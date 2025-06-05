@@ -1,45 +1,59 @@
+#include <stdint.h>
+#include <stdbool.h>
 #include <stdio.h>
-#include <GLFW/glfw3.h>
+#include <SDL2/SDL.h>
 
-#define WIDTH (800) // pixels
-#define HEIGHT (600)
-#define WINDOW_NAME ("Renderer")
+#define WIDTH 800
+#define HEIGHT 600
 
-int main(void) {
-	GLFWwindow* window;
-	uint32_t framebuffer[WIDTH*HEIGHT] = {0}; //buffer for what will be drawn to screen
+int main() { 
+	// Initialise SDL
+	if(SDL_Init(SDL_INIT_VIDEO) != 0) {
+		SDL_Log("SDL_Init Error: %s", SDL_GetError());
+		return 1;
+	}	
 
-	printf("width={%d}, height={%d}\n", WIDTH, HEIGHT);
+	// Create window
+	SDL_Window* window = SDL_CreateWindow(
+		"SDL2_Pixel_Buffer",
+		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+		WIDTH, HEIGHT, 0	
+	);
 
-	// Initialising GLFW window
-	if(!glfwInit()) {return -1;}
-	window = glfwCreateWindow(WIDTH,HEIGHT, WINDOW_NAME, NULL, NULL);
-	if(!window) { glfwTerminate(); return -1;}
-	glfwMakeContextCurrent(window);
+	// Create renderer
+	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
-	//Drawing a single red pixel to the middle of the screen
-	int x = 200;
-	int y = 200;
-	framebuffer[y * WIDTH + x] = 0xFF0000FF;
-
-	// upload framebuffer to a texture
-	GLuint tex; // to store the texture handle
-	glGenTextures(1, &tex); // openGL generates the handle and stores it here
-	glBindTexture(GL_TEXTURE_2D, tex);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, WIDTH, HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, framebuffer);
-
-	// Select color of background
-	glClearColor(0.0, 0.0, 0.0, 1.0);
-
-	// Rendering loop
-	while(!glfwWindowShouldClose(window))
-	{
-		glClear(GL_COLOR_BUFFER_BIT);
-		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, WIDTH, HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, framebuffer);
-		glfwSwapBuffers(window);
-		glfwPollEvents();
+	// Create texture
+	SDL_Texture* texture = SDL_CreateTexture(
+		renderer,
+		SDL_PIXELFORMAT_RGBA8888,
+		SDL_TEXTUREACCESS_STREAMING,
+		WIDTH, HEIGHT
+	);
+	
+	uint32_t framebuffer[WIDTH * HEIGHT] = {0};
+	framebuffer[100 + 100 * WIDTH] = 0xFF0000FF;	
+	bool running = true;
+	SDL_Event event;
+	while(running) {
+		// Event handling
+		while (SDL_PollEvent(&event)) {
+			if(event.type == SDL_QUIT) running = false;	
+		}	
+		
+		// Update texture with framebuffer pixels
+		SDL_UpdateTexture(texture, NULL, framebuffer, WIDTH * sizeof(uint32_t));
+		
+		// Draw
+		SDL_RenderClear(renderer);
+		SDL_RenderCopy(renderer, texture, NULL, NULL);
+		SDL_RenderPresent(renderer);
 	}
-
-	glfwTerminate();	
+	
+	// Clean Up
+	SDL_DestroyTexture(texture);
+	SDL_DestroyRenderer(renderer);
+	SDL_DestroyWindow(window);
+	SDL_Quit();
 	return 0;
 }
