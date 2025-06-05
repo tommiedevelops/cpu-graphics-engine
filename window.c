@@ -23,11 +23,10 @@ int main(void) {
 	framebuffer[y * WIDTH + x] = 0xFF0000FF;
 
 	// upload framebuffer to a texture
-	GLuint tex;
-	glGenTextures(1, &tex);
+	GLuint tex; // to store the texture handle
+	glGenTextures(1, &tex); // openGL generates the handle and stores it here
 	glBindTexture(GL_TEXTURE_2D, tex);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, WIDTH, HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, framebuffer);
-
 
 	// Select color of background
 	glClearColor(0.0, 0.0, 0.0, 1.0);
