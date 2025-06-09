@@ -15,7 +15,7 @@ int main() {
 
 	// Create window
 	SDL_Window* window = SDL_CreateWindow(
-		"SDL2_Pixel_Buffer",
+		"Software Rasterizer",
 		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 		WIDTH, HEIGHT, 0
 	);
@@ -35,7 +35,7 @@ int main() {
 
 	// set one pixel to red
 	int line_start[2] = {10,10};
-	int line_end[2] = {400,400};
+	int line_end[2] = {100,400};
 	draw_line(framebuffer, line_start, line_end); // testing linkage
 
 	bool running = true;

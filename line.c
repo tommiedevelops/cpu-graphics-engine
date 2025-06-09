@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "constants.h"
 #include <stdint.h>
+#include <math.h>
 
 /**
  * Draws a line on the framebuffer using given start and end coordinates.
@@ -15,6 +16,14 @@
  */
 
 void draw_line(uint32_t* framebuffer, int* line_start, int* line_end){
+
+	void place_pixel(int x, int y, uint32_t value) {
+		if( (x > WIDTH) || (x < 0) ) {printf("invalid x value: %d\n", x); return;}
+		if( (y > HEIGHT)||(y < 0)) {printf("invalid y value: %d\n", y); return;}
+		framebuffer[x + WIDTH*y] = value;
+	}
+
+
 	// null checks
 	if((framebuffer == NULL) || (line_start == NULL) || (line_end == NULL)) {
 		printf("Parameter(s) are null\n");
@@ -22,21 +31,26 @@ void draw_line(uint32_t* framebuffer, int* line_start, int* line_end){
 	}
 
 	// extract coordinates
-	int start_x = line_start[0];
-	int start_y = line_start[1];
-	int end_x = line_end[0];
-	int end_y = line_end[1];
+	int x0 = line_start[0];
+	int y0 = line_start[1];
+	int x1 = line_end[0];
+	int y1 = line_end[1];
 
 	// draw the line
-	framebuffer[start_x + WIDTH * start_y] = COLOR_RED;
-	framebuffer[end_x + WIDTH * end_y] = COLOR_RED;
 
-	int h_diff = end_x - start_x;
-	int v_diff = end_y - start_y;
-	float grad = v_diff / h_diff;
+	int dx = x1 - x0;
+	int dy = y1 - y0;
 
-	for(int i = 0; i < h_diff; i++){
-		framebuffer[(start_x + i) + WIDTH * (start_y + i)] = COLOR_RED;
+	if(dx == 0) {
+		printf("Division by 0 attempted\n");
+		return;
 	}
+
+	float m = dy/dx;
+
+	for(int i = 0; i < dx+1; i++){
+		place_pixel(x0 + i, round(y0 + i * m), COLOR_RED);
+	}
+
 }
 
