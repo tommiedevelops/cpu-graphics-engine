@@ -5,6 +5,7 @@
 #include "line.h"
 #include "constants.h"
 
+
 int main() {
 	// Initialise SDL
 	if(SDL_Init(SDL_INIT_VIDEO) != 0) {
@@ -33,7 +34,9 @@ int main() {
 	uint32_t framebuffer[WIDTH * HEIGHT] = {0};
 
 	// set one pixel to red
-	draw_line(framebuffer); // testing linkage
+	int line_start[2] = {0,0};
+	int line_end[2] = {5,5};
+	draw_line(framebuffer, line_start, line_end); // testing linkage
 
 	bool running = true;
 	SDL_Event event;
