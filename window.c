@@ -4,7 +4,7 @@
 #include <SDL2/SDL.h>
 #include "line.h"
 #include "constants.h"
-
+#include "inputparser.h"
 
 int main() {
 	// Initialise SDL
@@ -33,9 +33,9 @@ int main() {
 
 	uint32_t framebuffer[WIDTH * HEIGHT] = {0};
 
-	// set one pixel to red
-	int line_start[2] = {250,250};
-	int line_end[2] = {500,723};
+	// draw lines
+	int line_start[2] = {0}; int line_end[2] = {0};
+	parse_input("line.input", line_start, line_end);
 	draw_line(framebuffer, line_start, line_end); // testing linkage
 
 	bool running = true;
