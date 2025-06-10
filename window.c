@@ -34,8 +34,8 @@ int main() {
 	uint32_t framebuffer[WIDTH * HEIGHT] = {0};
 
 	// set one pixel to red
-	int line_start[2] = {10,10};
-	int line_end[2] = {100,400};
+	int line_start[2] = {250,250};
+	int line_end[2] = {500,723};
 	draw_line(framebuffer, line_start, line_end); // testing linkage
 
 	bool running = true;

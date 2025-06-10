@@ -48,8 +48,12 @@ void draw_line(uint32_t* framebuffer, int* line_start, int* line_end){
 
 	float m = dy/dx;
 
+	int curr_y = y0;
 	for(int i = 0; i < dx+1; i++){
-		place_pixel(x0 + i, round(y0 + i * m), COLOR_RED);
+		for(int yval = curr_y; yval < y0+i*m; yval++){
+			place_pixel(x0 + i, round(yval), COLOR_RED);
+		}
+		curr_y = y0+i*m;
 	}
 
 }
