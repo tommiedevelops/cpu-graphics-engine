@@ -2,9 +2,9 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <SDL2/SDL.h>
-#include "line.h"
-#include "constants.h"
-#include "inputparser.h"
+#include "headerfiles/line.h"
+#include "headerfiles/constants.h"
+#include "headerfiles/inputparser.h"
 
 int main() {
 	// Initialise SDL
@@ -34,9 +34,19 @@ int main() {
 	uint32_t framebuffer[WIDTH * HEIGHT] = {0};
 
 	// draw lines
-	int line_start[2] = {0}; int line_end[2] = {0};
-	parse_input("line.input", line_start, line_end);
-	draw_line(framebuffer, line_start, line_end); // testing linkage
+	int num_coords = 0; 
+	int** start_coords = NULL; 
+	int** end_coords = NULL;
+	parse_file("line.input", start_coords, end_coords, &num_coords);
+	
+	if( (start_coords == NULL) || (end_coords == NULL) ) {
+		perror("something wrong with cooridnates");
+		exit(0);
+	}
+	
+	for(int i = 0; i<num_coords;i++){
+		draw_line(framebuffer, start_coords[i], end_coords[i]); // testing linkage
+	}
 
 	bool running = true;
 	SDL_Event event;
@@ -54,8 +64,9 @@ int main() {
 		SDL_RenderCopy(renderer, texture, NULL, NULL);
 		SDL_RenderPresent(renderer);
 	}
-
 	// Clean Up
+	free_coords_array(start_coords, num_coords);
+	free_coords_array(end_coords, num_coords);
 	SDL_DestroyTexture(texture);
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);

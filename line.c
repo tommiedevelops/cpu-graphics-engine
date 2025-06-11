@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "constants.h"
+#include "headerfiles/constants.h"
 #include <stdint.h>
 #include <math.h>
 
@@ -15,14 +15,13 @@
  * @sideeffects Modifies the framebuffer by setting pixel values along the line path
  */
 
-void draw_line(uint32_t* framebuffer, int* line_start, int* line_end){
-
-	void place_pixel(int x, int y, uint32_t value) {
+void place_pixel(int x, int y, uint32_t value, uint32_t* framebuffer) {
 		if( (x > WIDTH) || (x < 0) ) {printf("invalid x value: %d\n", x); return;}
 		if( (y > HEIGHT)||(y < 0)) {printf("invalid y value: %d\n", y); return;}
-		framebuffer[x + WIDTH*y] = value;
-	}
+		framebuffer[x + WIDTH*y] = value;	
+}
 
+void draw_line(uint32_t* framebuffer, int* line_start, int* line_end){
 
 	// null checks
 	if((framebuffer == NULL) || (line_start == NULL) || (line_end == NULL)) {
@@ -51,7 +50,7 @@ void draw_line(uint32_t* framebuffer, int* line_start, int* line_end){
 	int curr_y = y0;
 	for(int i = 0; i < dx+1; i++){
 		for(int yval = curr_y; yval < y0+i*m; yval++){
-			place_pixel(x0 + i, round(yval), COLOR_RED);
+			place_pixel(x0 + i, round(yval), COLOR_RED, framebuffer);
 		}
 		curr_y = y0+i*m;
 	}
