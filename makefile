@@ -6,5 +6,7 @@ build:
 	$(CC) src/window.c src/line.c src/inputparser.c src/render.c $(DEBUGFLAGS) -o window $(CFLAGS) $(LDFLAGS)
 clean:
 	rm window
-run:
+run-dirty:
 	ASAN_OPTIONS=detect_leaks=1:leak_check_at_exit=0 ./window
+run:
+	./window
