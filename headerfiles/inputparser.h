@@ -1,6 +1,9 @@
 #ifndef INPUTPARSER_H
 #define INPUTPARSER_H
-	int parse_file(char* filename, int** res_start_coords,int** res_end_coords, int* num_coords_ptr);
+	void parse_coords(FILE* fp, int* coords, int num_coords);
 	int free_coords_array(int** coords, int num_coords);
+	int extract_num_coords(FILE* fp);
+	FILE* open_input_file(char* filename);
+	void close_input_file(FILE* fp);
 #endif
 

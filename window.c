@@ -1,9 +1,10 @@
+
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <SDL2/SDL.h>
-#include "headerfiles/line.h"
 #include "headerfiles/constants.h"
+#include "headerfiles/render.h"
 #include "headerfiles/inputparser.h"
 
 int main() {
@@ -33,20 +34,17 @@ int main() {
 
 	uint32_t framebuffer[WIDTH * HEIGHT] = {0};
 
-	// draw lines
-	int num_coords = 0; 
-	int** start_coords = NULL; 
-	int** end_coords = NULL;
-	parse_file("line.input", start_coords, end_coords, &num_coords);
-	
-	if( (start_coords == NULL) || (end_coords == NULL) ) {
-		perror("something wrong with cooridnates");
-		exit(0);
-	}
-	
-	for(int i = 0; i<num_coords;i++){
-		draw_line(framebuffer, start_coords[i], end_coords[i]); // testing linkage
-	}
+	// parse file into arrays of coords
+	FILE* fp = open_input_file("line.input");
+	int num_coords = extract_num_coords(fp); //side-effect: advanced line cursor to line 2
+
+	int* coords = malloc(num_coords*sizeof(int)*4);
+	memset(coords, 0x0, num_coords*sizeof(int)*4);
+
+	parse_coords(fp, coords, num_coords); //assumes line cursor is at line 2
+
+	close_input_file(fp);
+	draw_lines_to_screen(framebuffer, coords, num_coords);
 
 	bool running = true;
 	SDL_Event event;
@@ -65,8 +63,7 @@ int main() {
 		SDL_RenderPresent(renderer);
 	}
 	// Clean Up
-	free_coords_array(start_coords, num_coords);
-	free_coords_array(end_coords, num_coords);
+	free(coords);
 	SDL_DestroyTexture(texture);
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);

@@ -1,11 +1,9 @@
 A software rasterizer written in C
 
 Please install: 
-- valgrind-3.18.1
 - sdl2 version 2.26.5
 
 If using linux: 
-- sudo apt install valgrind
 - sudo apt install libsdl2-dev
 
 should work. Otherwise just google it.
@@ -14,4 +12,10 @@ To launch the program simply clone the repo and run the following commands in th
 - make all
 - ./window
 
+Please note that SDL2 has in-built memory leaks so pay close attention to the leak information to actual debug the program.
 
+For Drawing Lines:
+- Please use the following format in the line.input file:
+	line 1: <integer> (number of lines>
+	line 1-n: {<int>, <int>} {<int>, <int>}
+ where the first set of integers are the start coords and the second set of ints are the end coords for the line.
