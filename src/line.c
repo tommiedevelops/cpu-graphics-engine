@@ -25,7 +25,7 @@ void draw_line(uint32_t* framebuffer, int* line_start, int* line_end){
 
 	// null checks
 	if((framebuffer == NULL) || (line_start == NULL) || (line_end == NULL)) {
-		printf("Parameter(s) are null\n");
+		printf("draw_line: Parameter(s) are null\n");
 		return;
 	}
 
