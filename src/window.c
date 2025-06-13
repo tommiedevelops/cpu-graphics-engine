@@ -44,7 +44,6 @@ int main() {
 	parse_coords(fp, coords, num_coords); //assumes line cursor is at line 2
 
 	close_input_file(fp);
-	draw_lines_to_screen(framebuffer, coords, num_coords);
 
 	bool running = true;
 	SDL_Event event;

@@ -2,6 +2,7 @@
 #include "headerfiles/constants.h"
 #include <stdint.h>
 #include <math.h>
+#include <stdlib.h>
 
 /**
  * Draws a line on the framebuffer using given start and end coordinates.
@@ -15,17 +16,38 @@
  * @sideeffects Modifies the framebuffer by setting pixel values along the line path
  */
 
+struct Point {
+	int x;
+	int y;
+};
+
 void place_pixel(int x, int y, uint32_t value, uint32_t* framebuffer) {
 		if( (x > WIDTH) || (x < 0) ) {printf("invalid x value: %d\n", x); return;}
 		if( (y > HEIGHT)||(y < 0)) {printf("invalid y value: %d\n", y); return;}
 		framebuffer[x + WIDTH*y] = value;	
 }
 
-void draw_line(uint32_t* framebuffer, int* line_start, int* line_end){
+int identify_octant(int dx, int dy) {
+	float m = dy/dx;
+	if( dx>0 && dy>0 ) return (m>=1) ? 2 : 1;
+	if( dx>0 && dy<0 ) return (m<=-1) ? 7 : 8;
+	if( dx<0 && dy<0 ) return (m>=1) ? 6 : 5;
+	if( dx<0 && dy>0 ) return (m<=-1) ? 3 : 4;
+}
 
+void draw_line(int* line_start, int* line_end, struct Point* resulting_points) {
+	/* supports lines in first quadrant (dx>0, dy>0)*/
+	if(resulting_points == NULL) {
+		perror("provided struct Point* is null\n");
+		return;
+	}
+	//TODO
+}
+
+void draw_line_general(uint32_t* framebuffer, int* line_start, int* line_end) {
 	// null checks
 	if((framebuffer == NULL) || (line_start == NULL) || (line_end == NULL)) {
-		printf("draw_line: Parameter(s) are null\n");
+		perror("line.c/draw_line_general: Parameter(s) are null\n");
 		return;
 	}
 
@@ -35,25 +57,25 @@ void draw_line(uint32_t* framebuffer, int* line_start, int* line_end){
 	int x1 = line_end[0];
 	int y1 = line_end[1];
 
-	// draw the line
-
+	// compute decision paremeters
 	int dx = x1 - x0;
 	int dy = y1 - y0;
-
-	if(dx == 0) {
-		printf("Division by 0 attempted\n");
-		return;
-	}
-
 	float m = dy/dx;
 
-	int curr_y = y0;
-	for(int i = 0; i < dx+1; i++){
-		for(int yval = curr_y; yval < y0+i*m; yval++){
-			place_pixel(x0 + i, round(yval), COLOR_RED, framebuffer);
-		}
-		curr_y = y0+i*m;
-	}
+	//determine number of pixels needed
+	int num_pixels = (dx >= dy) ? dx : dy;
 
+	// allocate memory for Points
+	struct Point* points = (struct Point*)malloc(num_pixels * sizeof(struct Point));
+
+	// identify the octant
+	int octant = identify_octant(dx, dy);
+
+	// draw the line in the first quadrant
+	//TODO
+
+	free(points);
 }
+
+
 

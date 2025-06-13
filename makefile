@@ -5,8 +5,13 @@ DEBUGFLAGS = -fsanitize=address
 build:
 	$(CC) src/window.c src/line.c src/inputparser.c src/render.c $(DEBUGFLAGS) -o window $(CFLAGS) $(LDFLAGS)
 clean:
-	rm window
+	rm window testing
 run-dirty:
 	ASAN_OPTIONS=detect_leaks=1:leak_check_at_exit=0 ./window
 run:
 	./window
+build-tests:
+		$(CC) tests/line_tests.c src/line.c src/inputparser.c src/render.c $(DEBUGFLAGS) -o testing $(CFLAGS) $(LDFLAGS)
+run-tests:
+		ASAN_OPTIONS=detect_leaks=1:leak_check_at_exit=0 ./testing
+

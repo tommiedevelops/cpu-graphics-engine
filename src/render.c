@@ -9,7 +9,6 @@ int draw_lines_to_screen(uint32_t *framebuffer, int* coords, int num_coords) {
 	// where [start_coord_X] and [end_coord_X] are integers.
 	for(int i = 0; i < num_coords; i++){
 		printf("draw_lines: %d\n", i);
-		draw_line(framebuffer, coords + 4*i, coords+2 + 4*i);
 	}
 
 }

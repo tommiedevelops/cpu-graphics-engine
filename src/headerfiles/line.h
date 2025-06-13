@@ -1,6 +1,8 @@
 #ifndef LINE_H
 #define LINE_H
 
-void draw_line(uint32_t* framebuffer, int* linestart, int* lineend);
+#include <stdint.h>
+
+int identify_octant(int dx, int dy);
 
 #endif
