@@ -37,11 +37,13 @@ int main() {
 	// parse file into arrays of coords
 	FILE* fp = open_input_file("line.input");
 	int num_coords = extract_num_coords(fp); //side-effect: advanced line cursor to line 2
-
 	int* coords = malloc(num_coords*sizeof(int)*4);
 	memset(coords, 0x0, num_coords*sizeof(int)*4);
 
 	parse_coords(fp, coords, num_coords); //assumes line cursor is at line 2
+
+	// render lines
+	render_lines(framebuffer, coords, num_coords);
 
 	close_input_file(fp);
 

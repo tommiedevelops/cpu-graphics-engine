@@ -32,12 +32,11 @@ void parse_coords(FILE* fp, int* coords, int num_coords) {
 		int y0 = atoi(strtok(NULL, ","));
 		int x1 = atoi(strtok(end_coords, ","));
 		int y1 = atoi(strtok(NULL, ","));
-		
-		printf("coord_index = %d\n", coord_index);
-		coords[4*coord_index] = x0; printf("value at %p is %d\n", &(coords[4*coord_index]), x0);
-		coords[4*coord_index+1] = y0; printf("value at %p is %d\n", &(coords[4*coord_index+1]), y0);
-		coords[4*coord_index+2] = x1; printf("value at %p is %d\n", &(coords[4*coord_index+2]), x1);
-		coords[4*coord_index+3] = y1; printf("value at %p is %d\n", &(coords[4*coord_index+3]), y1);
+
+		coords[4*coord_index] = x0;
+		coords[4*coord_index+1] = y0;
+		coords[4*coord_index+2] = x1;
+		coords[4*coord_index+3] = y1;
 
 		coord_index++;
 		memset(buf, 0x0, sizeof(buf));
@@ -64,7 +63,7 @@ FILE* open_input_file(char* filename) {
 	FILE* fp = fopen(filename, "r");
 	if(fp == NULL) {
 		perror("error opening file");
-		return NULL;	
+		return NULL;
 	}
 	return fp;
 }
