@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <math.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 /**
  * Draws a line on the framebuffer using given start and end coordinates.
@@ -34,35 +35,33 @@ int identify_octant(int dx, int dy) {
 	if( dx>0 && dy<0 ) return (m<=-1) ? 7 : 8;
 	if( dx<0 && dy<0 ) return (m>=1) ? 6 : 5;
 	if( dx<0 && dy>0 ) return (m<=-1) ? 3 : 4;
+	return 0;
 }
 
 
 // There is a bug in this function causing exactly 2 pixels to not be rendered.
 // I can't be bothered figuring it out right now but I'll leave the debug code in
 // for future reference.
-void draw_line(int* line_start, int* line_end, struct Point* resulting_points) {
-	/* supports lines in second octant only (dx>0,dy>0,m>1)*/
+void draw_line(int dx, int dy, struct Point* resulting_points) {
+	/* supports lines in second octant only (dx>0,dy>0,m>1)*/	
+	/* function produces Point* starting at (0,0)->(dx,dx) and only in the 2nd octant */
 	if(resulting_points == NULL) {
 		perror("provided struct Point* is null\n");
 		return;
 	}
 
-	int dx = line_end[0] - line_start[0];
-	int dy = line_end[1] - line_start[1];
-	float m = dy/dx;
+	float m = fmax(dy/dx, dx/dy);
 
 	int points_index = 0;
-	int y_from = line_start[1];
+	int y_from = 0;
 
-
-	for(int i = 0; i < dx; i++){
-		int x = line_start[0] + i;
-		int y_to = line_start[1] + i*m;
+	for(int x = 0; x < dx; x++){
+		int y_to = x*m;
 
 		for(int y = y_from; y < y_to; y++){
 			struct Point p = {x,y};
 			resulting_points[points_index] = p;
-			printf("draw_line:point={%d,%d}\n",x,y);
+			//printf("draw_line:point={%d,%d}\n",x,y);
 			//printf("draw_line:points_index={%d}\n", points_index);
 			y_from = y_to;
 			points_index++;
@@ -95,7 +94,7 @@ void reflect_on_y(struct Point* points, int num_points) {
 	}
 }
 
-void transform_to_octant_2(int curr_octant, struct Point* points, int num_points) {
+void transform_from_octant_2(int curr_octant, struct Point* points, int num_points) {
 	switch(curr_octant) {
 		case 1:
 			reflect_on_yx(points, num_points);
@@ -131,9 +130,6 @@ void transform_to_octant_2(int curr_octant, struct Point* points, int num_points
 }
 
 
-void transform_vars_to_octant_2(int* dx,int* dy){
-}
-
 
 void draw_line_general(uint32_t* framebuffer, int* line_start, int* line_end) {
 	// null checks
@@ -162,16 +158,22 @@ void draw_line_general(uint32_t* framebuffer, int* line_start, int* line_end) {
 	// identify the octant
 	int octant = identify_octant(dx, dy);
 
-	// draw the line in the 2nd quadrant
-	draw_line(line_start, line_end, points);
+	// draw line in 2nd quadrant & from (0,0) -> (dx,dy)
+	draw_line(abs(dx), abs(dy), points);
 
-	// transform points to correct octant
-	// transform_to_octant_2(octant, points, num_pixels);
+	// transform points from correct octant
+	transform_from_octant_2(octant, points, num_pixels);
+
+	// translate points to correct position
+	for(int i = 0; i < num_pixels; i++){
+		points[i].x += line_start[0];
+		points[i].y += line_start[1];
+	}
 
 	// draw final line to the framebuffer
 	for(int i = 0; i < num_pixels; i++){
 		struct Point p = points[i];
-		//printf("draw_line_general:placing point{%d,%d} into the framebuffer...\n",points[i].x, points[i].y);
+		printf("draw_line_general:placing point{%d,%d} into the framebuffer...\n",points[i].x, points[i].y);
 		place_pixel(p.x, p.y, COLOR_RED, framebuffer);
 	}
 

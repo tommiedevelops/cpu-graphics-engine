@@ -12,7 +12,7 @@ int render_lines(uint32_t *framebuffer, int* coords, int num_coords) {
 		printf("drawing line: {%d,%d} -> {%d,%d}\n", *coord, *(coord+1),*(coord+2),*(coord+3));
 		draw_line_general(framebuffer, coords + 4*i, coords + 4*i + 2);
 	}
-
+	return 0;
 }
 
 
