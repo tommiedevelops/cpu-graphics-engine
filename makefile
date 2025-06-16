@@ -1,17 +1,21 @@
 CC = gcc
 CFLAGS = -I/opt/homebrew/include -I/opt/homebrew/include/SDL2
-LDFLAGS = -L/opt/homebrew/lib -lSDL2 -lm
+LDFLAGS = -L/opt/homebrew/lib -lSDL2 -lm -Iinclude
 DEBUGFLAGS = -fsanitize=address
-build:
-	$(CC) src/window.c src/line.c src/inputparser.c src/render.c $(DEBUGFLAGS) -o window $(CFLAGS) $(LDFLAGS)
+SRC_FILES := $(filter-out src/window.c, $(wildcard src/*.c))
+TEST_FILES := $(wildcard tests/src/*.c)
+
+build: ./build/window
+./build/window:
+	$(CC) src/*.c $(DEBUGFLAGS) -o ./build/window $(CFLAGS) $(LDFLAGS)
 clean:
-	rm window testing
-run-dirty:
-	ASAN_OPTIONS=detect_leaks=1:leak_check_at_exit=0 ./window
+	rm ./build/window ./tests/build/testing
 run:
-	./window
-build-tests:
-		$(CC) tests/line_tests.c src/line.c src/inputparser.c src/render.c $(DEBUGFLAGS) -o testing $(CFLAGS) $(LDFLAGS)
-run-tests:
-		ASAN_OPTIONS=detect_leaks=1:leak_check_at_exit=0 ./testing
+	ASAN_OPTIONS=detect_leaks=1:leak_check_at_exit=0 ./build/window
+run-normal:
+	./build/window
+tbuild:
+		$(CC) $(TEST_FILES) $(SRC_FILES) -Iinclude -Itests/include $(DEBUGFLAGS) -o ./tests/build/testing $(CFLAGS) $(LDFLAGS)
+trun:
+		ASAN_OPTIONS=detect_leaks=1:leak_check_at_exit=0 ./tests/build/testing
 

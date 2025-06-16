@@ -1,26 +1,10 @@
 #include <stdio.h>
-#include "headerfiles/constants.h"
+#include "constants.h"
 #include <stdint.h>
 #include <math.h>
 #include <stdlib.h>
 #include <stdbool.h>
-
-/**
- * Draws a line on the framebuffer using given start and end coordinates.
- *
- * @param framebuffer  A pointer to a WIDTH × HEIGHT pixel buffer (defined in constants.h)
- * @param line_start   An int[2] array representing the start coordinates (x, y) of the line
- * @param line_end     An int[2] array representing the end coordinates (x, y) of the line
- *
- * @return void
- *
- * @sideeffects Modifies the framebuffer by setting pixel values along the line path
- */
-
-struct Point {
-	int x;
-	int y;
-};
+#include "line_transform.h"
 
 void place_pixel(int x, int y, uint32_t value, uint32_t* framebuffer) {
 		if( (x > WIDTH) || (x < 0) ) {printf("line.c/place_pixel: invalid x value. point= {%d,%d}\n", x,y); return;}
@@ -28,16 +12,6 @@ void place_pixel(int x, int y, uint32_t value, uint32_t* framebuffer) {
 
 		framebuffer[x + WIDTH*y] = value;
 }
-
-int identify_octant(int dx, int dy) {
-	float m = dy/dx;
-	if( dx>0 && dy>0 ) return (m>=1) ? 2 : 1;
-	if( dx>0 && dy<0 ) return (m<=-1) ? 7 : 8;
-	if( dx<0 && dy<0 ) return (m>=1) ? 6 : 5;
-	if( dx<0 && dy>0 ) return (m<=-1) ? 3 : 4;
-	return 0;
-}
-
 
 // There is a bug in this function causing exactly 2 pixels to not be rendered.
 // I can't be bothered figuring it out right now but I'll leave the debug code in
@@ -69,67 +43,6 @@ void draw_line(int dx, int dy, struct Point* resulting_points) {
 
 	}
 }
-
-
-/*Function reflects 2D points along the line y = x*/
-void reflect_on_yx(struct Point* points, int num_points) {
-	for(int i = 0; i < num_points; i++) {
-		int temp = points[i].x;
-		points[i].x = points[i].y;
-		points[i].y = temp;
-	}
-}
-
-/* Function reflects 2D points along x axis */
-void reflect_on_x(struct Point* points, int num_points) {
-	for(int i = 0; i < num_points; i++){
-		points[i].x = -1 * points[i].x;
-	}
-}
-
-/* Function reflects 2D points along y axis */
-void reflect_on_y(struct Point* points, int num_points) {
-	for(int i = 0; i < num_points; i++){
-		points[i].y = -1 * points[i].y;
-	}
-}
-
-void transform_from_octant_2(int curr_octant, struct Point* points, int num_points) {
-	switch(curr_octant) {
-		case 1:
-			reflect_on_yx(points, num_points);
-			break;
-		case 2:
-			break;
-		case 3:
-			reflect_on_y(points, num_points);
-			break;
-		case 4:
-			reflect_on_y(points, num_points);
-			reflect_on_yx(points, num_points);
-			break;
-		case 5:
-			reflect_on_x(points, num_points);
-			reflect_on_y(points, num_points);
-			reflect_on_yx(points, num_points);
-			break;
-		case 6:
-			reflect_on_x(points, num_points);
-			reflect_on_y(points, num_points);
-			break;
-		case 7:
-			reflect_on_x(points, num_points);
-			break;
-		case 8:
-			reflect_on_x(points, num_points);
-			reflect_on_yx(points, num_points);
-			break;
-		default:
-			printf("line.c/transform_to_octant_2: invalid octant supplied: curr_octant={%d}\n",curr_octant);
-	}
-}
-
-
 
 void draw_line_general(uint32_t* framebuffer, int* line_start, int* line_end) {
 	// null checks
@@ -164,21 +77,29 @@ void draw_line_general(uint32_t* framebuffer, int* line_start, int* line_end) {
 	// transform points from correct octant
 	transform_from_octant_2(octant, points, num_pixels);
 
+	printf("line.c/draw_line_general: point values after reflections\n");
+	for(int i =0; i < num_pixels; i++) {printf("point={%d,%d}\n", points[i].x, points[i].y);}
+
 	// translate points to correct position
 	for(int i = 0; i < num_pixels; i++){
-		points[i].x += line_start[0];
-		points[i].y += line_start[1];
+		points[i].x += x0;
+		points[i].y += y0;
 	}
+
+
+	printf("line.c/draw_line_general: point values after translations\n");
+	for(int i =0; i < num_pixels; i++) {printf("point={%d,%d}\n", points[i].x, points[i].y);}
 
 	// draw final line to the framebuffer
 	for(int i = 0; i < num_pixels; i++){
 		struct Point p = points[i];
-		printf("draw_line_general:placing point{%d,%d} into the framebuffer...\n",points[i].x, points[i].y);
+		//printf("draw_line_general:placing point{%d,%d} into the framebuffer...\n",points[i].x, points[i].y);
 		place_pixel(p.x, p.y, COLOR_RED, framebuffer);
 	}
 
 	free(points);
 }
+
 
 
 

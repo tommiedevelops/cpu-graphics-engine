@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
-#include "headerfiles/constants.h"
-#include "headerfiles/line.h"
+#include "constants.h"
+#include "line.h"
 
 int render_lines(uint32_t *framebuffer, int* coords, int num_coords) {
 	// array organisation:

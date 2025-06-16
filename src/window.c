@@ -3,9 +3,10 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <SDL2/SDL.h>
-#include "headerfiles/constants.h"
-#include "headerfiles/render.h"
-#include "headerfiles/inputparser.h"
+
+#include "constants.h"
+#include "render.h"
+#include "inputparser.h"
 
 int main() {
 	// Initialise SDL
