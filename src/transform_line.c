@@ -1,18 +1,5 @@
 #include <stdio.h>
-
-struct Point {
-	int x;
-	int y;
-};
-
-int identify_octant(int dx, int dy) {
-	float m = dy/dx;
-	if( dx>0 && dy>0 ) return (m>=1) ? 2 : 1;
-	if( dx>0 && dy<0 ) return (m<=-1) ? 7 : 8;
-	if( dx<0 && dy<0 ) return (m>=1) ? 6 : 5;
-	if( dx<0 && dy>0 ) return (m<=-1) ? 3 : 4;
-	return 0;
-}
+#include "compute_line.h"
 
 /*Function reflects 2D points along the line y = x*/
 void reflect_on_yx(struct Point* points, int num_points) {
@@ -37,8 +24,8 @@ void reflect_on_y(struct Point* points, int num_points) {
 	}
 }
 
-void transform_from_octant_2(int curr_octant, struct Point* points, int num_points) {
-	switch(curr_octant) {
+void transform_from_2_to_target_octant(int target_octant, struct Point* points, int num_points) {
+	switch(target_octant) {
 		case 1:
 			reflect_on_yx(points, num_points);
 			break;
@@ -68,7 +55,7 @@ void transform_from_octant_2(int curr_octant, struct Point* points, int num_poin
 			reflect_on_yx(points, num_points);
 			break;
 		default:
-			printf("line.c/transform_to_octant_2: invalid octant supplied: curr_octant={%d}\n",curr_octant);
+			printf("line.c/transform_to_octant_2: invalid octant supplied: curr_octant={%d}\n",target_octant);
 	}
 }
 

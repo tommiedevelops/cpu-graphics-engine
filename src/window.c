@@ -5,7 +5,7 @@
 #include <SDL2/SDL.h>
 
 #include "constants.h"
-#include "render.h"
+#include "render_line.h"
 #include "inputparser.h"
 
 int main() {
@@ -45,7 +45,6 @@ int main() {
 
 	// render lines
 	render_lines(framebuffer, coords, num_coords);
-
 	close_input_file(fp);
 
 	bool running = true;

@@ -1,18 +1,11 @@
 #include <stdio.h>
-#include "line_transform.h"
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
 
-/* helper functions */
-bool PointsAreEqual(struct Point a, struct Point b){
-	if( (a.x == b.x) && (a.y == b.y) ) {
-		return true;
-	}
-	return false;
-}
-/* ================ */
+#include "transform_line.h"
+#include "compute_line.h"
 
 void test_identify_octant_simple_positive() {
 	int dx, dy;

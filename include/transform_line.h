@@ -1,11 +1,7 @@
-#ifndef LINE_TRANSFORM_H
-#define LINE_TRANSFORM_H
+#ifndef TRANSFORM_LINE_H
+#define TRANSFORM_LINE_H
 
-	struct Point {
-        	int x;
-        	int y;
-	};
-
+#include "compute_line.h"
 	int identify_octant(int dx, int dy);
 	void reflect_on_x(struct Point* points, int num_points);
 	void reflect_on_yx(struct Point* points, int num_points);
