@@ -18,6 +18,7 @@ Use the following command to clean up the directory afterwards.
 
 **Note on ASAN**  
 - Please note that SDL2 has in-built memory leaks so you may need to run the program multiple times to prevent ASAN from complaining. Pay close attention to memory leak details as it may not pertain to your actual code. 
+- It may start spamming ASAN error messages. Just quit and restart.
 
 **For Drawing Lines:**
 - Please use the following format in the line.input file:  
@@ -27,6 +28,4 @@ Line 2-n: {[int:x0],[int:y0]} {[int:x1],[int:y1]}
 
 **A note on the line drawing algorithm:**  
 - Bresenham's Line Drawing algorithm is definitely more efficient as it does not involve floating point operations and division. However it is more complicated to understand and obscures the theory. 
-- I have chosen to use a very simple draw_line algorithm with some overhead; making use of symmetry to transform the algorithm in order to draw any arbitrary line. You will find more details in the src/headerfiles/line.h headerfile and the source code in src/line.c.
-- In modern GPU's Bresenham's Line Drawing algorithm is not used. In fact, GPU's primarily use hardware-based rasterization solutions to draw line primitives.  
-- In the way I have implemented this algorithm, one can easily switch out the implementation by changing the draw_line_2ndoctant() function. So I may implement it in the future.
+- I have not implemented it yet as I would like to move on quickly but I may return to it. Please see the relevant code in compute_line.c
