@@ -7,6 +7,7 @@
 #include "constants.h"
 #include "render_line.h"
 #include "inputparser.h"
+#include "obj_parser.h"
 
 int main() {
 	// Initialise SDL
@@ -46,6 +47,13 @@ int main() {
 	// render lines
 	render_lines(framebuffer, coords, num_coords);
 	close_input_file(fp);
+
+
+	// render an obj
+	char* obj_file_path = "./models/bunny.obj";
+	parse_obj(obj_file_path);
+
+
 
 	bool running = true;
 	SDL_Event event;

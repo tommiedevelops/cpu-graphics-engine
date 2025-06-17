@@ -20,7 +20,7 @@ int compute_num_points(int x0, int y0, int x1, int y1){
 }
 
 struct Point* draw_line_easy(int x0, int y0, int x1, int y1) {
-
+	/* returns a malloc'd array that needs to be freed */
 	int dx = x1 - x0;
 	int dy = y1 - y0;
 
@@ -39,7 +39,3 @@ struct Point* draw_line_easy(int x0, int y0, int x1, int y1) {
 	}
 	return points;
 }
-
-
-
-
