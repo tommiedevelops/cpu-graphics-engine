@@ -1,5 +1,7 @@
 **A software rasterizer written in C**  
 
+![Demo of Software Rasterizer](thumbnail.png)
+
 **SETUP**  
 Please install: 
 - sdl2 version 2.26.5
