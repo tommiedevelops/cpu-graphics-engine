@@ -2,4 +2,5 @@
 #define OBJ_PARSER_TESTS_H
 	void test_get_bounds();
 	void test_shift_to_origin();
+	void test_normalize_lengths();
 #endif

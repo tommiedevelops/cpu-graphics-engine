@@ -113,17 +113,17 @@ void shift_to_origin(float* bounds, float* vertices, int num_vertices) {
 	}
 }
 
-/* Normalizes values to between [-1,1]*/
+/* Normalizes values to between [-1,1] - assumes min = 0 for all axes */
 void normalize_lengths(float* bounds, float* vertices, int num_vertices) {
 	for(int i = 0; i < num_vertices; i++){
-		vertices[3*i] = (vertices[3*i] / bounds[1]);
-		vertices[3*i + 1] = vertices[3*i + 1] / bounds[3];
-		vertices[3*i + 2] = vertices[3*i + 2] / bounds[5];
+		vertices[3*i] = (float)vertices[3*i] / bounds[1];
+		vertices[3*i + 1] = (float)vertices[3*i + 1] / bounds[3];
+		vertices[3*i + 2] = (float)vertices[3*i + 2] / bounds[5];
 	}
 
 	for(int i = 0; i <3* num_vertices; i++){
-		vertices[i] -= 1;
 		vertices[i] *= 2;
+		vertices[i] -= 1;
 	}
 }
 

@@ -24,8 +24,32 @@ void test_get_bounds(){
 	free(result);
 }
 
-void test_normalize_vertices(){
-	//TODO
+void test_normalize_lengths(){
+
+	float test_vertices[] = {
+			0.0f,0.0f,0.0f,
+			6.0f,6.0f,6.0f,
+			3.0f,3.0f,3.0f,
+	};
+
+	int num_vertices = 3;
+
+	float* bounds = get_bounds(test_vertices,num_vertices);
+
+	float expected_vertices[] = {
+			-1.0f, -1.0f, -1.0f,
+			1.0f, 1.0f, 1.0f,
+			0.0f, 0.0f, 0.0f
+	};
+
+	normalize_lengths(bounds, test_vertices, num_vertices);
+
+	for(int i = 0; i < 3*num_vertices;i++){
+		printf("testing {%f}=={%f}\n", test_vertices[i], expected_vertices[i]);
+		assert(test_vertices[i] == expected_vertices[i]);
+	}
+	printf("success\n");
+	free(bounds);
 }
 
 void test_shift_to_origin() {
