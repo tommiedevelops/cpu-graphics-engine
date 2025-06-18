@@ -23,3 +23,34 @@ void test_get_bounds(){
 	printf("success\n");
 	free(result);
 }
+
+void test_normalize_vertices(){
+	//TODO
+}
+
+void test_shift_to_origin() {
+	float test_vertices[] = {
+		-5.0f, 10.0f, 3.0f,
+		10.0f, 5.0f, -3.0f
+	};
+
+	int num_vertices = 2;
+	float* bounds = get_bounds(test_vertices,num_vertices);
+
+	shift_to_origin(bounds, test_vertices, num_vertices);
+
+	float expected[] = {
+		0.0f, 5.0f, 6.0f,
+		15.0f, 0.0f, 0.0f
+	};
+	for(int i = 0; i < 6; i++){
+		printf("testing actual={%f} == expected={%f}\n", test_vertices[i], expected[i]);
+		assert(test_vertices[i] == expected[i]);
+	}
+	printf("success\n");
+	free(bounds);
+}
+
+void tests_scale_lengths() {
+	//TODO
+}

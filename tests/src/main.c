@@ -4,4 +4,5 @@ int main(){
 	printf("Running unit tests...\n");
 	//obj_parser_tests
 	test_get_bounds();
+	test_shift_to_origin();
 }

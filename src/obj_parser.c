@@ -104,13 +104,27 @@ void normalize_vertices(float sidelength, float* vertices, int num_vertices){
 	free(bounds);
 }
 
+/* Shifts coordinates on al three axes to [0, imax - imin] */
 void shift_to_origin(float* bounds, float* vertices, int num_vertices) {
-	//TODO
+	for(int i = 0; i < num_vertices; i++){
+		vertices[3*i] -= bounds[0];
+		vertices[3*i+1] -= bounds[2];
+		vertices[3*i+2] -= bounds[4];
+	}
 }
 
+/* Normalizes values to between [-1,1]*/
 void normalize_lengths(float* bounds, float* vertices, int num_vertices) {
-	//TODO
-	// normalize range to be between [-1,1]
+	for(int i = 0; i < num_vertices; i++){
+		vertices[3*i] = (vertices[3*i] / bounds[1]);
+		vertices[3*i + 1] = vertices[3*i + 1] / bounds[3];
+		vertices[3*i + 2] = vertices[3*i + 2] / bounds[5];
+	}
+
+	for(int i = 0; i <3* num_vertices; i++){
+		vertices[i] -= 1;
+		vertices[i] *= 2;
+	}
 }
 
 void scale_lengths(float target_length, float* bounds, float* vertices, int num_vertices){
