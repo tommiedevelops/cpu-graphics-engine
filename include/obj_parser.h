@@ -1,4 +1,6 @@
 #ifndef OBJ_PARSER_H
 #define OBJ_PARSER_H
-	void parse_obj(char* filename);	
+	int parse_num_vertices(FILE* fp);
+	void parse_obj(char* file_path);
+	float* get_bounds(float* vertices, int num_vertices);
 #endif
