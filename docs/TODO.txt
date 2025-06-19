@@ -3,4 +3,8 @@ lines
 
 refactor bounds float* into a struct Bounds so it is more readable
 
+maybe do the same for struct Vertex and struct Edge
+
+refactor edges so it stores reference to vertex instead of value (could be useful for vertex shaders)
+
 write unit tests
