@@ -7,4 +7,6 @@ maybe do the same for struct Vertex and struct Edge
 
 refactor edges so it stores reference to vertex instead of value (could be useful for vertex shaders)
 
+have an exit procedure using signals to free all allocated memory
+
 write unit tests
