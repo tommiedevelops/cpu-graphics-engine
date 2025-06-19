@@ -61,7 +61,6 @@ void parse_vertices(FILE* fp, int num_vertices, float* vertices){
 				vertices[3*vertex_index + 1] = y;
 				vertices[3*vertex_index + 2] = z;
 				vertex_index++;
-				printf("parse_vertices:success. {%f,%f,%f}\n", x,y,z);
 			}
 		}
 	}
@@ -93,16 +92,26 @@ float* get_bounds(float* vertices, int num_vertices) {
 	return bounds;
 }
 
+void update_bounds(float* bounds, float* vertices, int num_vertices) {
+	/* return: [xmin, xmax, ymin, ymax, zmin, zmax] */
+	float xmin =  FLT_MAX, ymin =  FLT_MAX, zmin =  FLT_MAX;
+	float xmax = -FLT_MAX, ymax = -FLT_MAX, zmax = -FLT_MAX;
 
-// normalize vertices to fit in box, side length s that is centred on the origin all axes scaled equally.
+	for(int i = 0; i < num_vertices; i++){
+		if( vertices[3*i    ] > xmax ){ xmax = vertices[3*i    ]; }
+		if( vertices[3*i    ] < xmin ){ xmin = vertices[3*i    ]; }
+		if( vertices[3*i + 1] > ymax ){ ymax = vertices[3*i + 1]; }
+		if( vertices[3*i + 1] < ymin ){ ymin = vertices[3*i + 1]; }
+		if( vertices[3*i + 2] > zmax ){ zmax = vertices[3*i + 2]; }
+		if( vertices[3*i + 2] < zmin ){ zmin = vertices[3*i + 2]; }
+	}
 
-void normalize_vertices(float sidelength, float* vertices, int num_vertices){
-	// find the maximum vertex value along x, y AND z.
-	// divide all vertices by that value (now btn 0 and 1)
-	float* bounds = get_bounds(vertices, num_vertices);
+	bounds[0] = xmin; bounds[1] = xmax;
+	bounds[2] = ymin; bounds[3] = ymax;
+	bounds[4] = zmin; bounds[5] = zmax;
 
-	free(bounds);
 }
+
 
 /* Shifts coordinates on al three axes to [0, imax - imin] */
 void shift_to_origin(float* bounds, float* vertices, int num_vertices) {
@@ -111,25 +120,47 @@ void shift_to_origin(float* bounds, float* vertices, int num_vertices) {
 		vertices[3*i+1] -= bounds[2];
 		vertices[3*i+2] -= bounds[4];
 	}
+
+	update_bounds(bounds, vertices, num_vertices);
 }
 
 /* Normalizes values to between [-1,1] - assumes min = 0 for all axes */
 void normalize_lengths(float* bounds, float* vertices, int num_vertices) {
+
 	for(int i = 0; i < num_vertices; i++){
 		vertices[3*i] = (float)vertices[3*i] / bounds[1];
 		vertices[3*i + 1] = (float)vertices[3*i + 1] / bounds[3];
 		vertices[3*i + 2] = (float)vertices[3*i + 2] / bounds[5];
 	}
 
+
 	for(int i = 0; i <3* num_vertices; i++){
 		vertices[i] *= 2;
 		vertices[i] -= 1;
 	}
+	update_bounds(bounds, vertices, num_vertices);
+
 }
 
+/* Takes normalized vertices between [-1,1] and scales them to [-target_length/2, target_length/2] */
 void scale_lengths(float target_length, float* bounds, float* vertices, int num_vertices){
-	//TODO
-	// multiplying the range to be between [-target_length/2, target_length/2]
+	for(int i = 0; i < num_vertices*3; i++){
+		vertices[i] *= (float)target_length/2.0f;
+	}
+	update_bounds(bounds, vertices, num_vertices);
+}
+
+// normalize vertices to fit in box, side length s that is centred on the origin all axes scaled equally.
+void normalize_vertices(float sidelength, float* vertices, int num_vertices){
+	// find the maximum vertex value along x, y AND z.
+	// divide all vertices by that value (now btn 0 and 1)
+	float* bounds = get_bounds(vertices, num_vertices);
+
+	shift_to_origin(bounds, vertices, num_vertices);
+	normalize_lengths(bounds, vertices, num_vertices);
+	scale_lengths(sidelength, bounds, vertices, num_vertices);
+
+	free(bounds);
 }
 
 void parse_obj(char* filename){
@@ -143,6 +174,8 @@ void parse_obj(char* filename){
 
 	parse_vertices(fp, num_vertices, vertices);
 
+	const float scale = 200.0f;
+	normalize_vertices(scale, vertices, num_vertices);
 
 	free(vertices);
 	close_obj(fp);

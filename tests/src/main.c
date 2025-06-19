@@ -6,4 +6,5 @@ int main(){
 	test_get_bounds();
 	test_shift_to_origin();
 	test_normalize_lengths();
+	test_scale_lengths();
 }

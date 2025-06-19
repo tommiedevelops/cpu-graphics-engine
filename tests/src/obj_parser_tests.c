@@ -25,11 +25,12 @@ void test_get_bounds(){
 }
 
 void test_normalize_lengths(){
+	printf("test_normalize_lengths\n");
 
 	float test_vertices[] = {
 			0.0f,0.0f,0.0f,
-			6.0f,6.0f,6.0f,
-			3.0f,3.0f,3.0f,
+			0.6f,0.6f,0.6f,
+			0.3f,0.3f,0.3f,
 	};
 
 	int num_vertices = 3;
@@ -53,6 +54,7 @@ void test_normalize_lengths(){
 }
 
 void test_shift_to_origin() {
+	printf("test_shift_to_origin\n");
 	float test_vertices[] = {
 		-5.0f, 10.0f, 3.0f,
 		10.0f, 5.0f, -3.0f
@@ -75,6 +77,33 @@ void test_shift_to_origin() {
 	free(bounds);
 }
 
-void tests_scale_lengths() {
-	//TODO
+void test_scale_lengths() {
+	printf("test_scale_lengths\n");
+	float test_vertices[] = {
+			-1.0f, -1.0f, -1.0f,
+			1.0f, 1.0f, 1.0f,
+			0.0f, 0.0f, 0.0f
+	};
+
+	int num_vertices = 3;
+
+	float* bounds = get_bounds(test_vertices,num_vertices);
+	const float scale = 200.0f;
+
+	scale_lengths(scale,bounds, test_vertices, num_vertices);
+
+	float expected[] = {
+			-100.0f, -100.0f, -100.0f,
+			100.0f, 100.0f, 100.0f,
+			0.0f, 0.0f, 0.0f
+	};
+
+	for(int i = 0; i < 3*num_vertices; i++){
+		printf("testing actual={%f} == expected={%f}\n", test_vertices[i], expected[i]);
+		assert(test_vertices[i] == expected[i]);
+	}
+
+	printf("success\n");
+	free(bounds);
 }
+
