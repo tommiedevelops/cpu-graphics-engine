@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <float.h>
+#include <math.h>
 
 #include "vertex.h"
 #include "edge.h"
@@ -74,7 +75,7 @@ void parse_vertices(FILE* fp, int num_vertices, struct Vertex* vertices){
 /*In memory, an edge will be an ordered pair of vertices (a triplet of floats) */
 //TODO: might be better to store a reference to the vertex instead of the actual value. for future me.
 /* edges = [e0_x_from, e0_y_from, e0_z_from, e0_x_to, e0_y_to, e0_z_to, e1_x_from ... ]*/
-void parse_edges(FILE* fp, float* edges, int num_edges, struct Vertex* vertices) {
+void parse_edges(FILE* fp, struct Edge* edges, int num_edges, struct Vertex* vertices) {
 
 	if(edges==NULL){
 		perror("provided edges float* is null");
@@ -97,32 +98,20 @@ void parse_edges(FILE* fp, float* edges, int num_edges, struct Vertex* vertices)
 				v0--; v1--; v2--;
 
 				// v0 -> v1
-				edges[6*edge_index + 0] = vertices[v0].x;
-				edges[6*edge_index + 1] = vertices[v0].y;
-				edges[6*edge_index + 2] = vertices[v0].z;
-				edges[6*edge_index + 3] = vertices[v0].x;
-				edges[6*edge_index + 4] = vertices[v1].y;
-				edges[6*edge_index + 5] = vertices[v1].z;
+				edges[edge_index].from = vertices + v0;
+				edges[edge_index].to = vertices + v1;
 
 				edge_index++;
 
 				// v1 -> v2
-				edges[6*edge_index + 0] = vertices[v1].x;
-				edges[6*edge_index + 1] = vertices[v1].y;
-				edges[6*edge_index + 2] = vertices[v1].z;
-				edges[6*edge_index + 3] = vertices[v2].x;
-				edges[6*edge_index + 4] = vertices[v2].y;
-				edges[6*edge_index + 5] = vertices[v2].z;
+				edges[edge_index].from = vertices + v1;
+				edges[edge_index].to = vertices + v2;
 
 				edge_index++;
 
 				//v2 -> v0
-				edges[6*edge_index + 0] = vertices[v2].x;
-				edges[6*edge_index + 1] = vertices[v2].y;
-				edges[6*edge_index + 2] = vertices[v2].z;
-				edges[6*edge_index + 3] = vertices[v0].x;
-				edges[6*edge_index + 4] = vertices[v0].y;
-				edges[6*edge_index + 5] = vertices[v0].z;
+				edges[edge_index].from = vertices + v2;
+				edges[edge_index].to = vertices + v0;
 
 				edge_index++;
 			}
@@ -168,11 +157,9 @@ int* parse_obj_to_2D_coord_array(char* filename){
 	int num_edges = parse_num_edges(fp);
 	rewind(fp);
 
-	// edges array: edges = [e0_x_from, e0_y_from, e0_z_from, e0_x_to, e0_y_to, e0_z_to, e1_x_from ... ]
 	// i.e. every edge needs 6 floats to describe it
-	int edges_array_size = sizeof(float)*num_edges*6;
-	float* edges = malloc(edges_array_size);
-	memset(edges,0x0,edges_array_size);
+	struct Edge* edges = malloc(sizeof(struct Edge)*num_edges);
+	memset(edges,0x0,sizeof(struct Edge)*num_edges);
 
 	parse_edges(fp, edges, num_edges, vertices);
 	rewind(fp);
@@ -180,14 +167,16 @@ int* parse_obj_to_2D_coord_array(char* filename){
 	int* coords = malloc(sizeof(int)*4*num_edges);
 	memset(coords,0x0,sizeof(int)*4*num_edges);
 
+	//coords array: [int:x_0, int:y_0, int: x1, int: y1]
+	//TODO this could definitely be placed somewhere else / refactored.
 	for(int i = 0; i < num_edges; i++){
-		coords[4*i] = edges[6*i];
-		coords[4*i+1]= edges[6*i+1];
-		coords[4*i+2] = edges[6*i+3];
-		coords[4*i+3] = edges[6*i+4];
+		coords[4*i] = round(edges[i].from->x);
+		coords[4*i+1]= round(edges[i].from->y);
+		coords[4*i+2] = round(edges[i].to->x);
+		coords[4*i+3] = round(edges[i].to->y);
 	}
 
-	
+
 	free(edges);
 	free(vertices);
 	close_obj(fp);

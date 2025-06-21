@@ -2,7 +2,7 @@
 #define EDGE_H
 #include "vertex.h"
 	struct Edge {
-		struct Vertex from;
-		struct Vertex to;
+		struct Vertex* from;
+		struct Vertex* to;
 	};
 #endif
