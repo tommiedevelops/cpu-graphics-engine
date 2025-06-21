@@ -6,6 +6,8 @@
 
 #include "constants.h"
 #include "compute_line.h"
+#include "edge.h"
+#include "vertex.h"
 
 void place_pixel(int x, int y, uint32_t value, uint32_t* framebuffer) {
                 if( (x > WIDTH) || (x < 0) ) {printf("line.c/place_pixel: invalid x value. point= {%d,%d}\n", x,y); return;}
@@ -63,11 +65,42 @@ int render_lines(uint32_t *framebuffer, int* coords, int num_coords) {
 
 /* Assuming wireframe_vertices are centred at (0,0) */
 /* and structured like so: [x0,y0,z0,x1,y1,z1...]*/
-void render_wireframe_from_3D_vertices(float* wireframe_vertices, int num_vertices){
-	int centre_x = round(WIDTH / 2);
-	int centre_y = round(HEIGHT / 2);
+void render_wireframe(uint32_t* framebuffer, struct Edge* wireframe_edges, int num_edges){
 
-	//TODO
+	if(framebuffer == NULL){
+		perror("provided framebuffer is null");
+		exit(EXIT_FAILURE);
+	}
+	if(wireframe_edges == NULL) {
+		perror("provided edge array is null");
+		exit(EXIT_FAILURE);
+	}
+
+	float centre_x = (float)WIDTH / 2;
+	float centre_y = (float)HEIGHT / 2;
+
+	//TODO translate model to centre of screen and flip vertically
+
+	for(int i = 0; i < num_edges; i++){
+		if( (wireframe_edges[i].from == NULL) || (wireframe_edges[i].to == NULL) ){
+			perror("provided edge was null");
+			exit(EXIT_FAILURE); // HANDLE GRACEFULLY
+		}
+
+		struct Vertex* from = wireframe_edges[i].from;
+		struct Vertex* to = wireframe_edges[i].to;
+
+		convert_vertex_to_int_values(from);
+		convert_vertex_to_int_values(to);
+		
+		// assumes we are neglecting z values
+		// can probably generalise to a proper projection in the future
+		struct Point* line = draw_line_easy(from->x, from->y, to->x, to->y);
+		int num_points = compute_num_points(from->x, from->y, to->x, to->y);
+		draw_points_to_framebuffer(line, framebuffer, num_points);
+
+		free(line);
+	}
 }
 
 

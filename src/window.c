@@ -8,6 +8,7 @@
 #include "render_line.h"
 #include "inputparser.h"
 #include "obj_parser.h"
+#include "edge.h"
 
 int main() {
 	// Initialise SDL
@@ -36,42 +37,15 @@ int main() {
 
 	uint32_t framebuffer[WIDTH * HEIGHT] = {0};
 
-	// parse file into arrays of coords
-//	FILE* fp = open_input_file("line.input");
-//	int num_coords = extract_num_coords(fp); //side-effect: advanced line cursor to line 2
-//	int* coords = malloc(num_coords*sizeof(int)*4);
-//	memset(coords, 0x0, num_coords*sizeof(int)*4);
-
-	//parse_coords(fp, coords, num_coords); //assumes line cursor is at line 2
-
-	// render lines
-	//close_input_file(fp);
-
-// MOVE THE BELOW INTO RENDER.C
-
-	// render an obj
+	// render from .obj
 	char* obj_file_path = "./models/bunny.obj";
-	int* coords = parse_obj_to_2D_coord_array(obj_file_path);
 
-	FILE* fp = fopen(obj_file_path, "r");
-	int num_coords = parse_num_edges(fp);
-	fclose(fp);
+	struct Vertex* vertices = parse_vertices_from_obj(obj_file_path);
 
-	// translate coords to centre of the screen
-	float halfwidth = (float)WIDTH / (float)2;
-	float halfheight = (float)HEIGHT / (float)2;
+	struct Edge* edges = parse_edges_from_obj(obj_file_path, vertices);
+	int num_edges = parse_num_edges(obj_file_path);
 
-	// first flip it vertically
-	for(int i = 0; i < 2*num_coords; i++){
-		coords[2*i+1] = -1*coords[2*i+1];
-	}
-	// then translate it
-	for(int i = 0; i < 2*num_coords; i++){
-		coords[2*i] = round(coords[2*i] + halfwidth);
-		coords[2*i+1] = round(coords[2*i+1] + halfheight);
-	}
-
-	render_lines(framebuffer, coords, num_coords);
+	render_wireframe(framebuffer, edges, num_edges);
 
 	bool running = true;
 	SDL_Event event;
@@ -90,7 +64,8 @@ int main() {
 		SDL_RenderPresent(renderer);
 	}
 	// Clean Up
-	free(coords);
+	free(edges);
+	free(vertices);
 	SDL_DestroyTexture(texture);
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);

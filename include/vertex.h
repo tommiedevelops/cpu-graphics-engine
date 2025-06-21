@@ -12,6 +12,7 @@ struct Vertex {
 	float z;
 };
 
+void convert_vertex_to_int_values(struct Vertex* vertex);
 void scale_vertex(struct Vertex* vertex, float scalar);
 void translate_vertex(struct Vertex* vertex, float dx, float dy, float dz);
 bool vertices_are_equal(struct Vertex a, struct Vertex b);

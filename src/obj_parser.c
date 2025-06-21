@@ -33,7 +33,8 @@ void close_obj(FILE* fp){
 }
 
 
-int parse_num_vertices(FILE* fp){
+int parse_num_vertices(char* filename){
+	FILE* fp = open_obj(filename);
 	char buf[256] = {0};
 	const char * target = "# vertex count =";
 	int vertex_count = 0;
@@ -44,6 +45,7 @@ int parse_num_vertices(FILE* fp){
 			break;
 		}
 	}
+	close_obj(fp);
 	return vertex_count;
 }
 
@@ -82,7 +84,7 @@ void parse_edges(FILE* fp, struct Edge* edges, int num_edges, struct Vertex* ver
 		exit(EXIT_FAILURE); // gonna cause mem leaks pls fix
 	}
 	if(vertices==NULL){
-		perror("provided vertices float * is null");
+		perror("obj_parser.c/parse_edges:provided vertices float * is null");
 		exit(EXIT_FAILURE); // gonna cause mem leaks pls fix
 	}
 
@@ -120,8 +122,9 @@ void parse_edges(FILE* fp, struct Edge* edges, int num_edges, struct Vertex* ver
 
 }
 
-int parse_num_edges(FILE* fp) {
+int parse_num_edges(char* filename) {
 	// extract face count
+	FILE* fp = open_obj(filename);
 	char buf[256] = {0};
 	const char * target = "# face count =";
 	int face_count = 0;
@@ -135,50 +138,44 @@ int parse_num_edges(FILE* fp) {
 
 	// for every 'face' (i.e. triangle) there are 3 edges
 	int edge_count = 3 * face_count;
+	close_obj(fp);
 	return edge_count;
 }
 
-int* parse_obj_to_2D_coord_array(char* filename){
-	FILE* fp = open_obj(filename);
-
+struct Vertex* parse_vertices_from_obj(char* filename) {
 	// vertices array: [v0x,v0y,v0z,v1x,v1y,v1z,...]
-	int num_vertices = parse_num_vertices(fp);
-	rewind(fp);
+	int num_vertices = parse_num_vertices(filename);
 
 	struct Vertex* vertices = malloc(sizeof(struct Vertex)*num_vertices);
 	memset(vertices,0x0,sizeof(struct Vertex)*num_vertices);
 
-	const float scale = 600.0f;
+	FILE* fp = open_obj(filename);
+	const float scale = 200.0f; // hard coded
 	parse_vertices(fp, num_vertices, vertices);
-	rewind(fp);
+	close_obj(fp);
 
 	normalize_vertices(scale, vertices, num_vertices);
 
-	int num_edges = parse_num_edges(fp);
+	return vertices;
+}
+
+struct Edge* parse_edges_from_obj(char* filename, struct Vertex* parsed_vertices){
+	FILE* fp = open_obj(filename);
+
+	if(parsed_vertices == NULL){
+		perror("src/obj_parser.c/parse_edges_from_obj:provided struct Vertex* is null");
+		exit(EXIT_FAILURE);
+	}
+
+	int num_edges = parse_num_edges(filename);
 	rewind(fp);
 
-	// i.e. every edge needs 6 floats to describe it
 	struct Edge* edges = malloc(sizeof(struct Edge)*num_edges);
 	memset(edges,0x0,sizeof(struct Edge)*num_edges);
 
-	parse_edges(fp, edges, num_edges, vertices);
+	parse_edges(fp, edges, num_edges, parsed_vertices);
 	rewind(fp);
 
-	int* coords = malloc(sizeof(int)*4*num_edges);
-	memset(coords,0x0,sizeof(int)*4*num_edges);
-
-	//coords array: [int:x_0, int:y_0, int: x1, int: y1]
-	//TODO this could definitely be placed somewhere else / refactored.
-	for(int i = 0; i < num_edges; i++){
-		coords[4*i] = round(edges[i].from->x);
-		coords[4*i+1]= round(edges[i].from->y);
-		coords[4*i+2] = round(edges[i].to->x);
-		coords[4*i+3] = round(edges[i].to->y);
-	}
-
-
-	free(edges);
-	free(vertices);
 	close_obj(fp);
-	return coords;
+	return edges;
 }

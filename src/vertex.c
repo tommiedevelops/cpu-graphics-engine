@@ -1,4 +1,7 @@
 #include <stdio.h>
+#include <math.h>
+#include <stdlib.h>
+
 #include "vertex.h"
 #include "bounds.h"
 
@@ -75,4 +78,14 @@ void normalize_vertices(float sidelength, struct Vertex* vertices, int num_verti
         normalize_lengths(&bounds, vertices, num_vertices);
         scale_lengths(sidelength, &bounds, vertices, num_vertices);
 
+}
+
+void convert_vertex_to_int_values(struct Vertex* vertex){
+	if(vertex == NULL) { 
+		perror("vertex was null");
+		exit(EXIT_FAILURE); // handle gracefully
+	}
+	vertex->x = round(vertex->x);
+	vertex->y = round(vertex->y);
+	vertex->z = round(vertex->z);
 }
