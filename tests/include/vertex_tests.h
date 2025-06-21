@@ -4,4 +4,6 @@
 	void test_shift_to_origin();
 	void test_normalize_lengths();
 	void test_scale_lengths();
+	void test_scale_vertex();
+	void test_translate_vertex();
 #endif

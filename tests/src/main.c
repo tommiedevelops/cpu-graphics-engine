@@ -4,9 +4,11 @@
 
 int main(){
 	printf("Running unit tests...\n");
-	//obj_parser_tests
+	//vertex.c tests
 	test_get_bounds();
 	test_shift_to_origin();
+	test_scale_vertex();
+	test_translate_vertex();
 	test_normalize_lengths();
-//	test_scale_lengths();
+	test_scale_lengths();
 }

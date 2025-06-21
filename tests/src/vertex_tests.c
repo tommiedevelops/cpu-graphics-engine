@@ -103,10 +103,29 @@ void test_scale_lengths() {
 			{.x=0.0f, .y=0.0f, .z=0.0f}
 	};
 
-	for(int i = 0; i < 3*num_vertices; i++){
+	for(int i = 0; i < num_vertices; i++){
 		assert(vertices_are_equal(expected[i], vertices[i]));
 	}
 
+	printf("success\n");
+}
+
+
+void test_scale_vertex(){
+	printf("test_scale_vertex\n");
+	struct Vertex test = {.x=1.0f, .y=1.0f, .z=1.0f };
+	struct Vertex actual = {.x=3.0f, .y=3.0f, .z=3.0f};
+	scale_vertex(&test, 3.0f);
+	assert(vertices_are_equal(test,actual));
+	printf("success\n");
+}
+
+void test_translate_vertex(){
+	printf("test_translate_vertex\n");
+	struct Vertex test = {.x=1.0f, .y=1.0f, .z=1.0f};
+	struct Vertex actual = {.x=0.0f, .y=0.0f, .z=0.0f};
+	translate_vertex(&test, -1.0f,-1.0f,-1.0f);
+	assert(vertices_are_equal(test,actual));
 	printf("success\n");
 }
 

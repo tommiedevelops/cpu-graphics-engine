@@ -3,19 +3,22 @@
 #include "bounds.h"
 
 // single vertex methods
-void scale_vertex(struct Vertex vertex, float scalar){
-	vertex.x *= scalar;
-	vertex.y *= scalar;
-	vertex.z *= scalar;
+void scale_vertex(struct Vertex* vertex, float scalar){
+	// accepts struct Vertex ptr, not array
+	vertex->x *= scalar;
+	vertex->y *= scalar;
+	vertex->z *= scalar;
 }
 
-void translate_vertex(struct Vertex vertex, float dx, float dy, float dz){
-	vertex.x += dx;
-	vertex.y += dy;
-	vertex.z += dz;
+void translate_vertex(struct Vertex* vertex, float dx, float dy, float dz){
+	// accepts struct Vertex ptr, not array
+	vertex->x += dx;
+	vertex->y += dy;
+	vertex->z += dz;
 }
 
 bool vertices_are_equal(struct Vertex a, struct Vertex b) {
+	printf("checking {%f,%f,%f} == {%f,%f,%f}\n", a.x,a.y,a.z,b.z,b.y,b.z);
 	if(a.x != b.x) return false;
 	if(a.y != b.y) return false;
 	if(a.z != b.z) return false;
@@ -47,8 +50,8 @@ void normalize_lengths(struct Bounds bounds, struct Vertex* vertices, int num_ve
 
         // scale and translate to [-1,1]
         for(int i = 0; i < num_vertices; i++){
-                scale_vertex(vertices[i], 2);
-                translate_vertex(vertices[i], -1.0f,-1.0f,-1.0f);
+                scale_vertex(vertices + i, 2);
+                translate_vertex(vertices + i, -1.0f,-1.0f,-1.0f);
         }
         update_bounds(&bounds, vertices, num_vertices);
 
@@ -57,7 +60,7 @@ void normalize_lengths(struct Bounds bounds, struct Vertex* vertices, int num_ve
 /* Takes normalized vertices between [-1,1] and scales them to [-target_length/2, target_length/2] */
 void scale_lengths(float target_length, struct Bounds bounds, struct Vertex* vertices, int num_vertices){
         for(int i = 0; i < num_vertices; i++){
-                scale_vertex(vertices[i], (float)target_length/2.0f);
+                scale_vertex(vertices + i, (float)target_length/2.0f);
         }
         update_bounds(&bounds, vertices, num_vertices);
 }
