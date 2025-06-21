@@ -19,7 +19,7 @@ struct Bounds {
 	.ymin = FLT_MAX, .ymax = -FLT_MAX, 	\
 	.zmin = FLT_MAX, .zmax = -FLT_MAX 	\
 	}
-
+void print_bounds(struct Bounds bounds);
 bool bounds_are_equal(struct Bounds a, struct Bounds b);
 struct Bounds get_bounds(struct Vertex* vertices, int num_vertices);
 void update_bounds(struct Bounds* bounds, struct Vertex* vertices, int num_vertices);

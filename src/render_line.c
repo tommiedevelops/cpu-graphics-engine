@@ -76,11 +76,6 @@ void render_wireframe(uint32_t* framebuffer, struct Edge* wireframe_edges, int n
 		exit(EXIT_FAILURE);
 	}
 
-	float centre_x = (float)WIDTH / 2;
-	float centre_y = (float)HEIGHT / 2;
-
-	//TODO translate model to centre of screen and flip vertically
-
 	for(int i = 0; i < num_edges; i++){
 		if( (wireframe_edges[i].from == NULL) || (wireframe_edges[i].to == NULL) ){
 			perror("provided edge was null");
@@ -92,7 +87,7 @@ void render_wireframe(uint32_t* framebuffer, struct Edge* wireframe_edges, int n
 
 		convert_vertex_to_int_values(from);
 		convert_vertex_to_int_values(to);
-		
+
 		// assumes we are neglecting z values
 		// can probably generalise to a proper projection in the future
 		struct Point* line = draw_line_easy(from->x, from->y, to->x, to->y);

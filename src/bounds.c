@@ -47,3 +47,8 @@ void update_bounds(struct Bounds* bounds, struct Vertex* vertices, int num_verti
         }
 }
 
+void print_bounds(struct Bounds bounds){
+	printf("|   |    x    |    y    |    z    |\n");
+	printf("|max|%f|%f|%f|\n", bounds.xmax,bounds.ymax,bounds.zmax);
+	printf("|min|%f|%f|%f|\n", bounds.xmin,bounds.ymin,bounds.zmin);
+}

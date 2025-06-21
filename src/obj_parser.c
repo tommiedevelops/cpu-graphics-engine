@@ -88,37 +88,7 @@ void parse_edges(FILE* fp, struct Edge* edges, int num_edges, struct Vertex* ver
 		exit(EXIT_FAILURE); // gonna cause mem leaks pls fix
 	}
 
-	char buf[256] = {0};
-	int v0,v1,v2;
-	int edge_index = 0;
 
-	while( (fgets(buf, sizeof(buf), fp) != NULL) ) {
-		if ( buf[0] == 'f' ) {
-			if( sscanf(buf, "f %d %d %d\n",&v0,&v1,&v2) == 3) {
-
-				// .obj files start from index 1 so have to account for that
-				v0--; v1--; v2--;
-
-				// v0 -> v1
-				edges[edge_index].from = vertices + v0;
-				edges[edge_index].to = vertices + v1;
-
-				edge_index++;
-
-				// v1 -> v2
-				edges[edge_index].from = vertices + v1;
-				edges[edge_index].to = vertices + v2;
-
-				edge_index++;
-
-				//v2 -> v0
-				edges[edge_index].from = vertices + v2;
-				edges[edge_index].to = vertices + v0;
-
-				edge_index++;
-			}
-		}
-	}
 
 }
 
@@ -159,22 +129,51 @@ struct Vertex* parse_vertices_from_obj(char* filename) {
 	return vertices;
 }
 
-struct Edge* parse_edges_from_obj(char* filename, struct Vertex* parsed_vertices){
+struct Edge* parse_edges_from_obj(char* filename, struct Vertex* vertices){
 	FILE* fp = open_obj(filename);
 
-	if(parsed_vertices == NULL){
+	if(vertices == NULL){
 		perror("src/obj_parser.c/parse_edges_from_obj:provided struct Vertex* is null");
 		exit(EXIT_FAILURE);
 	}
 
 	int num_edges = parse_num_edges(filename);
-	rewind(fp);
 
 	struct Edge* edges = malloc(sizeof(struct Edge)*num_edges);
 	memset(edges,0x0,sizeof(struct Edge)*num_edges);
 
-	parse_edges(fp, edges, num_edges, parsed_vertices);
-	rewind(fp);
+	char buf[256] = {0};
+	int v0,v1,v2;
+	int edge_index = 0;
+
+	while( (fgets(buf, sizeof(buf), fp) != NULL) ) {
+		if ( buf[0] == 'f' ) {
+			if( sscanf(buf, "f %d %d %d\n",&v0,&v1,&v2) == 3) {
+
+				// .obj files start from index 1 so have to account for that
+				v0--; v1--; v2--;
+
+				// v0 -> v1
+				edges[edge_index].from = &(vertices[v0]);
+				edges[edge_index].to = &(vertices[v1]);
+
+				edge_index++;
+
+				// v1 -> v2
+				edges[edge_index].from = &(vertices[v1]);
+				edges[edge_index].to = &(vertices[v2]);
+
+				edge_index++;
+
+				//v2 -> v0
+				edges[edge_index].from = &(vertices[v2]);
+				edges[edge_index].to = &(vertices[v0]);
+
+				edge_index++;
+			}
+		}
+	}
+
 
 	close_obj(fp);
 	return edges;

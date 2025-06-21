@@ -41,11 +41,22 @@ int main() {
 	char* obj_file_path = "./models/bunny.obj";
 
 	struct Vertex* vertices = parse_vertices_from_obj(obj_file_path);
+	int num_vertices = parse_num_vertices(obj_file_path);
 
-	struct Edge* edges = parse_edges_from_obj(obj_file_path, vertices);
+	// transform vertices to fit the screen
+	float centre_x = (float)WIDTH / 2.0f;
+	float centre_y = (float)HEIGHT / 2.0f;
+
+	for(int i = 0; i < num_vertices; i++){
+		scale_vertex(vertices + i, -1.0f);
+		translate_vertex(vertices + i, centre_x, centre_y, 0);
+	}
+
+	// produce wireframe edges
+	struct Edge* wireframe_edges = parse_edges_from_obj(obj_file_path, vertices);
 	int num_edges = parse_num_edges(obj_file_path);
 
-	render_wireframe(framebuffer, edges, num_edges);
+	render_wireframe(framebuffer, wireframe_edges, num_edges);
 
 	bool running = true;
 	SDL_Event event;
@@ -64,7 +75,7 @@ int main() {
 		SDL_RenderPresent(renderer);
 	}
 	// Clean Up
-	free(edges);
+	free(wireframe_edges);
 	free(vertices);
 	SDL_DestroyTexture(texture);
 	SDL_DestroyRenderer(renderer);
