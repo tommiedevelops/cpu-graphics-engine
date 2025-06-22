@@ -5,7 +5,7 @@
 #include <SDL2/SDL.h>
 
 #include "constants.h"
-#include "render_line.h"
+#include "render.h"
 #include "inputparser.h"
 #include "obj_parser.h"
 #include "edge.h"

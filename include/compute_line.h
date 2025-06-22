@@ -3,11 +3,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-
-struct Point {
-	int x;
-	int y;
-};
+#include "point.h"
 
 int compute_num_points(int x0, int y0, int x1, int y1);
 struct Point* draw_line_easy(int x0, int y0, int x1, int y1);

@@ -40,7 +40,7 @@ int parse_num_vertices(char* filename){
 	int vertex_count = 0;
 
 	while(NULL != fgets(buf, sizeof(buf), fp) ) {
-		if(!strncmp(buf, target, sizeof(target))){
+		if(!strncmp(buf, target, strlen(target))){
 			sscanf(buf, "# vertex count = %d", &vertex_count);
 			break;
 		}
@@ -100,7 +100,7 @@ int parse_num_edges(char* filename) {
 	int face_count = 0;
 
 	while(NULL != fgets(buf, sizeof(buf), fp) ) {
-		if(!strncmp(buf, target, sizeof(target))){
+		if(!strncmp(buf, target, strlen(target))){
 			sscanf(buf, "# face count = %d", &face_count);
 			break;
 		}
