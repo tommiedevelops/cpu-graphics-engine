@@ -48,7 +48,7 @@ void test_normalize_lengths(){
 			{.x=0.0f, .y=0.0f, .z=0.0f}
 	};
 
-	normalize_lengths(&bounds, vertices, num_vertices);
+	normalize_lengths(bounds, vertices, num_vertices);
 
 	for(int i = 0; i < num_vertices;i++){
 		printf("testing expected:{%f,%f,%f} == actual:{%f,%f,%f}\n",
@@ -70,7 +70,7 @@ void test_shift_to_origin() {
 	int num_vertices = 2;
 	struct Bounds bounds = get_bounds(vertices,num_vertices);
 
-	shift_to_origin(&bounds, vertices, num_vertices);
+	shift_to_origin(bounds, vertices, num_vertices);
 
 	struct Vertex expected[] = {
 		{.x=0.0f, .y=5.0f, .z=6.0f},
@@ -95,7 +95,7 @@ void test_scale_lengths() {
 	struct Bounds bounds = get_bounds(vertices,num_vertices);
 	const float scale = 200.0f;
 
-	scale_lengths(scale, &bounds, vertices, num_vertices);
+	scale_lengths(scale, bounds, vertices, num_vertices);
 
 	struct Vertex expected[] = {
 			{.x=-100.0f, .y=-100.0f, .z=-100.0f},

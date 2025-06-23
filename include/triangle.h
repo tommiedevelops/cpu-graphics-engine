@@ -19,8 +19,8 @@ struct Triangle create_triangle(
 );
 
 // array size 3 of struct Vertex ptrs
-struct Vertex** sort_vertices_by_y(struct Triangle tri);
-struct Vertex** sort_vertices_by_x(struct Triangle tri);
+struct Vertex** sort_vertices_by_y_asc(struct Triangle tri);
+struct Vertex** sort_vertices_by_x_asc(struct Triangle tri);
 struct Point* raster_triangle(struct Triangle tri);
 
 #endif
