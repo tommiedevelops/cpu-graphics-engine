@@ -62,9 +62,47 @@ struct Vertex** sort_vertices_by_x_asc(struct Triangle tri) {
 	return arr;
 }
 
+// Rasterizes a bounding box
+// NOTE: currently assuming we are projecting onto x-y plane
+struct PointArray rasterize_bounding_box(struct Bounds bounds){
+
+	struct Vertex bot_left = {.x = bounds.xmin, .y= bounds.ymin, .z = 0.0f};
+	struct Vertex top_right = {.x = bounds.xmax, .y = bounds.ymax, .z = 0.0f};
+
+	int num_points = (int)(bounds.xmax - bounds.xmin)*(bounds.ymax - bounds.ymin);
+
+	struct Point* points = malloc(sizeof(struct Point)*num_points);
+
+
+	printf("bounds.xmin = {%d} bounds.xmax = {%d}\n", (int)bounds.xmin, (int)bounds.xmax);
+	printf("bounds.ymin = {%d} bounds.ymax = {%d}\n", (int)bounds.ymin, (int)bounds.ymax);
+
+	int points_index = 0;
+	for(int y = (int)bounds.ymin; y < (int)bounds.ymax; y++){
+		for(int x = (int)bounds.xmin; x < (int)bounds.xmax; x++) {
+			points[points_index].x = x;
+			points[points_index].y = y;
+			points_index++;
+		}
+	}
+
+	struct PointArray point_array = { .points = points, .num_points = num_points};
+	return point_array;
+}
+
 // Rasterizes a single triangle
-struct Point* rasterize_triangle(struct Triangle tri) {
+struct PointArray rasterize_triangle(struct Triangle tri) {
 	// sort vertices in ascending y
 	struct Vertex** sorted_verts = sort_vertices_by_y_asc(tri);
-	return NULL; //FIX
+
+	struct Vertex vertices[3] = {
+		*sorted_verts[0],
+		*sorted_verts[1],
+		*sorted_verts[2]
+	};
+
+	struct Bounds bounds = get_bounds(vertices, 3);
+	struct PointArray point_array = rasterize_bounding_box(bounds);
+	return point_array;
 }
+

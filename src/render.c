@@ -109,4 +109,8 @@ void render_triangles(uint32_t* framebuffer, struct Triangle* triangles, int num
 		draw_points_to_framebuffer(line2, framebuffer, compute_num_points(triangles[i].b->x, triangles[i].b->y, triangles[i].c->x, triangles[i].c->y));
 		draw_points_to_framebuffer(line3, framebuffer, compute_num_points(triangles[i].a->x, triangles[i].a->y, triangles[i].c->x, triangles[i].c->y));
 	}
+
+	struct PointArray triangle_points = rasterize_triangle(triangles[0]);
+	draw_points_to_framebuffer(triangle_points.points, framebuffer, triangle_points.num_points);
+	destroy_point_array(triangle_points);
 }
