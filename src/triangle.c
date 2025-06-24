@@ -61,3 +61,10 @@ struct Vertex** sort_vertices_by_x_asc(struct Triangle tri) {
 
 	return arr;
 }
+
+// Rasterizes a single triangle
+struct Point* rasterize_triangle(struct Triangle tri) {
+	// sort vertices in ascending y
+	struct Vertex** sorted_verts = sort_vertices_by_y_asc(tri);
+	return NULL; //FIX
+}

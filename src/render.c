@@ -8,6 +8,7 @@
 #include "compute_line.h"
 #include "edge.h"
 #include "vertex.h"
+#include "triangle.h"
 
 void place_pixel(int x, int y, uint32_t value, uint32_t* framebuffer) {
                 if( (x > WIDTH) || (x < 0) ) {printf("line.c/place_pixel: invalid x value. point= {%d,%d}\n", x,y); return;}
@@ -98,8 +99,14 @@ void render_wireframe(uint32_t* framebuffer, struct Edge* wireframe_edges, int n
 	}
 }
 
-
-
-
-
-
+void render_triangles(uint32_t* framebuffer, struct Triangle* triangles, int num_triangles){
+	//TODO
+	for(int i = 0; i < num_triangles; i++){
+		struct Point* line1 = draw_line_easy(triangles[i].a->x, triangles[i].a->y, triangles[i].b->x, triangles[i].b->y);
+		struct Point* line2 = draw_line_easy(triangles[i].b->x, triangles[i].b->y, triangles[i].c->x, triangles[i].c->y);
+		struct Point* line3 = draw_line_easy(triangles[i].a->x, triangles[i].a->y, triangles[i].c->x, triangles[i].c->y);
+		draw_points_to_framebuffer(line1, framebuffer, compute_num_points(triangles[i].a->x, triangles[i].a->y, triangles[i].b->x, triangles[i].b->y));
+		draw_points_to_framebuffer(line2, framebuffer, compute_num_points(triangles[i].b->x, triangles[i].b->y, triangles[i].c->x, triangles[i].c->y));
+		draw_points_to_framebuffer(line3, framebuffer, compute_num_points(triangles[i].a->x, triangles[i].a->y, triangles[i].c->x, triangles[i].c->y));
+	}
+}

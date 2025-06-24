@@ -9,6 +9,7 @@
 #include "inputparser.h"
 #include "obj_parser.h"
 #include "edge.h"
+#include "triangle.h"
 
 int main() {
 	// Initialise SDL
@@ -37,26 +38,22 @@ int main() {
 
 	uint32_t framebuffer[WIDTH * HEIGHT] = {0};
 
-	// render from .obj
-	char* obj_file_path = "./models/bunny.obj";
+	struct Vertex v0 = {.x = 50.0f, .y = 50.0f, .z = 0.0f};
+	struct Vertex v1 = {.x = 150.0f, .y = 50.0f, .z = 0.0f};
+	struct Vertex v2 = {.x = 50.0f, .y = 150.0f, .z = 0.0f};
 
-	struct Vertex* vertices = parse_vertices_from_obj(obj_file_path);
-	int num_vertices = parse_num_vertices(obj_file_path);
+	struct Vertex v3 = {.x = 200.0f, .y = 200.0f, .z = 0.0f};
+	struct Vertex v4 = {.x = 200.0f, .y = 100.0f, .z = 0.0f};
+	struct Vertex v5 = {.x = 300.0f, .y = 300.0f, .z = 0.0f};
 
-	// transform vertices to fit the screen
-	float centre_x = (float)WIDTH / 2.0f;
-	float centre_y = (float)HEIGHT / 2.0f;
+	struct Triangle triangles[2] = {
+		{.a = &v0, .b = &v1, .c = &v2},
+		{.a = &v3, .b = &v4, .c = &v5}
+	};
 
-	for(int i = 0; i < num_vertices; i++){
-		scale_vertex(vertices + i, -1.0f);
-		translate_vertex(vertices + i, centre_x, centre_y, 0);
-	}
+	int num_triangles = 2;
 
-	// produce wireframe edges
-	struct Edge* wireframe_edges = parse_edges_from_obj(obj_file_path, vertices);
-	int num_edges = parse_num_edges(obj_file_path);
-
-	render_wireframe(framebuffer, wireframe_edges, num_edges);
+	render_triangles(framebuffer, triangles, num_triangles);
 
 	bool running = true;
 	SDL_Event event;
@@ -75,8 +72,6 @@ int main() {
 		SDL_RenderPresent(renderer);
 	}
 	// Clean Up
-	free(wireframe_edges);
-	free(vertices);
 	SDL_DestroyTexture(texture);
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
