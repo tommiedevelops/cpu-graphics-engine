@@ -39,6 +39,39 @@ void test_sort_vertices_by_y(){
 	printf("success\n");
 }
 
+void test_sort_vertices_by_y_degenerate(){
+	printf("test_sort_vertices_by_y_degenerate\n");
+	// tests correct sorting of flat bottom or flat top triangles
+	// if two vertices have the same y val, sort based on x val
+
+	// flat bottom
+        struct Vertex a = {.x = 0.0f, .y = 0.0f, .z = 0.0f};
+        struct Vertex b = {.x = 1.0f, .y = 2.0f, .z = 0.0f};
+        struct Vertex c = {.x = 3.0f, .y = 0.0f, .z = 1.0f};
+
+	// flat top
+        struct Vertex d = {.x = 0.0f, .y = 2.0f, .z = 0.0f};
+        struct Vertex e = {.x = 1.0f, .y = 0.0f, .z = 0.0f};
+        struct Vertex f = {.x = 3.0f, .y = 2.0f, .z = 1.0f};
+
+        struct Triangle flat_bottom = create_triangle(&a,&b,&c);
+	struct Triangle flat_top = create_triangle(&d,&e,&f);
+
+        struct Vertex** flat_bottom_sorted = sort_vertices_by_y_asc(flat_bottom);
+	struct Vertex** flat_top_sorted = sort_vertices_by_y_asc(flat_top);
+
+        assert(flat_bottom_sorted != NULL);
+	assert(flat_top_sorted != NULL);
+	assert(vertices_are_equal(*flat_bottom_sorted[0], a));
+	assert(vertices_are_equal(*flat_bottom_sorted[1], c));
+	assert(vertices_are_equal(*flat_bottom_sorted[2], b));
+	assert(vertices_are_equal(*flat_top_sorted[0], e));
+	assert(vertices_are_equal(*flat_top_sorted[1], d));
+	assert(vertices_are_equal(*flat_top_sorted[2], f));
+
+	printf("success\n");
+}
+
 void test_sort_vertices_by_x(){
 	printf("test_sort_vertices_by_x\n");
 	struct Vertex a = {.x = 3.0f, .y = 1.0f, .z = 0.0f};

@@ -21,10 +21,10 @@ void translate_vertex(struct Vertex* vertex, float dx, float dy, float dz){
 }
 
 bool vertices_are_equal(struct Vertex a, struct Vertex b) {
-	printf("checking {%f,%f,%f} == {%f,%f,%f}\n", a.x,a.y,a.z,b.z,b.y,b.z);
-	if(a.x != b.x) return false;
-	if(a.y != b.y) return false;
-	if(a.z != b.z) return false;
+	printf("checking {%f,%f,%f} == {%f,%f,%f}\n", a.x,a.y,a.z,b.x,b.y,b.z);
+	if(a.x != b.x){ return false; }
+	if(a.y != b.y){ return false; }
+	if(a.z != b.z){ return false; }
 	return true;
 }
 

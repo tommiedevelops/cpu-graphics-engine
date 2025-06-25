@@ -90,10 +90,12 @@ struct PointArray rasterize_bounding_box(struct Bounds bounds){
 	return point_array;
 }
 
-void cull_points_not_in_triangle(struct PointArray* point_array_ptr, struct Triangle tri){
+void cull_points_not_in_triangle(struct PointArray point_array, struct Triangle tri){
 	// convert point_array to BaryPointArray (copy) w.r.t tri vertices
-	// for each point, test if it is inside triangle using bary coordinate test
-	// Modify corresponding points in the original array
+	struct BaryPointArray bary_point_array =
+	convert_point_arr_to_bary_point_arr(point_array, tri);
+
+	destroy_bary_point_array(bary_point_array);
 }
 
 // Rasterizes a single triangle
