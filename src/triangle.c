@@ -90,10 +90,54 @@ struct PointArray rasterize_bounding_box(struct Bounds bounds){
 	return point_array;
 }
 
-void cull_points_not_in_triangle(struct PointArray point_array, struct Triangle tri){
+struct PointArray cull_points_not_in_triangle(struct PointArray point_array, struct Triangle tri){
 	// convert point_array to BaryPointArray (copy) w.r.t tri vertices
 	struct BaryPointArray bary_point_array =
 	convert_point_arr_to_bary_point_arr(point_array, tri);
+
+	float alpha, beta, gamma;
+	int num_new_points = 0;
+
+	// first loop for counting number of points in new array
+	for(int i =  0; i < bary_point_array.num_bary_points; i++){
+		alpha = bary_point_array.bary_points[i].alpha;
+		beta = bary_point_array.bary_points[i].beta;
+		gamma = bary_point_array.bary_points[i].gamma;
+
+		bool inside_triangle = (alpha >= 0) && (beta >= 0) && (gamma >= 0);
+		if(inside_triangle){num_new_points++;}
+	}
+	printf("src/triangle.c/cull_points_not_in_triangle: num_new_points={%d}, num+bary_points={%d}\n", num_new_points, bary_point_array.num_bary_points);
+	// allocate memory for new struct Point*
+	struct Point* new_points = malloc(sizeof(struct Point)*num_new_points);
+
+	int j = 0; //index for new points
+	// second loop for removing points not in triangle
+	for(int i = 0; i < bary_point_array.num_bary_points; i++){
+
+		alpha = bary_point_array.bary_points[i].alpha;
+		beta = bary_point_array.bary_points[i].beta;
+		gamma = bary_point_array.bary_points[i].gamma;
+
+		bool inside_triangle = (alpha >= 0) && (beta >= 0) && (gamma >= 0);
+
+		if(inside_triangle){
+			new_points[j++] = point_array.points[i];
+		} else {
+			continue;
+		}
+	}
+
+
+	struct PointArray new_point_array = {
+		.points = new_points,
+		.num_points = num_new_points
+	};
+
+	free(point_array.points);
+	return new_point_array;
+
+
 
 	destroy_bary_point_array(bary_point_array);
 }
@@ -111,6 +155,7 @@ struct PointArray rasterize_triangle(struct Triangle tri) {
 
 	struct Bounds bounds = get_bounds(vertices, 3);
 	struct PointArray point_array = rasterize_bounding_box(bounds);
+	point_array = cull_points_not_in_triangle(point_array, tri);
 	return point_array;
 }
 
