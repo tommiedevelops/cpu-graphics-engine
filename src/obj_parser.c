@@ -7,6 +7,7 @@
 #include "vertex.h"
 #include "edge.h"
 #include "bounds.h"
+#include "triangle.h"
 
 /*
 Purpose: create .input files that can be understood by my line renderer from .obj file
@@ -112,6 +113,24 @@ int parse_num_edges(char* filename) {
 	return edge_count;
 }
 
+int parse_num_triangles(char* filename) {
+	// extract face count
+	FILE* fp = open_obj(filename);
+	char buf[256] = {0};
+	const char * target = "# face count =";
+	int face_count = 0;
+
+	while(NULL != fgets(buf, sizeof(buf), fp) ) {
+		if(!strncmp(buf, target, strlen(target))){
+			sscanf(buf, "# face count = %d", &face_count);
+			break;
+		}
+	}
+
+	close_obj(fp);
+	return face_count;
+}
+
 struct Vertex* parse_vertices_from_obj(char* filename) {
 	// vertices array: [v0x,v0y,v0z,v1x,v1y,v1z,...]
 	int num_vertices = parse_num_vertices(filename);
@@ -178,3 +197,43 @@ struct Edge* parse_edges_from_obj(char* filename, struct Vertex* vertices){
 	close_obj(fp);
 	return edges;
 }
+
+struct Triangle* parse_triangles_from_obj(char* filename, struct Vertex* vertices){
+	FILE* fp = open_obj(filename);
+
+	if(vertices == NULL){
+		perror("src/obj_parser.c/parse_edges_from_obj:provided struct Vertex* is null");
+		exit(EXIT_FAILURE);
+	}
+
+	int num_triangles = parse_num_triangles(filename);
+
+	struct Triangle* triangles = malloc(sizeof(struct Triangle)*num_triangles);
+	memset(triangles,0x0,sizeof(struct Triangle)*num_triangles);
+
+	char buf[256] = {0};
+	int v0,v1,v2;
+	int tri_index = 0;
+
+	while( (fgets(buf, sizeof(buf), fp) != NULL) ) {
+		if ( buf[0] == 'f' ) {
+			if( sscanf(buf, "f %d %d %d\n",&v0,&v1,&v2) == 3) {
+
+				// .obj files start from index 1 so have to account for that
+				v0--; v1--; v2--;
+				struct Triangle tri = {
+						.a = &(vertices[v0]),
+						.b = &(vertices[v1]),
+						.c = &(vertices[v2])
+				};
+
+				triangles[tri_index++] = tri;
+			}
+		}
+	}
+
+
+	close_obj(fp);
+	return triangles;
+}
+

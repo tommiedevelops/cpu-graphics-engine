@@ -38,21 +38,12 @@ int main() {
 
 	uint32_t framebuffer[WIDTH * HEIGHT] = {0};
 
-	struct Vertex v0 = {.x = 50.0f, .y = 50.0f, .z = 0.0f};
-	struct Vertex v1 = {.x = 150.0f, .y = 50.0f, .z = 0.0f};
-	struct Vertex v2 = {.x = 50.0f, .y = 150.0f, .z = 0.0f};
+	char* filename = "./models/bunny.obj";
+	int num_vertices = parse_num_vertices(filename);
+	struct Vertex* vertices = parse_vertices_from_obj(filename);
 
-	struct Vertex v3 = {.x = 200.0f, .y = 200.0f, .z = 0.0f};
-	struct Vertex v4 = {.x = 200.0f, .y = 100.0f, .z = 0.0f};
-	struct Vertex v5 = {.x = 300.0f, .y = 300.0f, .z = 0.0f};
-
-	struct Triangle triangles[2] = {
-		{.a = &v0, .b = &v1, .c = &v2},
-		{.a = &v3, .b = &v4, .c = &v5}
-	};
-
-	int num_triangles = 2;
-
+	int num_triangles = parse_num_triangles(filename);
+	struct Triangle* triangles = parse_triangles_from_obj(filename, vertices);
 	render_triangles(framebuffer, triangles, num_triangles);
 
 	bool running = true;
@@ -72,6 +63,8 @@ int main() {
 		SDL_RenderPresent(renderer);
 	}
 	// Clean Up
+	free(vertices);
+	free(triangles);
 	SDL_DestroyTexture(texture);
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);

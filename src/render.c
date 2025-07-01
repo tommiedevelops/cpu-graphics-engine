@@ -17,7 +17,7 @@ void place_pixel(int x, int y, uint32_t value, uint32_t* framebuffer) {
                 framebuffer[x + WIDTH*y] = value;
 }
 
-void draw_points_to_framebuffer(struct Point* points, uint32_t *framebuffer, int num_points){
+void draw_points_to_framebuffer(struct Point* points, uint32_t *framebuffer, int num_points, uint32_t color){
 	bool error = false;
 
 	if( (points == NULL) || (framebuffer == NULL) ) {
@@ -38,7 +38,7 @@ void draw_points_to_framebuffer(struct Point* points, uint32_t *framebuffer, int
 		}
  		if(error) {return;}
 
-		framebuffer[points[i].x + WIDTH * points[i].y] = COLOR_RED;
+		framebuffer[points[i].x + WIDTH * points[i].y] = color;
 	}
 }
 
@@ -58,7 +58,7 @@ int render_lines(uint32_t *framebuffer, int* coords, int num_coords) {
 		struct Point* line = draw_line_easy(x0,y0,x1,y1);
 		int num_points = compute_num_points(x0,y0,x1,y1);
 		printf("render_lines:num_points={%d}\n", num_points);
-		draw_points_to_framebuffer(line, framebuffer, num_points);
+		draw_points_to_framebuffer(line, framebuffer, num_points, COLOR_RED);
 		free(line);
 	}
 	return 0;
@@ -93,7 +93,7 @@ void render_wireframe(uint32_t* framebuffer, struct Edge* wireframe_edges, int n
 		// can probably generalise to a proper projection in the future
 		struct Point* line = draw_line_easy(from->x, from->y, to->x, to->y);
 		int num_points = compute_num_points(from->x, from->y, to->x, to->y);
-		draw_points_to_framebuffer(line, framebuffer, num_points);
+		draw_points_to_framebuffer(line, framebuffer, num_points, COLOR_RED);
 
 		free(line);
 	}
@@ -101,20 +101,34 @@ void render_wireframe(uint32_t* framebuffer, struct Edge* wireframe_edges, int n
 
 void render_triangles(uint32_t* framebuffer, struct Triangle* triangles, int num_triangles){
 
-	// draw edges
 	for(int i = 0; i < num_triangles; i++){
+
+		// select a random color
+		uint8_t r, g, b, a;
+		a = 255;
+		r = rand() % 256;
+		g = rand() % 256;
+		b = rand() % 256;
+
+		uint32_t color = (r << 24) | (g << 16) | (b << 8) | a;
+
+		// draw redges
 		struct Point* line1 = draw_line_easy(triangles[i].a->x, triangles[i].a->y, triangles[i].b->x, triangles[i].b->y);
 		struct Point* line2 = draw_line_easy(triangles[i].b->x, triangles[i].b->y, triangles[i].c->x, triangles[i].c->y);
 		struct Point* line3 = draw_line_easy(triangles[i].a->x, triangles[i].a->y, triangles[i].c->x, triangles[i].c->y);
-		draw_points_to_framebuffer(line1, framebuffer, compute_num_points(triangles[i].a->x, triangles[i].a->y, triangles[i].b->x, triangles[i].b->y));
-		draw_points_to_framebuffer(line2, framebuffer, compute_num_points(triangles[i].b->x, triangles[i].b->y, triangles[i].c->x, triangles[i].c->y));
-		draw_points_to_framebuffer(line3, framebuffer, compute_num_points(triangles[i].a->x, triangles[i].a->y, triangles[i].c->x, triangles[i].c->y));
+		draw_points_to_framebuffer(line1, framebuffer, compute_num_points(triangles[i].a->x, triangles[i].a->y, triangles[i].b->x, triangles[i].b->y), color);
+		draw_points_to_framebuffer(line2, framebuffer, compute_num_points(triangles[i].b->x, triangles[i].b->y, triangles[i].c->x, triangles[i].c->y), color);
+		draw_points_to_framebuffer(line3, framebuffer, compute_num_points(triangles[i].a->x, triangles[i].a->y, triangles[i].c->x, triangles[i].c->y), color);
+
+		// fill in middle
+		struct PointArray triangle_points = rasterize_triangle(triangles[i]);
+		draw_points_to_framebuffer(triangle_points.points, framebuffer, triangle_points.num_points, color); 
+
+		// free resources
+		destroy_point_array(triangle_points);
+		free(line1);
+		free(line2);
+		free(line3);
 	}
 
-	// fill in middle
-	for(int i = 0; i < num_triangles; i++){
-		struct PointArray triangle_points = rasterize_triangle(triangles[i]);
-		draw_points_to_framebuffer(triangle_points.points, framebuffer, triangle_points.num_points); 
-		destroy_point_array(triangle_points);
-	}
 }
