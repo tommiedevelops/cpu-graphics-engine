@@ -116,9 +116,9 @@ void render_triangles(uint32_t* framebuffer, struct Triangle* triangles, int num
 		struct Point* line1 = draw_line_easy(triangles[i].a->x, triangles[i].a->y, triangles[i].b->x, triangles[i].b->y);
 		struct Point* line2 = draw_line_easy(triangles[i].b->x, triangles[i].b->y, triangles[i].c->x, triangles[i].c->y);
 		struct Point* line3 = draw_line_easy(triangles[i].a->x, triangles[i].a->y, triangles[i].c->x, triangles[i].c->y);
-		draw_points_to_framebuffer(line1, framebuffer, compute_num_points(triangles[i].a->x, triangles[i].a->y, triangles[i].b->x, triangles[i].b->y), color);
-		draw_points_to_framebuffer(line2, framebuffer, compute_num_points(triangles[i].b->x, triangles[i].b->y, triangles[i].c->x, triangles[i].c->y), color);
-		draw_points_to_framebuffer(line3, framebuffer, compute_num_points(triangles[i].a->x, triangles[i].a->y, triangles[i].c->x, triangles[i].c->y), color);
+		//draw_points_to_framebuffer(line1, framebuffer, compute_num_points(triangles[i].a->x, triangles[i].a->y, triangles[i].b->x, triangles[i].b->y), color);
+		//draw_points_to_framebuffer(line2, framebuffer, compute_num_points(triangles[i].b->x, triangles[i].b->y, triangles[i].c->x, triangles[i].c->y), color);
+		//draw_points_to_framebuffer(line3, framebuffer, compute_num_points(triangles[i].a->x, triangles[i].a->y, triangles[i].c->x, triangles[i].c->y), color);
 
 		// fill in middle
 		struct PointArray triangle_points = rasterize_triangle(triangles[i]);

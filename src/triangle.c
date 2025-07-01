@@ -69,13 +69,9 @@ struct PointArray rasterize_bounding_box(struct Bounds bounds){
 	struct Vertex bot_left = {.x = bounds.xmin, .y= bounds.ymin, .z = 0.0f};
 	struct Vertex top_right = {.x = bounds.xmax, .y = bounds.ymax, .z = 0.0f};
 
-	int num_points = (int)(bounds.xmax - bounds.xmin)*(bounds.ymax - bounds.ymin);
+	int num_points = ((int)bounds.xmax - (int)bounds.xmin)*((int)bounds.ymax - (int)bounds.ymin);
 
 	struct Point* points = malloc(sizeof(struct Point)*num_points);
-
-
-	printf("bounds.xmin = {%d} bounds.xmax = {%d}\n", (int)bounds.xmin, (int)bounds.xmax);
-	printf("bounds.ymin = {%d} bounds.ymax = {%d}\n", (int)bounds.ymin, (int)bounds.ymax);
 
 	int points_index = 0;
 	for(int y = (int)bounds.ymin; y < (int)bounds.ymax; y++){
@@ -85,7 +81,7 @@ struct PointArray rasterize_bounding_box(struct Bounds bounds){
 			points_index++;
 		}
 	}
-
+ 
 	struct PointArray point_array = { .points = points, .num_points = num_points};
 	return point_array;
 }

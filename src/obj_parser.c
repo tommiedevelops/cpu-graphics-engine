@@ -139,7 +139,7 @@ struct Vertex* parse_vertices_from_obj(char* filename) {
 	memset(vertices,0x0,sizeof(struct Vertex)*num_vertices);
 
 	FILE* fp = open_obj(filename);
-	const float scale = 200.0f; // hard coded
+	const float scale = 500.0f; // hard coded
 	parse_vertices(fp, num_vertices, vertices);
 	close_obj(fp);
 

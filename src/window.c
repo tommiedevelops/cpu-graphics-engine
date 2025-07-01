@@ -42,6 +42,19 @@ int main() {
 	int num_vertices = parse_num_vertices(filename);
 	struct Vertex* vertices = parse_vertices_from_obj(filename);
 
+
+	// flip vertically
+	for(int i = 0; i < num_vertices; i++){
+		vertices[i].y = -1 * vertices[i].y;
+	}
+
+	// move bunny to screen centre
+	for(int i = 0; i < num_vertices; i++){
+		vertices[i].x += (int)WIDTH/2;
+		vertices[i].y += (int)HEIGHT/2;
+	}
+
+
 	int num_triangles = parse_num_triangles(filename);
 	struct Triangle* triangles = parse_triangles_from_obj(filename, vertices);
 	render_triangles(framebuffer, triangles, num_triangles);
