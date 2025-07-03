@@ -4,22 +4,24 @@
 #include <float.h>
 #include <math.h>
 
-#include "vertex.h"
-#include "edge.h"
 #include "bounds.h"
-#include "triangle.h"
+#include "obj_parser.h"
 
 /*
 Purpose: create .input files that can be understood by my line renderer from .obj file
 */
 
+void destroy_obj_data(struct ObjData data){
+	if(data.vertices != NULL) {free(data.vertices);}
+	if(data.triangles != NULL) {free(data.triangles);}
+}
 
 FILE* open_obj(char* filename){
 	FILE* fp = fopen(filename, "r");
 
 	if(fp == NULL){
-		perror("Could not find filename");
-		return NULL;
+		perror("src/obj_parser.c/open_obj: could not find filename");
+		exit(EXIT_FAILURE);
 	}
 
 	return fp;
@@ -34,8 +36,8 @@ void close_obj(FILE* fp){
 }
 
 
-int parse_num_vertices(char* filename){
-	FILE* fp = open_obj(filename);
+static int parse_num_vertices(FILE* fp){
+
 	char buf[256] = {0};
 	const char * target = "# vertex count =";
 	int vertex_count = 0;
@@ -46,17 +48,19 @@ int parse_num_vertices(char* filename){
 			break;
 		}
 	}
-	close_obj(fp);
+	rewind(fp);
 	return vertex_count;
 }
 
-void parse_vertices(FILE* fp, int num_vertices, struct Vertex* vertices){
+static struct Vertex* parse_vertices(FILE* fp, int num_vertices){
 
-	if(vertices==NULL){
-		perror("provided float* was null");
-		return;
+	// NULL CHECK
+	if(fp==NULL){
+		perror("src/obj_parser.c:parse_vertices: parameter(s) were NULL");
+		exit(EXIT_FAILURE);
 	}
 
+	struct Vertex* vertices = malloc(sizeof(struct Vertex)*num_vertices);
 
 	char buf[256] = {0};
 	float x,y,z;
@@ -72,168 +76,93 @@ void parse_vertices(FILE* fp, int num_vertices, struct Vertex* vertices){
 			}
 		}
 	}
-
-}
-
-/*In memory, an edge will be an ordered pair of vertices (a triplet of floats) */
-//TODO: might be better to store a reference to the vertex instead of the actual value. for future me.
-/* edges = [e0_x_from, e0_y_from, e0_z_from, e0_x_to, e0_y_to, e0_z_to, e1_x_from ... ]*/
-void parse_edges(FILE* fp, struct Edge* edges, int num_edges, struct Vertex* vertices) {
-
-	if(edges==NULL){
-		perror("provided edges float* is null");
-		exit(EXIT_FAILURE); // gonna cause mem leaks pls fix
-	}
-	if(vertices==NULL){
-		perror("obj_parser.c/parse_edges:provided vertices float * is null");
-		exit(EXIT_FAILURE); // gonna cause mem leaks pls fix
-	}
-
-
-
-}
-
-int parse_num_edges(char* filename) {
-	// extract face count
-	FILE* fp = open_obj(filename);
-	char buf[256] = {0};
-	const char * target = "# face count =";
-	int face_count = 0;
-
-	while(NULL != fgets(buf, sizeof(buf), fp) ) {
-		if(!strncmp(buf, target, strlen(target))){
-			sscanf(buf, "# face count = %d", &face_count);
-			break;
-		}
-	}
-
-	// for every 'face' (i.e. triangle) there are 3 edges
-	int edge_count = 3 * face_count;
-	close_obj(fp);
-	return edge_count;
-}
-
-int parse_num_triangles(char* filename) {
-	// extract face count
-	FILE* fp = open_obj(filename);
-	char buf[256] = {0};
-	const char * target = "# face count =";
-	int face_count = 0;
-
-	while(NULL != fgets(buf, sizeof(buf), fp) ) {
-		if(!strncmp(buf, target, strlen(target))){
-			sscanf(buf, "# face count = %d", &face_count);
-			break;
-		}
-	}
-
-	close_obj(fp);
-	return face_count;
-}
-
-struct Vertex* parse_vertices_from_obj(char* filename) {
-	// vertices array: [v0x,v0y,v0z,v1x,v1y,v1z,...]
-	int num_vertices = parse_num_vertices(filename);
-
-	struct Vertex* vertices = malloc(sizeof(struct Vertex)*num_vertices);
-	memset(vertices,0x0,sizeof(struct Vertex)*num_vertices);
-
-	FILE* fp = open_obj(filename);
-	const float scale = 500.0f; // hard coded
-	parse_vertices(fp, num_vertices, vertices);
-	close_obj(fp);
-
-	normalize_vertices(scale, vertices, num_vertices);
-
+	rewind(fp);
 	return vertices;
 }
 
-struct Edge* parse_edges_from_obj(char* filename, struct Vertex* vertices){
-	FILE* fp = open_obj(filename);
-
-	if(vertices == NULL){
-		perror("src/obj_parser.c/parse_edges_from_obj:provided struct Vertex* is null");
-		exit(EXIT_FAILURE);
-	}
-
-	int num_edges = parse_num_edges(filename);
-
-	struct Edge* edges = malloc(sizeof(struct Edge)*num_edges);
-	memset(edges,0x0,sizeof(struct Edge)*num_edges);
+static int parse_num_triangles(FILE* fp) {
 
 	char buf[256] = {0};
-	int v0,v1,v2;
-	int edge_index = 0;
+	const char * target = "# face count =";
+	int face_count = 0;
 
-	while( (fgets(buf, sizeof(buf), fp) != NULL) ) {
-		if ( buf[0] == 'f' ) {
-			if( sscanf(buf, "f %d %d %d\n",&v0,&v1,&v2) == 3) {
-
-				// .obj files start from index 1 so have to account for that
-				v0--; v1--; v2--;
-
-				// v0 -> v1
-				edges[edge_index].from = &(vertices[v0]);
-				edges[edge_index].to = &(vertices[v1]);
-
-				edge_index++;
-
-				// v1 -> v2
-				edges[edge_index].from = &(vertices[v1]);
-				edges[edge_index].to = &(vertices[v2]);
-
-				edge_index++;
-
-				//v2 -> v0
-				edges[edge_index].from = &(vertices[v2]);
-				edges[edge_index].to = &(vertices[v0]);
-
-				edge_index++;
-			}
+	while(NULL != fgets(buf, sizeof(buf), fp) ) {
+		if(!strncmp(buf, target, strlen(target))){
+			sscanf(buf, "# face count = %d", &face_count);
+			break;
 		}
 	}
-
-
-	close_obj(fp);
-	return edges;
+	rewind(fp);
+	return face_count;
 }
 
-struct Triangle* parse_triangles_from_obj(char* filename, struct Vertex* vertices){
-	FILE* fp = open_obj(filename);
+static struct Triangle* parse_triangles(FILE* fp, int num_triangles, int num_vertices, struct Vertex* vertices){
 
-	if(vertices == NULL){
-		perror("src/obj_parser.c/parse_edges_from_obj:provided struct Vertex* is null");
+	// NULL check
+	if( (vertices == NULL) || (fp == NULL) ){
+		perror("src/obj_parser.c/parse_triangle: parameter(s) are null");
 		exit(EXIT_FAILURE);
 	}
 
-	int num_triangles = parse_num_triangles(filename);
-
+	// allocate memory
 	struct Triangle* triangles = malloc(sizeof(struct Triangle)*num_triangles);
 	memset(triangles,0x0,sizeof(struct Triangle)*num_triangles);
 
 	char buf[256] = {0};
-	int v0,v1,v2;
+	int v0 = -1,v1 = -1,v2 = -1;
+	int vt0 = -1, vt1 = -1, vt2 = -1;
 	int tri_index = 0;
+	int line_number = 0;
 
 	while( (fgets(buf, sizeof(buf), fp) != NULL) ) {
+		line_number++;
 		if ( buf[0] == 'f' ) {
-			if( sscanf(buf, "f %d %d %d\n",&v0,&v1,&v2) == 3) {
-
-				// .obj files start from index 1 so have to account for that
-				v0--; v1--; v2--;
-				struct Triangle tri = {
-						.a = &(vertices[v0]),
-						.b = &(vertices[v1]),
-						.c = &(vertices[v2])
-				};
-
-				triangles[tri_index++] = tri;
+			if( sscanf(buf, "f %d/%d %d/%d %d/%d\n",&v0,&vt0,&v1,&vt1,&v2,&vt2) != 6 ) {
+				if(sscanf(buf, "f %d %d %d\n",&v0,&v1,&v2) != 3) {
+					perror("src/obj_parser.c/parse_triangle: parsing error");
+					exit(EXIT_FAILURE);
+				}
 			}
+
+			v0 = (v0 > 0) ? v0 - 1 : num_vertices + v0;
+			v1 = (v1 > 0) ? v1 - 1 : num_vertices + v1;
+			v2 = (v2 > 0) ? v2 - 1 : num_vertices + v2;
+
+			if(v0 > num_vertices || v1 > num_vertices || v2 > num_vertices || v0 < 0 || v1 < 0 || v2 < 0){
+				printf("Something went wrong. v0 = {%d}, v1 = {%d}, v2 = {%d}, num_vertices = {%d}\n", v0,v1,v2,num_vertices);
+				exit(EXIT_FAILURE);
+			}
+
+			struct Triangle tri = {
+					.a = &(vertices[v0]),
+					.b = &(vertices[v1]),
+					.c = &(vertices[v2])
+			};
+			triangles[tri_index++] = tri;
+		
 		}
 	}
-
-
-	close_obj(fp);
+	rewind(fp);
 	return triangles;
 }
 
+struct ObjData parse_obj(char* filename){
+	FILE* fp = open_obj(filename);
+
+	int num_vertices = parse_num_vertices(fp);
+	struct Vertex* vertices = parse_vertices(fp, num_vertices);
+
+	int num_triangles = parse_num_triangles(fp);
+	struct Triangle* triangles = parse_triangles(fp, num_triangles, num_vertices, vertices);
+
+	close_obj(fp);
+
+	struct ObjData data = {
+		.num_vertices = num_vertices,
+		.vertices = vertices,
+		.num_triangles = num_triangles,
+		.triangles = triangles
+	};
+
+	return data;
+}

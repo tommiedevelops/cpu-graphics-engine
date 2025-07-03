@@ -1,12 +1,10 @@
-generalise program to be able to accept multiple inputs in the input parser and draw all the required
-lines
 
-refactor bounds float* into a struct Bounds so it is more readable
+write a color module which wraps around sdl2 functions, is intuitive and easy to use
+- maybe even decouple window module and wrap around sdl2 for display functions and separate main logic from that
 
-maybe do the same for struct Vertex and struct Edge
+general refactoring and unit testing (clean code)
 
-refactor edges so it stores reference to vertex instead of value (could be useful for vertex shaders)
+multithread obj parsing (using some sort of divide and conquer approach). 
+- it takes too long when the file is too big (300MB for example)
 
-have an exit procedure using signals to free all allocated memory
 
-write unit tests

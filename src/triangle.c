@@ -103,7 +103,7 @@ struct PointArray cull_points_not_in_triangle(struct PointArray point_array, str
 		bool inside_triangle = (alpha >= 0) && (beta >= 0) && (gamma >= 0);
 		if(inside_triangle){num_new_points++;}
 	}
-	printf("src/triangle.c/cull_points_not_in_triangle: num_new_points={%d}, num+bary_points={%d}\n", num_new_points, bary_point_array.num_bary_points);
+
 	// allocate memory for new struct Point*
 	struct Point* new_points = malloc(sizeof(struct Point)*num_new_points);
 

@@ -1,21 +1,12 @@
 
-#include <stdint.h>
-#include <stdbool.h>
-#include <stdio.h>
-#include <SDL2/SDL.h>
+#include "window.h"
 
-#include "constants.h"
-#include "render.h"
-#include "inputparser.h"
-#include "obj_parser.h"
-#include "edge.h"
-#include "triangle.h"
+struct SDL_Data initialise_window(){
 
-int main() {
 	// Initialise SDL
 	if(SDL_Init(SDL_INIT_VIDEO) != 0) {
 		SDL_Log("SDL_Init Error: %s", SDL_GetError());
-		return 1;
+		exit(EXIT_FAILURE);
 	}
 
 	// Create window
@@ -25,8 +16,18 @@ int main() {
 		WIDTH, HEIGHT, 0
 	);
 
+	if(window == NULL){
+		perror("src/window.c/initialise_window: SDL_CreateWindow returned a NULL ptr");
+		exit(EXIT_FAILURE);
+	}
+
 	// Create renderer
 	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+
+	if(renderer == NULL){
+		perror("src/window.c/initialise_window: SDL_CreateRenderer returned a NULL ptr");
+		exit(EXIT_FAILURE);
+	}
 
 	// Create texture
 	SDL_Texture* texture = SDL_CreateTexture(
@@ -36,51 +37,33 @@ int main() {
 		WIDTH, HEIGHT
 	);
 
-	uint32_t framebuffer[WIDTH * HEIGHT] = {0};
-
-	char* filename = "./models/bunny.obj";
-	int num_vertices = parse_num_vertices(filename);
-	struct Vertex* vertices = parse_vertices_from_obj(filename);
-
-
-	// flip vertically
-	for(int i = 0; i < num_vertices; i++){
-		vertices[i].y = -1 * vertices[i].y;
+	if(texture == NULL){
+		perror("src/window.c/initialise_window: SDL_CreateTexture returned a NULL ptr");
+		exit(EXIT_FAILURE);
 	}
 
-	// move bunny to screen centre
-	for(int i = 0; i < num_vertices; i++){
-		vertices[i].x += (int)WIDTH/2;
-		vertices[i].y += (int)HEIGHT/2;
-	}
+	struct SDL_Data data = {
+		.window = window,
+		.renderer = renderer,
+		.texture = texture
+	};
 
+	return data;
+}
 
-	int num_triangles = parse_num_triangles(filename);
-	struct Triangle* triangles = parse_triangles_from_obj(filename, vertices);
-	render_triangles(framebuffer, triangles, num_triangles);
-
-	bool running = true;
-	SDL_Event event;
-	while(running) {
-		// Event handling
-		while (SDL_PollEvent(&event)) {
-			if(event.type == SDL_QUIT) running = false;
-		}
-
-		// Update texture with framebuffer pixels
-		SDL_UpdateTexture(texture, NULL, framebuffer, WIDTH * sizeof(uint32_t));
-
-		// Draw
-		SDL_RenderClear(renderer);
-		SDL_RenderCopy(renderer, texture, NULL, NULL);
-		SDL_RenderPresent(renderer);
-	}
-	// Clean Up
-	free(vertices);
-	free(triangles);
-	SDL_DestroyTexture(texture);
-	SDL_DestroyRenderer(renderer);
-	SDL_DestroyWindow(window);
+void destroy_window(struct SDL_Data data){
+	SDL_DestroyTexture(data.texture);
+	SDL_DestroyRenderer(data.renderer);
+	SDL_DestroyWindow(data.window);
 	SDL_Quit();
-	return 0;
+}
+
+void update_window(struct SDL_Data data, uint32_t* framebuffer) {
+	// Update texture with framebuffer pixels
+	SDL_UpdateTexture(data.texture, NULL, framebuffer, WIDTH * sizeof(uint32_t));
+
+	// Draw
+	SDL_RenderClear(data.renderer);
+	SDL_RenderCopy(data.renderer, data.texture, NULL, NULL);
+	SDL_RenderPresent(data.renderer);
 }

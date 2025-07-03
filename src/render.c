@@ -100,7 +100,6 @@ void render_wireframe(uint32_t* framebuffer, struct Edge* wireframe_edges, int n
 }
 
 void render_triangles(uint32_t* framebuffer, struct Triangle* triangles, int num_triangles){
-
 	for(int i = 0; i < num_triangles; i++){
 
 		// select a random color
@@ -112,23 +111,12 @@ void render_triangles(uint32_t* framebuffer, struct Triangle* triangles, int num
 
 		uint32_t color = (r << 24) | (g << 16) | (b << 8) | a;
 
-		// draw redges
-		struct Point* line1 = draw_line_easy(triangles[i].a->x, triangles[i].a->y, triangles[i].b->x, triangles[i].b->y);
-		struct Point* line2 = draw_line_easy(triangles[i].b->x, triangles[i].b->y, triangles[i].c->x, triangles[i].c->y);
-		struct Point* line3 = draw_line_easy(triangles[i].a->x, triangles[i].a->y, triangles[i].c->x, triangles[i].c->y);
-		//draw_points_to_framebuffer(line1, framebuffer, compute_num_points(triangles[i].a->x, triangles[i].a->y, triangles[i].b->x, triangles[i].b->y), color);
-		//draw_points_to_framebuffer(line2, framebuffer, compute_num_points(triangles[i].b->x, triangles[i].b->y, triangles[i].c->x, triangles[i].c->y), color);
-		//draw_points_to_framebuffer(line3, framebuffer, compute_num_points(triangles[i].a->x, triangles[i].a->y, triangles[i].c->x, triangles[i].c->y), color);
-
-		// fill in middle
+		// draw triangles
 		struct PointArray triangle_points = rasterize_triangle(triangles[i]);
 		draw_points_to_framebuffer(triangle_points.points, framebuffer, triangle_points.num_points, color); 
 
 		// free resources
 		destroy_point_array(triangle_points);
-		free(line1);
-		free(line2);
-		free(line3);
 	}
 
 }
