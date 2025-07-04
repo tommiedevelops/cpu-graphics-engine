@@ -57,7 +57,9 @@ int main(int argc, char* argv[]) {
                 while (SDL_PollEvent(&event)) {
                         if(event.type == SDL_QUIT) running = false;
                 }
-
+		// Operate on vertices
+		// Apply a rotation matrix that rotates it about its y-axis
+		
 		// Render 3D model to framebuffer
 	        render_triangles(framebuffer, obj_data.triangles, obj_data.num_triangles);
 
