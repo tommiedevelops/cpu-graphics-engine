@@ -5,40 +5,39 @@
 #include <stdbool.h>
 
 #include "constants.h"
-#include "compute_line.h"
-#include "edge.h"
+#include "line.h"
 #include "vertex.h"
 #include "triangle.h"
 
 void place_pixel(int x, int y, uint32_t value, uint32_t* framebuffer) {
-                if( (x > WIDTH) || (x < 0) ) {printf("line.c/place_pixel: invalid x value. point= {%d,%d}\n", x,y); return;}
-                if( (y > HEIGHT) || (y < 0) ) {printf("line.c/place_pixel: invalid y value. point= {%d,%d}\n", x,y); return;}
+                if( (x > WIDTH) || (x < 0) ) {printf("line.c/place_pixel: invalid x value. pixel= {%d,%d}\n", x,y); return;}
+                if( (y > HEIGHT) || (y < 0) ) {printf("line.c/place_pixel: invalid y value. pixel= {%d,%d}\n", x,y); return;}
 
                 framebuffer[x + WIDTH*y] = value;
 }
 
-void draw_points_to_framebuffer(struct Point* points, uint32_t *framebuffer, int num_points, uint32_t color){
+void draw_pixels_to_framebuffer(struct Pixel* pixels, uint32_t *framebuffer, int num_pixels, uint32_t color){
 	bool error = false;
 
-	if( (points == NULL) || (framebuffer == NULL) ) {
-		perror("points or framebuffer is null");
+	if( (pixels == NULL) || (framebuffer == NULL) ) {
+		perror("pixels or framebuffer is null");
 		return;
 	}
 
-	for(int i = 0; i < num_points; i++){
+	for(int i = 0; i < num_pixels; i++){
 
-		if( (points[i].x > WIDTH) || (points[i].x < 0) ) {
-			printf("invalid x value. point={%d,%d}\n", points[i].x, points[i].y);
+		if( (pixels[i].x > WIDTH) || (pixels[i].x < 0) ) {
+			printf("invalid x value. pixel={%d,%d}\n", pixels[i].x, pixels[i].y);
 			error = true;
 		}
 
-		if( (points[i].y > HEIGHT) || (points[i].y < 0) ) {
-			printf("invalid y value. point={%d,%d}\n", points[i].x, points[i].y);
+		if( (pixels[i].y > HEIGHT) || (pixels[i].y < 0) ) {
+			printf("invalid y value. pixel={%d,%d}\n", pixels[i].x, pixels[i].y);
 			error = true;
 		}
  		if(error) {return;}
 
-		framebuffer[points[i].x + WIDTH * points[i].y] = color;
+		framebuffer[pixels[i].x + WIDTH * pixels[i].y] = color;
 	}
 }
 
@@ -55,10 +54,10 @@ int render_lines(uint32_t *framebuffer, int* coords, int num_coords) {
 		int x1 = *(coord+2);
 		int y1 = *(coord+3);
 
-		struct Point* line = draw_line_easy(x0,y0,x1,y1);
-		int num_points = compute_num_points(x0,y0,x1,y1);
-		printf("render_lines:num_points={%d}\n", num_points);
-		draw_points_to_framebuffer(line, framebuffer, num_points, COLOR_RED);
+		struct Pixel* line = draw_line(x0,y0,x1,y1);
+		int num_pixels = compute_num_pixels(x0,y0,x1,y1);
+		printf("render_lines:num_pixels={%d}\n", num_pixels);
+		draw_pixels_to_framebuffer(line, framebuffer, num_pixels, COLOR_RED);
 		free(line);
 	}
 	return 0;
@@ -66,37 +65,18 @@ int render_lines(uint32_t *framebuffer, int* coords, int num_coords) {
 
 /* Assuming wireframe_vertices are centred at (0,0) */
 /* and structured like so: [x0,y0,z0,x1,y1,z1...]*/
-void render_wireframe(uint32_t* framebuffer, struct Edge* wireframe_edges, int num_edges){
+void render_wireframe(uint32_t* framebuffer,struct Triangle* triangles, int num_triangles){
 
 	if(framebuffer == NULL){
-		perror("provided framebuffer is null");
+		perror("src/render.c/render_wireframe: uin32_t* is NULL");
 		exit(EXIT_FAILURE);
 	}
-	if(wireframe_edges == NULL) {
-		perror("provided edge array is null");
+	if(triangles == NULL) {
+		perror("src/render.c/render_wireframe: struct Triangle* is NULL");
 		exit(EXIT_FAILURE);
 	}
 
-	for(int i = 0; i < num_edges; i++){
-		if( (wireframe_edges[i].from == NULL) || (wireframe_edges[i].to == NULL) ){
-			perror("provided edge was null");
-			exit(EXIT_FAILURE); // HANDLE GRACEFULLY
-		}
-
-		struct Vertex* from = wireframe_edges[i].from;
-		struct Vertex* to = wireframe_edges[i].to;
-
-		convert_vertex_to_int_values(from);
-		convert_vertex_to_int_values(to);
-
-		// assumes we are neglecting z values
-		// can probably generalise to a proper projection in the future
-		struct Point* line = draw_line_easy(from->x, from->y, to->x, to->y);
-		int num_points = compute_num_points(from->x, from->y, to->x, to->y);
-		draw_points_to_framebuffer(line, framebuffer, num_points, COLOR_RED);
-
-		free(line);
-	}
+	//TODO Re-write this function once Camera system is implemented
 }
 
 void render_triangles(uint32_t* framebuffer, struct Triangle* triangles, int num_triangles){
@@ -112,11 +92,11 @@ void render_triangles(uint32_t* framebuffer, struct Triangle* triangles, int num
 		uint32_t color = (r << 24) | (g << 16) | (b << 8) | a;
 
 		// draw triangles
-		struct PointArray triangle_points = rasterize_triangle(triangles[i]);
-		draw_points_to_framebuffer(triangle_points.points, framebuffer, triangle_points.num_points, color); 
+		struct PixelArray triangle_pixels = rasterize_triangle(triangles[i]);
+		draw_pixels_to_framebuffer(triangle_pixels.pixels, framebuffer, triangle_pixels.num_pixels, color); 
 
 		// free resources
-		destroy_point_array(triangle_points);
+		destroy_pixel_array(triangle_pixels);
 	}
 
 }

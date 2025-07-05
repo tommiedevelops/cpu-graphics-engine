@@ -40,16 +40,6 @@ bool vertices_are_equal(struct Vertex a, struct Vertex b) {
 	return true;
 }
 
-void convert_vertex_to_int_values(struct Vertex* vertex){
-	if(vertex == NULL) {
-		perror("src/vertex.c/convert_vertex_to_int_values: vertex was null");
-		exit(EXIT_FAILURE);
-	}
-	vertex->x = round(vertex->x);
-	vertex->y = round(vertex->y);
-	vertex->z = round(vertex->z);
-}
-
 /* vertex array methods */
 
 /* Shifts coordinates on all three axes to [0, imax - imin] */

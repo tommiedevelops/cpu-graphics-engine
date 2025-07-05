@@ -64,82 +64,82 @@ struct Vertex** sort_vertices_by_x_asc(struct Triangle tri) {
 
 // Rasterizes a bounding box
 // NOTE: currently assuming we are projecting onto x-y plane
-struct PointArray rasterize_bounding_box(struct Bounds bounds){
+struct PixelArray rasterize_bounding_box(struct Bounds bounds){
 
 	struct Vertex bot_left = {.x = bounds.xmin, .y= bounds.ymin, .z = 0.0f};
 	struct Vertex top_right = {.x = bounds.xmax, .y = bounds.ymax, .z = 0.0f};
 
-	int num_points = ((int)bounds.xmax - (int)bounds.xmin)*((int)bounds.ymax - (int)bounds.ymin);
+	int num_pixels = ((int)bounds.xmax - (int)bounds.xmin)*((int)bounds.ymax - (int)bounds.ymin);
 
-	struct Point* points = malloc(sizeof(struct Point)*num_points);
+	struct Pixel* pixels = malloc(sizeof(struct Pixel)*num_pixels);
 
-	int points_index = 0;
+	int pixels_index = 0;
 	for(int y = (int)bounds.ymin; y < (int)bounds.ymax; y++){
 		for(int x = (int)bounds.xmin; x < (int)bounds.xmax; x++) {
-			points[points_index].x = x;
-			points[points_index].y = y;
-			points_index++;
+			pixels[pixels_index].x = x;
+			pixels[pixels_index].y = y;
+			pixels_index++;
 		}
 	}
  
-	struct PointArray point_array = { .points = points, .num_points = num_points};
-	return point_array;
+	struct PixelArray pixel_array = { .pixels = pixels, .num_pixels = num_pixels};
+	return pixel_array;
 }
 
-struct PointArray cull_points_not_in_triangle(struct PointArray point_array, struct Triangle tri){
-	// convert point_array to BaryPointArray (copy) w.r.t tri vertices
-	struct BaryPointArray bary_point_array =
-	convert_point_arr_to_bary_point_arr(point_array, tri);
+struct PixelArray cull_pixels_not_in_triangle(struct PixelArray pixel_array, struct Triangle tri){
+	// convert pixel_array to BaryPixelArray (copy) w.r.t tri vertices
+	struct BaryPixelArray bary_pixel_array =
+	convert_pixel_arr_to_bary_pixel_arr(pixel_array, tri);
 
 	float alpha, beta, gamma;
-	int num_new_points = 0;
+	int num_new_pixels = 0;
 
-	// first loop for counting number of points in new array
-	for(int i =  0; i < bary_point_array.num_bary_points; i++){
-		alpha = bary_point_array.bary_points[i].alpha;
-		beta = bary_point_array.bary_points[i].beta;
-		gamma = bary_point_array.bary_points[i].gamma;
+	// first loop for counting number of pixels in new array
+	for(int i =  0; i < bary_pixel_array.num_bary_pixels; i++){
+		alpha = bary_pixel_array.bary_pixels[i].alpha;
+		beta = bary_pixel_array.bary_pixels[i].beta;
+		gamma = bary_pixel_array.bary_pixels[i].gamma;
 
 		bool inside_triangle = (alpha >= 0) && (beta >= 0) && (gamma >= 0);
-		if(inside_triangle){num_new_points++;}
+		if(inside_triangle){num_new_pixels++;}
 	}
 
-	// allocate memory for new struct Point*
-	struct Point* new_points = malloc(sizeof(struct Point)*num_new_points);
+	// allocate memory for new struct Pixel*
+	struct Pixel* new_pixels = malloc(sizeof(struct Pixel)*num_new_pixels);
 
-	int j = 0; //index for new points
-	// second loop for removing points not in triangle
-	for(int i = 0; i < bary_point_array.num_bary_points; i++){
+	int j = 0; //index for new pixels
+	// second loop for removing pixels not in triangle
+	for(int i = 0; i < bary_pixel_array.num_bary_pixels; i++){
 
-		alpha = bary_point_array.bary_points[i].alpha;
-		beta = bary_point_array.bary_points[i].beta;
-		gamma = bary_point_array.bary_points[i].gamma;
+		alpha = bary_pixel_array.bary_pixels[i].alpha;
+		beta = bary_pixel_array.bary_pixels[i].beta;
+		gamma = bary_pixel_array.bary_pixels[i].gamma;
 
 		bool inside_triangle = (alpha >= 0) && (beta >= 0) && (gamma >= 0);
 
 		if(inside_triangle){
-			new_points[j++] = point_array.points[i];
+			new_pixels[j++] = pixel_array.pixels[i];
 		} else {
 			continue;
 		}
 	}
 
 
-	struct PointArray new_point_array = {
-		.points = new_points,
-		.num_points = num_new_points
+	struct PixelArray new_pixel_array = {
+		.pixels = new_pixels,
+		.num_pixels = num_new_pixels
 	};
 
-	free(point_array.points);
-	return new_point_array;
+	free(pixel_array.pixels);
+	return new_pixel_array;
 
 
 
-	destroy_bary_point_array(bary_point_array);
+	destroy_bary_pixel_array(bary_pixel_array);
 }
 
 // Rasterizes a single triangle
-struct PointArray rasterize_triangle(struct Triangle tri) {
+struct PixelArray rasterize_triangle(struct Triangle tri) {
 	// sort vertices in ascending y
 	struct Vertex** sorted_verts = sort_vertices_by_y_asc(tri);
 
@@ -150,8 +150,8 @@ struct PointArray rasterize_triangle(struct Triangle tri) {
 	};
 
 	struct Bounds bounds = get_bounds(vertices, 3);
-	struct PointArray point_array = rasterize_bounding_box(bounds);
-	point_array = cull_points_not_in_triangle(point_array, tri);
-	return point_array;
+	struct PixelArray pixel_array = rasterize_bounding_box(bounds);
+	pixel_array = cull_pixels_not_in_triangle(pixel_array, tri);
+	return pixel_array;
 }
 

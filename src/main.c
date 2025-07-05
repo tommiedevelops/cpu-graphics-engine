@@ -4,9 +4,7 @@
 
 #include "constants.h"
 #include "render.h"
-#include "inputparser.h"
 #include "obj_parser.h"
-#include "edge.h"
 #include "triangle.h"
 #include "window.h"
 
