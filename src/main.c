@@ -7,6 +7,7 @@
 #include "obj_parser.h"
 #include "triangle.h"
 #include "window.h"
+#include "scene_manager.h"
 
 // Expects a single string for cmd line input representing the obj that the user wishes to render
 
@@ -21,11 +22,31 @@ int main(int argc, char* argv[]) {
 	char filename[256] = {0};
 	snprintf(filename, sizeof(filename), "./models/%s.obj", argv[1]);
 
-	/* Parse 3D Model from .obj file */
-	struct ObjData obj_data = parse_obj(filename);
+	/* Parse Mesh from .obj file */
+	struct Mesh mesh = parse_obj(filename);
 
-	// Prepare a Scene with a single Transform
-	// Create Mesh from obj_data and attach to Transform
+	struct Transform transform = {
+		.position = VEC3F_0, 
+		.rotation = 0.0f, 
+		.scale = VEC3F_1
+	};
+
+	struct GameObject go = {.mesh = mesh, .transform = transform };
+
+	// Normalize vertices
+	float length_scale = 500.0f;
+	normalize_vertices(length_scale, mesh.vertices, mesh.num_vertices);
+
+       	// Reflect vertices vertically
+       	for(int i = 0; i < mesh.num_vertices; i++){
+               	mesh.vertices[i].y = -1 * mesh.vertices[i].y;
+       	}
+
+       	// Translate vertices so model is in screen center
+       	for(int i = 0; i < mesh.num_vertices; i++){
+               	mesh.vertices[i].x += (int)WIDTH/2;
+               	mesh.vertices[i].y += (int)HEIGHT/2;
+       	}
 		
 
 	/* Initialize frame buffer */
@@ -38,6 +59,9 @@ int main(int argc, char* argv[]) {
         bool running = true;
         SDL_Event event;
         while(running) {
+		// Clear the framebuffer
+		memset(framebuffer, 0x0, sizeof(framebuffer));
+
                 // Event handling
                 while (SDL_PollEvent(&event)) {
                         if(event.type == SDL_QUIT) running = false;
@@ -50,30 +74,17 @@ int main(int argc, char* argv[]) {
 
 		// Operate on those vertices to prepare them to be displayed on the screen
 
-		// Normalize vertices
-		float length_scale = 500.0f;
-		normalize_vertices(length_scale, obj_data.vertices, obj_data.num_vertices);
-
-        	// Reflect vertices vertically
-        	for(int i = 0; i < obj_data.num_vertices; i++){
-                	obj_data.vertices[i].y = -1 * obj_data.vertices[i].y;
-        	}
-
-        	// Translate vertices so model is in screen center
-        	for(int i = 0; i < obj_data.num_vertices; i++){
-                	obj_data.vertices[i].x += (int)WIDTH/2;
-                	obj_data.vertices[i].y += (int)HEIGHT/2;
-        	}
-		
+	
 		// Rasterize triangles in the scene to the framebuffer
-	        render_triangles(framebuffer, obj_data.triangles, obj_data.num_triangles);
+	        render_triangles(framebuffer, mesh.triangles, mesh.num_triangles);
 
 		// Update SDL2 window w/ new framebuffer
                 update_window(window_data, framebuffer);
         }
 
         /* Clean Up */
-	destroy_obj_data(obj_data);
+	free(mesh.vertices);
+	free(mesh.triangles);
         destroy_window(window_data);
         return 0;
 }

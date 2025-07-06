@@ -3,14 +3,7 @@
 
 #include "vertex.h"
 #include "triangle.h"
+#include "scene_manager.h"
 
-struct ObjData {
-        int num_vertices;
-        int num_triangles;
-        struct Vertex* vertices;
-        struct Triangle* triangles;
-};
-
-struct ObjData parse_obj(char* filename);
-void destroy_obj_data(struct ObjData data);
+struct Mesh parse_obj(char* filename);
 #endif

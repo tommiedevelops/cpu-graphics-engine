@@ -1,16 +1,18 @@
 #ifndef SCENE_MANAGER_H 
 #define SCENE_MANAGER_H
+#include "vec3f.h"
+#include "obj_parser.h"
 
 struct Transform {
-	struct Vector3 position = {0}; // in world coords
-	struct Vector3 rotation = {0}; // (0,0,0) => facing +z
-	struct Vector3 scale = {1.0f, 1.0f, 1.0f};
-}
+	struct Vec3f position;  // in world coords
+	struct Vec3f rotation;  // (0,0,0) => facing +z
+	struct Vec3f scale;
+};
 
 struct Mesh {
 	struct Vertex* vertices;
 	int num_vertices;
-	int* triangles;
+	struct Triangle* triangles;
 	int num_triangles;
 };
 
@@ -19,9 +21,12 @@ struct GameObject {
 	struct Mesh mesh;
 };
 
+struct Vertex* get_vertices_from_game_object(struct GameObject go);
+
 struct Scene {
 	// For now, can only hold a single GameObject	
 	struct GameObject gameObject;
 };
+
 
 #endif

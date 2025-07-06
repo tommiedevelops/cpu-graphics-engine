@@ -11,11 +11,6 @@
 Purpose: create .input files that can be understood by my line renderer from .obj file
 */
 
-void destroy_obj_data(struct ObjData data){
-	if(data.vertices != NULL) {free(data.vertices);}
-	if(data.triangles != NULL) {free(data.triangles);}
-}
-
 FILE* open_obj(char* filename){
 	FILE* fp = fopen(filename, "r");
 
@@ -146,7 +141,7 @@ static struct Triangle* parse_triangles(FILE* fp, int num_triangles, int num_ver
 	return triangles;
 }
 
-struct ObjData parse_obj(char* filename){
+struct Mesh parse_obj(char* filename){
 	FILE* fp = open_obj(filename);
 
 	int num_vertices = parse_num_vertices(fp);
@@ -157,7 +152,7 @@ struct ObjData parse_obj(char* filename){
 
 	close_obj(fp);
 
-	struct ObjData data = {
+	struct Mesh data = {
 		.num_vertices = num_vertices,
 		.vertices = vertices,
 		.num_triangles = num_triangles,
