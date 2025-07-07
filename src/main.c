@@ -8,6 +8,7 @@
 #include "triangle.h"
 #include "window.h"
 #include "scene_manager.h"
+#include "game_time.h"
 
 // Expects a single string for cmd line input representing the obj that the user wishes to render
 
@@ -32,6 +33,10 @@ int main(int argc, char* argv[]) {
 	};
 
 	struct GameObject go = {.mesh = mesh, .transform = transform };
+	
+	// Initialize time struct
+	struct Time time;
+	time_init(&time);
 
 	// Normalize vertices
 	float length_scale = 500.0f;
@@ -59,6 +64,11 @@ int main(int argc, char* argv[]) {
         bool running = true;
         SDL_Event event;
         while(running) {
+
+		update_time(&time);
+		// DEBUGGING
+		print_fps(&time);
+
 		// Clear the framebuffer
 		memset(framebuffer, 0x0, sizeof(framebuffer));
 
