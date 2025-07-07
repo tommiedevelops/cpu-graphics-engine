@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
 
 	struct Transform transform = {
 		.position = VEC3F_0, 
-		.rotation = 0.0f, 
+		.rotation = VEC3F_0, 
 		.scale = VEC3F_1
 	};
 
@@ -64,9 +64,9 @@ int main(int argc, char* argv[]) {
         bool running = true;
         SDL_Event event;
         while(running) {
-
+		
+		// Handle Time
 		update_time(&time);
-		// DEBUGGING
 		print_fps(&time);
 
 		// Clear the framebuffer
@@ -75,21 +75,22 @@ int main(int argc, char* argv[]) {
                 // Event handling
                 while (SDL_PollEvent(&event)) {
                         if(event.type == SDL_QUIT) running = false;
-                }
-		
-		// Let Scene evolve with 'Time?'
-		// - Maybe give the Transform an 'Angular Velocity?'
+                }	
+
+		// Have the GameObject evolve with time
+		// Apply time dependent transformations to gameObject.transform
+		float angular_velocity = 1.0f; 
+		go.transform.rotation.y += time.delta_time * angular_velocity;	
 		
 		// Extract vertices and triangles from the Scene in World Coordinates
-
-		// Operate on those vertices to prepare them to be displayed on the screen
-
+		struct Vertex* vertices = get_vertices_from_game_object(go);
 	
 		// Rasterize triangles in the scene to the framebuffer
 	        render_triangles(framebuffer, mesh.triangles, mesh.num_triangles);
 
 		// Update SDL2 window w/ new framebuffer
                 update_window(window_data, framebuffer);
+		free(vertices);
         }
 
         /* Clean Up */
