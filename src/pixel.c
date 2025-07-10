@@ -13,10 +13,10 @@ void destroy_bary_pixel_array(struct BaryPixelArray bary_pixel_array){
 
 struct BaryPixel convert_pixel_to_bary_pixel(struct Pixel P, struct Triangle tri){
 
-	struct Vertex** sorted_verts = sort_vertices_by_y_asc(tri);
-	struct Vertex A = *sorted_verts[0];
-	struct Vertex B = *sorted_verts[1];
-	struct Vertex C = *sorted_verts[2];
+	struct Vec3f** sorted_verts = sort_vertices_by_y_asc(tri);
+	struct Vec3f A = *sorted_verts[0];
+	struct Vec3f B = *sorted_verts[1];
+	struct Vec3f C = *sorted_verts[2];
 
 	free(sorted_verts);
 

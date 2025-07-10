@@ -10,7 +10,7 @@ struct Transform {
 };
 
 struct Mesh {
-	struct Vertex* vertices;
+	struct Vec3f* vertices;
 	int num_vertices;
 	struct Triangle* triangles;
 	int num_triangles;
@@ -21,7 +21,7 @@ struct GameObject {
 	struct Mesh mesh;
 };
 
-struct Vertex* get_vertices_from_game_object(struct GameObject go);
+struct Vec3f* get_vertices_from_game_object(struct GameObject go);
 
 struct Scene {
 	// For now, can only hold a single GameObject	

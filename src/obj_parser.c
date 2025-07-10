@@ -47,7 +47,7 @@ static int parse_num_vertices(FILE* fp){
 	return vertex_count;
 }
 
-static struct Vertex* parse_vertices(FILE* fp, int num_vertices){
+static struct Vec3f* parse_vertices(FILE* fp, int num_vertices){
 
 	// NULL CHECK
 	if(fp==NULL){
@@ -55,7 +55,7 @@ static struct Vertex* parse_vertices(FILE* fp, int num_vertices){
 		exit(EXIT_FAILURE);
 	}
 
-	struct Vertex* vertices = malloc(sizeof(struct Vertex)*num_vertices);
+	struct Vec3f* vertices = malloc(sizeof(struct Vec3f)*num_vertices);
 
 	char buf[256] = {0};
 	float x,y,z;
@@ -91,7 +91,7 @@ static int parse_num_triangles(FILE* fp) {
 	return face_count;
 }
 
-static struct Triangle* parse_triangles(FILE* fp, int num_triangles, int num_vertices, struct Vertex* vertices){
+static struct Triangle* parse_triangles(FILE* fp, int num_triangles, int num_vertices, struct Vec3f* vertices){
 
 	// NULL check
 	if( (vertices == NULL) || (fp == NULL) ){
@@ -145,7 +145,7 @@ struct Mesh parse_obj(char* filename){
 	FILE* fp = open_obj(filename);
 
 	int num_vertices = parse_num_vertices(fp);
-	struct Vertex* vertices = parse_vertices(fp, num_vertices);
+	struct Vec3f* vertices = parse_vertices(fp, num_vertices);
 
 	int num_triangles = parse_num_triangles(fp);
 	struct Triangle* triangles = parse_triangles(fp, num_triangles, num_vertices, vertices);

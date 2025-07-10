@@ -1,7 +1,7 @@
 #ifndef OBJ_PARSER_H
 #define OBJ_PARSER_H
 
-#include "vertex.h"
+#include "vec3f.h"
 #include "triangle.h"
 #include "scene_manager.h"
 

@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
 
 	// Normalize vertices
 	float length_scale = 500.0f;
-	normalize_vertices(length_scale, mesh.vertices, mesh.num_vertices);
+	normalize_vectors(length_scale, mesh.vertices, mesh.num_vertices);
 
        	// Reflect vertices vertically
        	for(int i = 0; i < mesh.num_vertices; i++){
@@ -83,7 +83,7 @@ int main(int argc, char* argv[]) {
 		go.transform.rotation.y += time.delta_time * angular_velocity;	
 		
 		// Extract vertices and triangles from the Scene in World Coordinates
-		struct Vertex* vertices = get_vertices_from_game_object(go);
+		struct Vec3f* vertices = get_vertices_from_game_object(go);
 	
 		// Rasterize triangles in the scene to the framebuffer
 	        render_triangles(framebuffer, mesh.triangles, mesh.num_triangles);

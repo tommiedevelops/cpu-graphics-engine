@@ -3,7 +3,6 @@
 #include <stdlib.h>
 
 #include "bounds.h"
-#include "vertex.h"
 
 bool bounds_are_equal(struct Bounds a, struct Bounds b){
 	if(a.xmin != b.xmin) return false;
@@ -15,7 +14,7 @@ bool bounds_are_equal(struct Bounds a, struct Bounds b){
 	return true;
 }
 
-struct Bounds get_bounds(struct Vertex* vertices, int num_vertices) {
+struct Bounds get_bounds(struct Vec3f* vertices, int num_vertices) {
         /* return: [xmin, xmax, ymin, ymax, zmin, zmax] */
         struct Bounds bounds = BOUNDS_DEFAULT;
 
@@ -36,7 +35,7 @@ struct Bounds get_bounds(struct Vertex* vertices, int num_vertices) {
         return bounds;
 }
 
-void update_bounds(struct Bounds* bounds, struct Vertex* vertices, int num_vertices) {
+void update_bounds(struct Bounds* bounds, struct Vec3f* vertices, int num_vertices) {
         for(int i = 0; i < num_vertices; i++){
                 if( vertices[i].x > bounds->xmax ){ bounds->xmax = vertices[i].x; }
                 if( vertices[i].x < bounds->xmin ){ bounds->xmin = vertices[i].x; }

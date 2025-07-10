@@ -3,9 +3,9 @@
 #include "triangle.h"
 
 struct Triangle create_triangle(
-	struct Vertex* a,
-	struct Vertex* b,
-	struct Vertex* c
+	struct Vec3f* a,
+	struct Vec3f* b,
+	struct Vec3f* c
 ){
 	if( (a == NULL) || (b == NULL) || (c == NULL) ){
 		perror("src/triangle.c/create_triangle:provided parameter(s) are null");
@@ -23,8 +23,8 @@ void swap(void** a, void** b){
 	*b = temp;
 }
 
-struct Vertex** sort_vertices_by_y_asc(struct Triangle tri) {
-	struct Vertex** arr  = malloc(sizeof(struct Vertex*)*3);
+struct Vec3f** sort_vertices_by_y_asc(struct Triangle tri) {
+	struct Vec3f** arr  = malloc(sizeof(struct Vec3f*)*3);
 	// [ptr_0 ptr_1 ptr_2]
 
 	if(arr == NULL){
@@ -43,8 +43,8 @@ struct Vertex** sort_vertices_by_y_asc(struct Triangle tri) {
 }
 
 
-struct Vertex** sort_vertices_by_x_asc(struct Triangle tri) {
-	struct Vertex** arr  = malloc(sizeof(struct Vertex*)*3);
+struct Vec3f** sort_vertices_by_x_asc(struct Triangle tri) {
+	struct Vec3f** arr  = malloc(sizeof(struct Vec3f*)*3);
 	// [ptr_0 ptr_1 ptr_2]
 
 	if(arr == NULL){
@@ -66,8 +66,8 @@ struct Vertex** sort_vertices_by_x_asc(struct Triangle tri) {
 // NOTE: currently assuming we are projecting onto x-y plane
 struct PixelArray rasterize_bounding_box(struct Bounds bounds){
 
-	struct Vertex bot_left = {.x = bounds.xmin, .y= bounds.ymin, .z = 0.0f};
-	struct Vertex top_right = {.x = bounds.xmax, .y = bounds.ymax, .z = 0.0f};
+	struct Vec3f bot_left = {.x = bounds.xmin, .y= bounds.ymin, .z = 0.0f};
+	struct Vec3f top_right = {.x = bounds.xmax, .y = bounds.ymax, .z = 0.0f};
 
 	int num_pixels = ((int)bounds.xmax - (int)bounds.xmin)*((int)bounds.ymax - (int)bounds.ymin);
 
@@ -141,9 +141,9 @@ struct PixelArray cull_pixels_not_in_triangle(struct PixelArray pixel_array, str
 // Rasterizes a single triangle
 struct PixelArray rasterize_triangle(struct Triangle tri) {
 	// sort vertices in ascending y
-	struct Vertex** sorted_verts = sort_vertices_by_y_asc(tri);
+	struct Vec3f** sorted_verts = sort_vertices_by_y_asc(tri);
 
-	struct Vertex vertices[3] = {
+	struct Vec3f vertices[3] = {
 		*sorted_verts[0],
 		*sorted_verts[1],
 		*sorted_verts[2]

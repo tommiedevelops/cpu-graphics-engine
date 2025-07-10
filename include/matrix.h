@@ -1,5 +1,6 @@
 #ifndef MATRIX_H
 #define MATRIX_H
+#include "vec3f.h"
 struct Mat3 {
 	float m[3][3];
 };

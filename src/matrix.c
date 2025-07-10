@@ -1,7 +1,6 @@
 #include <stdio.h>
 
 #include "matrix.h"
-#include "vec3f.h"
 
 struct Vec3f mat3_mul_vec3(struct Mat3 m, struct Vec3f v) {
 	struct Vec3f result;

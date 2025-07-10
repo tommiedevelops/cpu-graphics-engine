@@ -6,7 +6,7 @@
 
 #include "constants.h"
 #include "line.h"
-#include "vertex.h"
+#include "vec3f.h"
 #include "triangle.h"
 
 void place_pixel(int x, int y, uint32_t value, uint32_t* framebuffer) {
