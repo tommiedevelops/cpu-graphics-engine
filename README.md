@@ -22,3 +22,9 @@ Use the following command to clean up the directory afterwards.
 - Please note that SDL2 has in-built memory leaks so you may need to run the program multiple times to prevent ASAN from complaining. Pay close attention to memory leak details as it may not pertain to your actual code. 
 - It may start spamming ASAN error messages. Just quit and restart.
 
+**TODO on the horizon**
+- Implement hidden face removal (z-buffer, back face culling)
+- Implement lighting (color module etc.)
+- Complete Transform (derive and implement Model matrix and integrate into code)
+- General refactoring and testing (always something to do)
+- Refactor wireframe / line rendering with Bresenham

@@ -78,17 +78,8 @@ void render_wireframe(uint32_t* framebuffer,struct Triangle* triangles, int num_
 	//TODO Re-write this function once Camera system is implemented
 }
 
-void render_triangles(uint32_t* framebuffer, struct Vec3f* vertices, int* triangles, int num_triangles){
+void render_triangles(uint32_t* framebuffer, uint32_t* zbuffer, struct Vec3f* vertices, int* triangles, int num_triangles){
 	for(int i = 0; i < num_triangles; i++){
-
-		// select a random color
-		uint8_t r, g, b, a;
-		a = 255;
-		r = rand() % 256;
-		g = rand() % 256;
-		b = rand() % 256;
-
-		uint32_t color = (r << 24) | (g << 16) | (b << 8) | a;
 
 		// create a triangle
 		struct Triangle tri = {
@@ -96,6 +87,15 @@ void render_triangles(uint32_t* framebuffer, struct Vec3f* vertices, int* triang
 			.b = &vertices[triangles[3*i+1]],
 			.c = &vertices[triangles[3*i+2]]
 		};
+
+		// determine the color of the triangle
+		uint8_t r, g, b, a;
+		a = 255;
+		r = rand() % 256;
+		g = rand() % 256;
+		b = rand() % 256;
+
+		uint32_t color = (r << 24) | (g << 16) | (b << 8) | a;
 
 		// draw triangles
 		struct PixelArray triangle_pixels = rasterize_triangle(tri);

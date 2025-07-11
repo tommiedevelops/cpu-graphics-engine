@@ -133,8 +133,6 @@ struct PixelArray cull_pixels_not_in_triangle(struct PixelArray pixel_array, str
 	free(pixel_array.pixels);
 	return new_pixel_array;
 
-
-
 	destroy_bary_pixel_array(bary_pixel_array);
 }
 

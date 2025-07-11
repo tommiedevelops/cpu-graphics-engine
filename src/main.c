@@ -33,13 +33,21 @@ int main(int argc, char* argv[]) {
 	};
 
 	struct GameObject go = {.mesh = mesh, .transform = transform };
-	
+
+	// Prepare light source
+	struct Vec3f light_source = {
+		.x = 500.0f,
+		.y = 1000.0f,
+		.z = 0.0f
+	};
+
 	// Initialize time struct
 	struct Time time;
 	time_init(&time);
 
-	/* Initialize frame buffer */
+	// Initialize framebuffer and z-buffer
 	uint32_t framebuffer[WIDTH * HEIGHT] = {0};
+	uint32_t zbuffer[WIDTH * HEIGHT] = {0};
 
         /* Prepare Window using SDL */
         struct SDL_Data window_data = initialise_window();
@@ -61,8 +69,7 @@ int main(int argc, char* argv[]) {
                         if(event.type == SDL_QUIT) running = false;
                 }	
 
-		// Have the GameObject evolve with time
-		// Apply time dependent transformations to gameObject.transform
+		// Apply transformations to game object
 		float angular_velocity = 1.0f; 
 		go.transform.rotation.y += time.delta_time * angular_velocity;	
 		
@@ -85,7 +92,7 @@ int main(int argc, char* argv[]) {
        		}
 
 		// Rasterize triangles in the scene to the framebuffer
-	        render_triangles(framebuffer, vertices, mesh.triangles, mesh.num_triangles);
+	        render_triangles(framebuffer, zbuffer, vertices, mesh.triangles, mesh.num_triangles);
 
 		// Update SDL2 window w/ new framebuffer
                 update_window(window_data, framebuffer);
