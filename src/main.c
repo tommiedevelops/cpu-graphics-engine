@@ -38,22 +38,6 @@ int main(int argc, char* argv[]) {
 	struct Time time;
 	time_init(&time);
 
-	// Normalize vertices
-	float length_scale = 500.0f;
-	normalize_vectors(length_scale, mesh.vertices, mesh.num_vertices);
-
-       	// Reflect vertices vertically
-       	for(int i = 0; i < mesh.num_vertices; i++){
-               	mesh.vertices[i].y = -1 * mesh.vertices[i].y;
-       	}
-
-       	// Translate vertices so model is in screen center
-       	for(int i = 0; i < mesh.num_vertices; i++){
-               	mesh.vertices[i].x += (int)WIDTH/2;
-               	mesh.vertices[i].y += (int)HEIGHT/2;
-       	}
-		
-
 	/* Initialize frame buffer */
 	uint32_t framebuffer[WIDTH * HEIGHT] = {0};
 
@@ -85,8 +69,23 @@ int main(int argc, char* argv[]) {
 		// Extract vertices and triangles from the Scene in World Coordinates
 		struct Vec3f* vertices = get_vertices_from_game_object(go);
 	
+		// Normalize vertices
+		float length_scale = 500.0f;
+		normalize_vectors(length_scale, vertices, mesh.num_vertices);
+
+       		// Reflect vertices vertically
+       		for(int i = 0; i < mesh.num_vertices; i++){
+       	        	vertices[i].y = -1 * vertices[i].y;
+       		}
+
+       		// Translate vertices so model is in screen center
+       		for(int i = 0; i < mesh.num_vertices; i++){
+       	        	vertices[i].x += (int)WIDTH/2;
+       	        	vertices[i].y += (int)HEIGHT/2;
+       		}
+
 		// Rasterize triangles in the scene to the framebuffer
-	        render_triangles(framebuffer, mesh.triangles, mesh.num_triangles);
+	        render_triangles(framebuffer, vertices, mesh.triangles, mesh.num_triangles);
 
 		// Update SDL2 window w/ new framebuffer
                 update_window(window_data, framebuffer);

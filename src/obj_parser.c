@@ -91,7 +91,7 @@ static int parse_num_triangles(FILE* fp) {
 	return face_count;
 }
 
-static struct Triangle* parse_triangles(FILE* fp, int num_triangles, int num_vertices, struct Vec3f* vertices){
+static int* parse_triangles(FILE* fp, int num_triangles, int num_vertices, struct Vec3f* vertices){
 
 	// NULL check
 	if( (vertices == NULL) || (fp == NULL) ){
@@ -100,8 +100,7 @@ static struct Triangle* parse_triangles(FILE* fp, int num_triangles, int num_ver
 	}
 
 	// allocate memory
-	struct Triangle* triangles = malloc(sizeof(struct Triangle)*num_triangles);
-	memset(triangles,0x0,sizeof(struct Triangle)*num_triangles);
+	int* triangles = malloc(sizeof(int)*3*num_triangles);
 
 	char buf[256] = {0};
 	int v0 = -1,v1 = -1,v2 = -1;
@@ -127,14 +126,11 @@ static struct Triangle* parse_triangles(FILE* fp, int num_triangles, int num_ver
 				printf("Something went wrong. v0 = {%d}, v1 = {%d}, v2 = {%d}, num_vertices = {%d}\n", v0,v1,v2,num_vertices);
 				exit(EXIT_FAILURE);
 			}
-
-			struct Triangle tri = {
-					.a = &(vertices[v0]),
-					.b = &(vertices[v1]),
-					.c = &(vertices[v2])
-			};
-			triangles[tri_index++] = tri;
 		
+			triangles[3*tri_index] = v0;
+			triangles[3*tri_index+1] = v1; 
+			triangles[3*tri_index+2] = v2;	
+			tri_index++;	
 		}
 	}
 	rewind(fp);
@@ -148,7 +144,7 @@ struct Mesh parse_obj(char* filename){
 	struct Vec3f* vertices = parse_vertices(fp, num_vertices);
 
 	int num_triangles = parse_num_triangles(fp);
-	struct Triangle* triangles = parse_triangles(fp, num_triangles, num_vertices, vertices);
+	int* triangles = parse_triangles(fp, num_triangles, num_vertices, vertices);
 
 	close_obj(fp);
 
@@ -159,5 +155,5 @@ struct Mesh parse_obj(char* filename){
 		.triangles = triangles
 	};
 
-	return data;
+return data;
 }

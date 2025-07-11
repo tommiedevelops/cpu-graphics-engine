@@ -12,7 +12,7 @@ struct Transform {
 struct Mesh {
 	struct Vec3f* vertices;
 	int num_vertices;
-	struct Triangle* triangles;
+	int* triangles;
 	int num_triangles;
 };
 

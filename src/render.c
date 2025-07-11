@@ -70,8 +70,7 @@ void render_wireframe(uint32_t* framebuffer,struct Triangle* triangles, int num_
 	if(framebuffer == NULL){
 		perror("src/render.c/render_wireframe: uin32_t* is NULL");
 		exit(EXIT_FAILURE);
-	}
-	if(triangles == NULL) {
+	} if(triangles == NULL) {
 		perror("src/render.c/render_wireframe: struct Triangle* is NULL");
 		exit(EXIT_FAILURE);
 	}
@@ -79,7 +78,7 @@ void render_wireframe(uint32_t* framebuffer,struct Triangle* triangles, int num_
 	//TODO Re-write this function once Camera system is implemented
 }
 
-void render_triangles(uint32_t* framebuffer, struct Triangle* triangles, int num_triangles){
+void render_triangles(uint32_t* framebuffer, struct Vec3f* vertices, int* triangles, int num_triangles){
 	for(int i = 0; i < num_triangles; i++){
 
 		// select a random color
@@ -91,8 +90,15 @@ void render_triangles(uint32_t* framebuffer, struct Triangle* triangles, int num
 
 		uint32_t color = (r << 24) | (g << 16) | (b << 8) | a;
 
+		// create a triangle
+		struct Triangle tri = {
+			.a = &vertices[triangles[3*i]],
+			.b = &vertices[triangles[3*i+1]],
+			.c = &vertices[triangles[3*i+2]]
+		};
+
 		// draw triangles
-		struct PixelArray triangle_pixels = rasterize_triangle(triangles[i]);
+		struct PixelArray triangle_pixels = rasterize_triangle(tri);
 		draw_pixels_to_framebuffer(triangle_pixels.pixels, framebuffer, triangle_pixels.num_pixels, color); 
 
 		// free resources
