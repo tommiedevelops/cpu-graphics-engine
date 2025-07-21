@@ -153,3 +153,4 @@ struct PixelArray rasterize_triangle(struct Triangle tri) {
 	return pixel_array;
 }
 
+

@@ -79,7 +79,9 @@ void render_wireframe(uint32_t* framebuffer,struct Triangle* triangles, int num_
 }
 
 void render_triangles(uint32_t* framebuffer, uint32_t* zbuffer, struct Vec3f* vertices, int* triangles, int num_triangles){
-	for(int i = 0; i < num_triangles; i++){
+	//TODO include zbuffer in rendering calculation
+	// for each pixel on the screen, calculate the 'depth' of the pixel by interpolating the values in the triangle
+	for(int i = 0; i < num_triangles; i++)	{
 
 		// create a triangle
 		struct Triangle tri = {
@@ -99,7 +101,9 @@ void render_triangles(uint32_t* framebuffer, uint32_t* zbuffer, struct Vec3f* ve
 
 		// draw triangles
 		struct PixelArray triangle_pixels = rasterize_triangle(tri);
-		draw_pixels_to_framebuffer(triangle_pixels.pixels, framebuffer, triangle_pixels.num_pixels, color); 
+		update_zbuffer(zbuffer, triangle_pixels);
+
+		draw_pixels_to_framebuffer(triangle_pixels.pixels, framebuffer, zbuffer, triangle_pixels.num_pixels, color); 
 
 		// free resources
 		destroy_pixel_array(triangle_pixels);
