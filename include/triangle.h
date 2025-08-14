@@ -22,5 +22,5 @@ struct Triangle create_triangle(
 struct Vec3f** sort_vertices_by_y_asc(struct Triangle tri);
 struct Vec3f** sort_vertices_by_x_asc(struct Triangle tri);
 struct PixelArray rasterize_triangle(struct Triangle tri);
-
+struct DepthPixelArray rasterize_triangle_depths(struct Triangle tri);
 #endif

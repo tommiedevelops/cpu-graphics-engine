@@ -61,8 +61,9 @@ int main(int argc, char* argv[]) {
 		update_time(&time);
 		print_fps(&time);
 
-		// Clear the framebuffer
+		// Clear the buffers	
 		memset(framebuffer, 0x0, sizeof(framebuffer));
+		memset(framebuffer, 0x0, sizeof(zbuffer));
 
                 // Event handling
                 while (SDL_PollEvent(&event)) {

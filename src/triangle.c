@@ -153,4 +153,6 @@ struct PixelArray rasterize_triangle(struct Triangle tri) {
 	return pixel_array;
 }
 
-
+// Rasterizes the fragment depths of a triangle
+//struct DepthPixelArray rasterize_triangle_depths(struct Triangle tri) {
+//}

@@ -16,7 +16,11 @@ void place_pixel(int x, int y, uint32_t value, uint32_t* framebuffer) {
                 framebuffer[x + WIDTH*y] = value;
 }
 
-void draw_pixels_to_framebuffer(struct Pixel* pixels, uint32_t *framebuffer, int num_pixels, uint32_t color){
+void draw_depth_pixels_to_zbuffer(struct DepthPixelArray depth_pixels, uint32_t* zbuffer){
+	int num_pixels = depth_pixels.num_depth_pixels; 
+};
+
+void draw_pixels_to_framebuffer(struct Pixel* pixels, uint32_t *framebuffer, uint32_t *zbuffer, int num_pixels, uint32_t color){
 	bool error = false;
 
 	if( (pixels == NULL) || (framebuffer == NULL) ) {
@@ -39,28 +43,6 @@ void draw_pixels_to_framebuffer(struct Pixel* pixels, uint32_t *framebuffer, int
 
 		framebuffer[pixels[i].x + WIDTH * pixels[i].y] = color;
 	}
-}
-
-int render_lines(uint32_t *framebuffer, int* coords, int num_coords) {
-	// array organisation:
-	// [[start_coord_x_0],[start_coord_y_0],[end_coord_x_0], [end_coord_y_0] ...]
-	// where [start_coord_X_X] and [end_coord_X_X] are integers.
-	for(int i = 0; i < num_coords; i++){
-		int* coord = coords + 4*i;
-		printf("drawing line: {%d,%d} -> {%d,%d}\n", *coord, *(coord+1),*(coord+2),*(coord+3));
-
-		int x0 = *coord;
-		int y0 = *(coord+1);
-		int x1 = *(coord+2);
-		int y1 = *(coord+3);
-
-		struct Pixel* line = draw_line(x0,y0,x1,y1);
-		int num_pixels = compute_num_pixels(x0,y0,x1,y1);
-		printf("render_lines:num_pixels={%d}\n", num_pixels);
-		draw_pixels_to_framebuffer(line, framebuffer, num_pixels, COLOR_RED);
-		free(line);
-	}
-	return 0;
 }
 
 /* Assuming wireframe_vertices are centred at (0,0) */
@@ -101,8 +83,9 @@ void render_triangles(uint32_t* framebuffer, uint32_t* zbuffer, struct Vec3f* ve
 
 		// draw triangles
 		struct PixelArray triangle_pixels = rasterize_triangle(tri);
-		update_zbuffer(zbuffer, triangle_pixels);
-
+		struct DepthPixelArray triangle_depth_pixels = rasterize_triangle_depths(tri);
+		
+		draw_depth_pixels_to_zbuffer(triangle_depth_pixels, zbuffer);
 		draw_pixels_to_framebuffer(triangle_pixels.pixels, framebuffer, zbuffer, triangle_pixels.num_pixels, color); 
 
 		// free resources

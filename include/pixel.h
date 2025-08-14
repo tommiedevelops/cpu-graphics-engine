@@ -24,6 +24,17 @@ struct BaryPixelArray {
 	int num_bary_pixels;
 };
 
+struct DepthPixel {
+	int x;
+	int y;
+	float depth;
+};
+
+struct DepthPixelArray {
+	struct DepthPixel* depth_pixels;
+	int num_depth_pixels;
+};
+
 struct BaryPixel convert_pixel_to_bary_pixel(struct Pixel pixel, struct Triangle tri);
 
 struct BaryPixelArray convert_pixel_arr_to_bary_pixel_arr(struct PixelArray pixel_array, struct Triangle tri);
