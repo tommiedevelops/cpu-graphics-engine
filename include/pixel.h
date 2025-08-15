@@ -6,6 +6,7 @@ struct Triangle;
 struct Pixel {
 	int x;
 	int y;
+	float depth;
 };
 
 struct PixelArray {

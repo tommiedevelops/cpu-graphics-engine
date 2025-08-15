@@ -45,21 +45,6 @@ void draw_pixels_to_framebuffer(struct Pixel* pixels, uint32_t *framebuffer, uin
 	}
 }
 
-/* Assuming wireframe_vertices are centred at (0,0) */
-/* and structured like so: [x0,y0,z0,x1,y1,z1...]*/
-void render_wireframe(uint32_t* framebuffer,struct Triangle* triangles, int num_triangles){
-
-	if(framebuffer == NULL){
-		perror("src/render.c/render_wireframe: uin32_t* is NULL");
-		exit(EXIT_FAILURE);
-	} if(triangles == NULL) {
-		perror("src/render.c/render_wireframe: struct Triangle* is NULL");
-		exit(EXIT_FAILURE);
-	}
-
-	//TODO Re-write this function once Camera system is implemented
-}
-
 void render_triangles(uint32_t* framebuffer, uint32_t* zbuffer, struct Vec3f* vertices, int* triangles, int num_triangles){
 	//TODO include zbuffer in rendering calculation
 	// for each pixel on the screen, calculate the 'depth' of the pixel by interpolating the values in the triangle
@@ -83,9 +68,7 @@ void render_triangles(uint32_t* framebuffer, uint32_t* zbuffer, struct Vec3f* ve
 
 		// draw triangles
 		struct PixelArray triangle_pixels = rasterize_triangle(tri);
-		struct DepthPixelArray triangle_depth_pixels = rasterize_triangle_depths(tri);
 		
-		draw_depth_pixels_to_zbuffer(triangle_depth_pixels, zbuffer);
 		draw_pixels_to_framebuffer(triangle_pixels.pixels, framebuffer, zbuffer, triangle_pixels.num_pixels, color); 
 
 		// free resources

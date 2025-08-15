@@ -19,26 +19,24 @@ int main(int argc, char* argv[]) {
 		printf("Please provide exactly one filename. ./models/{filename}.obj\n");
 		exit(EXIT_FAILURE);
 	}
-
+	
+	// Extract filename from CLI
 	char filename[256] = {0};
 	snprintf(filename, sizeof(filename), "./models/%s.obj", argv[1]);
 
 	/* Parse Mesh from .obj file */
 	struct Mesh mesh = parse_obj(filename);
-
+	
+	// Prepare Transform and GameObject
 	struct Transform transform = {
 		.position = VEC3F_0, 
 		.rotation = VEC3F_0, 
 		.scale = VEC3F_1
 	};
 
-	struct GameObject go = {.mesh = mesh, .transform = transform };
-
-	// Prepare light source
-	struct Vec3f light_source = {
-		.x = 500.0f,
-		.y = 1000.0f,
-		.z = 0.0f
+	struct GameObject go = {
+		.mesh 	    = mesh     , 
+		.transform  = transform 
 	};
 
 	// Initialize time struct

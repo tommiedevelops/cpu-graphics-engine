@@ -66,23 +66,30 @@ struct Vec3f** sort_vertices_by_x_asc(struct Triangle tri) {
 // NOTE: currently assuming we are projecting onto x-y plane
 struct PixelArray rasterize_bounding_box(struct Bounds bounds){
 
-	struct Vec3f bot_left = {.x = bounds.xmin, .y= bounds.ymin, .z = 0.0f};
-	struct Vec3f top_right = {.x = bounds.xmax, .y = bounds.ymax, .z = 0.0f};
+	int xmin = (int)bounds.xmin;
+	int xmax = (int)bounds.xmax;
+	int ymin = (int)bounds.ymin;
+	int ymax = (int)bounds.ymax;
 
-	int num_pixels = ((int)bounds.xmax - (int)bounds.xmin)*((int)bounds.ymax - (int)bounds.ymin);
+	int num_pixels = (xmax - xmin)*(ymax - ymin);
 
 	struct Pixel* pixels = malloc(sizeof(struct Pixel)*num_pixels);
 
-	int pixels_index = 0;
-	for(int y = (int)bounds.ymin; y < (int)bounds.ymax; y++){
-		for(int x = (int)bounds.xmin; x < (int)bounds.xmax; x++) {
-			pixels[pixels_index].x = x;
-			pixels[pixels_index].y = y;
-			pixels_index++;
+	int pixel_index = 0;
+
+	for(int y = ymin; y < ymax; y++){
+		for(int x = xmin; x < xmax; x++) {
+			pixels[pixel_index].x = x;
+			pixels[pixel_index].y = y;
+			pixel_index++;
 		}
 	}
  
-	struct PixelArray pixel_array = { .pixels = pixels, .num_pixels = num_pixels};
+	struct PixelArray pixel_array = { 
+		.pixels = pixels, 
+		.num_pixels = num_pixels
+	};
+
 	return pixel_array;
 }
 
@@ -153,6 +160,3 @@ struct PixelArray rasterize_triangle(struct Triangle tri) {
 	return pixel_array;
 }
 
-// Rasterizes the fragment depths of a triangle
-//struct DepthPixelArray rasterize_triangle_depths(struct Triangle tri) {
-//}
