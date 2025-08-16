@@ -14,6 +14,25 @@ bool bounds_are_equal(struct Bounds a, struct Bounds b){
 	return true;
 }
 
+struct Bounds get_bounds_from_tri(struct Triangle tri){
+        /* return: [xmin, xmax, ymin, ymax, zmin, zmax] */
+        struct Bounds bounds = BOUNDS_DEFAULT;
+	if (tri.v0->x > bounds.xmax) {bounds.xmax = tri.v0->x;}
+	if (tri.v0->y > bounds.ymax) {bounds.ymax = tri.v0->y;}
+	if (tri.v0->z > bounds.zmax) {bounds.zmax = tri.v0->z;}
+
+	if (tri.v1->x > bounds.xmax) {bounds.xmax = tri.v1->x;}
+	if (tri.v1->y > bounds.ymax) {bounds.ymax = tri.v1->y;}
+	if (tri.v1->z > bounds.zmax) {bounds.zmax = tri.v1->z;}
+
+	if (tri.v2->x > bounds.xmax) {bounds.xmax = tri.v2->x;}
+	if (tri.v2->y > bounds.ymax) {bounds.ymax = tri.v2->y;}
+	if (tri.v2->z > bounds.zmax) {bounds.zmax = tri.v2->z;}
+
+        return bounds;
+}
+
+
 struct Bounds get_bounds(struct Vec3f* vertices, int num_vertices) {
         /* return: [xmin, xmax, ymin, ymax, zmin, zmax] */
         struct Bounds bounds = BOUNDS_DEFAULT;

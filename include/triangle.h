@@ -9,9 +9,9 @@
 
 struct Triangle {
 	// no order is assumed here
-	struct Vec3f* a;
-	struct Vec3f* b;
-	struct Vec3f* c;
+	struct Vec3f* v0;
+	struct Vec3f* v1;
+	struct Vec3f* v2;
 };
 
 struct Triangle create_triangle(
@@ -21,8 +21,6 @@ struct Triangle create_triangle(
 );
 
 // array size 3 of struct Vec3f ptrs
-struct Vec3f** sort_vertices_by_y_asc(struct Triangle tri);
-struct Vec3f** sort_vertices_by_x_asc(struct Triangle tri);
-struct PixelArray rasterize_triangle(struct Triangle tri);
-struct DepthPixelArray rasterize_triangle_depths(struct Triangle tri);
+void sort_vertices_by_y_asc(struct Triangle tri);
+void rasterize_triangle(struct Triangle tri, uint32_t* framebuffer, uint32_t* zbuffer, uint32_t color);
 #endif

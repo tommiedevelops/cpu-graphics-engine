@@ -52,9 +52,9 @@ void render_triangles(uint32_t* framebuffer, uint32_t* zbuffer, struct Vec3f* ve
 
 		// create a triangle
 		struct Triangle tri = {
-			.a = &vertices[triangles[3*i]],
-			.b = &vertices[triangles[3*i+1]],
-			.c = &vertices[triangles[3*i+2]]
+			.v0 = &vertices[triangles[3*i]],
+			.v1 = &vertices[triangles[3*i+1]],
+			.v2 = &vertices[triangles[3*i+2]]
 		};
 
 		// determine the color of the triangle
@@ -67,12 +67,8 @@ void render_triangles(uint32_t* framebuffer, uint32_t* zbuffer, struct Vec3f* ve
 		uint32_t color = (r << 24) | (g << 16) | (b << 8) | a;
 
 		// draw triangles
-		struct PixelArray triangle_pixels = rasterize_triangle(tri);
+		rasterize_triangle(tri, framebuffer, zbuffer, color);
 		
-		draw_pixels_to_framebuffer(triangle_pixels.pixels, framebuffer, zbuffer, triangle_pixels.num_pixels, color); 
-
-		// free resources
-		destroy_pixel_array(triangle_pixels);
 	}
 
 }
