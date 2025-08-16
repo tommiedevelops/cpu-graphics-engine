@@ -2,8 +2,10 @@
 #define TRIANGLE_H
 
 #include <stdbool.h>
+#include <stdint.h>
 #include "vec3f.h"
 #include "pixel.h"
+#include "color.h"
 
 struct Triangle {
 	// no order is assumed here

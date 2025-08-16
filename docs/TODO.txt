@@ -8,3 +8,5 @@ multithread obj parsing (using some sort of divide and conquer approach).
 - it takes too long when the file is too big (300MB for example)
 
 refactor triangle.h so that struct Triangle is obsolete and it is just treated as an int[] relative to a vertex[]
+
+get rid of unecessary allocs in render_triangle. write directly to framebuffer to improve performance

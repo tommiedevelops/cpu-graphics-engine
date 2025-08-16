@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include "triangle.h"
+#include "color.h"
 
 struct Triangle create_triangle(
 	struct Vec3f* a,
@@ -160,3 +162,4 @@ struct PixelArray rasterize_triangle(struct Triangle tri) {
 	return pixel_array;
 }
 
+//void rasterize_triangle(struct Triangle tri, uint32_t* framebuffer, uint32_t* zbuffer, struct Color color);
