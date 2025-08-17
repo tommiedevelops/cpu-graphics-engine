@@ -38,6 +38,17 @@ bool inside_triangle(float alpha, float beta, float gamma){
 	return (alpha > 0) && (beta > 0) && (gamma > 0) && (alpha <= 1) && (beta <= 1) && (gamma <= 1);
 }
 
+uint32_t interpolate_depth(struct Triangle tri, float alpha, float beta, float gamma){
+	// the basic idea is that each point x,y has a z value. i just need to calculate it
+	float z0 = tri.v0->z;
+	float z1 = tri.v1->z;
+	float z2 = tri.v2->z;
+	
+	float zsum = z0 + z1 + z2;
+
+	return (uint32_t)(alpha*z0/zsum + beta*z1/zsum + gamma*z1/zsum);
+}
+
 void rasterize_triangle(struct Triangle tri, uint32_t* framebuffer, uint32_t* zbuffer, uint32_t color) {
 	
 	// Currently assuming camera fixed on z-axis and is orthographic
@@ -64,7 +75,15 @@ void rasterize_triangle(struct Triangle tri, uint32_t* framebuffer, uint32_t* zb
 			float beta = ((y-A->y) - alpha*(B->y-A->y))/(C->y-A->y);
 			float gamma = 1 - alpha - beta;
 			
-			// use bary coords to interpolate depth and update the zbuffer
+			// use bary coords to interpolate depth
+			uint32_t depth = interpolate_depth(tri, alpha, beta, gamma);	
+			
+			// at this point, the vertices are already normalized to fit in the [-1,1] cube. 
+			// naturally, the zbuffer will contain values between -1 and 1. 
+	
+			// update the zbuffer	
+			//if( depth > zbuffer[z + WIDTH*y] 						
+
 			if( inside_triangle(alpha, beta, gamma) ) 
 				place_pixel(x,y,color,framebuffer);			
 		}
