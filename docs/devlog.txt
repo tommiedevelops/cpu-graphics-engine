@@ -1,0 +1,7 @@
+17/08/25
+
+* successfully removed pixel.* modules which sped up program significantly. it's now running at minimum 50fps whereas before
+it was around 5fps. 
+* getting rid of the mallocs each frame dramatically sped up the program!
+* now just need to implement barycentric coords again to rasterize the triangles properly
+* also need to implement zbuffer to cull backfaces
