@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include "triangle.h"
 #include "color.h"
 #include "render.h"
@@ -33,17 +34,19 @@ void sort_vertices_by_y_asc(struct Triangle tri) {
 	if (tri.v1->y < tri.v0->y) swap((void**)&tri.v0,(void**)&tri.v1);
 }
 
-// Rasterizes a single triangle
-void rasterize_triangle(struct Triangle tri, uint32_t* framebuffer, uint32_t* zbuffer, uint32_t color) {
+bool inside_triangle(float alpha, float beta, float gamma){
+	return (alpha > 0) && (beta > 0) && (gamma > 0) && (alpha <= 1) && (beta <= 1) && (gamma <= 1);
+}
 
-	// sort vertices in ascending y
+void rasterize_triangle(struct Triangle tri, uint32_t* framebuffer, uint32_t* zbuffer, uint32_t color) {
+	
+	// Currently assuming camera fixed on z-axis and is orthographic
 	sort_vertices_by_y_asc(tri);
 
 	struct Vec3f* A = tri.v0;
 	struct Vec3f* B = tri.v1;
 	struct Vec3f* C = tri.v2;
 
-	//TODO test this works
 	struct Bounds bounds = get_bounds_from_tri(tri);
 
 	int xmin = (int)bounds.xmin;
@@ -53,16 +56,17 @@ void rasterize_triangle(struct Triangle tri, uint32_t* framebuffer, uint32_t* zb
 	
 	for(int y = ymin; y < ymax; y++){
 		for(int x = xmin; x < xmax; x++) {
-			// TODO 
+
 			// calculate barycentric coords
 			float alpha = (A->x*(C->y-A->y)+(y-A->y)*(C->x-A->x)-x*(C->y-A->y))
 					/((B->y-A->y)*(C->x-A->x)-(B->x-A->x)*(C->y-A->y));
 
 			float beta = ((y-A->y) - alpha*(B->y-A->y))/(C->y-A->y);
 			float gamma = 1 - alpha - beta;
-
-			// if inside triangle, place the pixel
-			place_pixel(x,y,color,framebuffer);			
+			
+			// use bary coords to interpolate depth and update the zbuffer
+			if( inside_triangle(alpha, beta, gamma) ) 
+				place_pixel(x,y,color,framebuffer);			
 		}
 	}
 }
