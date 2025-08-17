@@ -3,7 +3,6 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "pixel.h"
 
 int compute_num_pixels(int x0, int y0, int x1, int y1);
 struct Pixel* draw_line(int x0, int y0, int x1, int y1);

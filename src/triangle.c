@@ -43,6 +43,7 @@ void rasterize_triangle(struct Triangle tri, uint32_t* framebuffer, uint32_t* zb
 	struct Vec3f* B = tri.v1;
 	struct Vec3f* C = tri.v2;
 
+	//TODO test this works
 	struct Bounds bounds = get_bounds_from_tri(tri);
 
 	int xmin = (int)bounds.xmin;
@@ -52,6 +53,7 @@ void rasterize_triangle(struct Triangle tri, uint32_t* framebuffer, uint32_t* zb
 	
 	for(int y = ymin; y < ymax; y++){
 		for(int x = xmin; x < xmax; x++) {
+			// TODO 
 			// calculate barycentric coords
 			float alpha = (A->x*(C->y-A->y)+(y-A->y)*(C->x-A->x)-x*(C->y-A->y))
 					/((B->y-A->y)*(C->x-A->x)-(B->x-A->x)*(C->y-A->y));

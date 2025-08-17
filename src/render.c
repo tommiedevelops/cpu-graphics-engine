@@ -16,35 +16,6 @@ void place_pixel(int x, int y, uint32_t value, uint32_t* framebuffer) {
                 framebuffer[x + WIDTH*y] = value;
 }
 
-void draw_depth_pixels_to_zbuffer(struct DepthPixelArray depth_pixels, uint32_t* zbuffer){
-	int num_pixels = depth_pixels.num_depth_pixels; 
-};
-
-void draw_pixels_to_framebuffer(struct Pixel* pixels, uint32_t *framebuffer, uint32_t *zbuffer, int num_pixels, uint32_t color){
-	bool error = false;
-
-	if( (pixels == NULL) || (framebuffer == NULL) ) {
-		perror("pixels or framebuffer is null");
-		return;
-	}
-
-	for(int i = 0; i < num_pixels; i++){
-
-		if( (pixels[i].x > WIDTH) || (pixels[i].x < 0) ) {
-			printf("invalid x value. pixel={%d,%d}\n", pixels[i].x, pixels[i].y);
-			error = true;
-		}
-
-		if( (pixels[i].y > HEIGHT) || (pixels[i].y < 0) ) {
-			printf("invalid y value. pixel={%d,%d}\n", pixels[i].x, pixels[i].y);
-			error = true;
-		}
- 		if(error) {return;}
-
-		framebuffer[pixels[i].x + WIDTH * pixels[i].y] = color;
-	}
-}
-
 void render_triangles(uint32_t* framebuffer, uint32_t* zbuffer, struct Vec3f* vertices, int* triangles, int num_triangles){
 	//TODO include zbuffer in rendering calculation
 	// for each pixel on the screen, calculate the 'depth' of the pixel by interpolating the values in the triangle

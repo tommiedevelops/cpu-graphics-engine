@@ -29,6 +29,18 @@ struct Bounds get_bounds_from_tri(struct Triangle tri){
 	if (tri.v2->y > bounds.ymax) {bounds.ymax = tri.v2->y;}
 	if (tri.v2->z > bounds.zmax) {bounds.zmax = tri.v2->z;}
 
+	if (tri.v0->x < bounds.xmin) {bounds.xmin = tri.v0->x;}
+	if (tri.v0->y < bounds.ymin) {bounds.ymin = tri.v0->y;}
+	if (tri.v0->z < bounds.zmin) {bounds.zmin = tri.v0->z;}
+
+	if (tri.v1->x < bounds.xmin) {bounds.xmin = tri.v1->x;}
+	if (tri.v1->y < bounds.ymin) {bounds.ymin = tri.v1->y;}
+	if (tri.v1->z < bounds.zmin) {bounds.zmin = tri.v1->z;}
+
+	if (tri.v2->x < bounds.xmin) {bounds.xmin = tri.v2->x;}
+	if (tri.v2->y < bounds.ymin) {bounds.ymin = tri.v2->y;}
+	if (tri.v2->z < bounds.zmin) {bounds.zmin = tri.v2->z;}
+
         return bounds;
 }
 
