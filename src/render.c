@@ -16,7 +16,7 @@ void place_pixel(int x, int y, uint32_t value, uint32_t* framebuffer) {
                 framebuffer[x + WIDTH*y] = value;
 }
 
-void render_triangles(uint32_t* framebuffer, uint32_t* zbuffer, struct Vec3f* vertices, int* triangles, int num_triangles){
+void render_triangles(uint32_t* framebuffer, float* zbuffer, struct Vec3f* vertices, int* triangles, int num_triangles){
 	//TODO include zbuffer in rendering calculation
 	// for each pixel on the screen, calculate the 'depth' of the pixel by interpolating the values in the triangle
 	for(int i = 0; i < num_triangles; i++)	{

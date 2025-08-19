@@ -21,5 +21,5 @@ struct Triangle create_triangle(
 
 // array size 3 of struct Vec3f ptrs
 void sort_vertices_by_y_asc(struct Triangle tri);
-void rasterize_triangle(struct Triangle tri, uint32_t* framebuffer, uint32_t* zbuffer, uint32_t color);
+void rasterize_triangle(struct Triangle tri, uint32_t* framebuffer, float* zbuffer, uint32_t color);
 #endif

@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
 
 	// Initialize framebuffer and z-buffer
 	uint32_t framebuffer[WIDTH * HEIGHT] = {0};
-	uint32_t zbuffer[WIDTH * HEIGHT] = {0};
+	float zbuffer[WIDTH * HEIGHT] = {0};
 
         /* Prepare Window using SDL */
         struct SDL_Data window_data = initialise_window();
@@ -61,7 +61,7 @@ int main(int argc, char* argv[]) {
 
 		// Clear the buffers	
 		memset(framebuffer, 0x0, sizeof(framebuffer));
-		memset(framebuffer, 0x0, sizeof(zbuffer));
+		memset(zbuffer, 100000.0f, sizeof(zbuffer));
 
                 // Event handling
                 while (SDL_PollEvent(&event)) {

@@ -5,3 +5,8 @@ it was around 5fps.
 * getting rid of the mallocs each frame dramatically sped up the program!
 * now just need to implement barycentric coords again to rasterize the triangles properly
 * also need to implement zbuffer to cull backfaces
+
+19/08/25
+* spent a while trying to debug zbuffer stuff. got stuck because i don't know exact position of camera (pos z inf or neg z inf?)
+* eventually got someting working but it appears to chop the bunny in half (probably something to do with negative values)
+* need to debug further. demo: https://drive.google.com/file/d/1_DxiqoNhu3OlH_KBBLPmDgHHxaBPGjX8/view?usp=drive_link
