@@ -44,7 +44,7 @@ float interpolate_depth(struct Triangle tri, float alpha, float beta, float gamm
 	float z0 = tri.v0->z;
 	float z1 = tri.v1->z;
 	float z2 = tri.v2->z;
-	
+
 	float depth = alpha*z0 + beta*z1 + gamma*z2;
 
 	return depth;
@@ -78,13 +78,15 @@ void rasterize_triangle(struct Triangle tri, uint32_t* framebuffer, float* zbuff
 								
 			if( inside_triangle(alpha, beta, gamma) ) {
 				float depth = interpolate_depth(tri, alpha, beta, gamma);	
-				//printf("zbuffer value: %f\n", zbuffer[x + y*WIDTH]);
+				depth = depth / 2 + LENGTH_SCALE;
+
 				//printf("depth calculated: %f\n", depth);				
-				if(depth < zbuffer[x + y*WIDTH]){
+				//printf("zbuffer value: %f\n", zbuffer[x + y*WIDTH]);
+
+				if(depth > zbuffer[x + y*WIDTH]){
 					place_pixel(x,y,color,framebuffer);			
 					zbuffer[x + y*WIDTH] = depth;
-				}
-			}	
+				} 			}	
 
 		}
 

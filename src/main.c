@@ -61,7 +61,7 @@ int main(int argc, char* argv[]) {
 
 		// Clear the buffers	
 		memset(framebuffer, 0x0, sizeof(framebuffer));
-		memset(zbuffer, 100000.0f, sizeof(zbuffer));
+		memset(zbuffer, FLT_MAX, sizeof(zbuffer));
 
                 // Event handling
                 while (SDL_PollEvent(&event)) {
@@ -76,8 +76,7 @@ int main(int argc, char* argv[]) {
 		struct Vec3f* vertices = get_vertices_from_game_object(go);
 	
 		// Normalize vertices
-		float length_scale = 500.0f;
-		normalize_vectors(length_scale, vertices, mesh.num_vertices);
+		normalize_vectors(LENGTH_SCALE, vertices, mesh.num_vertices);
 
        		// Reflect vertices vertically
        		for(int i = 0; i < mesh.num_vertices; i++){

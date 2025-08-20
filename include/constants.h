@@ -4,5 +4,5 @@
 #define WIDTH (1280)
 #define HEIGHT (720)
 #define COLOR_RED (0xFF0000FF)
-
+#define LENGTH_SCALE (500.0f)
 #endif
