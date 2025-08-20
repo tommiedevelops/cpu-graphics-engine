@@ -19,8 +19,12 @@ struct Vec3f {
 };
 
 float dot_product(struct Vec3f a, struct Vec3f b);
-struct Vec3f cross_product(struct Vec3f a, struct Vec3f b);
+struct Vec3f vec3f_cross(struct Vec3f a, struct Vec3f b);
 
+struct Vec3f vec3f_normalize(struct Vec3f v);
+float vec3f_magnitude(struct Vec3f v);
+struct Vec3f vec3f_add(struct Vec3f a, struct Vec3f b);
+struct Vec3f vec3f_scale(struct Vec3f v, float value);
 void convert_vec3f_to_int_values(struct Vec3f* vertex);
 void scale_vector(struct Vec3f* vec3f, float scalar);
 void translate_vector(struct Vec3f* vec3f, float dx, float dy, float dz);

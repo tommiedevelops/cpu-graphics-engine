@@ -21,6 +21,10 @@ struct GameObject {
 	struct Mesh mesh;
 };
 
+struct LightSource {
+	struct Vec3f direction;
+};
+
 struct Vec3f* get_vertices_from_game_object(struct GameObject go);
 
 struct Scene {

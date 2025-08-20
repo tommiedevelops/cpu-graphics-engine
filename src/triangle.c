@@ -21,6 +21,17 @@ struct Triangle create_triangle(
 	return tri;
 }
 
+struct Vec3f calculate_normal(struct Triangle tri){
+	
+	// u = v1 - v0
+	struct Vec3f u = vec3f_add(*tri.v0, vec3f_scale(*tri.v1, -1));
+	// v = v2 - v0
+	struct Vec3f v = vec3f_add(*tri.v0, vec3f_scale(*tri.v2, -1));
+	
+	struct Vec3f n = vec3f_normalize(vec3f_cross(u,v));
+	
+	return n;
+}
 
 void swap(void** a, void** b){
 	void* temp = *a;
@@ -78,10 +89,9 @@ void rasterize_triangle(struct Triangle tri, uint32_t* framebuffer, float* zbuff
 								
 			if( inside_triangle(alpha, beta, gamma) ) {
 				float depth = interpolate_depth(tri, alpha, beta, gamma);	
+				
+				// Normalize depth to only positive values
 				depth = depth / 2 + LENGTH_SCALE;
-
-				//printf("depth calculated: %f\n", depth);				
-				//printf("zbuffer value: %f\n", zbuffer[x + y*WIDTH]);
 
 				if(depth > zbuffer[x + y*WIDTH]){
 					place_pixel(x,y,color,framebuffer);			

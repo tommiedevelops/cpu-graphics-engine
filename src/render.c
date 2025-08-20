@@ -1,13 +1,11 @@
-#include <stdio.h>
+#include <stdio.h> 
 #include <stdint.h>
 #include <math.h>
 #include <stdlib.h>
 #include <stdbool.h>
 
-#include "constants.h"
-#include "line.h"
 #include "vec3f.h"
-#include "triangle.h"
+#include "render.h"
 
 void place_pixel(int x, int y, uint32_t value, uint32_t* framebuffer) {
                 if( (x > WIDTH) || (x < 0) ) {printf("line.c/place_pixel: invalid x value. pixel= {%d,%d}\n", x,y); return;}
@@ -16,9 +14,7 @@ void place_pixel(int x, int y, uint32_t value, uint32_t* framebuffer) {
                 framebuffer[x + WIDTH*y] = value;
 }
 
-void render_triangles(uint32_t* framebuffer, float* zbuffer, struct Vec3f* vertices, int* triangles, int num_triangles){
-	//TODO include zbuffer in rendering calculation
-	// for each pixel on the screen, calculate the 'depth' of the pixel by interpolating the values in the triangle
+void render_triangles(uint32_t* framebuffer, float* zbuffer, struct Vec3f* vertices, int* triangles, int num_triangles, struct LightSource light_source){
 	for(int i = 0; i < num_triangles; i++)	{
 
 		// create a triangle
@@ -27,13 +23,22 @@ void render_triangles(uint32_t* framebuffer, float* zbuffer, struct Vec3f* verti
 			.v1 = &vertices[triangles[3*i+1]],
 			.v2 = &vertices[triangles[3*i+2]]
 		};
+		
+		// Calculate the normal vector of the triangle
+		struct Vec3f normal = calculate_normal(tri);		
 
+		//Calculate the dot product between normal vector and light source
+		float dot_prod = dot_product(normal, light_source.direction);
+		
+		// Square dot product to fit in [0,1] range
+		dot_prod = dot_prod * dot_prod;
+		
 		// determine the color of the triangle
 		uint8_t r, g, b, a;
-		a = 255;
-		r = rand() % 256;
-		g = rand() % 256;
-		b = rand() % 256;
+		a = dot_prod* 256;
+		r = dot_prod* 256;
+		g = dot_prod* 256;
+		b = dot_prod* 256;
 
 		uint32_t color = (r << 24) | (g << 16) | (b << 8) | a;
 

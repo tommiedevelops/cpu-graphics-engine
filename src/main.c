@@ -38,6 +38,13 @@ int main(int argc, char* argv[]) {
 		.mesh 	    = mesh     , 
 		.transform  = transform 
 	};
+	
+	struct Vec3f light_source_pos = VEC3F_1;
+	scale_vector(&light_source_pos, -1);
+
+	struct LightSource light_source  = {
+		.direction = light_source_pos
+	};
 
 	// Initialize time struct
 	struct Time time;
@@ -61,7 +68,7 @@ int main(int argc, char* argv[]) {
 
 		// Clear the buffers	
 		memset(framebuffer, 0x0, sizeof(framebuffer));
-		memset(zbuffer, FLT_MAX, sizeof(zbuffer));
+		memset(zbuffer, (float)FLT_MAX, sizeof(zbuffer));
 
                 // Event handling
                 while (SDL_PollEvent(&event)) {
@@ -90,7 +97,14 @@ int main(int argc, char* argv[]) {
        		}
 
 		// Rasterize triangles in the scene to the framebuffer
-	        render_triangles(framebuffer, zbuffer, vertices, mesh.triangles, mesh.num_triangles);
+	        render_triangles(
+			       	 framebuffer       , 
+				 zbuffer           , 
+				 vertices          , 
+			       	 mesh.triangles    , 
+				 mesh.num_triangles,
+				 light_source
+		);
 
 		// Update SDL2 window w/ new framebuffer
                 update_window(window_data, framebuffer);
