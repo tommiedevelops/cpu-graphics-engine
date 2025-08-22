@@ -21,6 +21,11 @@ struct GameObject {
 	struct Mesh mesh;
 };
 
+struct Material {
+	struct Color color;
+	struct Texture *tex;
+};
+
 struct LightSource {
 	struct Vec3f direction;
 };

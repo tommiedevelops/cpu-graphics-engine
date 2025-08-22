@@ -14,4 +14,4 @@ it was around 5fps.
 22/08/25
 * there are some visual artifacts on the 3D render. I used a very simple lighting model to flat shade the .obj. 
 * The artifacts include random horizontal and vertical lines. Will debug today. demo: https://drive.google.com/file/d/1bPZyXsM5UkKR6BHqA6qJ0xTAO5pDQ1xs/view?usp=drive_link
-
+* ok i fixed the artifacts. i now want to have look at texturing the bunny. i want to spend some time researching and understanding how 3D objects are usually textured in memory.

@@ -6,6 +6,7 @@
 
 #include "vec3f.h"
 #include "render.h"
+#include "color.h"
 
 void place_pixel(int x, int y, uint32_t value, uint32_t* framebuffer) {
                 if( (x > WIDTH) || (x < 0) ) {printf("line.c/place_pixel: invalid x value. pixel= {%d,%d}\n", x,y); return;}
@@ -34,16 +35,16 @@ void render_triangles(uint32_t* framebuffer, float* zbuffer, struct Vec3f* verti
 		if (dot_prod < 0.0f) dot_prod = 0.0f;
 
 		// determine the color of the triangle
-		uint8_t r, g, b, a;
-		a = 255;
-		r = dot_prod * 256;
-		g = dot_prod * 256;
-		b = dot_prod *  256;
+		struct Color color;
+		color.a = 255;
+		color.r = dot_prod * 256;
+		color.g = dot_prod * 256;
+		color.b = dot_prod *  256;
 
-		uint32_t color = (r << 24) | (g << 16) | (b << 8) | a;
+		uint32_t icolor = color_to_int(color);	
 
 		// draw triangles
-		rasterize_triangle(tri, framebuffer, zbuffer, color);
+		rasterize_triangle(tri, framebuffer, zbuffer, icolor);
 		
 	}
 
