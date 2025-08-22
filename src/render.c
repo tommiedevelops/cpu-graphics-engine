@@ -25,20 +25,20 @@ void render_triangles(uint32_t* framebuffer, float* zbuffer, struct Vec3f* verti
 		};
 		
 		// Calculate the normal vector of the triangle
-		struct Vec3f normal = calculate_normal(tri);		
+		struct Vec3f normal = vec3f_normalize(calculate_normal(tri));
+		struct Vec3f light = vec3f_normalize(light_source.direction);	
 
 		//Calculate the dot product between normal vector and light source
-		float dot_prod = dot_product(normal, light_source.direction);
+		float dot_prod = dot_product(normal, light);
 		
-		// Square dot product to fit in [0,1] range
-		dot_prod = dot_prod * dot_prod;
-		
+		if (dot_prod < 0.0f) dot_prod = 0.0f;
+
 		// determine the color of the triangle
 		uint8_t r, g, b, a;
-		a = dot_prod* 256;
-		r = dot_prod* 256;
-		g = dot_prod* 256;
-		b = dot_prod* 256;
+		a = 255;
+		r = dot_prod * 256;
+		g = dot_prod * 256;
+		b = dot_prod *  256;
 
 		uint32_t color = (r << 24) | (g << 16) | (b << 8) | a;
 

@@ -69,16 +69,19 @@ void rasterize_triangle(struct Triangle tri, uint32_t* framebuffer, float* zbuff
 	struct Vec3f* A = tri.v0;
 	struct Vec3f* B = tri.v1;
 	struct Vec3f* C = tri.v2;
-
+	
 	struct Bounds bounds = get_bounds_from_tri(tri);
 
 	int xmin = (int)bounds.xmin;
 	int xmax = (int)bounds.xmax;
 	int ymin = (int)bounds.ymin;
 	int ymax = (int)bounds.ymax;
-	
-	for(int y = ymin; y < ymax; y++){
-		for(int x = xmin; x < xmax; x++) {
+
+	//float allowance = 10.0f;
+	//if( ( abs(xmax - xmin) < allowance ) || ( abs(ymax - ymin) < allowance ) ) return;
+
+	for(int y = ymin; y <= ymax; y++){
+		for(int x = xmin; x <= xmax; x++) {
 
 			// calculate barycentric coords
 			float alpha = (A->x*(C->y-A->y)+(y-A->y)*(C->x-A->x)-x*(C->y-A->y))
@@ -93,10 +96,11 @@ void rasterize_triangle(struct Triangle tri, uint32_t* framebuffer, float* zbuff
 				// Normalize depth to only positive values
 				depth = depth / 2 + LENGTH_SCALE;
 
-				if(depth > zbuffer[x + y*WIDTH]){
+				if(depth >= zbuffer[x + y*WIDTH]){
 					place_pixel(x,y,color,framebuffer);			
 					zbuffer[x + y*WIDTH] = depth;
-				} 			}	
+				} 			
+			}	
 
 		}
 

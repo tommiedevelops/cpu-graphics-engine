@@ -10,3 +10,8 @@ it was around 5fps.
 * spent a while trying to debug zbuffer stuff. got stuck because i don't know exact position of camera (pos z inf or neg z inf?)
 * eventually got someting working but it appears to chop the bunny in half (probably something to do with negative values)
 * need to debug further. demo: https://drive.google.com/file/d/1_DxiqoNhu3OlH_KBBLPmDgHHxaBPGjX8/view?usp=drive_link
+
+22/08/25
+* there are some visual artifacts on the 3D render. I used a very simple lighting model to flat shade the .obj. 
+* The artifacts include random horizontal and vertical lines. Will debug today. demo: https://drive.google.com/file/d/1bPZyXsM5UkKR6BHqA6qJ0xTAO5pDQ1xs/view?usp=drive_link
+

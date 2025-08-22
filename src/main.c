@@ -68,7 +68,7 @@ int main(int argc, char* argv[]) {
 
 		// Clear the buffers	
 		memset(framebuffer, 0x0, sizeof(framebuffer));
-		memset(zbuffer, (float)FLT_MAX, sizeof(zbuffer));
+		memset(zbuffer, 0x0, sizeof(zbuffer));
 
                 // Event handling
                 while (SDL_PollEvent(&event)) {
