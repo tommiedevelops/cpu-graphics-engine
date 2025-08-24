@@ -5,7 +5,7 @@
 
 struct Transform {
 	struct Vec3f position;  // in world coords
-	struct Vec3f rotation;  // (0,0,0) => facing +z
+	struct Vec3f rotation;  // (0,0,0) => facing -z
 	struct Vec3f scale;
 };
 
