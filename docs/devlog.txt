@@ -21,3 +21,9 @@ it was around 5fps.
 * the latter requires studying the maths a bit more deeply - going into the various vector spaces and the relevant transforms
 * the former requires understanding textures, fragment shaders and materials better
 * I've decided to focus on perspective correction
+
+25/08/25
+* today, I will focus on completing the perspective correction algorithm.
+* today, wrote notes on linear/affine transformations and homogenous coordinates as well as clipping
+* would be good to have a directory in the repository containing all of my study notes written in LaTeX / md except
+i haven't designed a workflow for that just yet.

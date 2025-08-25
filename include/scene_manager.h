@@ -30,12 +30,17 @@ struct LightSource {
 	struct Vec3f direction;
 };
 
-struct Vec3f* get_vertices_from_game_object(struct GameObject go);
-
 struct Scene {
 	// For now, can only hold a single GameObject	
 	struct GameObject gameObject;
 };
 
+struct Vec3f* get_vertices_from_game_object(struct GameObject go);
+
+struct Mat3f get_model_matrix(struct GameObject go);
+
+struct Mat3f get_view_matrix(struct GameObject go);
+
+struct Mat3f get_clip_matrix();
 
 #endif
