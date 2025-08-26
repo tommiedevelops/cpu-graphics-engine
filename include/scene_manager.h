@@ -50,11 +50,11 @@ struct Scene {
 // this function basically applies a simple rotation matrix
 struct Vec3f* get_vertices_from_game_object(struct GameObject go);
 
-struct Mat4f get_model_matrix(struct GameObject go);
+struct Mat4 get_model_matrix(struct Transform tr);
 
-struct Mat4f get_view_matrix(struct Camera cam);
+struct Mat4 get_view_matrix(struct Camera cam);
 
-struct Mat4f get_projection_matrix();
+struct Mat4 get_projection_matrix();
 
-struct Mat3f get_screen_space_matrix();
+struct Mat3 get_screen_space_matrix();
 #endif

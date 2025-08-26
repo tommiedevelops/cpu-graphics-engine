@@ -5,6 +5,7 @@
 #include "matrix.h"
 
 
+
 struct Mat3 get_rotation_matrix(struct Transform tr) {
 	float cy = cosf(tr.rotation.y);
 	float sy = sinf(tr.rotation.y);
@@ -16,6 +17,14 @@ struct Mat3 get_rotation_matrix(struct Transform tr) {
 	}};
 	
 	return ry;
+}
+
+struct Mat4 get_scale_matrix(struct Transform tr);
+struct Mat4 get_translation_matrix(struct Transform tr);
+struct Mat4 get_rotation_matrix_mat4(struct Transform tr);
+
+struct Mat4 get_model_matrix(struct Transform tr){
+	
 }
 
 struct Vec3f* get_vertices_from_game_object(struct GameObject go) {
