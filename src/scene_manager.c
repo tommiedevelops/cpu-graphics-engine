@@ -22,16 +22,6 @@ struct Vec3f* get_vertices_from_game_object(struct GameObject go) {
 	// Prepare vertex array
 	struct Vec3f* vertices = malloc(go.mesh.num_vertices*sizeof(struct Vec3f));
 
-	if(vertices == NULL){
-		perror("src/scene_manager.c/get_vertices_from_game_object: malloc failed");
-		exit(EXIT_FAILURE);
-	}
-
-	if(go.mesh.vertices == NULL){
-		perror("src/scene_manager.c/get_vertices_from_game_object: vertex array is null");
-		exit(EXIT_FAILURE);
-	}
-
 	// Prepare rotation matrix (in future: transformation matrix)
 	struct Mat3 rotation = get_rotation_matrix(go.transform);
 

@@ -39,7 +39,7 @@ void render_triangles(uint32_t* framebuffer, float* zbuffer, struct Vec3f* verti
 		color.a = 255;
 		color.r = dot_prod * 256;
 		color.g = dot_prod * 256;
-		color.b = dot_prod *  256;
+		color.b = dot_prod * 256;
 
 		uint32_t icolor = color_to_int(color);	
 

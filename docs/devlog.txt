@@ -25,5 +25,10 @@ it was around 5fps.
 25/08/25
 * today, I will focus on completing the perspective correction algorithm.
 * today, wrote notes on linear/affine transformations and homogenous coordinates as well as clipping
-* would be good to have a directory in the repository containing all of my study notes written in LaTeX / md except
-i haven't designed a workflow for that just yet.
+* would be good to have a directory in the repository containing all of my study notes written in LaTeX / md except i haven't designed a workflow for that just yet.
+
+26/08/25
+* still focusing on implementing perspective projection* (not correction lol). I'm still spending time understanding the concepts.
+* I've decided to include an AABB in struct Camera that matches Vulcan's canonical view volume. (Just so I have something to work with)
+* I have decided to focus on deriving the Transform matrix first which converts vertices from Model space into World Space.
+* The transform matrix is composed of the scale, rotation and translation operations (which themselves are matrices)

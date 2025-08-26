@@ -2,11 +2,20 @@
 #define SCENE_MANAGER_H
 #include "vec3f.h"
 #include "obj_parser.h"
+#include "bounds.h"
 
+// --- STRUCT DEFINITIONS --- 
 struct Transform {
 	struct Vec3f position;  // in world coords
 	struct Vec3f rotation;  // (0,0,0) => facing -z
 	struct Vec3f scale;
+};
+
+struct Camera { 
+	struct Transform transform;
+	float fov;
+	float near_plane;
+	float far_plane;
 };
 
 struct Mesh {
@@ -31,16 +40,21 @@ struct LightSource {
 };
 
 struct Scene {
-	// For now, can only hold a single GameObject	
-	struct GameObject gameObject;
+	struct Camera cam;
+	struct GameObject *gameObjects;
+	struct LightSource light;
 };
 
+// --- FUNCTIONS ---
+
+// this function basically applies a simple rotation matrix
 struct Vec3f* get_vertices_from_game_object(struct GameObject go);
 
-struct Mat3f get_model_matrix(struct GameObject go);
+struct Mat4f get_model_matrix(struct GameObject go);
 
-struct Mat3f get_view_matrix(struct GameObject go);
+struct Mat4f get_view_matrix(struct Camera cam);
 
-struct Mat3f get_clip_matrix();
+struct Mat4f get_projection_matrix();
 
+struct Mat3f get_screen_space_matrix();
 #endif
