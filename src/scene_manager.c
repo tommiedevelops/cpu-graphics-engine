@@ -19,8 +19,28 @@ struct Mat3 get_rotation_matrix(struct Transform tr) {
 	return ry;
 }
 
-struct Mat4 get_scale_matrix(struct Transform tr);
-struct Mat4 get_translation_matrix(struct Transform tr);
+struct Mat4 get_scale_matrix(struct Transform tr) {
+	struct Vec3f scale = tr.scale;
+	struct Mat4 scale_matrix = {{
+		{scale.x, 0,       0,       0},
+		{0,       scale.y, 0,       0},
+		{0,       0,       scale.z, 0},
+		{0,       0,       0,       1.0f},
+	}};
+	return scale_matrix;
+}
+
+struct Mat4 get_translation_matrix(struct Transform tr) {
+	struct Vec3f pos = tr.position;
+    	struct Mat4 translation_matrix = {{
+       		{1, 0, 0, pos.x},
+        	{0, 1, 0, pos.y},
+        	{0, 0, 1, pos.z},
+        	{0, 0, 0, 1    },
+    	}};
+    	return translation_matrix;	
+}
+
 struct Mat4 get_rotation_matrix_mat4(struct Transform tr);
 
 struct Mat4 get_model_matrix(struct Transform tr){

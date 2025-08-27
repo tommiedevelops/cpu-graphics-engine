@@ -32,3 +32,8 @@ it was around 5fps.
 * I've decided to include an AABB in struct Camera that matches Vulcan's canonical view volume. (Just so I have something to work with)
 * I have decided to focus on deriving the Transform matrix first which converts vertices from Model space into World Space.
 * The transform matrix is composed of the scale, rotation and translation operations (which themselves are matrices)
+
+27/08/23
+* My goal today is to implement the Model, View and Projection matrices as well as Viewport matrix
+* I'm also thinking about how this repository will look as a finished product. I would like to write brief LaTeX pdf outlining the projct structure and the main concepts
+* I would also like to have some cloud repository that stores clean .obj files that can be used.

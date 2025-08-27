@@ -3,6 +3,7 @@
 #include "vec3f.h"
 #include "obj_parser.h"
 #include "bounds.h"
+#include "quaternion.h"
 
 // --- STRUCT DEFINITIONS --- 
 struct Transform {
