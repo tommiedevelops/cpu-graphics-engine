@@ -9,6 +9,7 @@
 #include "window.h"
 #include "scene_manager.h"
 #include "game_time.h"
+#include "quaternion.h"
 
 // Expects a single string for cmd line input representing the obj that the user wishes to render
 
@@ -30,7 +31,7 @@ int main(int argc, char* argv[]) {
 	// Prepare Transform and GameObject
 	struct Transform transform = {
 		.position = VEC3F_0, 
-		.rotation = VEC3F_0, 
+		.rotation = QUAT_IDENTITY, 
 		.scale = VEC3F_1
 	};
 
@@ -77,10 +78,15 @@ int main(int argc, char* argv[]) {
 
 		// Apply transformations to game object
 		float angular_velocity = 1.0f; 
-		go.transform.rotation.y += time.delta_time * angular_velocity;	
+		float angle = time.delta_time * angular_velocity;
+
+		struct Quaternion delta = quat_angle_axis(angle, (struct Vec3f){0.0f, 1.0f, 0.0f});
+
+		go.transform.rotation = quat_mul(go.transform.rotation, delta);	
+		go.transform.rotation = quat_normalize(go.transform.rotation);
 		
 		// Extract vertices and triangles from the Scene in World Coordinates
-		struct Vec3f* vertices = get_vertices_from_game_object(go);
+		struct Vec3f* vertices = (struct Vec3f*)get_vertices_from_game_object(go);
 	
 		// Normalize vertices
 		normalize_vectors(LENGTH_SCALE, vertices, mesh.num_vertices);

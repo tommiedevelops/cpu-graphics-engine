@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <math.h>
 #include "quaternion.h"
 
@@ -10,22 +11,73 @@ to a rotation of theta around vector n.
 */
 
 bool quat_are_equal(struct Quaternion q0, struct Quaternion q1);
-bool quat_mul_quat(struct Quaternion q0, struct Quaternion q1);
 struct Quaternion quat_conjugate(struct Quaternion q);
 struct Quaternion quat_inverse(struct Quaternion q);
+
+struct Quaternion quat_mul(struct Quaternion p, struct Quaternion q) {
+	// ORDER MATTERS
+	struct Quaternion r;	
+	r.q0 = p.q0*q.q0 - p.q1*q.q1 - p.q2*q.q2 - p.q3*q.q3;
+	r.q1 = p.q0*q.q1 + p.q1*q.q0 - p.q2*q.q3 + p.q3*q.q2;
+	r.q2 = p.q0*q.q2 + p.q2*q.q0 + p.q1*q.q3 - p.q3*q.q1;
+	r.q3 = p.q0*q.q3 + p.q3*q.q0 - p.q1*q.q2 + p.q2*q.q3;
+	return r;
+}
+
+struct Quaternion quat_normalize(struct Quaternion q){
+	float n = quat_norm(q);
+	
+	if(n == 0) {
+		printf("src/quaternion.c/normalize_quat: division by 0 error. returning QUAT_IDENTITY\n");
+		return QUAT_IDENTITY;
+	}
+	
+	struct Quaternion result = {
+		.q0 = q.q0/n,
+		.q1 = q.q1/n,
+		.q1 = q.q2/n,
+		.q3 = q.q3/n
+	};
+
+	return result;
+}
 
 float quat_norm(struct Quaternion q) {
 	return sqrtf(q.q0*q.q0 + q.q1*q.q1 + q.q2*q.q2 + q.q3*q.q3);
 }
 	
-struct Quaternion euler_to_quat(struct Vec3f euler_rotation) {
-	// Vec3f = (pitch, yaw, roll) 
-	// pitch => rotation about the x axis in radians
-	// yaw => rotation about they axis in radians
-	// roll => rotation about the z axis in radians
+struct Quaternion quat_angle_axis(float angle, struct Vec3f axis) {
+	struct Quaternion q;
+	float cs = cosf(angle * 0.5f);
+	float sn = sinf(angle * 0.5f);
+
+	q.q0 = cs;
+	q.q1 = sn*axis.x;	
+	q.q2 = sn*axis.y;
+	q.q3 = sn*axis.z;
 	
-	// TODO		
+	return q;
 }
+
+struct Quaternion euler_to_quaternion(float pitch, float yaw, float roll) {
+	// pitch => rotation about x axis in radians
+	// yaw => rotation about y axis in radians
+	// roll => rotation about z axis in radians
+	float cy = cosf(yaw * 0.5f);
+	float sy = sinf(yaw * 0.5f);
+	float cp = cosf(pitch * 0.5f);
+	float sp = sinf(pitch * 0.5f);
+	float cr = cosf(roll * 0.5f);
+	float sr = sinf(roll * 0.5f);
+
+	struct Quaternion q;
+	q.q0 = cr * cp * cy + sr * sp * sy;
+	q.q1 = sr * cp * cy - cr * sp * sy;
+	q.q2 = cr * sp * cy + sr * cp * sy;
+	q.q3 = cr * cp * sy - sr * sp * cy;
+	return q;
+}	
+
 
 struct Mat4 quat_to_mat4(struct Quaternion q) {
 

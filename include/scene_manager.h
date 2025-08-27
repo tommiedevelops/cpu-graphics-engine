@@ -8,7 +8,7 @@
 // --- STRUCT DEFINITIONS --- 
 struct Transform {
 	struct Vec3f position;  // in world coords
-	struct Vec3f rotation;  // (0,0,0) => facing -z
+	struct Quaternion rotation;  
 	struct Vec3f scale;
 };
 
@@ -49,7 +49,7 @@ struct Scene {
 // --- FUNCTIONS ---
 
 // this function basically applies a simple rotation matrix
-struct Vec3f* get_vertices_from_game_object(struct GameObject go);
+struct Vec4f* get_vertices_from_game_object(struct GameObject go);
 
 struct Mat4 get_model_matrix(struct Transform tr);
 
