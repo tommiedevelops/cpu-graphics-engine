@@ -55,3 +55,16 @@ bool vec4f_are_equal(struct Vec4f a, struct Vec4f b) {
 	return true;
 }
 
+bool vec4f_are_about_equal(struct Vec4f a, struct Vec4f b, float allowance) {
+	printf("checking {%f,%f,%f} == {%f,%f,%f}\n", a.x,a.y,a.z,b.x,b.y,b.z);
+	if( abs(a.x - b.x) > allowance ) { return false; }
+	if( abs(a.y - b.y) > allowance ) { return false; }
+	if( abs(a.z - b.z) > allowance ) { return false; }
+	if( abs(a.w - b.w) > allowance ) { return false; }
+
+	return true;
+}
+
+void print_vec4f(struct Vec4f v){
+	printf("(x = %f, y = %f, z = %f, w = %f)\n", v.x, v.y, v.z, v.w);
+}

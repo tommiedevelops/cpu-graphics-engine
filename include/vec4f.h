@@ -24,6 +24,7 @@ struct Vec4f vec4f_add(struct Vec4f a, struct Vec4f b);
 struct Vec4f vec4f_scale(struct Vec4f v, float value);
 struct Vec4f vec4f_translate(struct Vec4f v, float dx, float dy, float dz, float dw);
 bool vec4f_are_equal(struct Vec4f a, struct Vec4f b);
-
+void print_vec4f(struct Vec4f v);
+bool vec4f_are_about_equal(struct Vec4f a, struct Vec4f b, float allowance); 
 #endif
 

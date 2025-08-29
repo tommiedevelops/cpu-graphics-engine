@@ -58,4 +58,14 @@ struct Mat4 get_view_matrix(struct Camera cam);
 struct Mat4 get_projection_matrix();
 
 struct Mat3 get_screen_space_matrix();
+
+struct Mat4 get_scale_matrix(struct Transform tr); 
+
+struct Mat4 get_translation_matrix(struct Transform tr); 
+
+struct Mat4 get_rotation_matrix(struct Transform tr);
+
+struct Mat4 get_model_matrix(struct Transform tr);
+
+void normalize_vertices(float sidelength, struct Vec3f* vertices, int num_vertices);
 #endif

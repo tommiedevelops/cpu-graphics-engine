@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdbool.h>
 
 #include "matrix.h"
 
@@ -10,6 +11,16 @@ void print_mat4(struct Mat4 m) {
 		}
 		printf("\n");
 	}
+}
+
+
+bool mat4_are_equal(struct Mat4 m0, struct Mat4 m1){
+	for(int i = 0; i < 4; i++){
+		for(int j = 0; j < 4; j++){
+			if(m0.m[i][j] != m1.m[i][j]) {return false;}
+		}
+	}
+	return true;
 }
 
 struct Vec3f mat3_mul_vec3(struct Mat3 m, struct Vec3f v) {

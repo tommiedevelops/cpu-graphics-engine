@@ -80,33 +80,42 @@ int main(int argc, char* argv[]) {
 		float angular_velocity = 1.0f; 
 		float angle = time.delta_time * angular_velocity;
 
-		struct Quaternion delta = quat_angle_axis(angle, (struct Vec3f){0.0f, 1.0f, 0.0f});
+		struct Vec3f euler_rot = {.x = angle, .y = angle, .z = angle }; 
+		struct Quaternion delta = euler_to_quat(euler_rot);
 
 		go.transform.rotation = quat_mul(go.transform.rotation, delta);	
-		go.transform.rotation = quat_normalize(go.transform.rotation);
 		
 		// Extract vertices and triangles from the Scene in World Coordinates
-		struct Vec3f* vertices = (struct Vec3f*)get_vertices_from_game_object(go);
-	
+		struct Vec4f* vertices = get_vertices_from_game_object(go);
+		
+		// temporary sollution
+		struct Vec3f* vertices3 = malloc(sizeof(struct Vec3f)*mesh.num_vertices);
+		for(int i = 0; i < mesh.num_vertices; i++){
+			vertices3[i].x = vertices[i].x;
+			vertices3[i].y = vertices[i].y;
+			vertices3[i].z = vertices[i].z;
+		}	
+
 		// Normalize vertices
-		normalize_vectors(LENGTH_SCALE, vertices, mesh.num_vertices);
+		normalize_vertices(LENGTH_SCALE, vertices3, mesh.num_vertices);
 
-       		// Reflect vertices vertically
+       		// Reflect vertices3 vertically
        		for(int i = 0; i < mesh.num_vertices; i++){
-       	        	vertices[i].y = -1 * vertices[i].y;
+       	        	vertices3[i].y = -1 * vertices3[i].y;
        		}
 
-       		// Translate vertices so model is in screen center
+       		// Translate vertices3 so model is in screen center
        		for(int i = 0; i < mesh.num_vertices; i++){
-       	        	vertices[i].x += (int)WIDTH/2;
-       	        	vertices[i].y += (int)HEIGHT/2;
+       	        	vertices3[i].x += (int)WIDTH/2;
+       	        	vertices3[i].y += (int)HEIGHT/2;
        		}
 
+		// temporary so
 		// Rasterize triangles in the scene to the framebuffer
 	        render_triangles(
 			       	 framebuffer       , 
 				 zbuffer           , 
-				 vertices          , 
+				 vertices3          , 
 			       	 mesh.triangles    , 
 				 mesh.num_triangles,
 				 light_source
@@ -115,6 +124,7 @@ int main(int argc, char* argv[]) {
 		// Update SDL2 window w/ new framebuffer
                 update_window(window_data, framebuffer);
 		free(vertices);
+		free(vertices3);
         }
 
         /* Clean Up */

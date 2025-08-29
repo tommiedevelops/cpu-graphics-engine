@@ -56,13 +56,19 @@ struct Quaternion quat_angle_axis(float angle, struct Vec3f axis) {
 	q.q2 = sn*axis.y;
 	q.q3 = sn*axis.z;
 	
+	q = quat_normalize(q);	
+
 	return q;
 }
 
-struct Quaternion euler_to_quaternion(float pitch, float yaw, float roll) {
+struct Quaternion euler_to_quat(struct Vec3f euler_rot) {
 	// pitch => rotation about x axis in radians
 	// yaw => rotation about y axis in radians
 	// roll => rotation about z axis in radians
+	float pitch = euler_rot.y;
+	float yaw = euler_rot.x;
+	float roll = euler_rot.z;
+
 	float cy = cosf(yaw * 0.5f);
 	float sy = sinf(yaw * 0.5f);
 	float cp = cosf(pitch * 0.5f);

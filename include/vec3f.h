@@ -30,8 +30,6 @@ void scale_vector(struct Vec3f* vec3f, float scalar);
 void translate_vector(struct Vec3f* vec3f, float dx, float dy, float dz);
 bool vectors_are_equal(struct Vec3f a, struct Vec3f b);
 
-void normalize_vectors(float sidelength, struct Vec3f* vectors, int num_vectors);
-
 
 #endif
 
