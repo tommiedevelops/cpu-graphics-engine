@@ -48,3 +48,4 @@ it was around 5fps.
 * I successfully debugged it by added some temporary lines of code to convert the Vec4f* into a Vec3f*. 
 * It seems to work when I apply the model matrix altogether. I haven't really tested scale and translation matrices visually though. 
 * There appears to be some weird shearing and scaling when I apply the rotation matrix alogn the x and z axes. Maybe to do with normalization issues? Need to investigate further.
+* 
