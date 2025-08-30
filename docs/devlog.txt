@@ -33,19 +33,21 @@ it was around 5fps.
 * I have decided to focus on deriving the Transform matrix first which converts vertices from Model space into World Space.
 * The transform matrix is composed of the scale, rotation and translation operations (which themselves are matrices)
 
-27/08/23
+27/08/25
 * My goal today is to implement the Model, View and Projection matrices as well as Viewport matrix
 * I'm also thinking about how this repository will look as a finished product. I would like to write brief LaTeX pdf outlining the projct structure and the main concepts
 * I would also like to have some cloud repository that stores clean .obj files that can be used.
 
-28/08/23
+28/08/25
 * completed quaternion module and composed translation, rotation and scale matrices into the model matrix. however, result is very buggy. need to debug 
 * first clue is probably the dodgy (struct Vec3f*) cast that I do onto the struct Vec4f* because I couldn't be bothered re-writing my rasterizer. Once I finish all the matrices, I won't need to re-write the rasterizer though so I'll probably just try to debug this workaround.
 
-29/09/23
+29/09/25
 * Currently I'm debugging get_model_matrix by writing tests for each of the Transform matrices
 * I think I need to VERY explicit with my coordinate axes. By convention, in View Space AND Screen Space: into the camera = positive z. the 'down' direction is positive y. the 'right' direction in positive x. This is with respect to the Camera, so imagine you are looking through the camera / screen. 
 * I successfully debugged it by added some temporary lines of code to convert the Vec4f* into a Vec3f*. 
 * It seems to work when I apply the model matrix altogether. I haven't really tested scale and translation matrices visually though. 
 * There appears to be some weird shearing and scaling when I apply the rotation matrix alogn the x and z axes. Maybe to do with normalization issues? Need to investigate further.
-* 
+ 
+30/08/25
+* Quaternion Maths and, to be honest, rotation maths is still very confusing for me. It would be beneficial for me to do a review + some practice questions
