@@ -34,8 +34,8 @@ struct Quaternion quat_mul(struct Quaternion p, struct Quaternion q) {
 		{p.q3, -p.q2, p.q1, p.q0}
 	}};
 
-	struct Vec4f p_vec = {.x = p.q0, .y = p.q1, .z = p.q2, .w = p.q3 }; 
-	struct Vec4f r_vec = mat4_mul_vec4(m, p_vec);
+	struct Vec4f q_vec = {.x = q.q0, .y = q.q1, .z = q.q2, .w = q.q3 }; 
+	struct Vec4f r_vec = mat4_mul_vec4(m, q_vec);
 
 	struct Quaternion r = {.q0 = r_vec.x, .q1 = r_vec.y, .q2 = r_vec.z, .q3 = r_vec.w };
 
