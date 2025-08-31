@@ -15,12 +15,18 @@ void scene_manager_tests(){
 	test_get_rotation_matrix();
 }
 
+void quaternion_tests(){
+	test_quat_to_mat4();
+	test_quat_normalize();
+	test_euler_to_quat();
+	test_quat_mul();
+}
 int main(){
 	printf("Running unit tests...\n");
 	//bounds_tests();
 	test_vec3f_cross();
 	test_mat4_mul_mat4();
 	scene_manager_tests();
-	test_quat_to_mat4();
+	quaternion_tests();
 }
 

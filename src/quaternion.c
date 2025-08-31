@@ -10,17 +10,35 @@ When applied to a pure quaternion (which maps directly to an R3 vector), this co
 to a rotation of theta around vector n.
 */
 
-bool quat_are_equal(struct Quaternion q0, struct Quaternion q1);
+void print_quat(struct Quaternion q){
+	printf("(%f,%f,%f,%f)\n", q.q0, q.q1, q.q2, q.q3);
+}
+
+bool quat_are_about_equal(struct Quaternion q0, struct Quaternion q1, float epsilon) {
+	if(fabsf(q0.q0 - q1.q0) > epsilon) return false;
+	if(fabsf(q0.q1 - q1.q1) > epsilon) return false;
+	if(fabsf(q0.q2 - q1.q2) > epsilon) return false;
+	if(fabsf(q0.q3 - q1.q3) > epsilon) return false;
+	return true;
+}
+
 struct Quaternion quat_conjugate(struct Quaternion q);
 struct Quaternion quat_inverse(struct Quaternion q);
 
 struct Quaternion quat_mul(struct Quaternion p, struct Quaternion q) {
-	// ORDER MATTERS
-	struct Quaternion r;	
-	r.q0 = p.q0*q.q0 - p.q1*q.q1 - p.q2*q.q2 - p.q3*q.q3;
-	r.q1 = p.q0*q.q1 + p.q1*q.q0 - p.q2*q.q3 + p.q3*q.q2;
-	r.q2 = p.q0*q.q2 + p.q2*q.q0 + p.q1*q.q3 - p.q3*q.q1;
-	r.q3 = p.q0*q.q3 + p.q3*q.q0 - p.q1*q.q2 + p.q2*q.q3;
+
+	struct Mat4 m = {{
+		{p.q0, -p.q1, -p.q2, -p.q3},
+		{p.q1, p.q0, -p.q3, p.q2 },
+		{p.q2, p.q3, p.q0, -p.q1},
+		{p.q3, -p.q2, p.q1, p.q0}
+	}};
+
+	struct Vec4f p_vec = {.x = p.q0, .y = p.q1, .z = p.q2, .w = p.q3 }; 
+	struct Vec4f r_vec = mat4_mul_vec4(m, p_vec);
+
+	struct Quaternion r = {.q0 = r_vec.x, .q1 = r_vec.y, .q2 = r_vec.z, .q3 = r_vec.w };
+
 	return r;
 }
 
@@ -35,7 +53,7 @@ struct Quaternion quat_normalize(struct Quaternion q){
 	struct Quaternion result = {
 		.q0 = q.q0/n,
 		.q1 = q.q1/n,
-		.q1 = q.q2/n,
+		.q2 = q.q2/n,
 		.q3 = q.q3/n
 	};
 
@@ -60,29 +78,25 @@ struct Quaternion quat_angle_axis(float angle, struct Vec3f axis) {
 
 	return q;
 }
-
+	
+// euler_rot = {x=pitch, y=yaw, z=roll}  (radians)
+// XYZ intrinsic order
 struct Quaternion euler_to_quat(struct Vec3f euler_rot) {
-	// pitch => rotation about x axis in radians
-	// yaw => rotation about y axis in radians
-	// roll => rotation about z axis in radians
-	float pitch = euler_rot.y;
-	float yaw = euler_rot.x;
-	float roll = euler_rot.z;
+    float pitch = euler_rot.x; // X
+    float yaw   = euler_rot.y; // Y
+    float roll  = euler_rot.z; // Z
 
-	float cy = cosf(yaw * 0.5f);
-	float sy = sinf(yaw * 0.5f);
-	float cp = cosf(pitch * 0.5f);
-	float sp = sinf(pitch * 0.5f);
-	float cr = cosf(roll * 0.5f);
-	float sr = sinf(roll * 0.5f);
+    float cx = cosf(pitch * 0.5f), sx = sinf(pitch * 0.5f);
+    float cy = cosf(yaw   * 0.5f), sy = sinf(yaw   * 0.5f);
+    float cz = cosf(roll  * 0.5f), sz = sinf(roll  * 0.5f);
 
-	struct Quaternion q;
-	q.q0 = cr * cp * cy + sr * sp * sy;
-	q.q1 = sr * cp * cy - cr * sp * sy;
-	q.q2 = cr * sp * cy + sr * cp * sy;
-	q.q3 = cr * cp * sy - sr * sp * cy;
-	return q;
-}	
+    struct Quaternion q;
+    q.q0 =  cx*cy*cz + sx*sy*sz;   // w
+    q.q1 =  sx*cy*cz - cx*sy*sz;   // x
+    q.q2 =  cx*sy*cz + sx*cy*sz;   // y
+    q.q3 =  cx*cy*sz - sx*sy*cz;   // z
+    return q;
+}
 
 
 struct Mat4 quat_to_mat4(struct Quaternion q) {

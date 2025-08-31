@@ -12,6 +12,8 @@ struct Quaternion {
 	float q3; // k
 };
 
+void print_quat(struct Quaternion q);
+bool quat_are_about_equal(struct Quaternion q0, struct Quaternion q1, float epsilon);
 struct Quaternion quat_angle_axis(float angle, struct Vec3f axis); 
 bool quat_are_equal(struct Quaternion q0, struct Quaternion q1);
 struct Quaternion quat_mul(struct Quaternion q0, struct Quaternion q1);

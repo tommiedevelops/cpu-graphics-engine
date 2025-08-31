@@ -77,13 +77,13 @@ int main(int argc, char* argv[]) {
                 }	
 
 		// Apply transformations to game object
-		float angular_velocity = 1.0f; 
+		float angular_velocity = 10.0f; 
 		float angle = time.delta_time * angular_velocity;
 
-		struct Vec3f euler_rot = {.x = angle, .y = angle, .z = angle }; 
-		struct Quaternion delta = euler_to_quat(euler_rot);
+		struct Vec3f euler_rot = {.x = 0.0f, .y = angle, .z = 0.0f};
+		struct Quaternion delta = quat_normalize(euler_to_quat(euler_rot));
 
-		go.transform.rotation = quat_mul(go.transform.rotation, delta);	
+		go.transform.rotation = quat_normalize(quat_mul(go.transform.rotation, delta));	
 		
 		// Extract vertices and triangles from the Scene in World Coordinates
 		struct Vec4f* vertices = get_vertices_from_game_object(go);
