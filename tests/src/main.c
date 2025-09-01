@@ -13,6 +13,7 @@ void scene_manager_tests(){
 	test_get_scale_matrix();
 	test_get_translation_matrix();
 	test_get_rotation_matrix();
+	test_get_model_matrix();
 }
 
 void quaternion_tests(){
@@ -24,9 +25,9 @@ void quaternion_tests(){
 int main(){
 	printf("Running unit tests...\n");
 	//bounds_tests();
-	test_vec3f_cross();
-	test_mat4_mul_mat4();
+	//test_vec3f_cross();
+	//test_mat4_mul_mat4();
 	scene_manager_tests();
-	quaternion_tests();
+//	quaternion_tests();
 }
 

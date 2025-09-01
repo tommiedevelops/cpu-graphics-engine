@@ -75,17 +75,24 @@ int main(int argc, char* argv[]) {
                 while (SDL_PollEvent(&event)) {
                         if(event.type == SDL_QUIT) running = false;
                 }	
-
+		
+		// ---- SCRIPTING SECTION -----
 		// Apply transformations to game object
 		float angular_velocity = 1.0f; 
 		float angle = time.delta_time * angular_velocity;
 
-		struct Vec3f euler_rot = {.x = 0.0f, .y = angle, .z = 0.0f};
+		struct Vec3f scale = {.x = 1.0f, .y = 0.5f, .z = 1.0f};
+		struct Vec3f euler_rot = {.x = angle, .y = angle, .z = angle};
 		struct Quaternion delta = quat_normalize(euler_to_quat(euler_rot));
 		
+//		go.transform.rotation = quat_normalize(quat_mul(go.transform.rotation, delta));
+		go.transform.scale = scale;
+
+		// --- END OF SCRIPTING SECTION ---
+
 		// Extract vertices and triangles from the Scene in World Coordinates
 		struct Vec4f* vertices = get_vertices_from_game_object(go);
-		
+	
 		// temporary sollution
 		struct Vec3f* vertices3 = malloc(sizeof(struct Vec3f)*mesh.num_vertices);
 		for(int i = 0; i < mesh.num_vertices; i++){

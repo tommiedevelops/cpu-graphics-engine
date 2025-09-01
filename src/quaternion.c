@@ -42,6 +42,11 @@ struct Quaternion quat_mul(struct Quaternion p, struct Quaternion q) {
 	return r;
 }
 
+
+float quat_norm(struct Quaternion q) {
+	return sqrtf(q.q0*q.q0 + q.q1*q.q1 + q.q2*q.q2 + q.q3*q.q3);
+}
+
 struct Quaternion quat_normalize(struct Quaternion q){
 	float n = quat_norm(q);
 	
@@ -58,10 +63,6 @@ struct Quaternion quat_normalize(struct Quaternion q){
 	};
 
 	return result;
-}
-
-float quat_norm(struct Quaternion q) {
-	return sqrtf(q.q0*q.q0 + q.q1*q.q1 + q.q2*q.q2 + q.q3*q.q3);
 }
 	
 struct Quaternion quat_angle_axis(float angle, struct Vec3f axis) {
@@ -91,10 +92,12 @@ struct Quaternion euler_to_quat(struct Vec3f euler_rot) {
     float cz = cosf(roll  * 0.5f), sz = sinf(roll  * 0.5f);
 
     struct Quaternion q;
+
     q.q0 =  cx*cy*cz + sx*sy*sz;   // w
     q.q1 =  sx*cy*cz - cx*sy*sz;   // x
     q.q2 =  cx*sy*cz + sx*cy*sz;   // y
     q.q3 =  cx*cy*sz - sx*sy*cz;   // z
+
     return q;
 }
 

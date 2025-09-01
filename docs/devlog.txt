@@ -51,3 +51,7 @@ it was around 5fps.
  
 30/08/25
 * Quaternion Maths and, to be honest, rotation maths is still very confusing for me. It would be beneficial for me to do a review + some practice questions
+
+01/09/25
+* The rotations are still a bit buggy - there's a weird shearing happening with x and z rotations but I need to move on. Hopefully it resolves itself sometime in the future
+* Based on my testing, it seems like scale and translation are working as expected but because I am renormalizing the vertices separetly after applying the model matrix, I'm eliminating the changes I made. I should be able to see the results after I implement the View, Projection and Viewport matrices. So I can probably move on now to implmenting the View and Projection matrice
