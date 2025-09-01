@@ -28,6 +28,19 @@ int main(int argc, char* argv[]) {
 	/* Parse Mesh from .obj file */
 	struct Mesh mesh = parse_obj(filename);
 	
+	// Prepare Camera
+	// To start, the camera is on position (0,0,10) facing the -Z direction
+
+	struct Vec3f camera_pos = {.x = 0.0f, .y = 0.0f, .z = 10.0f};
+	struct Transform camera_transform = {
+		.position = camera_pos,
+		.rotation = QUAT_IDENTITY,	
+		.scale = VEC3F_1
+	};
+
+	struct Camera cam = {0};	
+	cam.transform = camera_transform;
+
 	// Prepare Transform and GameObject
 	struct Transform transform = {
 		.position = VEC3F_0, 

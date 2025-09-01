@@ -34,3 +34,23 @@ void test_mat4_mul_mat4(){
 	}	
 	printf("sucess\n");
 }
+
+void test_mat4_affine_orthonormal_inverse(){
+	printf("test_mat4_affine_orthonormal_inverse\n");
+
+	struct Vec4f v = {.x = 1.0f, .y = 2.0f, .z = 3.0f, .w = 4.0f}; 
+
+	// represents a translation of 1.0f in x direction and a rotation of 90deg about Z
+	struct Mat4 m = {{
+		{0, -1, 0, 1},
+		{1, 0, 0, 0},
+		{0, 0, 1, 0},
+		{0, 0, 0 ,1}
+	}};
+	
+	struct Vec4f u = mat4_mul_vec4(m,v);
+	u = mat4_mul_vec4(mat4_affine_orthonormal_inverse(m), u);
+	
+	assert(vec4f_are_equal(u,v));
+	printf("success\n");
+}

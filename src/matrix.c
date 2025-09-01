@@ -56,3 +56,53 @@ struct Vec4f mat4_mul_vec4(struct Mat4 m, struct Vec4f v) {
 
 }
 
+struct Mat3 mat3_transpose(struct Mat3 m){
+	struct Mat3 result;
+	for(int i = 0; i < 3; i++){
+		for(int j = 0; j < 3; j++){
+			result.m[i][j] = m.m[j][i];
+		}
+	}
+	return result;
+}
+
+struct Mat3 scal_mul_mat3(float s, struct Mat3 m){
+	struct Mat3 result;
+	for(int i = 0; i < 3; i++){
+		for(int j = 0; j < 3; j++){
+			result.m[i][j] = s*m.m[i][j];
+		}
+	}
+	return result;
+}
+
+struct Mat4 mat4_affine_orthonormal_inverse(struct Mat4 mat) {
+	// special case of Mat4 being an affine, orthonormal transformation	
+	float (*m)[4] = mat.m; // alias the existing storage
+	
+	struct Mat3 sub = {{
+		{m[0][0], m[0][1], m[0][2]},
+		{m[1][0], m[1][1], m[1][2]},
+		{m[2][0], m[2][1], m[2][2]}
+	}};
+
+	struct Vec3f t = {.x = m[0][3], .y = m[1][3], .z = m[2][3]};
+	
+	struct Mat3 r_T = mat3_transpose(sub);
+	struct Vec3f mR_Tt = mat3_mul_vec3(scal_mul_mat3(-1.0f, mat3_transpose(sub)), t);
+
+	struct Mat4 result = {0};
+	
+	for(int i = 0; i < 3; i++){
+		for(int j = 0; j < 3; j++){
+			result.m[i][j] = r_T.m[i][j];
+		}
+	} 
+	
+	result.m[0][3] = t.x;
+	result.m[1][2] = t.y;
+	result.m[2][3] = t.z;
+	result.m[3][3] = 1.0f;
+
+	return result;
+}

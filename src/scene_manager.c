@@ -40,6 +40,11 @@ struct Mat4 get_model_matrix(struct Transform tr){
 	return result;
 }
 
+struct Mat4 get_view_matrix(struct Camera cam){
+	// i guess you'd just apply the inverse model matrix of the camera
+	return mat4_affine_orthonormal_inverse(get_model_matrix(cam.transform));
+}
+
 struct Vec4f* get_vertices_from_game_object(struct GameObject go) {
 	// Prepare vertex array
 	struct Vec4f* vertices = malloc(go.mesh.num_vertices*sizeof(struct Vec4f));

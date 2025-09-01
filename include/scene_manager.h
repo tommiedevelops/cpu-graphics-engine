@@ -67,5 +67,7 @@ struct Mat4 get_rotation_matrix(struct Transform tr);
 
 struct Mat4 get_model_matrix(struct Transform tr);
 
+struct Mat4 get_view_matrix(struct Camera cam);
+
 void normalize_vertices(float sidelength, struct Vec3f* vertices, int num_vertices);
 #endif
