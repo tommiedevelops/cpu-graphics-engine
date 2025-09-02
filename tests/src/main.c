@@ -14,6 +14,7 @@ void scene_manager_tests(){
 	test_get_translation_matrix();
 	test_get_rotation_matrix();
 	test_get_model_matrix();
+	test_get_view_matrix();
 }
 
 void matrix_tests(){
@@ -33,6 +34,7 @@ int main(){
 	//test_vec3f_cross();
 //	scene_manager_tests();
 //	quaternion_tests();
-	matrix_tests();
+//	matrix_tests();
+	test_get_view_matrix();
 }
 

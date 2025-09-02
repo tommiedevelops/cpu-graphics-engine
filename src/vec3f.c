@@ -4,6 +4,10 @@
 
 #include "bounds.h"
 
+void print_vec3f(struct Vec3f v){
+	printf("(x = %f, y = %f, z = %f)\n", v.x, v.y, v.z);
+}
+
 // single vector methods
 void scale_vector(struct Vec3f* vector, float scalar){
 	// accepts struct Vec3f ptr, not array

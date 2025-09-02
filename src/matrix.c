@@ -3,6 +3,16 @@
 
 #include "matrix.h"
 
+void print_mat3(struct Mat3 m) {
+	
+	for(int i = 0; i < 3; i++){
+		for(int j = 0; j < 3; j++){
+			printf("%f ", m.m[i][j]);
+		}
+		printf("\n");
+	}
+}
+
 void print_mat4(struct Mat4 m) {
 	
 	for(int i = 0; i < 4; i++){
@@ -87,9 +97,10 @@ struct Mat4 mat4_affine_orthonormal_inverse(struct Mat4 mat) {
 	}};
 
 	struct Vec3f t = {.x = m[0][3], .y = m[1][3], .z = m[2][3]};
-	
 	struct Mat3 r_T = mat3_transpose(sub);
-	struct Vec3f mR_Tt = mat3_mul_vec3(scal_mul_mat3(-1.0f, mat3_transpose(sub)), t);
+	struct Mat3 mR_T = scal_mul_mat3(-1.0f, r_T);
+
+	struct Vec3f final_vec = mat3_mul_vec3(mR_T, t);
 
 	struct Mat4 result = {0};
 	
@@ -99,9 +110,9 @@ struct Mat4 mat4_affine_orthonormal_inverse(struct Mat4 mat) {
 		}
 	} 
 	
-	result.m[0][3] = t.x;
-	result.m[1][2] = t.y;
-	result.m[2][3] = t.z;
+	result.m[0][3] = final_vec.x;
+	result.m[1][3] = final_vec.y;
+	result.m[2][3] = final_vec.z;
 	result.m[3][3] = 1.0f;
 
 	return result;

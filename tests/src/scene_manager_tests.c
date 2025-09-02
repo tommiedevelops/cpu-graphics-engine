@@ -118,3 +118,49 @@ void test_get_model_matrix(){
 	
 	printf("success\n");
 }
+
+void test_get_view_matrix(){
+	printf("test_get_view_matrix\n");
+	// ok how tf do i test this bad boy
+	// C on (0,0), facing +x
+	// v on x = 2, y = 0, z = 0
+	// after Model - View, v should be (0,0,2)
+
+	struct Quaternion z_to_x = quat_normalize(euler_to_quat((struct Vec3f){0.0f, PI/2, 0.0f}));
+	
+	struct Transform cam_transform = {
+		.scale = VEC3F_1,
+		.position = VEC3F_0,
+		.rotation = z_to_x
+	};
+
+	struct Camera cam = {0};
+	cam.transform = cam_transform;
+
+	struct Vec3f test_pos = (struct Vec3f){2.0f, 0.0f, 0.0f,};
+
+	struct Transform test = {
+		.position = test_pos,
+		.rotation = QUAT_IDENTITY,
+		.scale = VEC3F_1
+	};
+
+	struct Mat4 model = get_model_matrix(test);
+	struct Mat4 view = get_view_matrix(cam);
+
+	// In the frame of the test transform
+	struct Vec4f test_vec4 = VEC4F_0;
+	test_vec4.w = 1.0f;
+
+	struct Vec4f result_vec4 = mat4_mul_vec4(model,test_vec4);
+	result_vec4 = mat4_mul_vec4(view, result_vec4);
+
+	struct Vec3f result = {
+		.x = result_vec4.x, .y = result_vec4.y, .z = result_vec4.z
+	};
+
+	struct Vec3f expected = (struct Vec3f){0.0f, 0.0f, 2.0f};
+
+	assert(vectors_are_equal(result,expected));
+	printf("success\n");
+}

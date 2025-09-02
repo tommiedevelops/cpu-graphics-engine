@@ -20,7 +20,7 @@ struct Vec3f {
 
 float dot_product(struct Vec3f a, struct Vec3f b);
 struct Vec3f vec3f_cross(struct Vec3f a, struct Vec3f b);
-
+void print_vec3f(struct Vec3f v);
 struct Vec3f vec3f_normalize(struct Vec3f v);
 float vec3f_magnitude(struct Vec3f v);
 struct Vec3f vec3f_add(struct Vec3f a, struct Vec3f b);
