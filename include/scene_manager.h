@@ -49,13 +49,7 @@ struct Scene {
 // --- FUNCTIONS ---
 
 // this function basically applies a simple rotation matrix
-struct Vec4f* get_vertices_from_game_object(struct GameObject go);
-
-struct Mat4 get_model_matrix(struct Transform tr);
-
-struct Mat4 get_view_matrix(struct Camera cam);
-
-struct Mat4 get_projection_matrix();
+struct Vec4f* apply_model_matrix(struct GameObject go);
 
 struct Mat3 get_screen_space_matrix();
 
@@ -65,9 +59,11 @@ struct Mat4 get_translation_matrix(struct Transform tr);
 
 struct Mat4 get_rotation_matrix(struct Transform tr);
 
-struct Mat4 get_model_matrix(struct Transform tr);
+struct Mat4 get_model_matrix(struct GameObject go);
 
 struct Mat4 get_view_matrix(struct Camera cam);
+
+struct Mat4 get_projection_matrix(float fov_y, float aspect, float zn, float zf);
 
 void normalize_vertices(float sidelength, struct Vec3f* vertices, int num_vertices);
 #endif

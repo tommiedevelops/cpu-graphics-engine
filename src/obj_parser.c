@@ -6,6 +6,8 @@
 
 #include "bounds.h"
 #include "obj_parser.h"
+#include "constants.h"
+#include "scene_manager.h"
 
 /*
 Purpose: create .input files that can be understood by my line renderer from .obj file
@@ -142,6 +144,7 @@ struct Mesh parse_obj(char* filename){
 
 	int num_vertices = parse_num_vertices(fp);
 	struct Vec3f* vertices = parse_vertices(fp, num_vertices);
+	normalize_vertices(LENGTH_SCALE, vertices, num_vertices);
 
 	int num_triangles = parse_num_triangles(fp);
 	int* triangles = parse_triangles(fp, num_triangles, num_vertices, vertices);

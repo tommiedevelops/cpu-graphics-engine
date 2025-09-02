@@ -57,3 +57,7 @@ it was around 5fps.
 * Based on my testing, it seems like scale and translation are working as expected but because I am renormalizing the vertices separetly after applying the model matrix, I'm eliminating the changes I made. I should be able to see the results after I implement the View, Projection and Viewport matrices. So I can probably move on now to implmenting the View and Projection matrice
 *I'm sure I've said this already but for this project, I am enforcing this coordinate frame w.r.t the screen. +X = right, +Y = up, -Z = forward. With this convention QUAT_IDENTITY is looking toward -Z. 
 * Started working on view matrix. Currently writing mat4_inverse. Need to do a bit of research but apparently inverse for affine orthonormal is straightforward. Although tests are not passing so either the implementation is wrong or there's a bug.
+
+02/09/24
+* Today I ran into the issue of no inheritance in C. I want get_model_matrix to take a GameObject as a parameter so it is clean (simialar to how get_view_matrix() takes a Camera as a parameter. However, as part of get_view_matrix() i need to use get_model_matrix() on the Camera object. Now, if camera could inherit from GameObject this wouldn't be an issue but since we are coding in C, I cannot do that. So I'm looking at some ways I can work around it now.
+* Tried again to fix the strange stretching with rotations especially notable when rotating around the z axis - still with no luck 

@@ -28,6 +28,8 @@ int main(int argc, char* argv[]) {
 	/* Parse Mesh from .obj file */
 	struct Mesh mesh = parse_obj(filename);
 	
+//	normalize_vertices(LENGTH_SCALE, mesh.vertices, mesh.num_vertices);
+
 	// Prepare Camera
 	// To start, the camera is on position (0,0,10) facing the -Z direction
 
@@ -94,18 +96,39 @@ int main(int argc, char* argv[]) {
 		float angular_velocity = 1.0f; 
 		float angle = time.delta_time * angular_velocity;
 
-		struct Vec3f scale = {.x = 1.0f, .y = 0.5f, .z = 1.0f};
-		struct Vec3f euler_rot = {.x = angle, .y = angle, .z = angle};
-		struct Quaternion delta = quat_normalize(euler_to_quat(euler_rot));
+		struct Vec3f euler_rot = {.x = angle, .y = angle, .z = 0.0f};
 		
-//		go.transform.rotation = quat_normalize(quat_mul(go.transform.rotation, delta));
-		go.transform.scale = scale;
+		//struct Quaternion delta = quat_normalize(euler_to_quat(euler_rot));
+		struct Vec3f axis = {.x = 1.0f, .y = 1.0f, .z= 1.0f};
+		struct Quaternion delta = quat_angle_axis(angle, axis);
+		go.transform.rotation = quat_normalize(quat_mul(go.transform.rotation, delta));
+		//cam.transform.rotation = quat_mul(cam.transform.rotation, delta);
 
 		// --- END OF SCRIPTING SECTION ---
 
 		// Extract vertices and triangles from the Scene in World Coordinates
-		struct Vec4f* vertices = get_vertices_from_game_object(go);
-	
+		struct Mat4 model_matrix = get_model_matrix(go);
+		struct Mat4 view_matrix = get_view_matrix(cam);
+		struct Mat4 projection_matrix = get_projection_matrix(30, WIDTH/HEIGHT, 1.0, 10.0);		
+		int num_vertices = go.mesh.num_vertices;
+		
+		struct Vec4f* vertices = malloc(num_vertices*sizeof(struct Vec4f));
+		memset(vertices, 0x0, num_vertices*sizeof(struct Vec4f));
+
+		for(int i = 0; i < num_vertices; i++){
+
+			struct Vec4f vertex = {
+				.x = go.mesh.vertices[i].x,
+				.y = go.mesh.vertices[i].y,
+				.z = go.mesh.vertices[i].z,
+				.w = 1.0f
+			};
+
+			vertices[i] = mat4_mul_vec4(model_matrix, vertex);
+			vertices[i] = mat4_mul_vec4(view_matrix, vertices[i]);
+			vertices[i] = mat4_mul_vec4(projection_matrix, vertices[i]);
+		}
+
 		// temporary sollution
 		struct Vec3f* vertices3 = malloc(sizeof(struct Vec3f)*mesh.num_vertices);
 		for(int i = 0; i < mesh.num_vertices; i++){
@@ -115,12 +138,11 @@ int main(int argc, char* argv[]) {
 		}	
 
 		// Normalize vertices
-		normalize_vertices(LENGTH_SCALE, vertices3, mesh.num_vertices);
 
        		// Reflect vertices3 vertically
-       		for(int i = 0; i < mesh.num_vertices; i++){
-       	        	vertices3[i].y = -1 * vertices3[i].y;
-       		}
+       		//for(int i = 0; i < mesh.num_vertices; i++){
+       	        //	vertices3[i].y = -1 * vertices3[i].y;
+       		//}
 
        		// Translate vertices3 so model is in screen center
        		for(int i = 0; i < mesh.num_vertices; i++){

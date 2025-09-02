@@ -6,7 +6,7 @@
 #include "matrix.h"
 
 struct Mat4 get_rotation_matrix(struct Transform tr) {
-	return quat_to_mat4(tr.rotation);
+	return quat_to_mat4(quat_normalize(tr.rotation));
 }
 
 struct Mat4 get_scale_matrix(struct Transform tr) {
@@ -23,17 +23,18 @@ struct Mat4 get_scale_matrix(struct Transform tr) {
 struct Mat4 get_translation_matrix(struct Transform tr) {
 	struct Vec3f pos = tr.position;
     	struct Mat4 translation_matrix = {{
-       		{1, 0, 0, pos.x},
-        	{0, 1, 0, pos.y},
-        	{0, 0, 1, pos.z},
-        	{0, 0, 0, 1    },
+       		{1.0f, 0, 0, pos.x},
+        	{0, 1.0f, 0, pos.y},
+        	{0, 0, 1.0f, pos.z},
+        	{0, 0, 0, 1.0f    },
     	}};
     	return translation_matrix;	
 }
 
 
-struct Mat4 get_model_matrix(struct Transform tr){
+struct Mat4 get_model_matrix(struct GameObject go){
 	struct Mat4 result;
+	struct Transform tr = go.transform;
 	result = get_scale_matrix(tr);
 	result = mat4_mul_mat4(get_rotation_matrix(tr), result);
 	result = mat4_mul_mat4(get_translation_matrix(tr), result);
@@ -42,28 +43,22 @@ struct Mat4 get_model_matrix(struct Transform tr){
 
 struct Mat4 get_view_matrix(struct Camera cam){
 	// i guess you'd just apply the inverse model matrix of the camera
-	return mat4_affine_orthonormal_inverse(get_model_matrix(cam.transform));
+	struct GameObject cam_go = {0};
+	cam_go.transform = cam.transform;
+	return mat4_affine_orthonormal_inverse(get_model_matrix(cam_go));
 }
 
-struct Vec4f* get_vertices_from_game_object(struct GameObject go) {
-	// Prepare vertex array
-	struct Vec4f* vertices = malloc(go.mesh.num_vertices*sizeof(struct Vec4f));
-	memset(vertices, 0x0, go.mesh.num_vertices*sizeof(struct Vec4f));
-
-	struct Mat4 model_matrix = get_model_matrix(go.transform);
-	
-	for(int i = 0; i < go.mesh.num_vertices; i++){
-		struct Vec3f v = go.mesh.vertices[i];
-		vertices[i].x = v.x;
-		vertices[i].y = v.y;
-		vertices[i].z = v.z;
-		vertices[i].w = 1.0f;
-
-		vertices[i] = mat4_mul_vec4(model_matrix, vertices[i]);
-	}	
-
-	return vertices;
+struct Mat4 get_projection_matrix(float fov_y, float aspect, float zn, float zf) {
+    float f = 1.0f / tanf(0.5f * fov_y);
+    struct Mat4 P = {0};
+    P.m[0][0] = f / aspect;
+    P.m[1][1] = f;
+    P.m[2][2] = -(zf + zn) / (zf - zn);
+    P.m[2][3] = -(2.0f * zf * zn) / (zf - zn);
+    P.m[3][2] = -1.0f;
+    return P;
 }
+
 
 /* vector array methods */
 
@@ -80,10 +75,11 @@ static void shift_to_origin(struct Bounds bounds, struct Vec3f* vectors, int num
 static void normalize_lengths(struct Bounds bounds, struct Vec3f* vectors, int num_vectors) {
 
         // normalizes between [0,1]
+	float max = fmax(fmax(bounds.xmax, bounds.ymax), bounds.zmax);
         for(int i = 0; i < num_vectors; i++){
-                vectors[i].x = (float)vectors[i].x / bounds.xmax;
-                vectors[i].y = (float)vectors[i].y / bounds.ymax;
-                vectors[i].z = (float)vectors[i].z / bounds.zmax;
+                vectors[i].x = (float)vectors[i].x / max;
+                vectors[i].y = (float)vectors[i].y / max;
+                vectors[i].z = (float)vectors[i].z / max;
         }
 
         // scale and translate to [-1,1]

@@ -19,7 +19,8 @@ void scene_manager_tests(){
 
 void matrix_tests(){
 	test_mat4_affine_orthonormal_inverse();
-	//test_mat4_mul_mat4();
+	test_mat4_mul_mat4();
+	//test_get_view_matrix();
 }
 
 void quaternion_tests(){
@@ -29,12 +30,8 @@ void quaternion_tests(){
 	test_quat_mul();
 }
 int main(){
-	printf("Running unit tests...\n");
-	//bounds_tests();
-	//test_vec3f_cross();
 //	scene_manager_tests();
-//	quaternion_tests();
-//	matrix_tests();
-	test_get_view_matrix();
+	quaternion_tests();
+	matrix_tests();
 }
 

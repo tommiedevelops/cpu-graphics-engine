@@ -25,7 +25,10 @@ bool quat_are_about_equal(struct Quaternion q0, struct Quaternion q1, float epsi
 struct Quaternion quat_conjugate(struct Quaternion q);
 struct Quaternion quat_inverse(struct Quaternion q);
 
-struct Quaternion quat_mul(struct Quaternion p, struct Quaternion q) {
+struct Quaternion quat_mul(struct Quaternion q0, struct Quaternion q1) {
+	
+	struct Quaternion p = quat_normalize(q0);
+	struct Quaternion q = quat_normalize(q1);
 
 	struct Mat4 m = {{
 		{p.q0, -p.q1, -p.q2, -p.q3},
@@ -39,6 +42,7 @@ struct Quaternion quat_mul(struct Quaternion p, struct Quaternion q) {
 
 	struct Quaternion r = {.q0 = r_vec.x, .q1 = r_vec.y, .q2 = r_vec.z, .q3 = r_vec.w };
 
+	r = quat_normalize(r);
 	return r;
 }
 
@@ -113,7 +117,6 @@ struct Mat4 quat_to_mat4(struct Quaternion q) {
 	float q2 = q.q2/n;
 	float q3 = q.q3/n;
 
-		
 	float m00 = 2*q0*q0 + 2*q1*q1 - 1;
 	float m01 = 2*q1*q2 - 2*q0*q3;
 	float m02 = 2*q1*q3 + 2*q0*q2;
