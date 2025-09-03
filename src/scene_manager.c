@@ -48,17 +48,29 @@ struct Mat4 get_view_matrix(struct Camera cam){
 	return mat4_affine_orthonormal_inverse(get_model_matrix(cam_go));
 }
 
-struct Mat4 get_projection_matrix(float fov_y, float aspect, float zn, float zf) {
-    float f = 1.0f / tanf(0.5f * fov_y);
+struct Mat4 get_projection_matrix(float fov, float aspect, float zn, float zf) {
+	// aspect = h/w
+    float f = 1.0f / tanf(0.5f * fov);
     struct Mat4 P = {0};
-    P.m[0][0] = f / aspect;
+    P.m[0][0] = aspect * f; 
     P.m[1][1] = f;
-    P.m[2][2] = -(zf + zn) / (zf - zn);
-    P.m[2][3] = -(2.0f * zf * zn) / (zf - zn);
-    P.m[3][2] = -1.0f;
+    P.m[2][2] = zf / (zf - zn);
+    P.m[2][3] = (- zf * zn) / (zf - zn);
+    P.m[3][2] = 1.0f;
     return P;
 }
 
+struct Vec3f perspective_divide(struct Vec4f v){
+	struct Vec3f result = {0};
+	
+	if(v.w != 0){
+		result.x = v.x/v.w;
+		result.y = v.y/v.w;
+		result.z = v.z/v.w;		
+	}
+	
+	return result;
+}
 
 /* vector array methods */
 

@@ -17,7 +17,7 @@ If using linux:
 
 Otherwise just google it.
 
-To run the program, ensure there is a **clean .obj** file in the models/ folder (helper shell scripts are provided in /shell_scripts for cleaning). Then run **make build** and **make run ARGS=<filename>**. Do not include the .obj file extension.
+To run the program, ensure there is a **clean .obj** file in the models/ folder (helper shell scripts are provided in /shell_scripts for cleaning). Then run **make build** and **make run ARGS=[filename]**. Do not include the .obj file extension.
 
 Use the following command to clean up the directory afterwards.
 - make clean

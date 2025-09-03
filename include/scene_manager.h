@@ -66,4 +66,7 @@ struct Mat4 get_view_matrix(struct Camera cam);
 struct Mat4 get_projection_matrix(float fov_y, float aspect, float zn, float zf);
 
 void normalize_vertices(float sidelength, struct Vec3f* vertices, int num_vertices);
+
+struct Vec3f perspective_divide(struct Vec4f v);
+
 #endif
