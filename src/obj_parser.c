@@ -144,6 +144,7 @@ struct Mesh parse_obj(char* filename){
 
 	int num_vertices = parse_num_vertices(fp);
 	struct Vec3f* vertices = parse_vertices(fp, num_vertices);
+
 	normalize_vertices(LENGTH_SCALE, vertices, num_vertices);
 
 	int num_triangles = parse_num_triangles(fp);

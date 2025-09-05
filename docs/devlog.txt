@@ -68,3 +68,7 @@ it was around 5fps.
 
 04/09/25
 * I've decided that the canonical view volume for this project to be -1 <= x <= 1, -1 <= y <= y, 0 <= z <= 1 in order to avoid pesky negative numbers
+
+05/09/25
+* I've more or less implemented the projection and viewport matrices (deriving the relationship for z is tricky and I dont FULLY get it but its done).
+* Currently I'm calculating lighting based on screen-space coordinates which is obviously incorrect. I need to calculate lighting based on world space coordinates so I've gotta figure out how to do that.

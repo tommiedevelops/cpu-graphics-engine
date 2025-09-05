@@ -77,11 +77,11 @@ void rasterize_triangle(struct Triangle tri, uint32_t* framebuffer, float* zbuff
 	int ymin = (int)bounds.ymin;
 	int ymax = (int)bounds.ymax;
 
-	//float allowance = 10.0f;
-	//if( ( abs(xmax - xmin) < allowance ) || ( abs(ymax - ymin) < allowance ) ) return;
-
 	for(int y = ymin; y <= ymax; y++){
 		for(int x = xmin; x <= xmax; x++) {
+			// check if within bounds
+			if( x > WIDTH || x < 0) return;
+			if( y > HEIGHT || y < 0) return;
 
 			// calculate barycentric coords
 			float alpha = (A->x*(C->y-A->y)+(y-A->y)*(C->x-A->x)-x*(C->y-A->y))
@@ -99,7 +99,7 @@ void rasterize_triangle(struct Triangle tri, uint32_t* framebuffer, float* zbuff
 				if(depth >= zbuffer[x + y*WIDTH]){
 					place_pixel(x,y,color,framebuffer);			
 					zbuffer[x + y*WIDTH] = depth;
-				} 			
+				}
 			}	
 
 		}

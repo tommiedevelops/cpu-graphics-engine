@@ -4,6 +4,7 @@
 #include <string.h>
 #include "scene_manager.h"
 #include "matrix.h"
+#include "constants.h"
 
 struct Mat4 get_rotation_matrix(struct Transform tr) {
 	return quat_to_mat4(quat_normalize(tr.rotation));
@@ -49,28 +50,40 @@ struct Mat4 get_view_matrix(struct Camera cam){
 }
 
 struct Mat4 get_projection_matrix(float fov, float aspect, float zn, float zf) {
-	// aspect = h/w
-    float f = 1.0f / tanf(0.5f * fov);
     struct Mat4 P = {0};
-    P.m[0][0] = aspect * f; 
-    P.m[1][1] = f;
-    P.m[2][2] = zf / (zf - zn);
-    P.m[2][3] = (- zf * zn) / (zf - zn);
+    P.m[0][0] = aspect/tan(0.5f*fov);
+    P.m[1][1] = 1/tan(0.5f*fov);
+    P.m[2][2] = (float)1.0f/ (zf - zn);
+    P.m[2][3] =	(float)(-zn)/(zf-zn); 
     P.m[3][2] = 1.0f;
     return P;
 }
 
-struct Vec3f perspective_divide(struct Vec4f v){
-	struct Vec3f result = {0};
+struct Vec4f perspective_divide(struct Vec4f v){
+	struct Vec4f result = {0};
 	
 	if(v.w != 0){
 		result.x = v.x/v.w;
 		result.y = v.y/v.w;
 		result.z = v.z/v.w;		
+		result.w = 1.0f;
 	}
 	
 	return result;
 }
+
+struct Mat4 get_viewport_matrix(float near, float far){
+	struct Mat4 P = {0};
+	P.m[0][0] = WIDTH/2;
+	P.m[1][1] = HEIGHT/2;
+	P.m[0][3] = WIDTH/2;
+	P.m[1][3] = HEIGHT/2;
+	P.m[2][2] = (far - near);
+	P.m[2][3] = near;
+	P.m[3][3] = 1.0f;
+	return P;
+}
+
 
 /* vector array methods */
 

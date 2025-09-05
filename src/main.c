@@ -28,21 +28,6 @@ int main(int argc, char* argv[]) {
 	/* Parse Mesh from .obj file */
 	struct Mesh mesh = parse_obj(filename);
 	
-//	normalize_vertices(LENGTH_SCALE, mesh.vertices, mesh.num_vertices);
-
-	// Prepare Camera
-	// To start, the camera is on position (0,0,10) facing the -Z direction
-
-	struct Vec3f camera_pos = {.x = 0.0f, .y = 0.0f, .z = 10.0f};
-	struct Transform camera_transform = {
-		.position = camera_pos,
-		.rotation = QUAT_IDENTITY,	
-		.scale = VEC3F_1
-	};
-
-	struct Camera cam = {0};	
-	cam.transform = camera_transform;
-
 	// Prepare Transform and GameObject
 	struct Transform transform = {
 		.position = VEC3F_0, 
@@ -54,12 +39,24 @@ int main(int argc, char* argv[]) {
 		.mesh 	    = mesh     , 
 		.transform  = transform 
 	};
-	
-	struct Vec3f light_source_pos = {
-		.x = -1.0f,
-		.y = -1.0f,
-		.z = -1.0f
 
+	// Prepare Camera
+	// To start, the camera is on position (0,0,5) facing the -Z direction
+	struct Vec3f camera_pos = {.x = 0.0f, .y = 0.0f, .z = 3.0f};
+	struct Transform camera_transform = {
+		.position = camera_pos,
+		.rotation = QUAT_IDENTITY,
+		.scale = VEC3F_1
+	};
+
+	struct Camera cam = {0};	
+	cam.transform = camera_transform;
+
+	// Prepare light source
+	struct Vec3f light_source_pos = {
+		.x = 0.0f,
+		.y = 0.0f,
+		.z = 1.0f
 	};
 
 	struct LightSource light_source  = {
@@ -103,24 +100,30 @@ int main(int argc, char* argv[]) {
 		struct Vec3f euler_rot = {.x = 0.0f, .y = angle, .z = angle};
 		
 		//struct Quaternion delta = quat_normalize(euler_to_quat(euler_rot));
-			struct Vec3f axis = {.x = 1.0f, .y = 1.0f, .z= 1.0f};
+		struct Vec3f axis = {.x = 0.0f, .y = 1.0f, .z= 0.0f};
 		struct Quaternion delta = quat_angle_axis(angle, axis);
 		go.transform.rotation = quat_normalize(quat_mul(go.transform.rotation, delta));
-		//cam.transform.rotation = quat_mul(cam.transform.rotation, delta);
+		/* cam.transform.rotation = quat_normalize(quat_mul(delta, cam.transform.rotation)); */
 
 		// --- END OF SCRIPTING SECTION ---
 
 		// Extract vertices and triangles from the Scene in World Coordinates
 		struct Mat4 model_matrix = get_model_matrix(go);
 		struct Mat4 view_matrix = get_view_matrix(cam);
+
 		float aspect = (float)HEIGHT / WIDTH;
-		struct Mat4 projection_matrix = get_projection_matrix(30, aspect, 1.0, 10.0);		
+		float fov = PI*60.0f/180.0f;
+		float near = 0.1f;
+		float far = 20.0f;
+
+		struct Mat4 projection_matrix = get_projection_matrix(fov, aspect, near, far);	
+		struct Mat4 viewport_matrix = get_viewport_matrix(near, far);	
 		int num_vertices = go.mesh.num_vertices;
 		
 		struct Vec4f* vertices = malloc(num_vertices*sizeof(struct Vec4f));
 		memset(vertices, 0x0, num_vertices*sizeof(struct Vec4f));
 
-		struct Vec3f* vertices3 = malloc(sizeof(struct Vec3f)*mesh.num_vertices);
+		struct Vec3f* vertices3 = malloc(num_vertices*sizeof(struct Vec3f));
 		memset(vertices3, 0x0, num_vertices*sizeof(struct Vec3f));
 
 		for(int i = 0; i < num_vertices; i++){
@@ -135,18 +138,18 @@ int main(int argc, char* argv[]) {
 			vertices[i] = mat4_mul_vec4(model_matrix, vertex);
 			vertices[i] = mat4_mul_vec4(view_matrix, vertices[i]);
 			vertices[i] = mat4_mul_vec4(projection_matrix, vertices[i]);
-			vertices3[i] = perspective_divide(vertices[i]);
+			vertices[i] = perspective_divide(vertices[i]);
+			vertices[i] = mat4_mul_vec4(viewport_matrix, vertices[i]);
+
+			vertices3[i].x = vertices[i].x;
+			vertices3[i].y = vertices[i].y;
+			vertices3[i].z = vertices[i].z;
+			/* print_vec4f(vertices[i]); */
+
 			print_vec3f(vertices3[i]);
 		}
 
-       		// Translate vertices3 so model is in screen center
-       		for(int i = 0; i < mesh.num_vertices; i++){
-       	        	vertices3[i].x += (int)WIDTH/2;
-       	        	vertices3[i].y += (int)HEIGHT/2;
-       		}
-
-		// temporary so
-		// Rasterize triangles in the scene to the framebuffer
+       		// Rasterize triangles in the scene to the framebuffer
 	        render_triangles(
 			       	 framebuffer       , 
 				 zbuffer           , 
@@ -159,7 +162,6 @@ int main(int argc, char* argv[]) {
 		// Update SDL2 window w/ new framebuffer
                 update_window(window_data, framebuffer);
 		free(vertices);
-		free(vertices3);
         }
 
         /* Clean Up */
