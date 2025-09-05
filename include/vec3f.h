@@ -2,7 +2,6 @@
 #define VEC3F_H
 
 #include <stdbool.h>
-#include "bounds.h"
 
 #define VEC3F_X ((struct Vec3f){1.0f, 0.0f, 0.0f})
 #define VEC3F_Y ((struct Vec3f){0.0f, 1.0f, 0.0f})
@@ -12,10 +11,9 @@
 
 struct Bounds;
 
+#pragma once
 struct Vec3f {
-	float x;
-	float y;
-	float z;
+	float x, y, z;
 };
 
 float dot_product(struct Vec3f a, struct Vec3f b);

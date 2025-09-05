@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
 
 	// Prepare Camera
 	// To start, the camera is on position (0,0,5) facing the -Z direction
-	struct Vec3f camera_pos = {.x = 0.0f, .y = 0.0f, .z = 3.0f};
+	struct Vec3f camera_pos = {.x = 0.0f, .y = 0.0f, .z = 20.0f};
 	struct Transform camera_transform = {
 		.position = camera_pos,
 		.rotation = QUAT_IDENTITY,
@@ -51,6 +51,10 @@ int main(int argc, char* argv[]) {
 
 	struct Camera cam = {0};	
 	cam.transform = camera_transform;
+	
+	cam.fov = PI*60.0f/180.0f; 
+	cam.near = 5.00f;
+	cam.far = 20.0f;
 
 	// Prepare light source
 	struct Vec3f light_source_pos = {
@@ -61,6 +65,13 @@ int main(int argc, char* argv[]) {
 
 	struct LightSource light_source  = {
 		.direction = light_source_pos
+	};
+
+	struct Scene scene = {
+		.cam = cam,
+		.gameObjects = &go,
+		.num_gameObjects = 1,
+		.light = light_source
 	};
 
 	// Initialize time struct
@@ -95,6 +106,7 @@ int main(int argc, char* argv[]) {
 		// ---- SCRIPTING SECTION -----
 		// Apply transformations to game object
 		float angular_velocity = 1.0f; 
+		float cam_speed = 1.0f;
 		float angle = time.delta_time * angular_velocity;
 
 		struct Vec3f euler_rot = {.x = 0.0f, .y = angle, .z = angle};
@@ -103,65 +115,16 @@ int main(int argc, char* argv[]) {
 		struct Vec3f axis = {.x = 0.0f, .y = 1.0f, .z= 0.0f};
 		struct Quaternion delta = quat_angle_axis(angle, axis);
 		go.transform.rotation = quat_normalize(quat_mul(go.transform.rotation, delta));
-		/* cam.transform.rotation = quat_normalize(quat_mul(delta, cam.transform.rotation)); */
+		go.transform.position.z += time.delta_time * cam_speed; 
+		print_vec3f(go.transform.position);
+		/* cam.transform.rotation:W
+		 * = quat_normalize(quat_mul(delta, cam.transform.rotation)); */
 
 		// --- END OF SCRIPTING SECTION ---
-
-		// Extract vertices and triangles from the Scene in World Coordinates
-		struct Mat4 model_matrix = get_model_matrix(go);
-		struct Mat4 view_matrix = get_view_matrix(cam);
-
-		float aspect = (float)HEIGHT / WIDTH;
-		float fov = PI*60.0f/180.0f;
-		float near = 0.1f;
-		float far = 20.0f;
-
-		struct Mat4 projection_matrix = get_projection_matrix(fov, aspect, near, far);	
-		struct Mat4 viewport_matrix = get_viewport_matrix(near, far);	
-		int num_vertices = go.mesh.num_vertices;
-		
-		struct Vec4f* vertices = malloc(num_vertices*sizeof(struct Vec4f));
-		memset(vertices, 0x0, num_vertices*sizeof(struct Vec4f));
-
-		struct Vec3f* vertices3 = malloc(num_vertices*sizeof(struct Vec3f));
-		memset(vertices3, 0x0, num_vertices*sizeof(struct Vec3f));
-
-		for(int i = 0; i < num_vertices; i++){
-
-			struct Vec4f vertex = {
-				.x = go.mesh.vertices[i].x,
-				.y = go.mesh.vertices[i].y,
-				.z = go.mesh.vertices[i].z,
-				.w = 1.0f
-			};
-
-			vertices[i] = mat4_mul_vec4(model_matrix, vertex);
-			vertices[i] = mat4_mul_vec4(view_matrix, vertices[i]);
-			vertices[i] = mat4_mul_vec4(projection_matrix, vertices[i]);
-			vertices[i] = perspective_divide(vertices[i]);
-			vertices[i] = mat4_mul_vec4(viewport_matrix, vertices[i]);
-
-			vertices3[i].x = vertices[i].x;
-			vertices3[i].y = vertices[i].y;
-			vertices3[i].z = vertices[i].z;
-			/* print_vec4f(vertices[i]); */
-
-			print_vec3f(vertices3[i]);
-		}
-
-       		// Rasterize triangles in the scene to the framebuffer
-	        render_triangles(
-			       	 framebuffer       , 
-				 zbuffer           , 
-				 vertices3          , 
-			       	 mesh.triangles    , 
-				 mesh.num_triangles,
-				 light_source
-		);
+		render_scene(framebuffer, zbuffer, scene);
 
 		// Update SDL2 window w/ new framebuffer
                 update_window(window_data, framebuffer);
-		free(vertices);
         }
 
         /* Clean Up */

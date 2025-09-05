@@ -15,8 +15,8 @@ struct Transform {
 struct Camera { 
 	struct Transform transform;
 	float fov;
-	float near_plane;
-	float far_plane;
+	float near;
+	float far;
 };
 
 struct Mesh {
@@ -43,6 +43,7 @@ struct LightSource {
 struct Scene {
 	struct Camera cam;
 	struct GameObject *gameObjects;
+	int num_gameObjects;
 	struct LightSource light;
 };
 
@@ -63,12 +64,12 @@ struct Mat4 get_model_matrix(struct GameObject go);
 
 struct Mat4 get_view_matrix(struct Camera cam);
 
-struct Mat4 get_projection_matrix(float fov_y, float aspect, float zn, float zf);
+struct Mat4 get_projection_matrix(struct Camera cam);
 
 void normalize_vertices(float sidelength, struct Vec3f* vertices, int num_vertices);
 
 struct Vec4f perspective_divide(struct Vec4f v);
 
-struct Mat4 get_viewport_matrix(float near, float far);
+struct Mat4 get_viewport_matrix(struct Camera cam);
 
 #endif

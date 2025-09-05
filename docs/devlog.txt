@@ -72,3 +72,4 @@ it was around 5fps.
 05/09/25
 * I've more or less implemented the projection and viewport matrices (deriving the relationship for z is tricky and I dont FULLY get it but its done).
 * Currently I'm calculating lighting based on screen-space coordinates which is obviously incorrect. I need to calculate lighting based on world space coordinates so I've gotta figure out how to do that.
+* Today, I successfully finished the perpsective projection matrix (Geez that was hard). Took me about 10 hours of debugging today. As the the gameObject approaches the camera though, it gets really laggy and crashes the program (stack overflow). Not sure why. Will create an issue and look into it in the future.
