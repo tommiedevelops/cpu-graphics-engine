@@ -65,8 +65,16 @@ float interpolate_depth(struct Triangle tri, float alpha, float beta, float gamm
 	return depth;
 }
 
-struct Triangle apply_perspective_projection(struct Mat4 m, struct Triangle tri) {
-	struct Triangle res;
+bool point_intersects_frustum(struct Vec4f point){
+	float w = abs(point.w);
+	if(point.x >= w || point.x <= -w) return true;
+	if(point.y >= w || point.y <= -w) return true;
+	if(point.z >= w || point.z <= 0) return true;
+	return false;
+}
+
+struct Triangle apply_perspective_projection(bool* clipped, struct Mat4 m, struct Triangle tri) {
+	struct Triangle res = {0};
 
 	struct Vec4f v4_0 = {.x = tri.v0.x, .y = tri.v0.y, .z = tri.v0.z, .w = 1.0f};
 	struct Vec4f v4_1 = {.x = tri.v1.x, .y = tri.v1.y, .z = tri.v1.z, .w = 1.0f};
@@ -75,6 +83,16 @@ struct Triangle apply_perspective_projection(struct Mat4 m, struct Triangle tri)
 	v4_0 = mat4_mul_vec4(m,v4_0);
 	v4_1 = mat4_mul_vec4(m,v4_1);
 	v4_2 = mat4_mul_vec4(m,v4_2);
+
+	if(point_intersects_frustum(v4_0)) *clipped = true;
+	if(point_intersects_frustum(v4_1)) *clipped = true;
+	if(point_intersects_frustum(v4_2)) *clipped = true;
+	
+	/* if(*clipped) { */
+	/* 	print_vec4f(v4_0); */
+	/* 	print_vec4f(v4_1); */
+	/* 	print_vec4f(v4_2); */
+	/* } */
 
 	v4_0 = perspective_divide(v4_0);
 	v4_1 = perspective_divide(v4_1);
@@ -113,6 +131,8 @@ struct Triangle apply_transformation(struct Mat4 tr, struct Triangle tri) {
 
 	return res;
 }
+
+
 
 void rasterize_triangle(struct Triangle tri_in, uint32_t* framebuffer, float* zbuffer, uint32_t color) {
 	

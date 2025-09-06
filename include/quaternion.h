@@ -11,6 +11,7 @@ struct Quaternion {
 	float q2; // j
 	float q3; // k
 };
+struct Vec3f quat_get_forward(struct Quaternion q);
 
 void print_quat(struct Quaternion q);
 bool quat_are_about_equal(struct Quaternion q0, struct Quaternion q1, float epsilon);

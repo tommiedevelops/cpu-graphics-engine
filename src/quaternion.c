@@ -25,6 +25,13 @@ bool quat_are_about_equal(struct Quaternion q0, struct Quaternion q1, float epsi
 struct Quaternion quat_conjugate(struct Quaternion q);
 struct Quaternion quat_inverse(struct Quaternion q);
 
+struct Vec3f quat_get_forward(struct Quaternion q){
+	struct Vec3f forward;
+	forward.x = 2*(q.q1*q.q3 + q.q0*q.q2);
+	forward.y = 2*(q.q2*q.q3 - q.q0*q.q1);
+	forward.z = 1 - 2*(q.q1*q.q1 + q.q2*q.q2);
+	return forward;
+}
 struct Quaternion quat_mul(struct Quaternion q0, struct Quaternion q1) {
 	
 	struct Quaternion p = quat_normalize(q0);
