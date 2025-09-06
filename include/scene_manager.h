@@ -41,7 +41,7 @@ struct LightSource {
 };
 
 struct Scene {
-	struct Camera cam;
+	struct Camera *cam;
 	struct GameObject *gameObjects;
 	int num_gameObjects;
 	struct LightSource light;
@@ -60,7 +60,7 @@ struct Mat4 get_translation_matrix(struct Transform tr);
 
 struct Mat4 get_rotation_matrix(struct Transform tr);
 
-struct Mat4 get_model_matrix(struct GameObject go);
+struct Mat4 get_model_matrix(struct Transform tr);
 
 struct Mat4 get_view_matrix(struct Camera cam);
 

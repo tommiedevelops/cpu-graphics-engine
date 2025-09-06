@@ -23,13 +23,13 @@ void render_scene(uint32_t* framebuffer, float* zbuffer, struct Scene scene) {
 		return;
 	}
 
-	struct Mat4 V = get_view_matrix(scene.cam);
-	struct Mat4 P = get_projection_matrix(scene.cam);
-	struct Mat4 VP = get_viewport_matrix(scene.cam);
+	struct Mat4 V = get_view_matrix(*scene.cam);
+	struct Mat4 P = get_projection_matrix(*scene.cam);
+	struct Mat4 VP = get_viewport_matrix(*scene.cam);
 
 	for(int i = 0; i < scene.num_gameObjects; i++) {
 		struct GameObject go = scene.gameObjects[i];
-		struct Mat4 M = get_model_matrix(go);
+		struct Mat4 M = get_model_matrix(go.transform);
 			
 		struct Vec3f* vertices = go.mesh.vertices;
 		int* triangles = go.mesh.triangles;
@@ -42,12 +42,12 @@ void render_scene(uint32_t* framebuffer, float* zbuffer, struct Scene scene) {
 			};	
 
 			tri = apply_transformation(M, tri);
-			
+				
 			// calculate lighting	
 			struct Vec3f surf_norm = vec3f_normalize(calculate_normal(tri));
 			struct Vec3f light = vec3f_normalize(scene.light.direction);	
 			float dot_prod = dot_product(surf_norm, light);
-
+			
 			// calculate color
 			struct Color color;
 			color.a = 255;
@@ -56,10 +56,13 @@ void render_scene(uint32_t* framebuffer, float* zbuffer, struct Scene scene) {
 			color.b = dot_prod * 256;
 
 			uint32_t icolor = color_to_int(color);	
-
-			// apply transformations
+					
 			tri = apply_transformation(V,tri);
-			tri = apply_perspective_projection(P,tri);
+			
+			bool clipped = false;	
+			tri = apply_perspective_projection(&clipped,P,tri);
+		//	if(ipped) return;	
+			
 			tri = apply_transformation(VP,tri);
 
 			rasterize_triangle(tri, framebuffer, zbuffer, icolor);

@@ -27,7 +27,7 @@ struct Triangle create_triangle(
 struct Vec3f calculate_normal(struct Triangle tri);
 struct Triangle apply_transformation(struct Mat4 tr, struct Triangle tri);
 struct Triangle tri_perspective_divide(struct Triangle tri); 
-struct Triangle apply_perspective_projection(struct Mat4 m, struct Triangle tri);
+struct Triangle apply_perspective_projection(bool* clipped, struct Mat4 m, struct Triangle tri);
 // array size 3 of struct Vec3f ptrs
 void rasterize_triangle(struct Triangle tri, uint32_t* framebuffer, float* zbuffer, uint32_t color);
 #endif

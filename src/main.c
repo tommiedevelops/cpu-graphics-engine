@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
 
 	// Prepare Camera
 	// To start, the camera is on position (0,0,5) facing the -Z direction
-	struct Vec3f camera_pos = {.x = 0.0f, .y = 0.0f, .z = 20.0f};
+	struct Vec3f camera_pos = {.x = 0.0f, .y = 0.0f, .z = 5.0f};
 	struct Transform camera_transform = {
 		.position = camera_pos,
 		.rotation = QUAT_IDENTITY,
@@ -68,7 +68,7 @@ int main(int argc, char* argv[]) {
 	};
 
 	struct Scene scene = {
-		.cam = cam,
+		.cam = &cam,
 		.gameObjects = &go,
 		.num_gameObjects = 1,
 		.light = light_source
@@ -92,7 +92,7 @@ int main(int argc, char* argv[]) {
 		
 		// Handle Time
 		update_time(&time);
-		print_fps(&time);
+		/* print_fps(&time); */
 
 		// Clear the buffers	
 		memset(framebuffer, 0x0, sizeof(framebuffer));
@@ -109,16 +109,16 @@ int main(int argc, char* argv[]) {
 		float cam_speed = 1.0f;
 		float angle = time.delta_time * angular_velocity;
 
-		struct Vec3f euler_rot = {.x = 0.0f, .y = angle, .z = angle};
+		struct Vec3f euler_rot = {.x = 0.0f, .y = angle, .z = 0.0f};
 		
-		//struct Quaternion delta = quat_normalize(euler_to_quat(euler_rot));
-		struct Vec3f axis = {.x = 0.0f, .y = 1.0f, .z= 0.0f};
+		struct Quaternion cam_delta = quat_normalize(euler_to_quat(euler_rot));
+		struct Vec3f axis = {.x = 0.0f, .y = 1.0f, .z= 1.0f};
 		struct Quaternion delta = quat_angle_axis(angle, axis);
-		go.transform.rotation = quat_normalize(quat_mul(go.transform.rotation, delta));
-		go.transform.position.z += time.delta_time * cam_speed; 
-		print_vec3f(go.transform.position);
-		/* cam.transform.rotation:W
-		 * = quat_normalize(quat_mul(delta, cam.transform.rotation)); */
+		//go.transform.rotation = quat_normalize(quat_mul(go.transform.rotation, delta));
+		//print_vec3f(go.transform.position);
+		cam.transform.rotation = quat_normalize(quat_mul(cam_delta, cam.transform.rotation));
+		//cam.transform.position.z += cam_speed * time.delta_time;
+		//print_vec3f(quat_get_forward(cam.transform.rotation));
 
 		// --- END OF SCRIPTING SECTION ---
 		render_scene(framebuffer, zbuffer, scene);

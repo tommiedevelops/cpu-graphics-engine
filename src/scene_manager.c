@@ -33,20 +33,49 @@ struct Mat4 get_translation_matrix(struct Transform tr) {
 }
 
 
-struct Mat4 get_model_matrix(struct GameObject go){
+struct Mat4 get_model_matrix(struct Transform tr){
 	struct Mat4 result;
-	struct Transform tr = go.transform;
 	result = get_scale_matrix(tr);
 	result = mat4_mul_mat4(get_rotation_matrix(tr), result);
 	result = mat4_mul_mat4(get_translation_matrix(tr), result);
 	return result;
 }
 
+struct Mat4 mat4_affine_orthonormal_inverse(struct Mat4 mat) {
+	// special case of Mat4 being an affine, orthonormal transformation	
+	float (*m)[4] = mat.m; // alias the existing storage
+	
+	struct Mat3 sub = {{
+		{m[0][0], m[0][1], m[0][2]},
+		{m[1][0], m[1][1], m[1][2]},
+		{m[2][0], m[2][1], m[2][2]}
+	}};
+
+	struct Vec3f t = {.x = m[0][3], .y = m[1][3], .z = m[2][3]};
+	struct Mat3 r_T = mat3_transpose(sub);
+	struct Mat3 mR_T = scal_mul_mat3(-1.0f, r_T);
+
+	struct Vec3f final_vec = mat3_mul_vec3(mR_T, t);
+
+	struct Mat4 result = {0};
+	
+	for(int i = 0; i < 3; i++){
+		for(int j = 0; j < 3; j++){
+			result.m[i][j] = r_T.m[i][j];
+		}
+	} 
+	
+	result.m[0][3] = final_vec.x;
+	result.m[1][3] = final_vec.y;
+	result.m[2][3] = final_vec.z;
+	result.m[3][3] = 1.0f;
+
+	return result;
+}
+
 struct Mat4 get_view_matrix(struct Camera cam){
 	// i guess you'd just apply the inverse model matrix of the camera
-	struct GameObject cam_go = {0};
-	cam_go.transform = cam.transform;
-	return mat4_affine_orthonormal_inverse(get_model_matrix(cam_go));
+	return mat4_affine_orthonormal_inverse(get_model_matrix(cam.transform));
 }
 
 struct Mat4 get_projection_matrix(struct Camera cam) {
@@ -60,7 +89,7 @@ struct Mat4 get_projection_matrix(struct Camera cam) {
 	P.m[0][0] = aspect/tan(0.5f*fov);
 	P.m[1][1] = 1/tan(0.5f*fov);
 	P.m[2][2] = (float)1.0f/ (zf - zn);
-	P.m[2][3] =	(float)(-zn)/(zf-zn); 
+	P.m[2][3] = (float)(-zn)/(zf-zn); 
 	P.m[3][2] = 1.0f;
 	return P;
 }
