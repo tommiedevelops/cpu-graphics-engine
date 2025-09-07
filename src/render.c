@@ -28,7 +28,7 @@ void render_scene(uint32_t* framebuffer, float* zbuffer, struct Scene scene) {
 	struct Mat4 VP = get_viewport_matrix(*scene.cam);
 
 	for(int i = 0; i < scene.num_gameObjects; i++) {
-		struct GameObject go = scene.gameObjects[i];
+		struct GameObject go = *scene.gameObjects[i];
 		struct Mat4 M = get_model_matrix(go.transform);
 			
 		struct Vec3f* vertices = go.mesh.vertices;

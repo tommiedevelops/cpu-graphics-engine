@@ -42,7 +42,7 @@ struct LightSource {
 
 struct Scene {
 	struct Camera *cam;
-	struct GameObject *gameObjects;
+	struct GameObject **gameObjects;
 	int num_gameObjects;
 	struct LightSource light;
 };

@@ -26,23 +26,57 @@ int main(int argc, char* argv[]) {
 	snprintf(filename, sizeof(filename), "./models/%s.obj", argv[1]);
 
 	/* Parse Mesh from .obj file */
-	struct Mesh mesh = parse_obj(filename);
+	struct Mesh bunny_mesh = parse_obj("./models/bunny.obj");
+	struct Mesh teapot_mesh = parse_obj("./models/teapot.obj");
+	struct Mesh dragon_mesh = parse_obj("./models/dragon.obj");
 	
-	// Prepare Transform and GameObject
-	struct Transform transform = {
-		.position = VEC3F_0, 
+	// Prepare Transform and GameObjects
+	
+	struct Vec3f bunny_pos = {.x = 1.0f, .y = 0.0f, .z = 0.0f};
+	struct Transform bunny_transform = {
+		.position = bunny_pos, 
 		.rotation = QUAT_IDENTITY, 
 		.scale = VEC3F_1
 	};
 
-	struct GameObject go = {
-		.mesh 	    = mesh     , 
-		.transform  = transform 
+	struct Vec3f teapot_pos = {.x = -1.0f, .y = 0.0f, .z = 0.0f};
+	struct Transform teapot_transform = {
+		.position = teapot_pos, 
+		.rotation = QUAT_IDENTITY, 
+		.scale = VEC3F_1
 	};
+
+	struct Vec3f dragon_pos = {.x = 0.0f, .y = 0.0f, .z = 1.0f};
+	struct Transform dragon_transform = {
+		.position = VEC3F_Z, 
+		.rotation = QUAT_IDENTITY, 
+		.scale = VEC3F_1
+	};
+
+	struct GameObject bunny_go = {
+		.mesh 	    = bunny_mesh     , 
+		.transform  = bunny_transform 
+	};
+
+	struct GameObject dragon_go = {
+		.mesh 	    = dragon_mesh     , 
+		.transform  = dragon_transform 
+	};
+
+	struct GameObject teapot_go = {
+		.mesh 	    = teapot_mesh     , 
+		.transform  = teapot_transform 
+	};
+
+	int num_gameObjects = 3;
+	struct GameObject* gameObjects[num_gameObjects];
+	gameObjects[0] = &bunny_go;
+	gameObjects[1] = &dragon_go;
+	gameObjects[2] = &teapot_go;
 
 	// Prepare Camera
 	// To start, the camera is on position (0,0,5) facing the -Z direction
-	struct Vec3f camera_pos = {.x = 0.0f, .y = 0.0f, .z = 5.0f};
+	struct Vec3f camera_pos = {.x = 0.0f, .y = 0.0f, .z = 3.0f};
 	struct Transform camera_transform = {
 		.position = camera_pos,
 		.rotation = QUAT_IDENTITY,
@@ -69,8 +103,8 @@ int main(int argc, char* argv[]) {
 
 	struct Scene scene = {
 		.cam = &cam,
-		.gameObjects = &go,
-		.num_gameObjects = 1,
+		.gameObjects = gameObjects,
+		.num_gameObjects = num_gameObjects,
 		.light = light_source
 	};
 
@@ -98,7 +132,7 @@ int main(int argc, char* argv[]) {
 		memset(framebuffer, 0x0, sizeof(framebuffer));
 		memset(zbuffer, 0x0, sizeof(zbuffer));
 
-                // Input Handling
+                // Event Handling
 		int mouse_dx = 0;
 		int mouse_dy = 0;
 
@@ -115,54 +149,83 @@ int main(int argc, char* argv[]) {
 			}
                 }	
 
+		mouse_dx = mouse_dx;
+		// Hide the cursor
 		const Uint8* kb = SDL_GetKeyboardState(NULL);
-	
-		if(mouse_dx != 0) printf("mouse x: %d\n", mouse_dx);	
-		if(mouse_dy != 0) printf("mouse y: %d\n", mouse_dy);
-
-		if(kb[SDL_SCANCODE_W]) {
-			printf("w was pressed\n");
-		}
-
-		if(kb[SDL_SCANCODE_A]) {
-			printf("a was pressed\n");
-		}
-
-		if(kb[SDL_SCANCODE_S]) {
-			printf("s was pressed\n");
-		}
-		
-		if(kb[SDL_SCANCODE_D]) {
-			printf("d was pressed\n");
-		}
 
 		// ---- SCRIPTING SECTION -----
 		// Apply transformations to game object
-		float angular_velocity = 1.0f; 
-		float cam_speed = 1.0f;
-		float angle = time.delta_time * angular_velocity;
+		float angular_velocity = 0.2f; 
+		float cam_speed = -1.0f;
+		float angle =time.delta_time * angular_velocity * mouse_dx;
 
-		struct Vec3f euler_rot = {.x = 0.0f, .y = angle, .z = 0.0f};
+/* 		if(mouse_dx != 0){ */
+/* 			printf("mouse_dx = %d\n", mouse_dx); */
+/* 			printf("time.delta_time=%f\n", time.delta_time); */
+/* 			printf("angular_velocity = %f\n", angular_velocity); */
+/* 			printf("angle=%f\n", angle); */
+/* 		} */	
+
+		// input handling 	
+		struct Quaternion cam_delta = quat_normalize(quat_angle_axis(angle, VEC3F_Y));
+		cam.transform.rotation = quat_normalize(quat_mul(cam.transform.rotation, cam_delta));
+
+		//printf("mousex= %d mousey= %d\n", mouse_dx, mouse_dy);
+		struct Vec3f move_dir = {0};
+		struct Vec3f move_vec = {0};
+
+		if(kb[SDL_SCANCODE_W]) {
+			move_dir = quat_get_forward(cam.transform.rotation);
+			move_vec = vec3f_scale(move_dir, cam_speed * time.delta_time);
+
+		}
+
+		if(kb[SDL_SCANCODE_A]) {
+			move_dir = vec3f_scale(quat_get_right(cam.transform.rotation), -1.0f);
+			move_vec = vec3f_scale(move_dir, cam_speed * time.delta_time);
+		}
+
+		if(kb[SDL_SCANCODE_S]) {
+			move_dir = vec3f_scale(quat_get_forward(cam.transform.rotation), -1.0f);
+			move_vec = vec3f_scale(move_dir, cam_speed * time.delta_time);
+		}
+
 		
-		struct Quaternion cam_delta = quat_normalize(euler_to_quat(euler_rot));
-		struct Vec3f axis = {.x = 0.0f, .y = 1.0f, .z= 1.0f};
-		struct Quaternion delta = quat_angle_axis(angle, axis);
-		//go.transform.rotation = quat_normalize(quat_mul(go.transform.rotation, delta));
-		//print_vec3f(go.transform.position);
-		cam.transform.rotation = quat_normalize(quat_mul(cam_delta, cam.transform.rotation));
-		//cam.transform.position.z += cam_speed * time.delta_time;
-		//print_vec3f(quat_get_forward(cam.transform.rotation));
+		if(kb[SDL_SCANCODE_D]) {
+			move_dir = quat_get_right(cam.transform.rotation);
+			move_vec = vec3f_scale(move_dir, cam_speed * time.delta_time);
+		}
 		
+		cam.transform.position = vec3f_add(cam.transform.position, move_vec);
+
 		// --- END OF SCRIPTING SECTION ---
+		float go_angle = angular_velocity * time.delta_time;
+
+		struct Quaternion bunny_rot = quat_normalize(quat_angle_axis(go_angle, VEC3F_Y));
+		struct Quaternion dragon_rot = quat_normalize(quat_angle_axis(2*go_angle, VEC3F_Y));
+		struct Quaternion teapot_rot = quat_normalize(quat_angle_axis(3*go_angle, VEC3F_Y));
+
+		bunny_go.transform.rotation = quat_normalize(quat_mul(bunny_go.transform.rotation, bunny_rot));
+		dragon_go.transform.rotation = quat_normalize(quat_mul(dragon_go.transform.rotation, dragon_rot));
+		teapot_go.transform.rotation = quat_normalize(quat_mul(teapot_go.transform.rotation, teapot_rot));
+
 		render_scene(framebuffer, zbuffer, scene);
+		print_vec3f(quat_get_forward(cam.transform.rotation));
 
 		// Update SDL2 window w/ new framebuffer
                 update_window(window_data, framebuffer);
         }
 
         /* Clean Up */
-	free(mesh.vertices);
-	free(mesh.triangles);
+
+	free(bunny_mesh.vertices);
+	free(bunny_mesh.triangles);
+
+	free(dragon_mesh.vertices);
+	free(dragon_mesh.triangles);
+
+	free(teapot_mesh.vertices);
+	free(teapot_mesh.triangles);
         destroy_window(window_data);
         return 0;
 }
