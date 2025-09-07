@@ -77,3 +77,7 @@ it was around 5fps.
 06/09/25
 * Today, I want to start working on implementing textures in the renderer. I think that includes lighting, skybox and floor as well
 * I also want to implement a simple character controller so I can move the camera around. I think I need to debug the camera a big (I don't think I'm actually frustum culling lol)
+
+07/09/25
+* I hacked away at the issue from yesterday. It's fixed but I don't know why. I'll just leave it for now. 
+* Gonna try implement a simple character controller for now

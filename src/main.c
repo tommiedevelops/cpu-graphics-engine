@@ -98,11 +98,44 @@ int main(int argc, char* argv[]) {
 		memset(framebuffer, 0x0, sizeof(framebuffer));
 		memset(zbuffer, 0x0, sizeof(zbuffer));
 
-                // Event handling
+                // Input Handling
+		int mouse_dx = 0;
+		int mouse_dy = 0;
+
                 while (SDL_PollEvent(&event)) {
-                        if(event.type == SDL_QUIT) running = false;
+			switch(event.type) {
+				case SDL_QUIT: running = false; break;
+				case SDL_MOUSEMOTION:
+					mouse_dx += event.motion.xrel;
+					mouse_dy += event.motion.yrel;
+					break;
+				case SDL_KEYDOWN:
+					if(event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) running = false;
+					break;
+			}
                 }	
+
+		const Uint8* kb = SDL_GetKeyboardState(NULL);
+	
+		if(mouse_dx != 0) printf("mouse x: %d\n", mouse_dx);	
+		if(mouse_dy != 0) printf("mouse y: %d\n", mouse_dy);
+
+		if(kb[SDL_SCANCODE_W]) {
+			printf("w was pressed\n");
+		}
+
+		if(kb[SDL_SCANCODE_A]) {
+			printf("a was pressed\n");
+		}
+
+		if(kb[SDL_SCANCODE_S]) {
+			printf("s was pressed\n");
+		}
 		
+		if(kb[SDL_SCANCODE_D]) {
+			printf("d was pressed\n");
+		}
+
 		// ---- SCRIPTING SECTION -----
 		// Apply transformations to game object
 		float angular_velocity = 1.0f; 
@@ -119,7 +152,7 @@ int main(int argc, char* argv[]) {
 		cam.transform.rotation = quat_normalize(quat_mul(cam_delta, cam.transform.rotation));
 		//cam.transform.position.z += cam_speed * time.delta_time;
 		//print_vec3f(quat_get_forward(cam.transform.rotation));
-
+		
 		// --- END OF SCRIPTING SECTION ---
 		render_scene(framebuffer, zbuffer, scene);
 
