@@ -28,6 +28,9 @@ int main(int argc, char* argv[]) {
 	/* Parse Mesh from .obj file */
 	struct Mesh mesh = parse_obj(filename);
 	
+	struct Mesh ground_mesh = {
+	};
+	
 	// Prepare Transform and GameObjects
 	
 	struct Transform transform = {
@@ -36,14 +39,42 @@ int main(int argc, char* argv[]) {
 		.scale = VEC3F_1
 	};
 
+	struct Vec3f pos1 = {.x = 2.0f, .y = 0.0f, .z = 0.0f};
+
+	struct Transform tr1 = {
+		.position = pos1,
+		.rotation = QUAT_IDENTITY,
+		.scale = VEC3F_1
+	};
+
+	struct Vec3f pos2 = {.x = -2.0f, .y = 0.0f, .z = 0.0f};
+
+	struct Transform tr2 = {
+		.position = pos2,
+		.rotation = QUAT_IDENTITY,
+		.scale = VEC3F_1
+	};
+
 	struct GameObject go = {
 		.mesh 	    = mesh     , 
 		.transform  = transform 
 	};
 
-	int num_gameObjects = 1;
+	struct GameObject go1 = {
+		.mesh = mesh ,
+		.transform = tr1
+	};
+
+	struct GameObject go2 = {
+		.mesh = mesh ,
+		.transform = tr2
+	};
+
+	int num_gameObjects = 3;
 	struct GameObject* gameObjects[num_gameObjects];
 	gameObjects[0] = &go;
+	gameObjects[1] = &go1;
+	gameObjects[2] = &go2;
 		
 	// Prepare Camera
 	// To start, the camera is on position (0,0,5) facing the -Z direction
@@ -165,9 +196,17 @@ int main(int argc, char* argv[]) {
 		float go_angle = angular_velocity * time.delta_time;
 
 		struct Vec3f rot_axis = {.x = 1.0f, .y = 1.0f, .z = 1.0f};
+		struct Vec3f rot_axis1 = {.x = -1.0f, .y = 1.0f, .z = 1.0f};
+		struct Vec3f rot_axis2 = {.x = 1.0f, .y = 1.0f, .z = -1.0f};
+
 		struct Quaternion rot = quat_normalize(quat_angle_axis(go_angle, rot_axis));
 
+		struct Quaternion rot1 = quat_normalize(quat_angle_axis(2*go_angle, rot_axis1));
+		struct Quaternion rot2 = quat_normalize(quat_angle_axis(3*go_angle, rot_axis2));
+
 		go.transform.rotation = quat_normalize(quat_mul(go.transform.rotation, rot));
+		go1.transform.rotation = quat_normalize(quat_mul(go1.transform.rotation, rot1));
+		go2.transform.rotation = quat_normalize(quat_mul(go2.transform.rotation, rot2));
 		cam.transform.position = vec3f_add(cam.transform.position, move_vec);
 
 		// --- END OF SCRIPTING SECTION ---
