@@ -73,6 +73,9 @@ int main(int argc, char* argv[]) {
 	gameObjects[0] = &bunny_go;
 	gameObjects[1] = &dragon_go;
 	gameObjects[2] = &teapot_go;
+		
+	// quick and dirty hack not load in dragon and teapot lol 
+	num_gameObjects =1;
 
 	// Prepare Camera
 	// To start, the camera is on position (0,0,5) facing the -Z direction
@@ -195,13 +198,10 @@ int main(int argc, char* argv[]) {
 			move_dir = quat_get_right(cam.transform.rotation);
 			move_vec = vec3f_scale(move_dir, cam_speed * time.delta_time);
 		}
-		
-		cam.transform.position = vec3f_add(cam.transform.position, move_vec);
-
-		// --- END OF SCRIPTING SECTION ---
 		float go_angle = angular_velocity * time.delta_time;
 
-		struct Quaternion bunny_rot = quat_normalize(quat_angle_axis(go_angle, VEC3F_Y));
+		struct Vec3f rot_axis = {.x = 1.0f, .y = 1.0f, .z = 1.0f};
+		struct Quaternion bunny_rot = quat_normalize(quat_angle_axis(go_angle, rot_axis));
 		struct Quaternion dragon_rot = quat_normalize(quat_angle_axis(2*go_angle, VEC3F_Y));
 		struct Quaternion teapot_rot = quat_normalize(quat_angle_axis(3*go_angle, VEC3F_Y));
 
@@ -209,6 +209,10 @@ int main(int argc, char* argv[]) {
 		dragon_go.transform.rotation = quat_normalize(quat_mul(dragon_go.transform.rotation, dragon_rot));
 		teapot_go.transform.rotation = quat_normalize(quat_mul(teapot_go.transform.rotation, teapot_rot));
 
+
+		cam.transform.position = vec3f_add(cam.transform.position, move_vec);
+
+		// --- END OF SCRIPTING SECTION ---
 		render_scene(framebuffer, zbuffer, scene);
 		print_vec3f(quat_get_forward(cam.transform.rotation));
 
