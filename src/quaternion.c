@@ -32,6 +32,15 @@ struct Vec3f quat_get_forward(struct Quaternion q){
 	forward.z = 1 - 2*(q.q1*q.q1 + q.q2*q.q2);
 	return forward;
 }
+
+struct Vec3f quat_get_right(struct Quaternion q){
+	struct Vec3f right;
+	right.x = 1 - 2*q.q2*q.q2 - 2*q.q3*q.q3; 
+	right.y = 2*q.q1*q.q2 + 2*q.q0*q.q3;
+	right.z = 2*q.q0*q.q3 - 2*q.q0*q.q2;
+	return right;
+}
+
 struct Quaternion quat_mul(struct Quaternion q0, struct Quaternion q1) {
 	
 	struct Quaternion p = quat_normalize(q0);
