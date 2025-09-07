@@ -81,3 +81,4 @@ it was around 5fps.
 07/09/25
 * I hacked away at the issue from yesterday. It's fixed but I don't know why. I'll just leave it for now. 
 * Gonna try implement a simple character controller for now
+* just testing my git commits from my mac as well
