@@ -65,12 +65,11 @@ float interpolate_depth(struct Triangle tri, float alpha, float beta, float gamm
 	return depth;
 }
 
-bool point_intersects_frustum(struct Vec4f point){
-	float w = abs(point.w);
-	if(point.x >= w || point.x <= -w) return true;
-	if(point.y >= w || point.y <= -w) return true;
-	if(point.z >= w || point.z <= 0) return true;
-	return false;
+bool point_inside(struct Vec4f point){	
+	float w = point.w;
+	return (point.x >= -w) && (point.x <= w) && 
+	       (point.y >= -w) && (point.y <= w); //&& 
+               //(point.z >= 0) && (point.z <= w);	       
 }
 
 struct Triangle apply_perspective_projection(bool* clipped, struct Mat4 m, struct Triangle tri) {
@@ -84,15 +83,7 @@ struct Triangle apply_perspective_projection(bool* clipped, struct Mat4 m, struc
 	v4_1 = mat4_mul_vec4(m,v4_1);
 	v4_2 = mat4_mul_vec4(m,v4_2);
 
-	if(point_intersects_frustum(v4_0)) *clipped = true;
-	if(point_intersects_frustum(v4_1)) *clipped = true;
-	if(point_intersects_frustum(v4_2)) *clipped = true;
-	
-	/* if(*clipped) { */
-	/* 	print_vec4f(v4_0); */
-	/* 	print_vec4f(v4_1); */
-	/* 	print_vec4f(v4_2); */
-	/* } */
+	*clipped = !point_inside(v4_0) || !point_inside(v4_1) || !point_inside(v4_2);
 
 	v4_0 = perspective_divide(v4_0);
 	v4_1 = perspective_divide(v4_1);

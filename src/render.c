@@ -61,7 +61,7 @@ void render_scene(uint32_t* framebuffer, float* zbuffer, struct Scene scene) {
 			
 			bool clipped = false;	
 			tri = apply_perspective_projection(&clipped,P,tri);
-		//	if(ipped) return;	
+			if(!clipped) return;	
 			
 			tri = apply_transformation(VP,tri);
 
