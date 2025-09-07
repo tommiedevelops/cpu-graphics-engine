@@ -16,6 +16,10 @@ struct SDL_Data initialise_window(){
 		WIDTH, HEIGHT, 0
 	);
 
+	SDL_ShowCursor(SDL_DISABLE);
+	int ret = SDL_ShowCursor(SDL_QUERY);
+	if(ret != SDL_DISABLE) exit(0);	
+
 	if(window == NULL){
 		perror("src/window.c/initialise_window: SDL_CreateWindow returned a NULL ptr");
 		exit(EXIT_FAILURE);
