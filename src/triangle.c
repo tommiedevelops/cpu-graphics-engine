@@ -149,8 +149,8 @@ void rasterize_triangle(struct Triangle tri_in, uint32_t* framebuffer, float* zb
 	for(int y = ymin; y <= ymax; y++){
 		for(int x = xmin; x <= xmax; x++) {
 			// check if within bounds
-			if( x > WIDTH || x < 0) return;
-			if( y > HEIGHT || y < 0) return;
+			if( x >= WIDTH || x <= 0) return;
+			if( y >= HEIGHT || y <= 0) return;
 
 			// calculate barycentric coords
 			float alpha = (A.x*(C.y-A.y)+(y-A.y)*(C.x-A.x)-x*(C.y-A.y))
