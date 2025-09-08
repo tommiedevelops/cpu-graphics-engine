@@ -1,25 +1,57 @@
 #include <stdio.h>
-#include "scene_manager.h"
+#include "construct_plane.h"
 
-struct Mesh create_plane(float width, float length, float density) {
-	/*
-		width - width of the plane in world space
-		length - length of the plane in world space
-		density - vertices per unit length both ways
-	*/
+struct Mesh create_square_plane() {
 
-	// construct plane mesh
-	int num_x_verts = density * width;
-	int num_y_verts = density * length;
+	float w = 0.5f;
+	float l = 0.5f; 
+	
+	struct Vec3f bl = {
+		.x = -w ,
+		.y = 0.10f,
+		.z = -l
+	};
 
-	struct Vec3f* vertices;
-	int* triangles;	
+	struct Vec3f br = {
+		.x = w ,
+		.y = 0.20f,
+		.z = -l
+	};
 
-	for(int y = 0; y < num_y_verts; y++){
-		for(int x = 0; x < num_x_verts; x++){
-						
-		}
-	}		
+	struct Vec3f tl = {
+		.x = -w ,
+		.y = 0.30f,
+		.z = l
+	};
+
+	struct Vec3f tr = {
+		.x = w ,
+		.y = 0.0f,
+		.z = l
+	};
+
+	struct Vec3f *vertices = malloc(4*sizeof(struct Vec3f));
+	vertices[0] = bl;
+	vertices[1] = tl;
+	vertices[2] = br;
+	vertices[3] = tr;
+
+	int *triangles = malloc(6*sizeof(int));
+	triangles[0] = 0;
+	triangles[1] = 1;	
+	triangles[2] = 2;
+	triangles[3] = 1;
+	triangles[4] = 3;
+	triangles[5] = 2;
+
+	struct Mesh mesh = {
+		.num_vertices = 4,
+		.vertices = vertices,
+	    	.triangles = triangles,
+		.num_triangles = 2		
+	};
+
+	return mesh;
 	
 }
 	

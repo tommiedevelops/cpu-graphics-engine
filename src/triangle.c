@@ -125,20 +125,12 @@ struct Triangle apply_transformation(struct Mat4 tr, struct Triangle tri) {
 
 
 
-void rasterize_triangle(struct Triangle tri_in, uint32_t* framebuffer, float* zbuffer, uint32_t color) {
+void rasterize_triangle(struct Triangle tri, uint32_t* framebuffer, float* zbuffer, uint32_t color) {
 	
-	// Currently assuming camera fixed on z-axis and is orthographic
-	struct Triangle tri = sort_vertices_by_y_asc(tri_in);
-
 	struct Vec3f A = tri.v0;
 	struct Vec3f B = tri.v1;
 	struct Vec3f C = tri.v2;
 
-	/* printf("rasterizing triangle:\n"); */
-	/* print_vec3f(A); */
-	/* print_vec3f(B); */
-	/* print_vec3f(C); */
-	
 	struct Bounds bounds = get_bounds_from_tri(tri);
 
 	int xmin = (int)bounds.xmin;

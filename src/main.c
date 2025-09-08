@@ -10,11 +10,13 @@
 #include "scene_manager.h"
 #include "game_time.h"
 #include "quaternion.h"
+#include "texture.h"
+#include "construct_plane.h"
 
 // Expects a single string for cmd line input representing the obj that the user wishes to render
 
 int main(int argc, char* argv[]) {
-
+	
 	/* Handle CLI */
 	if(argc != 2) {
 		printf("Please provide exactly one filename. ./models/{filename}.obj\n");
@@ -28,18 +30,30 @@ int main(int argc, char* argv[]) {
 	/* Parse Mesh from .obj file */
 	struct Mesh mesh = parse_obj(filename);
 	
-	struct Mesh ground_mesh = {
+	struct Mesh ground_mesh = create_square_plane();
+	struct Vec3f ground_scale = {.x = 1.0f, .y = 1.0f, .z = 1.0f};
+
+	struct Transform ground_tr = {
+		.position = VEC3F_0,
+		.rotation = QUAT_IDENTITY,
+		.scale = ground_scale	
+	};
+
+	struct GameObject ground_go = {
+		.transform = ground_tr,
+		.mesh = ground_mesh
 	};
 	
 	// Prepare Transform and GameObjects
 	
+	struct Vec3f pos0 = {.x = 0.0f, .y = 1.0f, .z = 0.0f};
 	struct Transform transform = {
-		.position = VEC3F_0, 
+		.position = pos0, 
 		.rotation = QUAT_IDENTITY, 
 		.scale = VEC3F_1
 	};
 
-	struct Vec3f pos1 = {.x = 2.0f, .y = 0.0f, .z = 0.0f};
+	struct Vec3f pos1 = {.x = 2.0f, .y = 1.0f, .z = 0.0f};
 
 	struct Transform tr1 = {
 		.position = pos1,
@@ -47,7 +61,7 @@ int main(int argc, char* argv[]) {
 		.scale = VEC3F_1
 	};
 
-	struct Vec3f pos2 = {.x = -2.0f, .y = 0.0f, .z = 0.0f};
+	struct Vec3f pos2 = {.x = -2.0f, .y = 1.0f, .z = 0.0f};
 
 	struct Transform tr2 = {
 		.position = pos2,
@@ -70,15 +84,16 @@ int main(int argc, char* argv[]) {
 		.transform = tr2
 	};
 
-	int num_gameObjects = 3;
+	int num_gameObjects = 4;
 	struct GameObject* gameObjects[num_gameObjects];
 	gameObjects[0] = &go;
 	gameObjects[1] = &go1;
 	gameObjects[2] = &go2;
+	gameObjects[3] = &ground_go;
 		
 	// Prepare Camera
 	// To start, the camera is on position (0,0,5) facing the -Z direction
-	struct Vec3f camera_pos = {.x = 0.0f, .y = 0.0f, .z = 3.0f};
+	struct Vec3f camera_pos = {.x = 0.0f, .y = 0.5f, .z = 3.0f};
 	struct Transform camera_transform = {
 		.position = camera_pos,
 		.rotation = QUAT_IDENTITY,
@@ -95,8 +110,8 @@ int main(int argc, char* argv[]) {
 	// Prepare light source
 	struct Vec3f light_source_pos = {
 		.x = 0.0f,
-		.y = 0.0f,
-		.z = 1.0f
+		.y = -1.0f,
+		.z = 0.0f
 	};
 
 	struct LightSource light_source  = {
@@ -159,15 +174,10 @@ int main(int argc, char* argv[]) {
 		float angular_velocity = 0.2f; 
 		float cam_speed = -1.0f;
 		float yaw = time.delta_time * angular_velocity * mouse_dx;
-		float pitch = time.delta_time * angular_velocity * mouse_dy;
 
 		// input handling 	
 		struct Quaternion cam_delta_lr = quat_normalize(quat_angle_axis(yaw, VEC3F_Y));
-		
-		struct Vec3f ud_rot_axis = vec3f_cross(quat_get_forward(cam.transform.rotation), VEC3F_Y);
-		struct Quaternion cam_delta_ud = quat_normalize(quat_angle_axis(pitch,ud_rot_axis));
 		cam.transform.rotation = quat_normalize(quat_mul(cam.transform.rotation, cam_delta_lr));
-		cam.transform.rotation = quat_normalize(quat_mul(cam.transform.rotation, cam_delta_ud));
 
 		//printf("mousex= %d mousey= %d\n", mouse_dx, mouse_dy);
 		struct Vec3f move_dir = {0};
@@ -188,7 +198,6 @@ int main(int argc, char* argv[]) {
 			move_vec = vec3f_scale(move_dir, cam_speed * time.delta_time);
 		}
 
-		
 		if(kb[SDL_SCANCODE_D]) {
 			move_dir = quat_get_right(cam.transform.rotation);
 			move_vec = vec3f_scale(move_dir, cam_speed * time.delta_time);
@@ -209,6 +218,7 @@ int main(int argc, char* argv[]) {
 		go2.transform.rotation = quat_normalize(quat_mul(go2.transform.rotation, rot2));
 		cam.transform.position = vec3f_add(cam.transform.position, move_vec);
 
+	
 		// --- END OF SCRIPTING SECTION ---
 		render_scene(framebuffer, zbuffer, scene);
 
@@ -220,7 +230,6 @@ int main(int argc, char* argv[]) {
 
 	free(mesh.vertices);
 	free(mesh.triangles);
-
         destroy_window(window_data);
         return 0;
 }

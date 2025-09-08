@@ -34,11 +34,11 @@ void render_scene(uint32_t* framebuffer, float* zbuffer, struct Scene scene) {
 		struct Vec3f* vertices = go.mesh.vertices;
 		int* triangles = go.mesh.triangles;
 
-		for(int i = 0; i < go.mesh.num_triangles; i++) {
+		for(int j = 0; j < go.mesh.num_triangles; j++) {
 			struct Triangle tri = {
-				.v0 = vertices[triangles[3*i]],
-				.v1 = vertices[triangles[3*i+1]],
-				.v2 = vertices[triangles[3*i+2]]
+				.v0 = vertices[triangles[3*j]],
+				.v1 = vertices[triangles[3*j+1]],
+				.v2 = vertices[triangles[3*j+2]]
 			};	
 
 			tri = apply_transformation(M, tri);
@@ -56,15 +56,24 @@ void render_scene(uint32_t* framebuffer, float* zbuffer, struct Scene scene) {
 			color.b = dot_prod * 256;
 
 			uint32_t icolor = color_to_int(color);	
-					
 			tri = apply_transformation(V,tri);
 			
+
 			bool clipped = false;	
 			tri = apply_perspective_projection(&clipped,P,tri);
 			if(!clipped) return;	
-			
+
 			tri = apply_transformation(VP,tri);
 
+			if(i==3){
+			printf("rasterizing triangle:\n");
+			print_vec3f(tri.v0);
+			print_vec3f(tri.v1);
+			print_vec3f(tri.v2);
+			print_bounds(get_bounds_from_tri(tri));
+			}
+
+			
 			rasterize_triangle(tri, framebuffer, zbuffer, icolor);
 		}
 	}
