@@ -1,0 +1,4 @@
+# Ignore one file from language stats
+include/stb_image.h linguist-vendored
+
+
