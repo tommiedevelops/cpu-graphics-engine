@@ -8,19 +8,19 @@ struct Mesh create_square_plane() {
 	
 	struct Vec3f bl = {
 		.x = -w ,
-		.y = 0.10f,
+		.y = 0.0f,
 		.z = -l
 	};
 
 	struct Vec3f br = {
 		.x = w ,
-		.y = 0.20f,
+		.y = 0.0f,
 		.z = -l
 	};
 
 	struct Vec3f tl = {
 		.x = -w ,
-		.y = 0.30f,
+		.y = 0.0f,
 		.z = l
 	};
 
@@ -28,6 +28,60 @@ struct Mesh create_square_plane() {
 		.x = w ,
 		.y = 0.0f,
 		.z = l
+	};
+
+	struct Vec3f *vertices = malloc(4*sizeof(struct Vec3f));
+	vertices[0] = bl;
+	vertices[1] = tl;
+	vertices[2] = br;
+	vertices[3] = tr;
+
+	int *triangles = malloc(6*sizeof(int));
+	triangles[0] = 0;
+	triangles[1] = 2;	
+	triangles[2] = 1;
+	triangles[3] = 2;
+	triangles[4] = 3;
+	triangles[5] = 1;
+
+	struct Mesh mesh = {
+		.num_vertices = 4,
+		.vertices = vertices,
+	    	.triangles = triangles,
+		.num_triangles = 2		
+	};
+
+	return mesh;
+	
+}
+	
+struct Mesh create_square_plane_xy() {
+
+	float w = 0.5f;
+	float l = 0.5f; 
+	
+	struct Vec3f bl = {
+		.x = -w ,
+		.y = -l,
+		.z = 0.0f
+	};
+
+	struct Vec3f br = {
+		.x = w ,
+		.y = -l,
+		.z = 0.0f
+	};
+
+	struct Vec3f tl = {
+		.x = -w ,
+		.y = l,
+		.z = 0.0f
+	};
+
+	struct Vec3f tr = {
+		.x = w ,
+		.y = l,
+		.z = 0.0f 
 	};
 
 	struct Vec3f *vertices = malloc(4*sizeof(struct Vec3f));
@@ -54,4 +108,4 @@ struct Mesh create_square_plane() {
 	return mesh;
 	
 }
-	
+

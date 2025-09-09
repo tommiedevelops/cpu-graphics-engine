@@ -40,7 +40,8 @@ void render_scene(uint32_t* framebuffer, float* zbuffer, struct Scene scene) {
 				.v1 = vertices[triangles[3*j+1]],
 				.v2 = vertices[triangles[3*j+2]]
 			};	
-
+			
+			// Model to World 
 			tri = apply_transformation(M, tri);
 				
 			// calculate lighting	
@@ -48,6 +49,9 @@ void render_scene(uint32_t* framebuffer, float* zbuffer, struct Scene scene) {
 			struct Vec3f light = vec3f_normalize(scene.light.direction);	
 			float dot_prod = dot_product(surf_norm, light);
 			
+			
+			if(dot_prod < 0) dot_prod = 0;
+
 			// calculate color
 			struct Color color;
 			color.a = 255;
@@ -56,24 +60,24 @@ void render_scene(uint32_t* framebuffer, float* zbuffer, struct Scene scene) {
 			color.b = dot_prod * 256;
 
 			uint32_t icolor = color_to_int(color);	
-			tri = apply_transformation(V,tri);
-			
 
+			// World to Camera
+			tri = apply_transformation(V,tri);
+
+			// Camera to Clip
 			bool clipped = false;	
 			tri = apply_perspective_projection(&clipped,P,tri);
 			if(!clipped) return;	
 
+			// Clip to Viewport
 			tri = apply_transformation(VP,tri);
 
 			if(i==3){
-			printf("rasterizing triangle:\n");
-			print_vec3f(tri.v0);
-			print_vec3f(tri.v1);
-			print_vec3f(tri.v2);
-			print_bounds(get_bounds_from_tri(tri));
+				// color the ground mesh red
+				// hacky
+				icolor = COLOR_BLUE;
 			}
-
-			
+			// Rasterize
 			rasterize_triangle(tri, framebuffer, zbuffer, icolor);
 		}
 	}

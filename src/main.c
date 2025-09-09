@@ -1,7 +1,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
-
 #include "constants.h"
 #include "render.h"
 #include "obj_parser.h"
@@ -31,7 +30,7 @@ int main(int argc, char* argv[]) {
 	struct Mesh mesh = parse_obj(filename);
 	
 	struct Mesh ground_mesh = create_square_plane();
-	struct Vec3f ground_scale = {.x = 1.0f, .y = 1.0f, .z = 1.0f};
+	struct Vec3f ground_scale = {.x = 5.0f, .y = 1.0f, .z = 5.0f};
 
 	struct Transform ground_tr = {
 		.position = VEC3F_0,
@@ -110,7 +109,7 @@ int main(int argc, char* argv[]) {
 	// Prepare light source
 	struct Vec3f light_source_pos = {
 		.x = 0.0f,
-		.y = -1.0f,
+		.y = 1.0f,
 		.z = 0.0f
 	};
 

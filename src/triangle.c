@@ -28,6 +28,13 @@ struct Vec3f calculate_normal(struct Triangle tri){
 	return n;
 }
 
+void print_tri(struct Triangle tri){
+	printf("printing triangle:\n");
+	print_vec3f(tri.v0);
+	print_vec3f(tri.v1);
+	print_vec3f(tri.v2);
+	printf("end triangle\n");
+}
 void swap(struct Vec3f a, struct Vec3f b){
 	struct Vec3f temp = a;
 	a = b;
@@ -121,9 +128,7 @@ struct Triangle apply_transformation(struct Mat4 tr, struct Triangle tri) {
 	res.v2 = v3_2;
 
 	return res;
-}
-
-
+}	
 
 void rasterize_triangle(struct Triangle tri, uint32_t* framebuffer, float* zbuffer, uint32_t color) {
 	
@@ -150,13 +155,9 @@ void rasterize_triangle(struct Triangle tri, uint32_t* framebuffer, float* zbuff
 
 			float beta = ((y-A.y) - alpha*(B.y-A.y))/(C.y-A.y);
 			float gamma = 1 - alpha - beta;
-								
+
 			if( inside_triangle(alpha, beta, gamma) ) {
 				float depth = interpolate_depth(tri, alpha, beta, gamma);	
-				
-				// Normalize depth to only positive values
-				depth = depth / 2 + LENGTH_SCALE;
-
 				if(depth >= zbuffer[x + y*WIDTH]){
 					place_pixel(x,y,color,framebuffer);			
 					zbuffer[x + y*WIDTH] = depth;

@@ -17,6 +17,7 @@ struct Triangle {
 	struct Vec3f v1;
 	struct Vec3f v2;
 };
+void print_tri(struct Triangle tri);
 
 struct Triangle create_triangle(
 	struct Vec3f a,

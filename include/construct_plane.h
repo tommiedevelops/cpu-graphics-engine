@@ -2,4 +2,5 @@
 #define CONSTRUCT_PLANE_H
 #include "scene_manager.h"
 struct Mesh create_square_plane();
+struct Mesh create_square_plane_xy();
 #endif
