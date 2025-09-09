@@ -28,6 +28,12 @@ struct Vec3f calculate_normal(struct Triangle tri){
 	return n;
 }
 
+struct ClipResult {
+	struct Triangle* triangles;
+	struct num_triangles;
+};
+
+
 void print_tri(struct Triangle tri){
 	printf("printing triangle:\n");
 	print_vec3f(tri.v0);
