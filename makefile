@@ -20,3 +20,7 @@ trun:
 		ASAN_OPTIONS=detect_leaks=1:leak_check_at_exit=0 ./tests/build/testing
 trun-normal:
 	./tests/build/testing
+docs:
+	pdflatex docs/docs-latex/main.tex
+	latexmk -pdf -pvc docs/docs-latex/main.tex 
+
