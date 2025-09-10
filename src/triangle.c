@@ -28,6 +28,19 @@ struct Vec3f calculate_normal(struct Triangle tri){
 	return n;
 }
 
+struct ClipResult {
+	struct Triangle* triangles;
+	struct num_triangles;
+};
+
+
+void print_tri(struct Triangle tri){
+	printf("printing triangle:\n");
+	print_vec3f(tri.v0);
+	print_vec3f(tri.v1);
+	print_vec3f(tri.v2);
+	printf("end triangle\n");
+}
 void swap(struct Vec3f a, struct Vec3f b){
 	struct Vec3f temp = a;
 	a = b;
@@ -68,8 +81,8 @@ float interpolate_depth(struct Triangle tri, float alpha, float beta, float gamm
 bool point_inside(struct Vec4f point){	
 	float w = point.w;
 	return (point.x >= -w) && (point.x <= w) && 
-	       (point.y >= -w) && (point.y <= w); //&& 
-               //(point.z >= 0) && (point.z <= w);	       
+	       (point.y >= -w) && (point.y <= w) &&
+               (point.z >= 0) && (point.z <= w);	       
 }
 
 struct Triangle apply_perspective_projection(bool* clipped, struct Mat4 m, struct Triangle tri) {
@@ -121,24 +134,14 @@ struct Triangle apply_transformation(struct Mat4 tr, struct Triangle tri) {
 	res.v2 = v3_2;
 
 	return res;
-}
+}	
 
-
-
-void rasterize_triangle(struct Triangle tri_in, uint32_t* framebuffer, float* zbuffer, uint32_t color) {
+void rasterize_triangle(struct Triangle tri, uint32_t* framebuffer, float* zbuffer, uint32_t color) {
 	
-	// Currently assuming camera fixed on z-axis and is orthographic
-	struct Triangle tri = sort_vertices_by_y_asc(tri_in);
-
 	struct Vec3f A = tri.v0;
 	struct Vec3f B = tri.v1;
 	struct Vec3f C = tri.v2;
 
-	/* printf("rasterizing triangle:\n"); */
-	/* print_vec3f(A); */
-	/* print_vec3f(B); */
-	/* print_vec3f(C); */
-	
 	struct Bounds bounds = get_bounds_from_tri(tri);
 
 	int xmin = (int)bounds.xmin;
@@ -158,13 +161,9 @@ void rasterize_triangle(struct Triangle tri_in, uint32_t* framebuffer, float* zb
 
 			float beta = ((y-A.y) - alpha*(B.y-A.y))/(C.y-A.y);
 			float gamma = 1 - alpha - beta;
-								
+
 			if( inside_triangle(alpha, beta, gamma) ) {
 				float depth = interpolate_depth(tri, alpha, beta, gamma);	
-				
-				// Normalize depth to only positive values
-				depth = depth / 2 + LENGTH_SCALE;
-
 				if(depth >= zbuffer[x + y*WIDTH]){
 					place_pixel(x,y,color,framebuffer);			
 					zbuffer[x + y*WIDTH] = depth;

@@ -34,13 +34,14 @@ void render_scene(uint32_t* framebuffer, float* zbuffer, struct Scene scene) {
 		struct Vec3f* vertices = go.mesh.vertices;
 		int* triangles = go.mesh.triangles;
 
-		for(int i = 0; i < go.mesh.num_triangles; i++) {
+		for(int j = 0; j < go.mesh.num_triangles; j++) {
 			struct Triangle tri = {
-				.v0 = vertices[triangles[3*i]],
-				.v1 = vertices[triangles[3*i+1]],
-				.v2 = vertices[triangles[3*i+2]]
+				.v0 = vertices[triangles[3*j]],
+				.v1 = vertices[triangles[3*j+1]],
+				.v2 = vertices[triangles[3*j+2]]
 			};	
-
+			
+			// Model to World 
 			tri = apply_transformation(M, tri);
 				
 			// calculate lighting	
@@ -48,6 +49,9 @@ void render_scene(uint32_t* framebuffer, float* zbuffer, struct Scene scene) {
 			struct Vec3f light = vec3f_normalize(scene.light.direction);	
 			float dot_prod = dot_product(surf_norm, light);
 			
+			
+			if(dot_prod < 0) dot_prod = 0;
+
 			// calculate color
 			struct Color color;
 			color.a = 255;
@@ -56,15 +60,26 @@ void render_scene(uint32_t* framebuffer, float* zbuffer, struct Scene scene) {
 			color.b = dot_prod * 256;
 
 			uint32_t icolor = color_to_int(color);	
-					
+
+			// World to Camera
 			tri = apply_transformation(V,tri);
-			
+
+			// Camera to Clip
 			bool clipped = false;	
 			tri = apply_perspective_projection(&clipped,P,tri);
-			if(!clipped) return;	
+			if(!clipped) {
 			
+			}
+
+			// Clip to Viewport
 			tri = apply_transformation(VP,tri);
 
+			if(i==3){
+				// color the ground mesh red
+				// hacky
+				icolor = COLOR_BLUE;
+			}
+			// Rasterize
 			rasterize_triangle(tri, framebuffer, zbuffer, icolor);
 		}
 	}
