@@ -81,8 +81,8 @@ float interpolate_depth(struct Triangle tri, float alpha, float beta, float gamm
 bool point_inside(struct Vec4f point){	
 	float w = point.w;
 	return (point.x >= -w) && (point.x <= w) && 
-	       (point.y >= -w) && (point.y <= w); //&& 
-               //(point.z >= 0) && (point.z <= w);	       
+	       (point.y >= -w) && (point.y <= w) &&
+               (point.z >= 0) && (point.z <= w);	       
 }
 
 struct Triangle apply_perspective_projection(bool* clipped, struct Mat4 m, struct Triangle tri) {
