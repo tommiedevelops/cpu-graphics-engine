@@ -26,15 +26,15 @@ int main(int argc, char* argv[]) {
 	snprintf(filename, sizeof(filename), "./models/%s.obj", argv[1]);
 
 	/* Parse Mesh from .obj file */
-	struct Mesh mesh = parse_obj(filename);
+	struct Mesh mesh = parse_obj("./models/bunny.obj");
 	
 	struct Mesh ground_mesh = {
 	};
 	
-	// Prepare Transform and GameObjects
-	
+	struct Vec3f bunny_pos = {.x = 1.0f, .y = 0.0f, .z = 0.0f};
+
 	struct Transform transform = {
-		.position = VEC3F_0, 
+		.position = bunny_pos, 
 		.rotation = QUAT_IDENTITY, 
 		.scale = VEC3F_1
 	};
@@ -159,17 +159,17 @@ int main(int argc, char* argv[]) {
 		float angular_velocity = 0.2f; 
 		float cam_speed = -1.0f;
 		float yaw = time.delta_time * angular_velocity * mouse_dx;
-		float pitch = time.delta_time * angular_velocity * mouse_dy;
 
 		// input handling 	
 		struct Quaternion cam_delta_lr = quat_normalize(quat_angle_axis(yaw, VEC3F_Y));
-		
-		struct Vec3f ud_rot_axis = vec3f_cross(quat_get_forward(cam.transform.rotation), VEC3F_Y);
-		struct Quaternion cam_delta_ud = quat_normalize(quat_angle_axis(pitch,ud_rot_axis));
 		cam.transform.rotation = quat_normalize(quat_mul(cam.transform.rotation, cam_delta_lr));
-		cam.transform.rotation = quat_normalize(quat_mul(cam.transform.rotation, cam_delta_ud));
 
-		//printf("mousex= %d mousey= %d\n", mouse_dx, mouse_dy);
+		float angle = time.delta_time * angular_velocity * mouse_dx;
+
+		// input handling 	
+		struct Quaternion cam_delta = quat_normalize(quat_angle_axis(angle, VEC3F_Y));
+		cam.transform.rotation = quat_normalize(quat_mul(cam.transform.rotation, cam_delta));
+
 		struct Vec3f move_dir = {0};
 		struct Vec3f move_vec = {0};
 
@@ -188,11 +188,13 @@ int main(int argc, char* argv[]) {
 			move_vec = vec3f_scale(move_dir, cam_speed * time.delta_time);
 		}
 
-		
 		if(kb[SDL_SCANCODE_D]) {
 			move_dir = quat_get_right(cam.transform.rotation);
 			move_vec = vec3f_scale(move_dir, cam_speed * time.delta_time);
 		}
+
+		cam.transform.position = vec3f_add(cam.transform.position, move_vec);
+
 		float go_angle = angular_velocity * time.delta_time;
 
 		struct Vec3f rot_axis = {.x = 1.0f, .y = 1.0f, .z = 1.0f};
@@ -200,17 +202,17 @@ int main(int argc, char* argv[]) {
 		struct Vec3f rot_axis2 = {.x = 1.0f, .y = 1.0f, .z = -1.0f};
 
 		struct Quaternion rot = quat_normalize(quat_angle_axis(go_angle, rot_axis));
-
 		struct Quaternion rot1 = quat_normalize(quat_angle_axis(2*go_angle, rot_axis1));
 		struct Quaternion rot2 = quat_normalize(quat_angle_axis(3*go_angle, rot_axis2));
 
 		go.transform.rotation = quat_normalize(quat_mul(go.transform.rotation, rot));
 		go1.transform.rotation = quat_normalize(quat_mul(go1.transform.rotation, rot1));
 		go2.transform.rotation = quat_normalize(quat_mul(go2.transform.rotation, rot2));
-		cam.transform.position = vec3f_add(cam.transform.position, move_vec);
 
 		// --- END OF SCRIPTING SECTION ---
+
 		render_scene(framebuffer, zbuffer, scene);
+		print_vec3f(quat_get_forward(cam.transform.rotation));
 
 		// Update SDL2 window w/ new framebuffer
                 update_window(window_data, framebuffer);
