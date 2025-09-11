@@ -224,9 +224,7 @@ int main(int argc, char* argv[]) {
 
 	
 		// --- END OF SCRIPTING SECTION ---
-
 		render_scene(framebuffer, zbuffer, scene);
-		print_vec3f(quat_get_forward(cam.transform.rotation));
 
 		// Update SDL2 window w/ new framebuffer
                 update_window(window_data, framebuffer);

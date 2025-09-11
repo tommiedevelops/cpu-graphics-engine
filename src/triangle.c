@@ -136,7 +136,7 @@ struct Triangle apply_transformation(struct Mat4 tr, struct Triangle tri) {
 	return res;
 }	
 
-void rasterize_triangle(struct Triangle tri, uint32_t* framebuffer, float* zbuffer, uint32_t color) {
+void rasterize_triangle(struct Triangle tri, struct Material* mat, uint32_t* framebuffer, float* zbuffer) {
 	
 	struct Vec3f A = tri.v0;
 	struct Vec3f B = tri.v1;
