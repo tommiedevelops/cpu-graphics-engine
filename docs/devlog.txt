@@ -82,3 +82,9 @@ it was around 5fps.
 * I hacked away at the issue from yesterday. It's fixed but I don't know why. I'll just leave it for now. 
 * Gonna try implement a simple character controller for now
 * just testing my git commits from my mac as well
+
+23/09/25
+* I've decided to keep the scope of this project to to create a 'scrappy' software rasterizer that has a flat layout. I've begun refactoring the project into a more polished App/Core architecture, however I feel as though it would be most beneficial to continue this work  in C++.
+* In the future, I'll refactor this project into a full 3D renderer but for now I will keep the scope small.
+* I just want to implement simple textures, material, lighting, shadows and that sort of thing and I'll be alright with that.
+* The complicated SceneManager stuff can be left for the future C++ project.
