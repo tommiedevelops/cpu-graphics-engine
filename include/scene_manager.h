@@ -28,16 +28,8 @@ struct Mesh {
 
 struct GameObject {
 	struct Transform transform;
-	struct Mesh mesh;
-};
-
-struct Material {
-	struct Color color;
-	struct Texture *tex;
-};
-
-struct LightSource {
-	struct Vec3f direction;
+	struct Mesh* mesh;
+	struct Material* material;
 };
 
 struct Scene {

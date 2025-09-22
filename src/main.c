@@ -9,8 +9,8 @@
 #include "scene_manager.h"
 #include "game_time.h"
 #include "quaternion.h"
-#include "texture.h"
 #include "construct_plane.h"
+#include "shading.h"
 
 // Expects a single string for cmd line input representing the obj that the user wishes to render
 
@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
 
 	struct GameObject ground_go = {
 		.transform = ground_tr,
-		.mesh = ground_mesh
+		.mesh = &ground_mesh
 	};
 	
 	// Prepare Transform and GameObjects
@@ -68,17 +68,17 @@ int main(int argc, char* argv[]) {
 	};
 
 	struct GameObject go = {
-		.mesh 	    = mesh     , 
+		.mesh 	    = &mesh     , 
 		.transform  = transform 
 	};
 
 	struct GameObject go1 = {
-		.mesh = mesh ,
+		.mesh = &mesh ,
 		.transform = tr1
 	};
 
 	struct GameObject go2 = {
-		.mesh = mesh ,
+		.mesh = &mesh ,
 		.transform = tr2
 	};
 
@@ -224,9 +224,7 @@ int main(int argc, char* argv[]) {
 
 	
 		// --- END OF SCRIPTING SECTION ---
-
 		render_scene(framebuffer, zbuffer, scene);
-		print_vec3f(quat_get_forward(cam.transform.rotation));
 
 		// Update SDL2 window w/ new framebuffer
                 update_window(window_data, framebuffer);
