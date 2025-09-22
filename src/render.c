@@ -46,8 +46,13 @@ void render_scene(uint32_t* framebuffer, float* zbuffer, struct Scene scene) {
 			// World to Camera
 			tri = apply_transformation(get_view_matrix(*scene.cam) ,tri);
 
-			// Camera to Clip
+			// ADDING TEXTURES LIVES BETWEEN HERE
+			
+			// decide on color based on go.mat
+			// how about lighting? 
+
 			bool clipped = false;	
+
 			tri = apply_perspective_projection(
 					&clipped,
 					get_projection_matrix(*scene.cam),
@@ -56,11 +61,31 @@ void render_scene(uint32_t* framebuffer, float* zbuffer, struct Scene scene) {
 
 			if(!clipped) return;
 
+			// at this point the tri contains 'fragments' - points in Clip Space
+			// i need to calculate the color of each vertex, then interpolate nicely across its surface
+			// what's the difference between color and lighting tho? 
+
 			// Clip to Viewport
 			tri = apply_transformation(get_viewport_matrix(*scene.cam),tri);
 
 			// Rasterize
 			rasterize_triangle(tri, &mat, framebuffer, zbuffer);
+
+			// Triangle now contains 'fragments' (potential pixels)
+
+			if(i==3){
+				// color the ground mesh red
+				// hacky
+				icolor = COLOR_BLUE;
+			}
+
+			// Rasterize
+			rasterize_triangle(tri, framebuffer, zbuffer, icolor);
+
+			// the fragment shader is actually after this point
+			
+			// merge(Fragment frag, uint32_t* backbuffer);
+			// AND HERE
 		}
 	}
 }
