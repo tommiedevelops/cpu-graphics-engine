@@ -9,7 +9,7 @@ struct Texture load_texture(char* filename){
 	int width, height, channels;
 	uint8_t* img = stbi_load(filename, &width, &height, &channels, 4);
 
-	struct Color* map = malloc(sizeof(struct Vec4f)*width*height);
+	struct Vec4f* map = malloc(sizeof(struct Vec4f)*width*height);
 	memset(map, 0x0, sizeof(struct Vec4f)*width*height);
 
 	struct Texture tex = {

@@ -28,7 +28,7 @@ void render_scene(uint32_t* framebuffer, float* zbuffer, struct Scene scene) {
 		struct GameObject go = *scene.gameObjects[i];
 
 		struct Vec3f* vertices = NULL;
-		int* triangles = NULL:
+		int* triangles = NULL;
 
 		if(go.mesh != NULL) {
 			struct Vec3f* vertices = go.mesh->vertices;
@@ -45,7 +45,7 @@ void render_scene(uint32_t* framebuffer, float* zbuffer, struct Scene scene) {
 		}
 
 		// Transform and rasterize each triangle
-		for(int j = 0; j < go.mesh.num_triangles; j++) {
+		for(int j = 0; j < go.mesh->num_triangles; j++) {
 
 			struct Triangle tri = {
 				.v0 = vertices[triangles[3*j]],
@@ -60,9 +60,8 @@ void render_scene(uint32_t* framebuffer, float* zbuffer, struct Scene scene) {
 			tri = apply_transformation(get_view_matrix(*scene.cam) ,tri);
 
 			// ADDING TEXTURES LIVES BETWEEN HERE
-			
+		
 			// decide on color based on go.mat
-			// how about lighting? 
 
 			bool clipped = false;	
 
@@ -95,7 +94,7 @@ void render_scene(uint32_t* framebuffer, float* zbuffer, struct Scene scene) {
 			}
 
 			// Rasterize
-			rasterize_triangle(tri, go.material, framebuffer, zbuffer, icolor);
+			rasterize_triangle(tri, go.material, framebuffer, zbuffer);
 
 			// the fragment shader is actually after this point
 			
