@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "construct_plane.h"
 
 struct Mesh create_square_plane() {

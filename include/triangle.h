@@ -6,8 +6,8 @@
 
 #pragma once
 #include "vec3f.h"
-#include "color.h"
 #include "matrix.h"
+#include "shading.h"
 
 struct Vec3f;
 

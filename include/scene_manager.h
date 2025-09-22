@@ -26,19 +26,10 @@ struct Mesh {
 	int num_triangles;
 };
 
-struct Material {
-	struct Vec3f color; // fallback color if no texture
-	struct Texture *albedo; // for base color
-};
-
 struct GameObject {
 	struct Transform transform;
-	struct Mesh mesh;
-	struct Material material;
-};
-
-struct LightSource {
-	struct Vec3f direction;
+	struct Mesh* mesh;
+	struct Material* material;
 };
 
 struct Scene {

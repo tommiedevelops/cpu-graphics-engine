@@ -1,15 +1,16 @@
 #include <stdio.h>
-#include "texture.h"
-#include "color.h"
+
+#include "shading.h" 
 #define STB_IMAGE_IMPLEMENTATION
+
 #include "stb_image.h"
 
 struct Texture load_texture(char* filename){
 	int width, height, channels;
 	uint8_t* img = stbi_load(filename, &width, &height, &channels, 4);
 
-	struct Color* map = malloc(sizeof(struct Color)*width*height);
-	memset(map, 0x0, sizeof(struct Color)*width*height);
+	struct Color* map = malloc(sizeof(struct Vec4f)*width*height);
+	memset(map, 0x0, sizeof(struct Vec4f)*width*height);
 
 	struct Texture tex = {
 		.width = width,
@@ -21,11 +22,11 @@ struct Texture load_texture(char* filename){
 		for(int j = 0; j < height; j++){
 			int index = (j * width + i) * 4;
 
-			struct Color col_rgb = {
-				.r = img[index],
-				.g = img[index + 1],
-				.b = img[index + 2],
-				.a = img[index + 3]
+			struct Vec4f col_rgb = {
+				.x = img[index],
+				.y = img[index + 1],
+				.z = img[index + 2],
+				.w = img[index + 3]
 			};
 			
 			map[j * width + i] = col_rgb;

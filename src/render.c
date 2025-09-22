@@ -6,7 +6,6 @@
 
 #include "vec3f.h"
 #include "render.h"
-#include "color.h"
 #include "matrix.h"
 #include "scene_manager.h"
 
@@ -18,6 +17,7 @@ void place_pixel(int x, int y, uint32_t value, uint32_t* framebuffer) {
 }
 
 void render_scene(uint32_t* framebuffer, float* zbuffer, struct Scene scene) {
+
 	if(scene.gameObjects == NULL){
 		printf("src/render.c/render_scene: no gameObjects to render\n");
 		return;
@@ -25,11 +25,24 @@ void render_scene(uint32_t* framebuffer, float* zbuffer, struct Scene scene) {
 	
 	for(int i = 0; i < scene.num_gameObjects; i++) {
 		
-		// Primitive Assembly
 		struct GameObject go = *scene.gameObjects[i];
-		struct Material mat = go.material;
-		struct Vec3f* vertices = go.mesh.vertices;
-		int* triangles = go.mesh.triangles;
+
+		struct Vec3f* vertices = NULL;
+		int* triangles = NULL:
+
+		if(go.mesh != NULL) {
+			struct Vec3f* vertices = go.mesh->vertices;
+			int* triangles = go.mesh->triangles;
+		} else {
+			//LOG_ERROR("No mesh to render");
+			return;
+		}
+
+		struct Material mat = material_default();
+
+		if(go.material != NULL) {
+			mat = *go.material;
+		}
 
 		// Transform and rasterize each triangle
 		for(int j = 0; j < go.mesh.num_triangles; j++) {
@@ -73,6 +86,8 @@ void render_scene(uint32_t* framebuffer, float* zbuffer, struct Scene scene) {
 
 			// Triangle now contains 'fragments' (potential pixels)
 
+			uint32_t icolor;
+
 			if(i==3){
 				// color the ground mesh red
 				// hacky
@@ -80,7 +95,7 @@ void render_scene(uint32_t* framebuffer, float* zbuffer, struct Scene scene) {
 			}
 
 			// Rasterize
-			rasterize_triangle(tri, framebuffer, zbuffer, icolor);
+			rasterize_triangle(tri, go.material, framebuffer, zbuffer, icolor);
 
 			// the fragment shader is actually after this point
 			
