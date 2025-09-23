@@ -88,3 +88,4 @@ it was around 5fps.
 * In the future, I'll refactor this project into a full 3D renderer but for now I will keep the scope small.
 * I just want to implement simple textures, material, lighting, shadows and that sort of thing and I'll be alright with that.
 * The complicated SceneManager stuff can be left for the future C++ project.
+* was able to implement basic materials and textures. though textures not perspective correct.
