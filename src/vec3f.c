@@ -8,6 +8,18 @@ void print_vec3f(struct Vec3f v){
 	printf("(x = %f, y = %f, z = %f)\n", v.x, v.y, v.z);
 }
 
+void print_vec2f(struct Vec2f v) {
+	printf("(x = %f, y = %f)\n", v.x, v.y);
+}
+
+struct Vec2f vec2f_create(float x, float y) {
+	struct Vec2f v = {
+		.x = x,
+		.y = y
+	};
+
+	return v;
+}
 
 
 // single vector methods

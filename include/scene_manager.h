@@ -21,6 +21,7 @@ struct Camera {
 
 struct Mesh {
 	struct Vec3f* vertices;
+	struct Vec2f* uvs;
 	int num_vertices;
 	int* triangles;
 	int num_triangles;

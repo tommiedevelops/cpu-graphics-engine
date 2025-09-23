@@ -3,6 +3,18 @@
 #include <stdlib.h>
 
 #include "vec4f.h"
+
+struct Vec4f vec4f_create(float x, float y, float z, float w){
+	struct Vec4f v = {
+		.x = x,
+		.y = y,
+		.z = z,
+		.w = w
+	};
+
+	return v;
+}
+
 struct Vec4f vec4f_add(struct Vec4f a, struct Vec4f b){
 	struct Vec4f result;
 	result.x = a.x + b.x;

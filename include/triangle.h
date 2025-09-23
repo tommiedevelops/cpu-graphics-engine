@@ -16,6 +16,12 @@ struct Triangle {
 	struct Vec3f v0;
 	struct Vec3f v1;
 	struct Vec3f v2;
+	
+	struct Vec2f uv0;
+	struct Vec2f uv1;
+	struct Vec2f uv2;
+
+	bool has_uv;
 };
 void print_tri(struct Triangle tri);
 

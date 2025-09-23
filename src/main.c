@@ -28,9 +28,16 @@ int main(int argc, char* argv[]) {
 
 	/* Parse Mesh from .obj file */
 	struct Mesh mesh = parse_obj("./models/bunny.obj");
-	
+
+	// load ground texture
+	struct Texture tex = texture_load("./textures/brickwall.png");
+	struct Material ground_material = create_material(VEC4F_1, &tex); 	
+
+	struct Vec4f pink = vec4f_create(1.0f, 0.0f, 1.0f, 1.0f);
+	struct Material bunny_material = create_material(pink, NULL);
+
 	struct Mesh ground_mesh = create_square_plane();
-	struct Vec3f ground_scale = {.x = 5.0f, .y = 1.0f, .z = 5.0f};
+	struct Vec3f ground_scale = {.x = 1.0f, .y = 1.0f, .z = 1.0f};
 
 	struct Transform ground_tr = {
 		.position = VEC3F_0,
@@ -40,7 +47,8 @@ int main(int argc, char* argv[]) {
 
 	struct GameObject ground_go = {
 		.transform = ground_tr,
-		.mesh = &ground_mesh
+		.mesh = &ground_mesh ,
+		.material = &ground_material
 	};
 	
 	// Prepare Transform and GameObjects
@@ -69,17 +77,20 @@ int main(int argc, char* argv[]) {
 
 	struct GameObject go = {
 		.mesh 	    = &mesh     , 
-		.transform  = transform 
+		.transform  = transform ,
+		.material = &bunny_material
 	};
 
 	struct GameObject go1 = {
 		.mesh = &mesh ,
-		.transform = tr1
+		.transform = tr1,
+		.material = &bunny_material
 	};
 
 	struct GameObject go2 = {
 		.mesh = &mesh ,
-		.transform = tr2
+		.transform = tr2,
+		.material = &bunny_material
 	};
 
 	int num_gameObjects = 4;
@@ -232,6 +243,7 @@ int main(int argc, char* argv[]) {
 
         /* Clean Up */
 
+	texture_free(tex);
 	free(mesh.vertices);
 	free(mesh.triangles);
         destroy_window(window_data);

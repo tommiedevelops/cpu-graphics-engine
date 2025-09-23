@@ -8,20 +8,23 @@ struct LightSource {
 	struct Vec3f direction;
 };
 
-struct Material {
-	struct Vec3f color; // fallback color if no texture
-	struct Texture *albedo; // for base
-};
-
-struct Material material_default(); 
-
 struct Texture {
 	int width;
 	int height;
 	struct Vec4f* map;
 };
 
-struct Texture load_texture(char* filename);
+struct Texture texture_load(char* filename);
+void texture_free(struct Texture tex);
+struct Vec4f texture_sample(struct Texture* tex, float u, float v);
 
-void free_texture(struct Texture tex);
+struct Material {
+	struct Vec4f color; // fallback color if no texture
+	struct Texture *tex; // for base
+};
+
+struct Material create_material(struct Vec4f color, struct Texture* tex);
+struct Material material_default(); 
+struct Vec4f material_get_albedo(struct Material* mat, struct Vec2f uv);
+
 #endif 

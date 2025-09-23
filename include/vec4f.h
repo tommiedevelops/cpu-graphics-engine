@@ -17,6 +17,8 @@ struct Vec4f {
 	float w;
 };
 
+struct Vec4f vec4f_create(float x, float y, float z, float w);
+
 float vec4f_dot(struct Vec4f a, struct Vec4f b);
 struct Vec4f vec4f_normalize(struct Vec4f v);
 float vec4f_magnitude(struct Vec4f v);

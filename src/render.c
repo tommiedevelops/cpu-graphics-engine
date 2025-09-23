@@ -10,10 +10,7 @@
 #include "scene_manager.h"
 
 void place_pixel(int x, int y, uint32_t value, uint32_t* framebuffer) {
-	if( (x > WIDTH) || (x < 0) )
-		printf("render.c/place_pixel: invalid x value. pixel= {%d,%d}\n", x,y); return;
-	if( (y > HEIGHT) || (y < 0) )
-		printf("render.c/place_pixel: invalid y value. pixel= {%d,%d}\n", x,y); return;
+	framebuffer[x + WIDTH*y] = value;
 }
 
 void render_scene(uint32_t* framebuffer, float* zbuffer, struct Scene scene) {
@@ -29,10 +26,12 @@ void render_scene(uint32_t* framebuffer, float* zbuffer, struct Scene scene) {
 
 		struct Vec3f* vertices = NULL;
 		int* triangles = NULL;
+		struct Vec2f* uvs = NULL;
 
 		if(go.mesh != NULL) {
-			struct Vec3f* vertices = go.mesh->vertices;
-			int* triangles = go.mesh->triangles;
+			vertices = go.mesh->vertices;
+			uvs = go.mesh->uvs;
+			triangles = go.mesh->triangles;
 		} else {
 			//LOG_ERROR("No mesh to render");
 			return;
@@ -47,24 +46,27 @@ void render_scene(uint32_t* framebuffer, float* zbuffer, struct Scene scene) {
 		// Transform and rasterize each triangle
 		for(int j = 0; j < go.mesh->num_triangles; j++) {
 
-			struct Triangle tri = {
-				.v0 = vertices[triangles[3*j]],
-				.v1 = vertices[triangles[3*j+1]],
-				.v2 = vertices[triangles[3*j+2]]
-			};	
-			
+			struct Triangle tri = {0};
+
+			// positions
+			tri.v0 = vertices[triangles[3*j]];
+			tri.v1 = vertices[triangles[3*j+1]];
+			tri.v2 = vertices[triangles[3*j+2]];
+	
+			// uvs
+			if(uvs != NULL) {
+				tri.uv0 = uvs[triangles[3*j]];
+				tri.uv1 = uvs[triangles[3*j+1]];
+				tri.uv2 = uvs[triangles[3*j+2]];
+			}; 
+	
 			// Model to World 
 			tri = apply_transformation(get_model_matrix(go.transform), tri);
-				
+			
 			// World to Camera
 			tri = apply_transformation(get_view_matrix(*scene.cam) ,tri);
 
-			// ADDING TEXTURES LIVES BETWEEN HERE
-		
-			// decide on color based on go.mat
-
 			bool clipped = false;	
-
 			tri = apply_perspective_projection(
 					&clipped,
 					get_projection_matrix(*scene.cam),
@@ -79,27 +81,7 @@ void render_scene(uint32_t* framebuffer, float* zbuffer, struct Scene scene) {
 
 			// Clip to Viewport
 			tri = apply_transformation(get_viewport_matrix(*scene.cam),tri);
-
-			// Rasterize
 			rasterize_triangle(tri, &mat, framebuffer, zbuffer);
-
-			// Triangle now contains 'fragments' (potential pixels)
-
-			uint32_t icolor;
-
-			if(i==3){
-				// color the ground mesh red
-				// hacky
-				icolor = COLOR_BLUE;
-			}
-
-			// Rasterize
-			rasterize_triangle(tri, go.material, framebuffer, zbuffer);
-
-			// the fragment shader is actually after this point
-			
-			// merge(Fragment frag, uint32_t* backbuffer);
-			// AND HERE
 		}
 	}
 }

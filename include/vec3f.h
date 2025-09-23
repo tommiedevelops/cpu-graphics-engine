@@ -3,6 +3,11 @@
 
 #include <stdbool.h>
 
+#define VEC2F_X ((struct Vec2f){1.0f, 0.0f})
+#define VEC2F_Y ((struct Vec2f){0.0f, 1.0f})
+#define VEC2F_0 ((struct Vec2f){0.0f, 0.0f})
+#define VEC2F_1 ((struct Vec2f){1.0f, 1.0f})
+
 #define VEC3F_X ((struct Vec3f){1.0f, 0.0f, 0.0f})
 #define VEC3F_Y ((struct Vec3f){0.0f, 1.0f, 0.0f})
 #define VEC3F_Z ((struct Vec3f){0.0f, 0.0f, 1.0f})
@@ -15,6 +20,13 @@ struct Bounds;
 struct Vec3f {
 	float x, y, z;
 };
+
+struct Vec2f {
+	float x, y;
+};
+
+void print_vec2f(struct Vec2f v);
+struct Vec2f vec2f_create(float x, float y);
 
 float dot_product(struct Vec3f a, struct Vec3f b);
 struct Vec3f vec3f_cross(struct Vec3f a, struct Vec3f b);

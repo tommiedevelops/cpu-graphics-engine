@@ -45,11 +45,18 @@ struct Mesh create_square_plane() {
 	triangles[4] = 3;
 	triangles[5] = 1;
 
+	struct Vec2f* uvs = malloc(4*sizeof(struct Vec2f));
+	uvs[0] = vec2f_create(0.0f,0.0f);
+	uvs[1] = vec2f_create(0.0f,1.0f);
+	uvs[2] = vec2f_create(1.0f,0.0f);
+	uvs[3] = vec2f_create(1.0f,1.0f);
+
 	struct Mesh mesh = {
 		.num_vertices = 4,
 		.vertices = vertices,
 	    	.triangles = triangles,
-		.num_triangles = 2		
+		.num_triangles = 2,
+		.uvs = uvs
 	};
 
 	return mesh;
