@@ -22,6 +22,14 @@ struct Vec2f vec2f_create(float x, float y) {
 }
 
 
+struct Vec3f vec3f_create(float x, float y, float z){
+	struct Vec3f v;
+	v.x = x;
+	v.y = y;
+	v.z = z;
+	return v;
+}
+
 // single vector methods
 void scale_vector(struct Vec3f* vector, float scalar){
 	// accepts struct Vec3f ptr, not array

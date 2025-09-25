@@ -6,6 +6,50 @@
 #include "matrix.h"
 #include "constants.h"
 
+struct Transform transform_create(struct Vec3f pos, struct Quaternion rot, struct Vec3f scale){
+	struct Transform tr;
+	tr.position = pos;
+	tr.rotation = rot;
+	tr.scale = scale;
+	return tr;
+}
+
+struct Camera camera_create(struct Transform tr){
+	struct Camera cam;
+	cam.transform = tr;
+	cam.fov = PI*60.0f/180.0f;
+	cam.near = 1.0f;
+	cam.far = 20.0f;
+	return cam;
+}
+
+void camera_set_fov_degrees(struct Camera* cam, float fov_degrees){
+
+	if(fov_degrees < 0.0f) fov_degrees = 0.0f;
+	if(fov_degrees > 180.0f) fov_degrees = 180.0f;
+
+	float fov_radians = PI*fov_degrees/180.0f;	
+	cam->fov = fov_radians;
+}
+
+
+void camera_set_near(struct Camera* cam, float near){
+	if(near < 0.0f) near = 0.0f;
+	cam->near = near;
+}
+
+void camera_set_far(struct Camera* cam, float far){
+	cam->far = far;
+}
+
+struct GameObject game_object_create(struct Transform tr, struct Mesh* mesh, struct Material* mat){
+	struct GameObject go;
+	go.transform = tr;
+	go.mesh = mesh;
+	go.material = mat;
+	return go;
+}
+
 struct Mat4 get_rotation_matrix(struct Transform tr) {
 	return quat_to_mat4(quat_normalize(tr.rotation));
 }

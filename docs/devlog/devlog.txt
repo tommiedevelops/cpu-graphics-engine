@@ -89,3 +89,9 @@ it was around 5fps.
 * I just want to implement simple textures, material, lighting, shadows and that sort of thing and I'll be alright with that.
 * The complicated SceneManager stuff can be left for the future C++ project.
 * was able to implement basic materials and textures. though textures not perspective correct.
+
+25/09/25
+* I can probably accomplish the function of a programmable vertex and fragment shader using function ptrs
+* I'm almost finished with this project. I just want to fix textures, write the clipping algorithm, introduce vertex and fragment shaders and that's pretty much it
+* I probably also want to create a nice scene with a skybox, ground and some models with nice textures so I can display it nicely
+* Also going to slowly refactor the main branch. I have a 'refactor' branch that I can refer to when I write a C++ OpenGL / Vulkan project but I'm just going to focus on functionality for now over code style. Though I'm gonna do the best job I can at making the code as clean as possible. 

@@ -78,7 +78,7 @@ struct Material material_default(){
 	return mat;
 }
 
-struct Material create_material(struct Vec4f color, struct Texture* tex){
+struct Material material_create(struct Vec4f color, struct Texture* tex){
 	struct Material mat = {
 		.color = color,
 		.tex = tex

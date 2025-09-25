@@ -25,6 +25,9 @@ struct Vec2f {
 	float x, y;
 };
 
+struct Vec3f vec3f_create(float x, float y, float z);
+
+
 void print_vec2f(struct Vec2f v);
 struct Vec2f vec2f_create(float x, float y);
 

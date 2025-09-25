@@ -4,6 +4,7 @@
 #include "obj_parser.h"
 #include "bounds.h"
 #include "quaternion.h"
+#include "constants.h"
 
 // --- STRUCT DEFINITIONS --- 
 struct Transform {
@@ -12,12 +13,19 @@ struct Transform {
 	struct Vec3f scale;
 };
 
+struct Transform transform_create(struct Vec3f pos, struct Quaternion rot, struct Vec3f scale);
+
 struct Camera { 
 	struct Transform transform;
 	float fov;
 	float near;
 	float far;
 };
+
+struct Camera camera_create(struct Transform tr);
+void camera_set_fov_degrees(struct Camera* cam, float fov_degrees);
+void camera_set_near(struct Camera* cam, float near);
+void camera_set_far(struct Camera* cam, float far);
 
 struct Mesh {
 	struct Vec3f* vertices;
@@ -32,6 +40,8 @@ struct GameObject {
 	struct Mesh* mesh;
 	struct Material* material;
 };
+
+struct GameObject game_object_create(struct Transform tr, struct Mesh* mesh, struct Material* mat);
 
 struct Scene {
 	struct Camera *cam;

@@ -12,128 +12,65 @@
 #include "construct_plane.h"
 #include "shading.h"
 
-// Expects a single string for cmd line input representing the obj that the user wishes to render
-
-int main(int argc, char* argv[]) {
+int main(void) {
 	
-	/* Handle CLI */
-	if(argc != 2) {
-		printf("Please provide exactly one filename. ./models/{filename}.obj\n");
-		exit(EXIT_FAILURE);
-	}
+	// Loading Assets
+	struct Mesh  mesh        = parse_obj("./assets/models/bunny.obj");
+	struct Mesh  teapot_mesh = parse_obj("./assets/models/teapot.obj");
+	struct Mesh  ground_mesh = create_square_plane();
+
+	struct Texture tex = texture_load("./assets/textures/brickwall.png");
+
+	// creating materials
+	struct Vec4f pink  = vec4f_create(1.0f, 0.0f, 1.0f, 1.0f);
+	struct Vec4f green = vec4f_create(0.2f, 0.8f, 0.2f, 1.0f);
+	struct Vec4f blue  = vec4f_create(0.2f, 0.2f, 0.8f, 1.0f);
+
+	struct Material bunny_material  = material_create(pink, NULL);
+	struct Material teapot_material = material_create(green, NULL);
+	struct Material dragon_material = material_create(blue, NULL);
+	struct Material ground_material = material_create(VEC4F_1, &tex); 	
+
+	// creating game_objects
+	struct Vec3f      ground_scale = {.x = 5.0f, .y = 1.0f, .z = 5.0f};
+	struct Transform  ground_tr    = transform_create(VEC3F_0, QUAT_IDENTITY, ground_scale);
+	struct GameObject ground_go    = game_object_create(ground_tr, &ground_mesh, &ground_material);
+		
+	struct Vec3f      pos0      = {.x = 0.0f, .y = 1.0f, .z = 0.0f};
+	struct Transform  transform = transform_create(pos0, QUAT_IDENTITY, VEC3F_1);
+	struct GameObject go        = game_object_create(transform, &mesh, &bunny_material);
+
+	struct Vec3f      pos1 = {.x = 2.0f, .y = 1.0f, .z = 0.0f};
+	struct Transform  tr1  = transform_create(pos1, QUAT_IDENTITY, VEC3F_1);
+	struct GameObject go1  = game_object_create(tr1, &teapot_mesh, &teapot_material);
+
+	struct Vec3f      pos2 = {.x = -2.0f, .y = 1.0f, .z = 0.0f};
+	struct Transform  tr2  = transform_create(pos2, QUAT_IDENTITY, VEC3F_1);
+	struct GameObject go2  = game_object_create(tr2, &mesh, &dragon_material);
 	
-	// Extract filename from CLI
-	char filename[256] = {0};
-	snprintf(filename, sizeof(filename), "./models/%s.obj", argv[1]);
-
-	/* Parse Mesh from .obj file */
-	struct Mesh mesh = parse_obj("./models/bunny.obj");
-
-	// load ground texture
-	struct Texture tex = texture_load("./textures/brickwall.png");
-	struct Material ground_material = create_material(VEC4F_1, &tex); 	
-
-	struct Vec4f pink = vec4f_create(1.0f, 0.0f, 1.0f, 1.0f);
-	struct Material bunny_material = create_material(pink, NULL);
-
-	struct Mesh ground_mesh = create_square_plane();
-	struct Vec3f ground_scale = {.x = 1.0f, .y = 1.0f, .z = 1.0f};
-
-	struct Transform ground_tr = {
-		.position = VEC3F_0,
-		.rotation = QUAT_IDENTITY,
-		.scale = ground_scale	
-	};
-
-	struct GameObject ground_go = {
-		.transform = ground_tr,
-		.mesh = &ground_mesh ,
-		.material = &ground_material
-	};
-	
-	// Prepare Transform and GameObjects
-	struct Vec3f pos0 = {.x = 0.0f, .y = 1.0f, .z = 0.0f};
-	struct Transform transform = {
-		.position = pos0, 
-		.rotation = QUAT_IDENTITY, 
-		.scale = VEC3F_1
-	};
-
-	struct Vec3f pos1 = {.x = 2.0f, .y = 1.0f, .z = 0.0f};
-
-	struct Transform tr1 = {
-		.position = pos1,
-		.rotation = QUAT_IDENTITY,
-		.scale = VEC3F_1
-	};
-
-	struct Vec3f pos2 = {.x = -2.0f, .y = 1.0f, .z = 0.0f};
-
-	struct Transform tr2 = {
-		.position = pos2,
-		.rotation = QUAT_IDENTITY,
-		.scale = VEC3F_1
-	};
-
-	struct GameObject go = {
-		.mesh 	    = &mesh     , 
-		.transform  = transform ,
-		.material = &bunny_material
-	};
-
-	struct GameObject go1 = {
-		.mesh = &mesh ,
-		.transform = tr1,
-		.material = &bunny_material
-	};
-
-	struct GameObject go2 = {
-		.mesh = &mesh ,
-		.transform = tr2,
-		.material = &bunny_material
-	};
-
+	// game_object array
 	int num_gameObjects = 4;
 	struct GameObject* gameObjects[num_gameObjects];
 	gameObjects[0] = &go;
 	gameObjects[1] = &go1;
 	gameObjects[2] = &go2;
 	gameObjects[3] = &ground_go;
-		
-	// Prepare Camera
-	// To start, the camera is on position (0,0,5) facing the -Z direction
-	struct Vec3f camera_pos = {.x = 0.0f, .y = 0.5f, .z = 3.0f};
-	struct Transform camera_transform = {
-		.position = camera_pos,
-		.rotation = QUAT_IDENTITY,
-		.scale = VEC3F_1
-	};
 
-	struct Camera cam = {0};	
-	cam.transform = camera_transform;
+	// creating & configuring camera
 	
-	cam.fov = PI*60.0f/180.0f; 
-	cam.near = 5.00f;
-	cam.far = 20.0f;
+	struct Transform camera_transform = transform_create(vec3f_create(0.0f, 0.5f, 3.0f), QUAT_IDENTITY, VEC3F_1);
+	struct Camera cam = camera_create(camera_transform);
+	camera_set_fov_degrees(&cam, 60.0f); //remember to convert to radians in function 
+	camera_set_near(&cam, 5.0f);
+	camera_set_far(&cam, 20.0f);
 
-	// Prepare light source
-	struct Vec3f light_source_pos = {
-		.x = 0.0f,
-		.y = 1.0f,
-		.z = 0.0f
-	};
-
-	struct LightSource light_source  = {
-		.direction = light_source_pos
-	};
-
+	// creating scene
 	struct Scene scene = {
 		.cam = &cam,
-		.gameObjects = gameObjects,
-		.num_gameObjects = num_gameObjects,
-		.light = light_source
+	       	.gameObjects = gameObjects, 
+		.num_gameObjects =num_gameObjects
 	};
-
+	
 	// Initialize time struct
 	struct Time time;
 	time_init(&time);
@@ -149,12 +86,12 @@ int main(int argc, char* argv[]) {
         bool running = true;
         SDL_Event event;
         while(running) {
-		
+
 		// Handle Time
 		update_time(&time);
 		/* print_fps(&time); */
 
-		// Clear the buffers	
+		// Clear the buffers 
 		memset(framebuffer, 0x0, sizeof(framebuffer));
 		memset(zbuffer, 0x0, sizeof(zbuffer));
 
@@ -175,27 +112,12 @@ int main(int argc, char* argv[]) {
 			}
                 }	
 
-		// Hide the cursor
+		// input handling 	
 		const Uint8* kb = SDL_GetKeyboardState(NULL);
-
-		// ---- SCRIPTING SECTION -----
-		// Apply transformations to game object
-		float angular_velocity = 0.2f; 
-		float cam_speed = -1.0f;
-		float yaw = time.delta_time * angular_velocity * mouse_dx;
-
-		// input handling 	
-		struct Quaternion cam_delta_lr = quat_normalize(quat_angle_axis(yaw, VEC3F_Y));
-		cam.transform.rotation = quat_normalize(quat_mul(cam.transform.rotation, cam_delta_lr));
-
-		float angle = time.delta_time * angular_velocity * mouse_dx;
-
-		// input handling 	
-		struct Quaternion cam_delta = quat_normalize(quat_angle_axis(angle, VEC3F_Y));
-		cam.transform.rotation = quat_normalize(quat_mul(cam.transform.rotation, cam_delta));
 
 		struct Vec3f move_dir = {0};
 		struct Vec3f move_vec = {0};
+		float cam_speed = -1.0f;
 
 		if(kb[SDL_SCANCODE_W]) {
 			move_dir = quat_get_forward(cam.transform.rotation);
@@ -217,6 +139,16 @@ int main(int argc, char* argv[]) {
 			move_vec = vec3f_scale(move_dir, cam_speed * time.delta_time);
 		}
 
+		// ---- SCRIPTING SECTION -----
+		
+		float angular_velocity = 0.2f; 
+		float angle = time.delta_time * angular_velocity * mouse_dx;
+		struct Quaternion cam_delta = quat_normalize(quat_angle_axis(angle, VEC3F_Y));
+		cam.transform.rotation = quat_normalize(quat_mul(cam.transform.rotation, cam_delta));
+		// Apply transformations to game object
+		float yaw = time.delta_time * angular_velocity * mouse_dx;
+
+		// input handling 	
 		cam.transform.position = vec3f_add(cam.transform.position, move_vec);
 
 		float go_angle = angular_velocity * time.delta_time;
@@ -224,7 +156,7 @@ int main(int argc, char* argv[]) {
 		struct Vec3f rot_axis = {.x = 1.0f, .y = 1.0f, .z = 1.0f};
 		struct Vec3f rot_axis1 = {.x = -1.0f, .y = 1.0f, .z = 1.0f};
 		struct Vec3f rot_axis2 = {.x = 1.0f, .y = 1.0f, .z = -1.0f};
-
+		
 		struct Quaternion rot = quat_normalize(quat_angle_axis(go_angle, rot_axis));
 		struct Quaternion rot1 = quat_normalize(quat_angle_axis(2*go_angle, rot_axis1));
 		struct Quaternion rot2 = quat_normalize(quat_angle_axis(3*go_angle, rot_axis2));
@@ -232,7 +164,6 @@ int main(int argc, char* argv[]) {
 		go.transform.rotation = quat_normalize(quat_mul(go.transform.rotation, rot));
 		go1.transform.rotation = quat_normalize(quat_mul(go1.transform.rotation, rot1));
 		go2.transform.rotation = quat_normalize(quat_mul(go2.transform.rotation, rot2));
-
 	
 		// --- END OF SCRIPTING SECTION ---
 		render_scene(framebuffer, zbuffer, scene);
