@@ -1,7 +1,7 @@
 #ifndef MATRIX_H
 #define MATRIX_H
-#include "vec3f.h"
-#include "vec4f.h"
+
+#include "vector.h"
 
 #define MAT4_ZERO ((struct Mat4){ { \
     {0.0f, 0.0f, 0.0f, 0.0f}, \

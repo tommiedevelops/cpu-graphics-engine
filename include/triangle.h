@@ -5,7 +5,7 @@
 #include <stdint.h>
 
 #pragma once
-#include "vec3f.h"
+#include "vector.h"
 #include "matrix.h"
 #include "shading.h"
 
@@ -25,6 +25,8 @@ struct Triangle {
 };
 void print_tri(struct Triangle tri);
 
+
+struct Bounds get_bounds_from_tri(struct Triangle tri);
 struct Triangle create_triangle(
 	struct Vec3f a,
 	struct Vec3f b,

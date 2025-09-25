@@ -1,13 +1,4 @@
-#include <stdio.h> 
-#include <stdint.h>
-#include <math.h>
-#include <stdlib.h>
-#include <stdbool.h>
-
-#include "vec3f.h"
 #include "render.h"
-#include "matrix.h"
-#include "scene_manager.h"
 
 void place_pixel(int x, int y, uint32_t value, uint32_t* framebuffer) {
 	framebuffer[x + WIDTH*y] = value;

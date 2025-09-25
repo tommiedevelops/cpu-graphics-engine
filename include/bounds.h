@@ -1,14 +1,20 @@
 #ifndef BOUNDS_H
 #define BOUNDS_H
 
-#include <float.h>
 #include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <float.h>
 
-#include "vec3f.h"
-#include "triangle.h"
+#include "vector.h"
 
 struct Vec3f;
-struct Triangle;
+#define BOUNDS_DEFAULT (struct Bounds) { 	\
+	.xmin = FLT_MAX, .xmax = -FLT_MAX, 	\
+	.ymin = FLT_MAX, .ymax = -FLT_MAX, 	\
+	.zmin = FLT_MAX, .zmax = -FLT_MAX 	\
+	}
+
 
 struct Bounds {
 	float xmin, xmax;
@@ -16,16 +22,9 @@ struct Bounds {
 	float zmin, zmax;
 };
 
-#define BOUNDS_DEFAULT (struct Bounds) { 	\
-	.xmin = FLT_MAX, .xmax = -FLT_MAX, 	\
-	.ymin = FLT_MAX, .ymax = -FLT_MAX, 	\
-	.zmin = FLT_MAX, .zmax = -FLT_MAX 	\
-	}
-
 void print_bounds(struct Bounds bounds);
 bool bounds_are_equal(struct Bounds a, struct Bounds b);
 struct Bounds get_bounds(struct Vec3f* vertices, int num_vertices);
-struct Bounds get_bounds_from_tri(struct Triangle tri);
 void update_bounds(struct Bounds* bounds, struct Vec3f* vertices, int num_vertices);
 
 #endif

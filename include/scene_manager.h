@@ -1,6 +1,6 @@
 #ifndef SCENE_MANAGER_H 
 #define SCENE_MANAGER_H
-#include "vec3f.h"
+#include "vector.h"
 #include "obj_parser.h"
 #include "bounds.h"
 #include "quaternion.h"
@@ -23,6 +23,7 @@ struct Camera {
 };
 
 struct Camera camera_create(struct Transform tr);
+
 void camera_set_fov_degrees(struct Camera* cam, float fov_degrees);
 void camera_set_near(struct Camera* cam, float near);
 void camera_set_far(struct Camera* cam, float far);

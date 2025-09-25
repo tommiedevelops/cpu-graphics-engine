@@ -5,6 +5,7 @@
 #include "triangle.h"
 #include "render.h"
 #include "constants.h"
+#include "bounds.h"
 
 struct Triangle create_triangle(
 	struct Vec3f v0,
@@ -14,6 +15,37 @@ struct Triangle create_triangle(
 	struct Triangle tri = {.v0=v0,.v1=v1,.v2=v2};
 	return tri;
 }
+
+struct Bounds get_bounds_from_tri(struct Triangle tri){
+        /* return: [xmin, xmax, ymin, ymax, zmin, zmax] */
+        struct Bounds bounds = BOUNDS_DEFAULT;
+	if (tri.v0.x > bounds.xmax) {bounds.xmax = tri.v0.x;}
+	if (tri.v0.y > bounds.ymax) {bounds.ymax = tri.v0.y;}
+	if (tri.v0.z > bounds.zmax) {bounds.zmax = tri.v0.z;}
+
+	if (tri.v1.x > bounds.xmax) {bounds.xmax = tri.v1.x;}
+	if (tri.v1.y > bounds.ymax) {bounds.ymax = tri.v1.y;}
+	if (tri.v1.z > bounds.zmax) {bounds.zmax = tri.v1.z;}
+
+	if (tri.v2.x > bounds.xmax) {bounds.xmax = tri.v2.x;}
+	if (tri.v2.y > bounds.ymax) {bounds.ymax = tri.v2.y;}
+	if (tri.v2.z > bounds.zmax) {bounds.zmax = tri.v2.z;}
+
+	if (tri.v0.x < bounds.xmin) {bounds.xmin = tri.v0.x;}
+	if (tri.v0.y < bounds.ymin) {bounds.ymin = tri.v0.y;}
+	if (tri.v0.z < bounds.zmin) {bounds.zmin = tri.v0.z;}
+
+	if (tri.v1.x < bounds.xmin) {bounds.xmin = tri.v1.x;}
+	if (tri.v1.y < bounds.ymin) {bounds.ymin = tri.v1.y;}
+	if (tri.v1.z < bounds.zmin) {bounds.zmin = tri.v1.z;}
+
+	if (tri.v2.x < bounds.xmin) {bounds.xmin = tri.v2.x;}
+	if (tri.v2.y < bounds.ymin) {bounds.ymin = tri.v2.y;}
+	if (tri.v2.z < bounds.zmin) {bounds.zmin = tri.v2.z;}
+
+        return bounds;
+}
+
 
 struct Vec3f calculate_normal(struct Triangle tri){
 	

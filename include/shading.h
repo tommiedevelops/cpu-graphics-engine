@@ -1,8 +1,7 @@
 #ifndef SHADING_H
 #define SHADING_H
 
-#include "vec3f.h"
-#include "vec4f.h"
+#include "vector.h"
 
 struct LightSource {
 	struct Vec3f direction;

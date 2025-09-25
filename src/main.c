@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
+
 #include "constants.h"
 #include "render.h"
 #include "obj_parser.h"
@@ -57,7 +58,6 @@ int main(void) {
 	gameObjects[3] = &ground_go;
 
 	// creating & configuring camera
-	
 	struct Transform camera_transform = transform_create(vec3f_create(0.0f, 0.5f, 3.0f), QUAT_IDENTITY, VEC3F_1);
 	struct Camera cam = camera_create(camera_transform);
 	camera_set_fov_degrees(&cam, 60.0f); //remember to convert to radians in function 
@@ -71,7 +71,6 @@ int main(void) {
 		.num_gameObjects =num_gameObjects
 	};
 	
-	// Initialize time struct
 	struct Time time;
 	time_init(&time);
 
@@ -89,16 +88,15 @@ int main(void) {
 
 		// Handle Time
 		update_time(&time);
-		/* print_fps(&time); */
 
 		// Clear the buffers 
 		memset(framebuffer, 0x0, sizeof(framebuffer));
 		memset(zbuffer, 0x0, sizeof(zbuffer));
 
-                // Event Handling
+                // ----- Input & Event Handling -----
 		int mouse_dx = 0;
 		int mouse_dy = 0;
-
+		
                 while (SDL_PollEvent(&event)) {
 			switch(event.type) {
 				case SDL_QUIT: running = false; break;
@@ -112,45 +110,20 @@ int main(void) {
 			}
                 }	
 
-		// input handling 	
 		const Uint8* kb = SDL_GetKeyboardState(NULL);
+		struct Vec2f move_input = {0};
+		if(kb[SDL_SCANCODE_W]) move_input.y += 1.0f;
+		if(kb[SDL_SCANCODE_A]) move_input.x -= 1.0f; 
+		if(kb[SDL_SCANCODE_S]) move_input.y -= 1.0f;
+		if(kb[SDL_SCANCODE_D]) move_input.x += 1.0f; 
 
-		struct Vec3f move_dir = {0};
-		struct Vec3f move_vec = {0};
-		float cam_speed = -1.0f;
+		vec2f_normalize(&move_input);
 
-		if(kb[SDL_SCANCODE_W]) {
-			move_dir = quat_get_forward(cam.transform.rotation);
-			move_vec = vec3f_scale(move_dir, cam_speed * time.delta_time);
-		}
+		// ----- Custom Scripting -----
 
-		if(kb[SDL_SCANCODE_A]) {
-			move_dir = vec3f_scale(quat_get_right(cam.transform.rotation), -1.0f);
-			move_vec = vec3f_scale(move_dir, cam_speed * time.delta_time);
-		}
-
-		if(kb[SDL_SCANCODE_S]) {
-			move_dir = vec3f_scale(quat_get_forward(cam.transform.rotation), -1.0f);
-			move_vec = vec3f_scale(move_dir, cam_speed * time.delta_time);
-		}
-
-		if(kb[SDL_SCANCODE_D]) {
-			move_dir = quat_get_right(cam.transform.rotation);
-			move_vec = vec3f_scale(move_dir, cam_speed * time.delta_time);
-		}
-
-		// ---- SCRIPTING SECTION -----
-		
-		float angular_velocity = 0.2f; 
-		float angle = time.delta_time * angular_velocity * mouse_dx;
-		struct Quaternion cam_delta = quat_normalize(quat_angle_axis(angle, VEC3F_Y));
-		cam.transform.rotation = quat_normalize(quat_mul(cam.transform.rotation, cam_delta));
-		// Apply transformations to game object
-		float yaw = time.delta_time * angular_velocity * mouse_dx;
-
-		// input handling 	
-		cam.transform.position = vec3f_add(cam.transform.position, move_vec);
-
+		// First Person Camera
+			
+		float angular_velocity = 1.0f;
 		float go_angle = angular_velocity * time.delta_time;
 
 		struct Vec3f rot_axis = {.x = 1.0f, .y = 1.0f, .z = 1.0f};
@@ -165,10 +138,10 @@ int main(void) {
 		go1.transform.rotation = quat_normalize(quat_mul(go1.transform.rotation, rot1));
 		go2.transform.rotation = quat_normalize(quat_mul(go2.transform.rotation, rot2));
 	
-		// --- END OF SCRIPTING SECTION ---
+		// ----- Rendering -----
 		render_scene(framebuffer, zbuffer, scene);
 
-		// Update SDL2 window w/ new framebuffer
+		// ---- Merging -----
                 update_window(window_data, framebuffer);
         }
 
