@@ -14,63 +14,9 @@
 #include "shading.h"
 
 int main(void) {
-	
-	// Loading Assets
-	struct Mesh  mesh        = parse_obj("./assets/models/bunny.obj");
-	struct Mesh  teapot_mesh = parse_obj("./assets/models/teapot.obj");
-	struct Mesh  ground_mesh = create_square_plane();
 
-	struct Texture tex = texture_load("./assets/textures/brickwall.png");
+	struct Scene scene = create_scene();
 
-	// creating materials
-	struct Vec4f pink  = vec4f_create(1.0f, 0.0f, 1.0f, 1.0f);
-	struct Vec4f green = vec4f_create(0.2f, 0.8f, 0.2f, 1.0f);
-	struct Vec4f blue  = vec4f_create(0.2f, 0.2f, 0.8f, 1.0f);
-
-	struct Material bunny_material  = material_create(pink, NULL);
-	struct Material teapot_material = material_create(green, NULL);
-	struct Material dragon_material = material_create(blue, NULL);
-	struct Material ground_material = material_create(VEC4F_1, &tex); 	
-
-	// creating game_objects
-	struct Vec3f      ground_scale = {.x = 5.0f, .y = 1.0f, .z = 5.0f};
-	struct Transform  ground_tr    = transform_create(VEC3F_0, QUAT_IDENTITY, ground_scale);
-	struct GameObject ground_go    = game_object_create(ground_tr, &ground_mesh, &ground_material);
-		
-	struct Vec3f      pos0      = {.x = 0.0f, .y = 1.0f, .z = 0.0f};
-	struct Transform  transform = transform_create(pos0, QUAT_IDENTITY, VEC3F_1);
-	struct GameObject go        = game_object_create(transform, &mesh, &bunny_material);
-
-	struct Vec3f      pos1 = {.x = 2.0f, .y = 1.0f, .z = 0.0f};
-	struct Transform  tr1  = transform_create(pos1, QUAT_IDENTITY, VEC3F_1);
-	struct GameObject go1  = game_object_create(tr1, &teapot_mesh, &teapot_material);
-
-	struct Vec3f      pos2 = {.x = -2.0f, .y = 1.0f, .z = 0.0f};
-	struct Transform  tr2  = transform_create(pos2, QUAT_IDENTITY, VEC3F_1);
-	struct GameObject go2  = game_object_create(tr2, &mesh, &dragon_material);
-	
-	// game_object array
-	int num_gameObjects = 4;
-	struct GameObject* gameObjects[num_gameObjects];
-	gameObjects[0] = &go;
-	gameObjects[1] = &go1;
-	gameObjects[2] = &go2;
-	gameObjects[3] = &ground_go;
-
-	// creating & configuring camera
-	struct Transform camera_transform = transform_create(vec3f_create(0.0f, 0.5f, 3.0f), QUAT_IDENTITY, VEC3F_1);
-	struct Camera cam = camera_create(camera_transform);
-	camera_set_fov_degrees(&cam, 60.0f); //remember to convert to radians in function 
-	camera_set_near(&cam, 5.0f);
-	camera_set_far(&cam, 20.0f);
-
-	// creating scene
-	struct Scene scene = {
-		.cam = &cam,
-	       	.gameObjects = gameObjects, 
-		.num_gameObjects =num_gameObjects
-	};
-	
 	struct Time time;
 	time_init(&time);
 
@@ -121,8 +67,42 @@ int main(void) {
 
 		// ----- Custom Scripting -----
 
-		// First Person Camera
+		// First Person Camera	
+		float cam_speed = 4.0f;	
+		float cam_ang_vel = 1.0f;	
+
+		struct Vec3f forward = quat_get_forward(scene.cam->transform.rotation);
+		struct Vec3f right = quat_get_right(scene.cam->transform.rotation);	
+
+		// camera rotation
+		struct Vec3f forward_projected = vec3f_create(forward.x, 0.0f, forward.z);
+		struct Vec3f lr_axis = VEC3F_Y;		
+
+		struct Quaternion lr_rot = quat_angle_axis(mouse_dx * time.delta_time * cam_ang_vel, lr_axis);
+
+		scene.cam->transform.rotation =
+			quat_normalize(
+					quat_mul(
+						scene.cam->transform.rotation,
+						lr_rot
+					        )
+				      );
+
+		// camera translation
+		struct Vec3f move_vec = 
+			vec3f_add(
+					vec3f_scale(forward, -move_input.y),
+					vec3f_scale(right, -move_input.x)
+				 );
+
+		
+		scene.cam->transform.position = 
+			vec3f_add(
+					scene.cam->transform.position, 
+					vec3f_scale(move_vec, cam_speed * time.delta_time)
+				 );
 			
+		// Game Objects
 		float angular_velocity = 1.0f;
 		float go_angle = angular_velocity * time.delta_time;
 
@@ -134,10 +114,13 @@ int main(void) {
 		struct Quaternion rot1 = quat_normalize(quat_angle_axis(2*go_angle, rot_axis1));
 		struct Quaternion rot2 = quat_normalize(quat_angle_axis(3*go_angle, rot_axis2));
 
+		struct GameObject go = *scene.gameObjects[0];
+		struct GameObject go1 = *scene.gameObjects[1];
+		struct GameObject go2 = *scene.gameObjects[2];
 		go.transform.rotation = quat_normalize(quat_mul(go.transform.rotation, rot));
 		go1.transform.rotation = quat_normalize(quat_mul(go1.transform.rotation, rot1));
 		go2.transform.rotation = quat_normalize(quat_mul(go2.transform.rotation, rot2));
-	
+
 		// ----- Rendering -----
 		render_scene(framebuffer, zbuffer, scene);
 
@@ -147,9 +130,7 @@ int main(void) {
 
         /* Clean Up */
 
-	texture_free(tex);
-	free(mesh.vertices);
-	free(mesh.triangles);
+	// destroy_scene(scene);
         destroy_window(window_data);
         return 0;
 }

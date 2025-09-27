@@ -15,6 +15,8 @@ struct Transform {
 
 struct Transform transform_create(struct Vec3f pos, struct Quaternion rot, struct Vec3f scale);
 
+struct Scene create_scene();
+
 struct Camera { 
 	struct Transform transform;
 	float fov;

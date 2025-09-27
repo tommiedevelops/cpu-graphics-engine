@@ -5,7 +5,68 @@
 #include "scene_manager.h"
 #include "matrix.h"
 #include "constants.h"
+#include "construct_plane.h"
 
+// custom logic
+struct Scene create_scene(){
+		
+	// Loading Assets
+	struct Mesh  mesh        = parse_obj("./assets/models/bunny.obj");
+	struct Mesh  teapot_mesh = parse_obj("./assets/models/teapot.obj");
+	struct Mesh  ground_mesh = create_square_plane();
+
+	struct Texture tex = texture_load("./assets/textures/brickwall.png");
+
+	// creating materials
+	struct Vec4f pink  = vec4f_create(1.0f, 0.0f, 1.0f, 1.0f);
+	struct Vec4f green = vec4f_create(0.2f, 0.8f, 0.2f, 1.0f);
+	struct Vec4f blue  = vec4f_create(0.2f, 0.2f, 0.8f, 1.0f);
+
+	struct Material bunny_material  = material_create(pink, NULL);
+	struct Material teapot_material = material_create(green, NULL);
+	struct Material dragon_material = material_create(blue, NULL);
+	struct Material ground_material = material_create(VEC4F_1, &tex); 	
+
+	// creating game_objects
+	struct Vec3f      ground_scale = {.x = 5.0f, .y = 1.0f, .z = 5.0f};
+	struct Transform  ground_tr    = transform_create(VEC3F_0, QUAT_IDENTITY, ground_scale);
+	struct GameObject ground_go    = game_object_create(ground_tr, &ground_mesh, &ground_material);
+		
+	struct Vec3f      pos0      = {.x = 0.0f, .y = 1.0f, .z = 0.0f};
+	struct Transform  transform = transform_create(pos0, QUAT_IDENTITY, VEC3F_1);
+	struct GameObject go        = game_object_create(transform, &mesh, &bunny_material);
+
+	struct Vec3f      pos1 = {.x = 2.0f, .y = 1.0f, .z = 0.0f};
+	struct Transform  tr1  = transform_create(pos1, QUAT_IDENTITY, VEC3F_1);
+	struct GameObject go1  = game_object_create(tr1, &teapot_mesh, &teapot_material);
+
+	struct Vec3f      pos2 = {.x = -2.0f, .y = 1.0f, .z = 0.0f};
+	struct Transform  tr2  = transform_create(pos2, QUAT_IDENTITY, VEC3F_1);
+	struct GameObject go2  = game_object_create(tr2, &mesh, &dragon_material);
+	
+	// game_object array
+	int num_gameObjects = 4;
+	struct GameObject* gameObjects[num_gameObjects];
+	gameObjects[0] = &go;
+	gameObjects[1] = &go1;
+	gameObjects[2] = &go2;
+	gameObjects[3] = &ground_go;
+
+	// creating & configuring camera
+	struct Transform camera_transform = transform_create(vec3f_create(0.0f, 0.5f, 3.0f), QUAT_IDENTITY, VEC3F_1);
+	struct Camera cam = camera_create(camera_transform);
+	camera_set_fov_degrees(&cam, 60.0f); //remember to convert to radians in function 
+	camera_set_near(&cam, 5.0f);
+	camera_set_far(&cam, 20.0f);
+
+	struct Scene scene = {
+		.cam = &cam,
+	       	.gameObjects = gameObjects, 
+		.num_gameObjects =num_gameObjects
+	};
+
+	return scene;	
+}
 struct Transform transform_create(struct Vec3f pos, struct Quaternion rot, struct Vec3f scale){
 	struct Transform tr;
 	tr.position = pos;
