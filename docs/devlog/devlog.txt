@@ -95,3 +95,7 @@ it was around 5fps.
 * I'm almost finished with this project. I just want to fix textures, write the clipping algorithm, introduce vertex and fragment shaders and that's pretty much it
 * I probably also want to create a nice scene with a skybox, ground and some models with nice textures so I can display it nicely
 * Also going to slowly refactor the main branch. I have a 'refactor' branch that I can refer to when I write a C++ OpenGL / Vulkan project but I'm just going to focus on functionality for now over code style. Though I'm gonna do the best job I can at making the code as clean as possible. 
+
+28/09/25
+* Just came across an interesing issue. If you define a local stack variable int bar[2] and try to return bar and access its contents, you get a seg fault since bar has since been wiped.If you, however, package the local stack var in a struct and then return it, you dont get the same seg fault but you can get some faulty data. Safer just to malloc all the raw data. MAKE SURE UR NOT RETURNING STUFF THAT LIVES ON THE STACK!!!
+* I fixed the seg fault issues when I moved scene creation logic to a different module. Basically I malloced everything that either was an array declared in a stack or a ptr to a ptr declared in a stack. There's a bunch of mem leaks because I haven't written proper cleanup functions but I defer that work for now. I think an 'app' module where I defien load, cleanup and update logic would be useful. For now I push to github.

@@ -17,6 +17,11 @@ int main(void) {
 
 	struct Scene scene = create_scene();
 
+	if(scene.gameObjects == NULL){
+		printf("NULL\n");
+		exit(0);
+	}
+
 	struct Time time;
 	time_init(&time);
 
@@ -114,12 +119,15 @@ int main(void) {
 		struct Quaternion rot1 = quat_normalize(quat_angle_axis(2*go_angle, rot_axis1));
 		struct Quaternion rot2 = quat_normalize(quat_angle_axis(3*go_angle, rot_axis2));
 
-		struct GameObject go = *scene.gameObjects[0];
-		struct GameObject go1 = *scene.gameObjects[1];
-		struct GameObject go2 = *scene.gameObjects[2];
-		go.transform.rotation = quat_normalize(quat_mul(go.transform.rotation, rot));
-		go1.transform.rotation = quat_normalize(quat_mul(go1.transform.rotation, rot1));
-		go2.transform.rotation = quat_normalize(quat_mul(go2.transform.rotation, rot2));
+		struct GameObject* go = scene.gameObjects[0];
+
+		struct GameObject* go1 = scene.gameObjects[1];
+
+		struct GameObject* go2 = scene.gameObjects[2];
+	
+		go->transform.rotation = quat_normalize(quat_mul(go->transform.rotation, rot));
+		go1->transform.rotation = quat_normalize(quat_mul(go1->transform.rotation, rot1));
+		go2->transform.rotation = quat_normalize(quat_mul(go2->transform.rotation, rot2));
 
 		// ----- Rendering -----
 		render_scene(framebuffer, zbuffer, scene);

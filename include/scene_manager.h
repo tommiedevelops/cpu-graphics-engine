@@ -24,7 +24,7 @@ struct Camera {
 	float far;
 };
 
-struct Camera camera_create(struct Transform tr);
+struct Camera* camera_create(struct Transform tr);
 
 void camera_set_fov_degrees(struct Camera* cam, float fov_degrees);
 void camera_set_near(struct Camera* cam, float near);
@@ -44,7 +44,7 @@ struct GameObject {
 	struct Material* material;
 };
 
-struct GameObject game_object_create(struct Transform tr, struct Mesh* mesh, struct Material* mat);
+struct GameObject* game_object_create(struct Transform tr, struct Mesh* mesh, struct Material* mat);
 
 struct Scene {
 	struct Camera *cam;

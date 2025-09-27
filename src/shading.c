@@ -5,18 +5,21 @@
 
 #include "stb_image.h"
 
-struct Texture texture_load(char* filename){
+struct Texture* texture_load(char* filename){
 	int width, height, channels;
 	uint8_t* img = stbi_load(filename, &width, &height, &channels, 4);
+
+	if(NULL == img){
+		//LOG_ERROR("something went wrong loading the .png");
+	}
 
 	struct Vec4f* map = malloc(sizeof(struct Vec4f)*width*height);
 	memset(map, 0x0, sizeof(struct Vec4f)*width*height);
 
-	struct Texture tex = {
-		.width = width,
-		.height = height,
-		.map = map
-	};
+	struct Texture* tex = malloc(sizeof(struct Texture));
+	tex->width = width;
+	tex->height = height;
+	tex->map = map;
 
 	for(int i = 0; i < width; i++){
 		for(int j = 0; j < height; j++){
@@ -41,6 +44,7 @@ void texture_free(struct Texture tex){
 }
 
 struct Vec4f get_pixel(struct Vec4f* data, int width, int height, int x, int y){
+
 	if (x < 0) x = 0;
 	if (y < 0) y = 0;
 	if (x >= width) x = width - 1;
@@ -78,12 +82,10 @@ struct Material material_default(){
 	return mat;
 }
 
-struct Material material_create(struct Vec4f color, struct Texture* tex){
-	struct Material mat = {
-		.color = color,
-		.tex = tex
-	};
-
+struct Material* material_create(struct Vec4f color, struct Texture* tex){
+	struct Material* mat = malloc(sizeof(struct Material));
+	mat->color = color;
+	mat->tex = tex;
 	return mat;
 }
 
