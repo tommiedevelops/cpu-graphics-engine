@@ -16,7 +16,6 @@ struct Vec2f vec2f_create(float x, float y) {
 
 	return v;
 }
-
 float vec2f_magnitude(struct Vec2f v){
 	return sqrt(v.x*v.x + v.y*v.y);	
 }
