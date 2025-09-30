@@ -104,3 +104,4 @@ it was around 5fps.
 * just tried defining a struct Vertex so I could have code that better reflected the conceptual ideas (i.e. struct Vertex => primitive assembly and applying vertex shaders is apply_shader(&vertex) ) but the number of stack allocations as a result makes the program too slow. 
 * going to stick with defining the vertex primitives implicitly inside the triangle struct
 * will upload code to github though just to have it as reference
+* in the rasterize() function, I avoid a stack allocation by casting a Vec3 to a Vec4 meaning I copy the memory information of a Vec3 into a zero'd out Vec4 to avoid having to write a conversion function and hence stack allocation

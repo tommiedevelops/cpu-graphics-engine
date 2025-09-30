@@ -4,41 +4,6 @@ void place_pixel(int x, int y, uint32_t value, uint32_t* framebuffer) {
 	framebuffer[x + WIDTH*y] = value;
 }
 
-struct Vertex {
-	struct Vec4f position; // Vec4f to support Mat4 
-	struct Vec2f uv;
-	struct Vec3f normal;
-};
-
-struct MyTriangle {
-	struct Vertex v0;
-	struct Vertex v1;
-	struct Vertex v2;
-};
-
-struct Vertex vertex_create(struct Vec3f position, struct Vec2f uv, struct Vec3f normal){
-	struct Vec4f pos = vec4f_create(position.x, position.y, position.z, 1.0f);
-
-	struct Vertex v = {
-		.position = pos,
-		.uv = uv,
-		.normal = normal
-	};
-
-	return v;
-}
-
-struct MyTriangle triangle_create(struct Vertex v0, struct Vertex v1, struct Vertex v2){
-
-	struct MyTriangle tri = {
-		.v0 = v0,
-		.v1 = v1,
-		.v2 = v2
-	};
-
-	return tri;
-}
-
 struct Mat4 get_rotation_matrix(struct Transform tr) {
 	return quat_to_mat4(quat_normalize(tr.rotation));
 }
@@ -155,112 +120,99 @@ struct Mat4 get_viewport_matrix(struct Camera cam){
 	return P;
 }
 
-struct Fragment {
-	struct Vec4f position;
+// CHAT-GPT
+static inline struct Vec4f vec3f_to_vec4f(struct Vec3f v, float w) {
+    return (struct Vec4f){ v.x, v.y, v.z, w };
+}
+
+struct RenderData {
+	int num_vertices;
+	struct Vec3f* vertices;
+	struct Vec2f* uvs;
+	struct Vec3f* normals;
+	int num_triangles;
+	int* triangles;	
+	struct Material mat;
 };
 
+struct RenderData prepare_render_data(struct GameObject go) {
+
+	struct RenderData r = {0};
+
+	if(go.mesh == NULL){
+		//LOG_ERROR("No mesh to render");
+		return r;
+	}
+
+	// Vertex Data
+	r.num_vertices = go.mesh->num_vertices;
+	r.vertices = go.mesh->vertices;
+	r.uvs = go.mesh->uvs;
+	r.normals = NULL; // FIX!!
+
+	// Triangle Data
+	r.num_triangles = go.mesh->num_triangles;
+	r.triangles = go.mesh->triangles;
+
+	// Material Data
+	struct Material mat = material_default();
+	if(go.material != NULL) r.mat = *go.material;
+
+	return r;
+}
+
 void render_game_object(uint32_t* framebuffer, float* zbuffer, struct Scene scene, struct GameObject go){
-
-		if(go.mesh == NULL){
-			//LOG_ERROR("No mesh to render");
-			return;
-		}
-
-		// Vertex Data
-		int num_vertices = go.mesh->num_vertices;
-		struct Vec3f* vertices = go.mesh->vertices;
-		struct Vec2f* uvs = go.mesh->uvs;
-		struct Vec3f* normals = NULL; // FIX!!
 		
-		// Triangle Data
-		int num_triangles = go.mesh->num_triangles;
-		int* triangles = go.mesh->triangles;
+		struct RenderData data = prepare_render_data(go);
+		if(NULL == data.vertices) return; // required
 
-		// Material Data
-		struct Material mat = material_default();
-		if(go.material != NULL) mat = *go.material;
-
-		// Transform and rasterize each triangle
-		for(int t = 0; t < num_triangles; t++) {
-			// GPU WORK
-			
-			// Primitive Assembly
-			struct Vec3f p0 = (vertices) ? vertices[triangles[3*t]] : VEC3F_0;
-			struct Vec3f p1 = (vertices) ? vertices[triangles[3*t+1]]: VEC3F_0;
-			struct Vec3f p2 = (vertices) ? vertices[triangles[3*t+2]] : VEC3F_0;
-
-			struct Vec2f uv0 = (uvs) ? uvs[triangles[3*t]] : VEC2F_0;
-			struct Vec2f uv1 = (uvs) ? uvs[triangles[3*t+1]]: VEC2F_0;
-			struct Vec2f uv2 = (uvs) ? uvs[triangles[3*t+2]] : VEC2F_0;
-			
-			struct Vec3f n0 = (normals) ? normals[triangles[3*t]]: VEC3F_0;
-			struct Vec3f n1 = (normals) ? normals[triangles[3*t+1]]: VEC3F_0;
-			struct Vec3f n2 = (normals) ? normals[triangles[3*t+2]] : VEC3F_0;
-
-			struct Vertex v0 = vertex_create(p0, uv0, n0);
-			struct Vertex v1 = vertex_create(p1, uv1, n1);
-			struct Vertex v2 = vertex_create(p2, uv2, n2);
-			
-			struct Mat4 model = get_model_matrix(go.transform);
-			struct Mat4 view = get_view_matrix(*scene.cam);
-			struct Mat4 projection = get_projection_matrix(*scene.cam);
-
-			// ----- Vertex Shader -----
-			/* apply_vertex_shader(&v0); */
-			/* apply_vertex_shader(&v1); */
-			/* apply_vertex_shader(&v2); */
-
-			// ----- End Vertex Shader -----
-			
-			struct MyTriangle myTri = triangle_create(v0, v1, v2);
-
-			// Rasterize
-			// define a frag buffer?
-				
-			//struct Fragment frag = rasterize_triangle(myTri,&mat);
-			// Apply Fragment Shader
-			
-			//merge_fragment(frag, framebuffer, zbuffer);
+		for(int t = 0; t < data.num_triangles; t++) {
 
 			struct Triangle tri = {0};
-			struct Vec3f pos;
-			struct Vec2f uv;
-			struct Vec3f normal;	
 
-			// positions
-			tri.v0 = vertices[triangles[3*t]];
-			tri.v1 = vertices[triangles[3*t+1]];
-			tri.v2 = vertices[triangles[3*t+2]];
+			int tri_idx = 3*t;
+
+			int v0_idx = data.triangles[tri_idx];
+			int v1_idx = data.triangles[tri_idx + 1];
+			int v2_idx = data.triangles[tri_idx + 2];
+
+			// convert to homogenous coordinates
+			tri.v0 = vec3f_to_vec4f(data.vertices[v0_idx], 1.0f);
+			tri.v1 = vec3f_to_vec4f(data.vertices[v1_idx], 1.0f);
+			tri.v2 = vec3f_to_vec4f(data.vertices[v2_idx], 1.0f);
 	
-			// uvs
-			if(uvs != NULL) {
-				tri.uv0 = uvs[triangles[3*t]];
-				tri.uv1 = uvs[triangles[3*t+1]];
-				tri.uv2 = uvs[triangles[3*t+2]];
-			}; 
-	
-			// Model to World 
-			tri = apply_transformation(get_model_matrix(go.transform), tri);
+			if(data.uvs != NULL) { // optional 
+				tri.uv0 = data.uvs[v0_idx];
+				tri.uv1 = data.uvs[v1_idx];
+				tri.uv2 = data.uvs[v2_idx];
+			} 
+
+			if(data.normals != NULL) { //optional
+				tri.n0 = data.normals[v0_idx];
+				tri.n1 = data.normals[v1_idx];
+				tri.n2 = data.normals[v2_idx];
+			}
+
+			// --- Vertex Shader ---
+			struct Mat4 model, view, projection, view_port;
+
+			model = get_model_matrix(go.transform);
+			view = get_view_matrix(*scene.cam);
+			projection = get_projection_matrix(*scene.cam);
+			view_port = get_viewport_matrix(*scene.cam);
+
+			apply_transformation(model, &tri);
+			apply_transformation(view, &tri);
+			apply_transformation(projection, &tri);
+
+			// clipping
 			
-			// World to Camera
-			tri = apply_transformation(get_view_matrix(*scene.cam) ,tri);
+			apply_perspective_divide(&tri); // divide (x,y,z,w) by w
 
-			bool clipped = false;	
-			tri = apply_perspective_projection(
-					&clipped,
-					get_projection_matrix(*scene.cam),
-					tri
-			);
+			apply_transformation(view_port, &tri);
 
-			if(!clipped) return;
-
-			// at this point the tri contains 'fragments' - points in Clip Space
-			// i need to calculate the color of each vertex, then interpolate nicely across its surface
-			// what's the difference between color and lighting tho? 
-
-			// Clip to Viewport
-			tri = apply_transformation(get_viewport_matrix(*scene.cam),tri);
-			rasterize_triangle(tri, &mat, framebuffer, zbuffer);
+			// Fragment Shader
+			rasterize_triangle(tri, &data.mat, framebuffer, zbuffer);
 		}
 
 }
@@ -273,10 +225,7 @@ void render_scene(uint32_t* framebuffer, float* zbuffer, struct Scene scene) {
 	}
 	
 	for(int i = 0; i < scene.num_gameObjects; i++) {
-
 		struct GameObject go = *scene.gameObjects[i];
-		struct Camera cam = *scene.cam;
-
 		render_game_object(framebuffer, zbuffer, scene, go);
 	}
 }

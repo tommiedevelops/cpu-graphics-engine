@@ -7,15 +7,6 @@
 #include "constants.h"
 #include "bounds.h"
 
-struct Triangle create_triangle(
-	struct Vec3f v0,
-	struct Vec3f v1,
-	struct Vec3f v2 
-){
-	struct Triangle tri = {.v0=v0,.v1=v1,.v2=v2};
-	return tri;
-}
-
 struct Bounds get_bounds_from_tri(struct Triangle tri){
         /* return: [xmin, xmax, ymin, ymax, zmin, zmax] */
         struct Bounds bounds = BOUNDS_DEFAULT;
@@ -47,47 +38,6 @@ struct Bounds get_bounds_from_tri(struct Triangle tri){
 }
 
 
-struct Vec3f calculate_normal(struct Triangle tri){
-	
-	// u = v1 - v0
-	struct Vec3f u = vec3f_add(tri.v0, vec3f_scale(tri.v1, -1));
-	// v = v2 - v0
-	struct Vec3f v = vec3f_add(tri.v0, vec3f_scale(tri.v2, -1));
-	
-	struct Vec3f n = vec3f_normalize(vec3f_cross(u,v));
-	
-	return n;
-}
-
-void print_tri(struct Triangle tri){
-	printf("printing triangle:\n");
-	print_vec3f(tri.v0);
-	print_vec3f(tri.v1);
-	print_vec3f(tri.v2);
-	printf("end triangle\n");
-}
-void swap(struct Vec3f a, struct Vec3f b){
-	struct Vec3f temp = a;
-	a = b;
-	b = temp;
-}
-
-struct Triangle sort_vertices_by_y_asc(struct Triangle tri) {
-	// Mini 3-element bubble sort to order vertices by ascending y
-	struct Triangle res;
-
-	if (tri.v1.y < tri.v0.y) swap(tri.v0,tri.v1);
-	if (tri.v2.y < tri.v1.y) swap(tri.v2,tri.v1);
-	if (tri.v1.y < tri.v0.y) swap(tri.v0,tri.v1);
-
-	res.v0 = tri.v0;
-	res.v1 = tri.v1;
-	res.v2 = tri.v2;
-
-	return res;
-
-}
-
 bool inside_triangle(float alpha, float beta, float gamma){
 	return (alpha > 0) && (beta > 0) && (gamma > 0) && (alpha <= 1) && (beta <= 1) && (gamma <= 1);
 }
@@ -110,65 +60,29 @@ bool point_inside(struct Vec4f point){
                (point.z >= 0) && (point.z <= w);	       
 }
 
-struct Triangle apply_perspective_projection(bool* clipped, struct Mat4 m, struct Triangle tri) {
-	struct Triangle res = {0};
-
-	struct Vec4f v4_0 = {.x = tri.v0.x, .y = tri.v0.y, .z = tri.v0.z, .w = 1.0f};
-	struct Vec4f v4_1 = {.x = tri.v1.x, .y = tri.v1.y, .z = tri.v1.z, .w = 1.0f};
-	struct Vec4f v4_2 = {.x = tri.v2.x, .y = tri.v2.y, .z = tri.v2.z, .w = 1.0f};
+void apply_perspective_divide(struct Triangle* tri) {
 	
-	v4_0 = mat4_mul_vec4(m,v4_0);
-	v4_1 = mat4_mul_vec4(m,v4_1);
-	v4_2 = mat4_mul_vec4(m,v4_2);
+	if(NULL == tri){
+		//LOG_ERROR("tri is null")
+		return;
+	}
 
-	*clipped = !point_inside(v4_0) || !point_inside(v4_1) || !point_inside(v4_2);
-
-	v4_0 = perspective_divide(v4_0);
-	v4_1 = perspective_divide(v4_1);
-	v4_2 = perspective_divide(v4_2);
-
-	struct Vec3f v3_0 = {.x = v4_0.x, .y = v4_0.y, .z = v4_0.z};
-	struct Vec3f v3_1 = {.x = v4_1.x, .y = v4_1.y, .z = v4_1.z};
-	struct Vec3f v3_2 = {.x = v4_2.x, .y = v4_2.y, .z = v4_2.z};
-
-	res.v0 = v3_0;
-	res.v1 = v3_1;
-	res.v2 = v3_2;
-
-	// fix? 
-	res.uv0 = tri.uv0;
-	res.uv1 = tri.uv1;
-	res.uv2 = tri.uv2;
-
-	return res;
+	tri->v0 = perspective_divide(tri->v0);
+	tri->v1 = perspective_divide(tri->v1);
+	tri->v2 = perspective_divide(tri->v2);
 }
 
 
-struct Triangle apply_transformation(struct Mat4 tr, struct Triangle tri) {
-	struct Triangle res;
+void apply_transformation(struct Mat4 tr, struct Triangle* tri) {
+	if(NULL == tri){
+		//LOG_ERROR("tri is null");
+		return;
+	}
 
-	struct Vec4f v4_0 = {.x = tri.v0.x, .y = tri.v0.y, .z = tri.v0.z, .w = 1.0f};
-	struct Vec4f v4_1 = {.x = tri.v1.x, .y = tri.v1.y, .z = tri.v1.z, .w = 1.0f};
-	struct Vec4f v4_2 = {.x = tri.v2.x, .y = tri.v2.y, .z = tri.v2.z, .w = 1.0f};
-
-	v4_0 = mat4_mul_vec4(tr, v4_0);
-	v4_1 = mat4_mul_vec4(tr, v4_1);
-	v4_2 = mat4_mul_vec4(tr, v4_2);
-
-	struct Vec3f v3_0 = {.x = v4_0.x, .y = v4_0.y, .z = v4_0.z};
-	struct Vec3f v3_1 = {.x = v4_1.x, .y = v4_1.y, .z = v4_1.z};
-	struct Vec3f v3_2 = {.x = v4_2.x, .y = v4_2.y, .z = v4_2.z};
-
-	res.v0 = v3_0;
-	res.v1 = v3_1;
-	res.v2 = v3_2;
-	res.uv0 = tri.uv0;
-	res.uv1 = tri.uv1;
-	res.uv2 = tri.uv2;
-
-	return res;
+	tri->v0 = mat4_mul_vec4(tr, tri->v0);
+	tri->v1 = mat4_mul_vec4(tr, tri->v1);
+	tri->v2 = mat4_mul_vec4(tr, tri->v2);
 }	
-
 
 struct Vec2f interpolate_uv(struct Triangle tri, float alpha, float beta, float gamma){
 	float u0 = tri.uv0.x;
@@ -214,9 +128,9 @@ static inline uint32_t vec4f_to_rgba32(struct Vec4f c) {
 
 void rasterize_triangle(struct Triangle tri, struct Material* mat, uint32_t* framebuffer, float* zbuffer) {
 	
-	struct Vec3f A = tri.v0;
-	struct Vec3f B = tri.v1;
-	struct Vec3f C = tri.v2;
+	struct Vec4f A = tri.v0;
+	struct Vec4f B = tri.v1;
+	struct Vec4f C = tri.v2;
 
 	struct Bounds bounds = get_bounds_from_tri(tri);
 
