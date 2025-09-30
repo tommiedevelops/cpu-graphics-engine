@@ -11,6 +11,7 @@
 #include "scene_manager.h"
 #include "constants.h"
 #include "vector.h"
+#include "transformation.h"
 
 void place_pixel(int x, int y, uint32_t value, uint32_t* framebuffer); 
 int render_lines(uint32_t* framebuffer, int* coords, int num_coords);

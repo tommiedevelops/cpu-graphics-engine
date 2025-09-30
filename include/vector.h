@@ -57,11 +57,12 @@ bool vectors_are_equal(struct Vec3f a, struct Vec3f b);
 #define VEC4F_1 ((struct Vec4f){1.0f, 1.0f, 1.0f, 1.0f})
 
 struct Vec4f {
-	float x;
-	float y;
-	float z;
-	float w;
+	float x, y, z, w;
 };
+
+static inline struct Vec4f vec3f_to_vec4f(struct Vec3f v, float w) {
+    return (struct Vec4f){ v.x, v.y, v.z, w };
+}
 
 struct Vec4f vec4f_create(float x, float y, float z, float w);
 

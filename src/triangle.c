@@ -60,30 +60,6 @@ bool point_inside(struct Vec4f point){
                (point.z >= 0) && (point.z <= w);	       
 }
 
-void apply_perspective_divide(struct Triangle* tri) {
-	
-	if(NULL == tri){
-		//LOG_ERROR("tri is null")
-		return;
-	}
-
-	tri->v0 = perspective_divide(tri->v0);
-	tri->v1 = perspective_divide(tri->v1);
-	tri->v2 = perspective_divide(tri->v2);
-}
-
-
-void apply_transformation(struct Mat4 tr, struct Triangle* tri) {
-	if(NULL == tri){
-		//LOG_ERROR("tri is null");
-		return;
-	}
-
-	tri->v0 = mat4_mul_vec4(tr, tri->v0);
-	tri->v1 = mat4_mul_vec4(tr, tri->v1);
-	tri->v2 = mat4_mul_vec4(tr, tri->v2);
-}	
-
 struct Vec2f interpolate_uv(struct Triangle tri, float alpha, float beta, float gamma){
 	float u0 = tri.uv0.x;
 	float u1 = tri.uv1.x;
@@ -126,40 +102,42 @@ static inline uint32_t vec4f_to_rgba32(struct Vec4f c) {
            ((uint32_t)A);
 }
 
+static inline float compute_alpha(int x, int y, struct Triangle tri) {
+
+	// calculate barycentric coords
+	float alpha = (tri.v0.x*(tri.v2.y-tri.v0.y)+(y-tri.v0.y)*(tri.v2.x-tri.v0.x)-x*(tri.v2.y-tri.v0.y))
+		/((tri.v1.y-tri.v0.y)*(tri.v2.x-tri.v0.x)-(tri.v1.x-tri.v0.x)*(tri.v2.y-tri.v0.y));
+
+	return alpha;
+}
+
+static inline float compute_beta(int x, int y, struct Triangle tri, float alpha) {
+	float beta = ((y-tri.v0.y) - alpha*(tri.v1.y-tri.v0.y))/(tri.v2.y-tri.v0.y);
+	return beta;
+}
+
 void rasterize_triangle(struct Triangle tri, struct Material* mat, uint32_t* framebuffer, float* zbuffer) {
-	
-	struct Vec4f A = tri.v0;
-	struct Vec4f B = tri.v1;
-	struct Vec4f C = tri.v2;
 
 	struct Bounds bounds = get_bounds_from_tri(tri);
 
-	int xmin = (int)bounds.xmin;
-	int xmax = (int)bounds.xmax;
-	int ymin = (int)bounds.ymin;
-	int ymax = (int)bounds.ymax;
-
-	for(int y = ymin; y <= ymax; y++){
-		for(int x = xmin; x <= xmax; x++) {
-			// check if within bounds
+	for(int y = (int)bounds.ymin; y <= (int)bounds.ymax; y++){
+		for(int x = (int)bounds.xmin; x <= (int)bounds.xmax; x++) {
+			
 			if( x >= WIDTH || x <= 0) return;
 			if( y >= HEIGHT || y <= 0) return;
 
-			// calculate barycentric coords
-			float alpha = (A.x*(C.y-A.y)+(y-A.y)*(C.x-A.x)-x*(C.y-A.y))
-					/((B.y-A.y)*(C.x-A.x)-(B.x-A.x)*(C.y-A.y));
-
-			float beta = ((y-A.y) - alpha*(B.y-A.y))/(C.y-A.y);
+			float alpha = compute_alpha(x,y,tri);
+			float beta = compute_beta(x,y,tri, alpha);
 			float gamma = 1 - alpha - beta;
 
 			if( inside_triangle(alpha, beta, gamma) ) {
-
+				// Fragment 
 				float depth = interpolate_depth(tri, alpha, beta, gamma);	
 				struct Vec2f uv = interpolate_uv(tri, alpha, beta, gamma);
 
 				if(depth >= zbuffer[x + y*WIDTH]){
 					struct Vec4f albedo = material_get_albedo(mat,uv);
-					uint32_t color = vec4f_to_rgba32(material_get_albedo(mat,uv));
+					uint32_t color = vec4f_to_rgba32(albedo);
 
 					place_pixel(x,y,color,framebuffer);			
 					zbuffer[x + y*WIDTH] = depth;

@@ -33,14 +33,10 @@ struct Triangle {
 	bool is_clipped;
 };
 
-void print_tri(struct Triangle tri);
-
 struct Bounds get_bounds_from_tri(struct Triangle tri);
 
 struct Vec3f calculate_normal(struct Triangle tri);
-void apply_transformation(struct Mat4 tr, struct Triangle* tri);
 struct Triangle tri_perspective_divide(struct Triangle tri); 
-void apply_perspective_divide(struct Triangle* tri);
 
 // array size 3 of struct Vec3f ptrs
 void rasterize_triangle(struct Triangle tri, struct Material* mat, uint32_t* framebuffer, float* zbuffer);
