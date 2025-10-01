@@ -20,8 +20,8 @@ struct Camera* camera_create(struct Transform tr){
 	struct Camera* cam = malloc(sizeof(struct Camera));
 	cam->transform = tr;
 	cam->fov = PI*60.0f/180.0f;
-	cam->near = 1.0f;
-	cam->far = 20.0f;
+	cam->near = 5.0f;
+	cam->far = 10.0f;
 	return cam;
 }
 
@@ -78,7 +78,7 @@ struct Scene create_scene(){
 	struct Material* ground_material = material_create(VEC4F_1, tex); 	
 
 	// creating game_objects
-	struct Vec3f      ground_scale = {.x = 5.0f, .y = 1.0f, .z = 5.0f};
+	struct Vec3f      ground_scale = {.x = 1.0f, .y = 1.0f, .z = 1.0f};
 	struct Transform  ground_tr    = transform_create(VEC3F_0, QUAT_IDENTITY, ground_scale);
 	struct GameObject* ground_go    = game_object_create(ground_tr, ground_mesh, ground_material);
 		
@@ -105,10 +105,10 @@ struct Scene create_scene(){
 	gameObjects[3] = ground_go;
 
 	// creating & configuring camera
-	struct Transform camera_transform = transform_create(vec3f_create(0.0f, 0.5f, 3.0f), QUAT_IDENTITY, VEC3F_1);
+	struct Transform camera_transform = transform_create(vec3f_create(0.0f, 0.5f, 5.0f), QUAT_IDENTITY, VEC3F_1);
 	struct Camera* cam = camera_create(camera_transform);
-	camera_set_fov_degrees(cam, 60.0f); //remember to convert to radians in function 
-	camera_set_near(cam, 5.0f);
+	camera_set_fov_degrees(cam, 60.0f); 
+	camera_set_near(cam, 1.0f);
 	camera_set_far(cam, 20.0f);
 
 	struct Scene scene = {

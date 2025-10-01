@@ -36,7 +36,7 @@ void vec2f_normalize(struct Vec2f* v);
 void print_vec2f(struct Vec2f v);
 struct Vec2f vec2f_create(float x, float y);
 
-float dot_product(struct Vec3f a, struct Vec3f b);
+float vec3f_dot(struct Vec3f a, struct Vec3f b);
 struct Vec3f vec3f_cross(struct Vec3f a, struct Vec3f b);
 void print_vec3f(struct Vec3f v);
 struct Vec3f vec3f_normalize(struct Vec3f v);

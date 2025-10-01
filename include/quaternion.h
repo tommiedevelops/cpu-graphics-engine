@@ -12,6 +12,8 @@ struct Quaternion {
 	float q2; // j
 	float q3; // k
 };
+
+struct Quaternion quat_slerp(struct Quaternion q, struct Quaternion p, float t);
 struct Vec3f quat_get_forward(struct Quaternion q);
 struct Vec3f quat_get_right(struct Quaternion q);
 void print_quat(struct Quaternion q);

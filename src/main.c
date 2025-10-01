@@ -35,6 +35,7 @@ int main(void) {
         /* Render Loop */
         bool running = true;
         SDL_Event event;
+	
         while(running) {
 
 		// Handle Time
@@ -74,7 +75,7 @@ int main(void) {
 
 		// First Person Camera	
 		float cam_speed = 4.0f;	
-		float cam_ang_vel = 1.0f;	
+		float cam_ang_vel = 5.0f;	
 
 		struct Vec3f forward = quat_get_forward(scene.cam->transform.rotation);
 		struct Vec3f right = quat_get_right(scene.cam->transform.rotation);	
@@ -108,23 +109,26 @@ int main(void) {
 				 );
 			
 		// Game Objects
-		float angular_velocity = 1.0f;
-		float go_angle = angular_velocity * time.delta_time;
-
-		struct Vec3f rot_axis = {.x = 1.0f, .y = 1.0f, .z = 1.0f};
+		float angular_velocity = 0.5f;
+		
 		struct Vec3f rot_axis1 = {.x = -1.0f, .y = 1.0f, .z = 1.0f};
 		struct Vec3f rot_axis2 = {.x = 1.0f, .y = 1.0f, .z = -1.0f};
 		
-		struct Quaternion rot = quat_normalize(quat_angle_axis(go_angle, rot_axis));
-		struct Quaternion rot1 = quat_normalize(quat_angle_axis(2*go_angle, rot_axis1));
-		struct Quaternion rot2 = quat_normalize(quat_angle_axis(3*go_angle, rot_axis2));
+		struct Quaternion rot1 = quat_angle_axis(0.0, rot_axis1);
+		struct Quaternion rot2 = quat_angle_axis(0.0, rot_axis2);
+
 		struct GameObject* go = scene.gameObjects[0];
 		struct GameObject* go1 = scene.gameObjects[1];
 		struct GameObject* go2 = scene.gameObjects[2];
-	
+
+		struct Vec3f rot_axis = {.x = 0.0f, .y = 1.0f, .z = 0.0f};
+
+		float angle = angular_velocity * time.delta_time;
+		struct Quaternion rot = quat_angle_axis(angular_velocity * time.delta_time, rot_axis);
+
 		go->transform.rotation = quat_normalize(quat_mul(go->transform.rotation, rot));
-		go1->transform.rotation = quat_normalize(quat_mul(go1->transform.rotation, rot1));
-		go2->transform.rotation = quat_normalize(quat_mul(go2->transform.rotation, rot2));
+		go1->transform.rotation = quat_mul(go1->transform.rotation, rot1);
+		go2->transform.rotation = quat_mul(go2->transform.rotation, rot2);
 
 		// ----- Rendering -----
 		render_scene(framebuffer, zbuffer, scene);

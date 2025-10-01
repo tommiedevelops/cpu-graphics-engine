@@ -95,7 +95,7 @@ struct Vec3f vec3f_cross(struct Vec3f a, struct Vec3f b) {
 	return result;
 }
 
-float dot_product(struct Vec3f a, struct Vec3f b){
+float vec3f_dot(struct Vec3f a, struct Vec3f b){
 	return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
@@ -112,11 +112,15 @@ void translate_vector(struct Vec3f* vector, float dx, float dy, float dz){
 	vector->z += dz;
 }
 
+bool float_equal(float a, float b, float epsilon) {
+    return fabsf(a - b) < epsilon;
+}
+
 bool vectors_are_equal(struct Vec3f a, struct Vec3f b) {
 	printf("checking {%f,%f,%f} == {%f,%f,%f}\n", a.x,a.y,a.z,b.x,b.y,b.z);
-	if(a.x != b.x){ return false; }
-	if(a.y != b.y){ return false; }
-	if(a.z != b.z){ return false; }
+	if(!float_equal(a.x,b.x,0.000001)) {return false;}
+	if(!float_equal(a.y,b.y,0.000001)) {return false;}
+	if(!float_equal(a.z,b.z,0.000001)) {return false;}
 	return true;
 }
 

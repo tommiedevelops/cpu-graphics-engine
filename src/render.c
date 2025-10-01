@@ -40,19 +40,6 @@ struct RenderData prepare_render_data(struct GameObject go) {
 	return r;
 }
 
-static inline bool vert_clipped(struct Vec4f v){
-	if( (v.x <= -v.w) || (v.x >= v.w) ) return false;
-	if( (v.y <= -v.w) || (v.y >= v.w) ) return false;
-	if( (v.z <= 0.0f) || (v.z >= v.w) ) return false;
-	return true;
-}
-static inline bool clipped(struct Triangle* tri){
-	if( vert_clipped(tri->v0) ) return false;
-	if( vert_clipped(tri->v1) ) return false;
-	if( vert_clipped(tri->v2) ) return false;
-	return true;	
-}
-
 void render_game_object(uint32_t* framebuffer, float* zbuffer, struct Scene scene, struct GameObject go){
 		
 		struct RenderData data = prepare_render_data(go);
@@ -96,9 +83,9 @@ void render_game_object(uint32_t* framebuffer, float* zbuffer, struct Scene scen
 			apply_transformation(model, &tri);
 			apply_transformation(view, &tri);
 			apply_transformation(projection, &tri);
+	
+			// Clipping Algorithm	
 
-			// clipping
-			
 			apply_perspective_divide(&tri); // divide (x,y,z,w) by w
 			apply_transformation(view_port, &tri);
 

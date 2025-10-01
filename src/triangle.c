@@ -116,33 +116,39 @@ static inline float compute_beta(int x, int y, struct Triangle tri, float alpha)
 	return beta;
 }
 
+void draw_pixel(int x, int y, uint32_t* framebuffer, float* zbuffer, float depth, uint32_t color){
+
+	if(depth >= zbuffer[x + y*WIDTH]){
+		framebuffer[x + y*WIDTH] = color;			
+		zbuffer[x + y*WIDTH] = depth;
+	}
+}
+
 void rasterize_triangle(struct Triangle tri, struct Material* mat, uint32_t* framebuffer, float* zbuffer) {
 
 	struct Bounds bounds = get_bounds_from_tri(tri);
-
+	
 	for(int y = (int)bounds.ymin; y <= (int)bounds.ymax; y++){
 		for(int x = (int)bounds.xmin; x <= (int)bounds.xmax; x++) {
-			
-			if( x >= WIDTH || x <= 0) return;
-			if( y >= HEIGHT || y <= 0) return;
+				
+			if( x <= 0 || x >= WIDTH) return;
+			if( y <0 || y >= HEIGHT) return; 		
 
 			float alpha = compute_alpha(x,y,tri);
 			float beta = compute_beta(x,y,tri, alpha);
 			float gamma = 1 - alpha - beta;
 
 			if( inside_triangle(alpha, beta, gamma) ) {
-				// Fragment 
+				
+				// Fragment Shader
 				float depth = interpolate_depth(tri, alpha, beta, gamma);	
 				struct Vec2f uv = interpolate_uv(tri, alpha, beta, gamma);
 
-				if(depth >= zbuffer[x + y*WIDTH]){
-					struct Vec4f albedo = material_get_albedo(mat,uv);
-					uint32_t color = vec4f_to_rgba32(albedo);
+				struct Vec4f albedo = material_get_albedo(mat,uv);
+				uint32_t color = vec4f_to_rgba32(albedo);
 
-					place_pixel(x,y,color,framebuffer);			
-					zbuffer[x + y*WIDTH] = depth;
-				}
-			}	
+				draw_pixel(x,y,framebuffer,zbuffer,depth,color);
+			} 
 
 		}
 

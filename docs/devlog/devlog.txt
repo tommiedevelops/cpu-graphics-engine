@@ -105,3 +105,7 @@ it was around 5fps.
 * going to stick with defining the vertex primitives implicitly inside the triangle struct
 * will upload code to github though just to have it as reference
 * in the rasterize() function, I avoid a stack allocation by casting a Vec3 to a Vec4 meaning I copy the memory information of a Vec3 into a zero'd out Vec4 to avoid having to write a conversion function and hence stack allocation
+
+01/10/25
+* There is a bug with clipping. I'm trying to write a clipping algorithm to correctly clip the triangles but there must be a bug in my projection matrix functions because far plane clipping in particular is not working as expected. The energy that will go into debugging outweights the importance of the issue so I will leave it broken for now and try to work around it.
+* quat_mul is not passing basic test cases so I rewrote it but that version breaks the code that worked before. so i'm leaving it as before. the corrected version is quat_mul_m
