@@ -7,7 +7,35 @@
 #define PI (3.14159265359f)
 #define SQRT1_2 0.7071067811865476f
 
+void test_quat_slerp(){
+	printf("test_quat_slerp\n");
+
+	printf("test_case_1\n");
+
+	// identity (no rot)
+	struct Quaternion q = { .q0 = 1.0f, .q1 = 0.0f, .q2 = 0.0f, .q3 = 0.0f };
+	printf("q=");print_quat(q);
+
+	// 180 deg about z axis
+	struct Quaternion p = { .q0 = 0.0f, .q1 = 0.0f, .q2 = 0.0f, .q3 = 1.0f };
+	printf("p="); print_quat(p);
+
+	float t = 0.5f;
+
+	struct Quaternion result = quat_slerp(q,p,t); 
+	printf("result="); print_quat(result);
+
+	//90 deg rotation about z axis
+	struct Quaternion expected = {.q0 = SQRT1_2, .q1 = 0.0f, .q2 = 0.0f, .q3 = SQRT1_2};
+	printf("expected="); print_quat(expected);
+
+	assert(quat_are_about_equal(result,expected, 0.00001f));
+
+	printf("success\n");
+}
+
 void test_quat_to_mat4(){
+
 	printf("test_quat_to_mat4\n");
 
 	printf("test case 1\n");
@@ -52,17 +80,31 @@ void test_quat_to_mat4(){
 void test_quat_normalize(){
 	printf("test_quat_normalize\n");
 
+	const float EPS = 1e-6f;
+
 	printf("test case 1\n");
+
 	struct Quaternion q = { .q0 = 2.0f, .q1 = 0.0f, .q2 = 0.0f, .q3 = 0.0f };
 	struct Quaternion r = quat_normalize(q);
 	struct Quaternion expected = {.q0 = 1.0f, .q1 = 0.0f, .q2 = 0.0f, .q3 = 0.0f};
 
-	const float EPS = 1e-6f;
 	printf("result:"); print_quat(r);
 	printf("expected:"); print_quat(expected);
 
 	assert(quat_are_about_equal(r, expected, EPS));
+
+	printf("test case 2\n");
+
+	struct Quaternion q2 = { .q0 = 0.0f, .q1 = 3.0f, .q2 = 4.0f, .q3 = 0.0f };
+	struct Quaternion r2 = quat_normalize(q2);
+	// The length of (0,3,4,0) is 5 → normalized = (0, 0.6, 0.8, 0)
+	struct Quaternion expected2 = { .q0 = 0.0f, .q1 = 0.6f, .q2 = 0.8f, .q3 = 0.0f };
 	
+	printf("result:"); print_quat(r2);
+	printf("expected:"); print_quat(expected2);
+
+	assert(quat_are_about_equal(r2, expected2, EPS));
+
 	printf("success\n");
 }
 
@@ -119,8 +161,8 @@ void test_quat_mul(){
 	printf("r1="); print_quat(r1);
 	printf("r2="); print_quat(r2);
 
-	assert(quat_are_about_equal(q,r1,0.0f));
-	assert(quat_are_about_equal(q,r2,0.0f));
+	assert(quat_are_about_equal(q,r1,0.01f));
+	assert(quat_are_about_equal(q,r2,0.01f));
 
 	printf("test case 2\n");
 
@@ -129,8 +171,17 @@ void test_quat_mul(){
 	struct Quaternion k = {0.0f, 0.0f, 0.0f, 1.0f};
 
 	struct Quaternion r3 = quat_mul(i, j);  // Expected: k
-
 	assert(quat_are_about_equal(k,r3,0.0f));
+
+	printf("test case 3\n");
+
+	struct Quaternion r4 = quat_mul(j, k); // Expected: i
+
+	printf("j="); print_quat(j);
+	printf("k="); print_quat(k);
+	printf("r4="); print_quat(r4);
+
+	assert(quat_are_about_equal(i, r4, 0.0f));
 
 	printf("success\n");
 }

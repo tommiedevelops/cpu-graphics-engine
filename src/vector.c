@@ -178,6 +178,14 @@ struct Vec4f vec4f_translate(struct Vec4f vector, float dx, float dy, float dz, 
 	vector.w += dw;
 }
 
+bool vec3f_are_equal(struct Vec3f a, struct Vec3f b) {
+	printf("checking {%f,%f,%f} == {%f,%f,%f}\n", a.x,a.y,a.z,b.x,b.y,b.z);
+	if(a.x != b.x){ return false; }
+	if(a.y != b.y){ return false; }
+	if(a.z != b.z){ return false; }
+	return true;
+}
+
 bool vec4f_are_equal(struct Vec4f a, struct Vec4f b) {
 	printf("checking {%f,%f,%f} == {%f,%f,%f}\n", a.x,a.y,a.z,b.x,b.y,b.z);
 	if(a.x != b.x){ return false; }

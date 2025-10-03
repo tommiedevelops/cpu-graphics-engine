@@ -130,9 +130,6 @@ void rasterize_triangle(struct Triangle tri, struct Material* mat, uint32_t* fra
 	
 	for(int y = (int)bounds.ymin; y <= (int)bounds.ymax; y++){
 		for(int x = (int)bounds.xmin; x <= (int)bounds.xmax; x++) {
-				
-			if( x <= 0 || x >= WIDTH) return;
-			if( y <0 || y >= HEIGHT) return; 		
 
 			float alpha = compute_alpha(x,y,tri);
 			float beta = compute_beta(x,y,tri, alpha);

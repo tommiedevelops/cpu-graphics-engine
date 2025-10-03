@@ -1,36 +1,38 @@
 \contentsline {section}{\numberline {1}Introduction}{3}{}%
 \contentsline {subsection}{\numberline {1.1}Motivation}{3}{}%
-\contentsline {subsection}{\numberline {1.2}What is a \textit {Software Rasterizer}?}{3}{}%
-\contentsline {subsection}{\numberline {1.3}Why \textit {C}?}{3}{}%
+\contentsline {subsubsection}{\numberline {1.1.1}What is a \textit {Software Rasterizer}?}{3}{}%
+\contentsline {subsubsection}{\numberline {1.1.2}Why \textit {C}?}{3}{}%
+\contentsline {subsubsection}{\numberline {1.1.3}What's the difference between a Software Rasterizer and a \textit {Real} Rasterizer?}{3}{}%
+\contentsline {subsubsection}{\numberline {1.1.4}What does the project depend on?}{3}{}%
 \contentsline {section}{\numberline {2}Background}{3}{}%
-\contentsline {subsection}{\numberline {2.1}Algorithms}{3}{}%
-\contentsline {subsubsection}{\numberline {2.1.1}Rasterisation}{3}{}%
-\contentsline {subsubsection}{\numberline {2.1.2}Clipping}{3}{}%
-\contentsline {subsubsection}{\numberline {2.1.3}Bresenham Line Drawing}{3}{}%
-\contentsline {subsubsection}{\numberline {2.1.4}Anti-Aliasing}{3}{}%
-\contentsline {subsection}{\numberline {2.2}Math Concepts}{3}{}%
-\contentsline {subsubsection}{\numberline {2.2.1}Vectors}{3}{}%
-\contentsline {subsubsection}{\numberline {2.2.2}Matrices}{3}{}%
-\contentsline {subsubsection}{\numberline {2.2.3}Transformations}{3}{}%
-\contentsline {section}{\numberline {3}System Architecture}{3}{}%
-\contentsline {subsection}{\numberline {3.1}Overview}{3}{}%
-\contentsline {subsubsection}{\numberline {3.1.1}System Diagram}{3}{}%
-\contentsline {subsubsection}{\numberline {3.1.2}Project Structure}{3}{}%
-\contentsline {subsubsection}{\numberline {3.1.3}Conventions}{3}{}%
-\contentsline {subsection}{\numberline {3.2}Data Design}{3}{}%
-\contentsline {subsubsection}{\numberline {3.2.1}Vectors \& Matrices}{3}{}%
-\contentsline {subsubsection}{\numberline {3.2.2}Primitives: Triangles and Vertices}{3}{}%
-\contentsline {subsubsection}{\numberline {3.2.3}Textures and Materials}{3}{}%
-\contentsline {subsubsection}{\numberline {3.2.4}Framebuffer and Zbuffer}{3}{}%
-\contentsline {subsubsection}{\numberline {3.2.5}Scene, GameObject, Camera, LightObject}{3}{}%
-\contentsline {subsection}{\numberline {3.3}Software Design}{3}{}%
-\contentsline {subsubsection}{\numberline {3.3.1}Procedural Programming vs. Object Oriented Programming}{3}{}%
-\contentsline {subsubsection}{\numberline {3.3.2}Graphics Pipeline}{3}{}%
-\contentsline {subsubsection}{\numberline {3.3.3}Scene Management}{3}{}%
-\contentsline {subsubsection}{\numberline {3.3.4}Rendering}{3}{}%
-\contentsline {subsubsection}{\numberline {3.3.5}Shading}{3}{}%
-\contentsline {section}{\numberline {4}Conclusion \& Future Work}{3}{}%
-\contentsline {subsection}{\numberline {4.1}What I learnt}{3}{}%
-\contentsline {subsection}{\numberline {4.2}Limitations}{3}{}%
-\contentsline {subsection}{\numberline {4.3}A future implementation in C++}{3}{}%
-\contentsline {section}{\numberline {5}References}{3}{}%
+\contentsline {subsection}{\numberline {2.1}Math Concepts}{3}{}%
+\contentsline {subsubsection}{\numberline {2.1.1}Vectors}{3}{}%
+\contentsline {subsubsection}{\numberline {2.1.2}Matrices}{4}{}%
+\contentsline {subsubsection}{\numberline {2.1.3}Quaternions}{4}{}%
+\contentsline {subsubsection}{\numberline {2.1.4}Transformations}{4}{}%
+\contentsline {subsubsection}{\numberline {2.1.5}Coordinate Systems}{4}{}%
+\contentsline {subsection}{\numberline {2.2}Algorithms}{4}{}%
+\contentsline {subsubsection}{\numberline {2.2.1}Rasterization}{4}{}%
+\contentsline {subsubsection}{\numberline {2.2.2}Clipping}{4}{}%
+\contentsline {subsubsection}{\numberline {2.2.3}Anti-Aliasing}{4}{}%
+\contentsline {section}{\numberline {3}System Architecture}{4}{}%
+\contentsline {subsection}{\numberline {3.1}Overview}{4}{}%
+\contentsline {subsubsection}{\numberline {3.1.1}System Diagram}{4}{}%
+\contentsline {subsubsection}{\numberline {3.1.2}Project Structure}{4}{}%
+\contentsline {subsubsection}{\numberline {3.1.3}Conventions}{4}{}%
+\contentsline {subsection}{\numberline {3.2}Data Design}{4}{}%
+\contentsline {subsubsection}{\numberline {3.2.1}Primitives: Triangles and Vertices}{4}{}%
+\contentsline {subsubsection}{\numberline {3.2.2}Textures and Materials}{4}{}%
+\contentsline {subsubsection}{\numberline {3.2.3}Framebuffer and Zbuffer}{4}{}%
+\contentsline {subsubsection}{\numberline {3.2.4}Scene, GameObject, Camera, LightSource}{4}{}%
+\contentsline {subsection}{\numberline {3.3}Software Design}{4}{}%
+\contentsline {subsubsection}{\numberline {3.3.1}Procedural Programming vs. Object Oriented Programming}{4}{}%
+\contentsline {subsubsection}{\numberline {3.3.2}Graphics Pipeline}{5}{}%
+\contentsline {subsubsection}{\numberline {3.3.3}Scene Management}{5}{}%
+\contentsline {subsubsection}{\numberline {3.3.4}Rendering}{5}{}%
+\contentsline {subsubsection}{\numberline {3.3.5}Shading}{5}{}%
+\contentsline {section}{\numberline {4}Conclusion \& Future Work}{5}{}%
+\contentsline {subsection}{\numberline {4.1}What I learnt}{5}{}%
+\contentsline {subsection}{\numberline {4.2}Limitations}{5}{}%
+\contentsline {subsection}{\numberline {4.3}A future implementation in C++}{5}{}%
+\contentsline {section}{\numberline {5}References}{5}{}%

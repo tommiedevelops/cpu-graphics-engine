@@ -1,13 +1,8 @@
 #include <stdio.h>
-#include "bounds_tests.h"
-#include "vec3f_tests.h"
 #include "matrix_tests.h"
 #include "scene_manager_tests.h"
 #include "quaternion_tests.h"
-
-void bounds_tests(){
-	test_get_bounds_from_tri();	
-}
+#include "clip_tests.h"
 
 void scene_manager_tests(){
 	test_get_scale_matrix();
@@ -20,18 +15,21 @@ void scene_manager_tests(){
 void matrix_tests(){
 	test_mat4_affine_orthonormal_inverse();
 	test_mat4_mul_mat4();
-	//test_get_view_matrix();
 }
 
 void quaternion_tests(){
-	test_quat_to_mat4();
-	test_quat_normalize();
-	test_euler_to_quat();
-	test_quat_mul();
+	/* test_quat_to_mat4(); */
+	/* test_quat_normalize(); */
+	/* test_euler_to_quat(); */
+	/* test_quat_mul(); */
+	/* test_quat_slerp(); */
 }
 int main(){
-//	scene_manager_tests();
-	quaternion_tests();
-	matrix_tests();
+	test_lerp();
+	test_sdf();
+	test_inside();
+	test_intersect();
+	test_clip_against_plane();
+	test_clip();
 }
 

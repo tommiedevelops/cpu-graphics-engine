@@ -1,6 +1,11 @@
 \documentclass{article}
 
 \usepackage{graphicx}
+\usepackage{amsmath,amssymb,bm}
+
+% Bold vectors for Latin and Greek:
+\newcommand{\vect}[1]{\bm{#1}}    % \vect{x}, \vect{\alpha}, \vect{\nabla}
+\newcommand{\uvect}[1]{\hat{\bm{#1}}} % unit vectors: \uvect{n}
 
 \author{Thomas Dizon}
 \title{Implementing a Software Rasterizer in C}
@@ -38,7 +43,7 @@
 * I first touched C during my Systems Programming course at University. It was extrememly difficult for me at the time but very benefiical for my programming skills. I felt that I haven't extracted all that I can from the language yet.
 * Also, I wanted to get as low level as possible for this project to ensure I had minimal dependencies. To truly understand the Graphics Pipeline, I wanted to build it truly (well, mostly) from scratch
 
-\subsubsection{What's the difference between a Software Rasterizer and a \textit{Real} Rasterizer?
+\subsubsection{What's the difference between a Software Rasterizer and a \textit{Real} Rasterizer?}
 * bleeh blah 
 \subsubsection{What does the project depend on?}
 * Right now, it depends on the C standard library, std\_image.h (reference) for dealing with .png files and SDL2 (reference) for handling all the OS level stuff like inputs and writing to the screen. Though you coud easily replace SDL with any other kind of 2D array.
@@ -47,10 +52,21 @@
 
 \subsection{Math Concepts}
 \subsubsection{Vectors}
+* In this document, we will use typical Vector operations and notation including but not limited to the following
+* A vector is $\textbf{v}$ is a collection of real numbers denoted by 
+* The \textit{dot product} is defined by
+* The \textit{cross product} is defined by
+* A unit vector is denoted by the hat
+* A plane --
+
 \subsubsection{Matrices}
+
 \subsubsection{Quaternions}
+* A quaternion is a type of number system blah blah
 \subsubsection{Transformations}
+
 \subsubsection{Coordinate Systems}
+* 
 
 \subsection{Algorithms}
 \subsubsection{Rasterization}

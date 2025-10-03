@@ -1,11 +1,36 @@
 #include <stdio.h>
 #include <assert.h>
+#include "transformation.h"
 #include "scene_manager.h"
 #include "matrix.h"
 #include "quaternion.h"
 
-#define PI (3.14159265358979323846)
+void test_clipping(){
+	printf("test_clipping\n");
+	
 
+	printf("succes\n");
+}
+
+void test_mat4_affine_orthonormal_inverse(){
+	printf("test_mat4_affine_orthonormal_inverse\n");
+
+	struct Vec4f v = {.x = 1.0f, .y = 2.0f, .z = 3.0f, .w = 4.0f}; 
+
+	// represents a translation of 1.0f in x direction and a rotation of 90deg about Z
+	struct Mat4 m = {{
+		{0, -1, 0, 1},
+		{1, 0, 0, 0},
+		{0, 0, 1, 0},
+		{0, 0, 0 ,1}
+	}};
+	
+	struct Vec4f u = mat4_mul_vec4(m,v);
+	u = mat4_mul_vec4(mat4_affine_orthonormal_inverse(m), u);
+	
+	assert(vec4f_are_equal(u,v));
+	printf("success\n");
+}
 
 void test_get_scale_matrix() {
 	printf("test_get_scale_matrix\n");
@@ -126,6 +151,7 @@ void test_get_view_matrix(){
 	// v on x = 2, y = 0, z = 0
 	// after Model - View, v should be (0,0,2)
 
+	printf("test_case_1\n");
 	struct Quaternion z_to_x = quat_normalize(euler_to_quat((struct Vec3f){0.0f, PI/2, 0.0f}));
 	
 	struct Transform cam_transform = {
@@ -162,5 +188,26 @@ void test_get_view_matrix(){
 	struct Vec3f expected = (struct Vec3f){0.0f, 0.0f, 2.0f};
 
 	assert(vectors_are_equal(result,expected));
+	printf("test_case_2\n");
+
+	cam_transform.rotation = QUAT_IDENTITY;
+	cam.transform = cam_transform;
+	view = get_view_matrix(cam);
+
+	// In the frame of the test transform
+	test_vec4 = VEC4F_0;
+	test_vec4.w = 1.0f;
+	test_vec4.z = -1.0f;
+
+	result_vec4 = mat4_mul_vec4(view, test_vec4);
+
+	result.x = result_vec4.x;
+	result.y = result_vec4.y;
+	result.z = result_vec4.z;
+
+	expected = (struct Vec3f){0.0f, 0.0f, -1.0f};
+
+	assert(vectors_are_equal(result,expected));
+
 	printf("success\n");
 }

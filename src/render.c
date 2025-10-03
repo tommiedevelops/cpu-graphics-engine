@@ -40,9 +40,28 @@ struct RenderData prepare_render_data(struct GameObject go) {
 	return r;
 }
 
+
+struct ClipResult {
+	int num_tris;
+};
+
+static inline bool vert_clipped(struct Vec4f v) {
+
+	if(v.z > 0) return true;
+	if(v.x < v.w || v.x > -v.w) return true;
+	if(v.y < v.w || v.y > -v.w) return true;
+
+	return false; 
+}
+
+static inline bool tri_clipped(struct Triangle tri){
+	return vert_clipped(tri.v0) || vert_clipped(tri.v1) || vert_clipped(tri.v2);
+}
+
 void render_game_object(uint32_t* framebuffer, float* zbuffer, struct Scene scene, struct GameObject go){
 		
 		struct RenderData data = prepare_render_data(go);
+
 		if(NULL == data.vertices) return; // required
 
 		for(int t = 0; t < data.num_triangles; t++) {
@@ -83,8 +102,12 @@ void render_game_object(uint32_t* framebuffer, float* zbuffer, struct Scene scen
 			apply_transformation(model, &tri);
 			apply_transformation(view, &tri);
 			apply_transformation(projection, &tri);
-	
-			// Clipping Algorithm	
+
+			// white = clipped
+			if(tri_clipped(tri)) {
+				// clipping algorithm
+				return;
+			}
 
 			apply_perspective_divide(&tri); // divide (x,y,z,w) by w
 			apply_transformation(view_port, &tri);
