@@ -76,5 +76,6 @@ bool vec4f_are_equal(struct Vec4f a, struct Vec4f b);
 bool vec3f_are_equal(struct Vec3f a, struct Vec3f b);
 void print_vec4f(struct Vec4f v);
 bool vec4f_are_about_equal(struct Vec4f a, struct Vec4f b, float allowance); 
+bool vec3f_are_about_equal(struct Vec3f a, struct Vec3f b, float allowance); 
 
 #endif

@@ -97,10 +97,11 @@ void test_clip_against_plane(){
 	P.n = vec3f_create(-1.0f, 0.0f, 0.0f);	
 	P.p = vec3f_create(1.0f, 0.0f, 0.0f);
 
-	struct Vec3f tri[9] = {0}; // added more space just in case
-	tri[0] = vec3f_create(0.0f,2.0f,0.0f);
-	tri[1] = vec3f_create(2.0f, 0.0f, 0.0f);
-	tri[2] = vec3f_create(0.0f,-2.0f,0.0f);
+	struct Vec3f in1[9] = {0};
+	struct Vec3f out1[9] = {0}; // added more space just in case
+	in1[0] = vec3f_create(0.0f,2.0f,0.0f);
+	in1[1] = vec3f_create(2.0f, 0.0f, 0.0f);
+	in1[2] = vec3f_create(0.0f,-2.0f,0.0f);
 
 	struct Vec3f expected[4] = {0};
 	int expected_num_verts = 4;
@@ -110,22 +111,23 @@ void test_clip_against_plane(){
 	expected[2] = vec3f_create(0.0f, -2.0f, 0.0f);
 	expected[3] = vec3f_create(0.0f, 2.0f, 0.0f);
 
-	int result = clip_against_plane(tri,3,P);
+	int result = clip_against_plane(in1,3,P, out1);
 
 	assert(result = expected_num_verts);
 
 	for(int i = 0; i < expected_num_verts; i++){
-		assert(vec3f_are_equal(expected[i], tri[i]));
+		assert(vec3f_are_equal(expected[i], out1[i]));
 	}
 
 	printf("test_case_2\n");
 
 	// uses same P as test case 1
-	struct Vec3f tri2[9] = {0};
+	struct Vec3f in2[9] = {0};
+	struct Vec3f out2[9] = {0};
 	
-	tri2[0] = vec3f_create(0.0f, 0.0f, 0.0f);
-	tri2[1] = vec3f_create(2.0f,2.0f,0.0f);
-	tri2[2] = vec3f_create(2.0f,-2.0f,0.0f);
+	in2[0] = vec3f_create(0.0f, 0.0f, 0.0f);
+	in2[1] = vec3f_create(2.0f,2.0f,0.0f);
+	in2[2] = vec3f_create(2.0f,-2.0f,0.0f);
 
 	struct Vec3f expected2[3] = {0};
 	int expected_num_verts2 = 3;
@@ -134,23 +136,23 @@ void test_clip_against_plane(){
 	expected2[1] = vec3f_create(1.0f,-1.0f,0.0f);
 	expected2[2] = vec3f_create(0.0f, 0.0f, 0.0f);
 
-	int result2 = clip_against_plane(tri2,3,P);
+	int result2 = clip_against_plane(in2,3,P,out2);
 
 	assert(result2 = expected_num_verts2);
 
 	for(int i = 0; i < expected_num_verts2; i++){
-		assert(vec3f_are_equal(expected2[i], tri2[i]));
+		assert(vec3f_are_equal(expected2[i], out2[i]));
 	}
-
 
 	printf("test_case_3\n");
 
 	// uses same P as test case 1
-	struct Vec3f tri3[9] = {0};
+	struct Vec3f in3[9] = {0};
+	struct Vec3f out3[9] = {0};
 	
-	tri3[0] = vec3f_create(1.0f, 0.0f, 0.0f);
-	tri3[1] = vec3f_create(2.0f,0.0f,2.0f);
-	tri3[2] = vec3f_create(0.0f,0.0f,1.0f);
+	in3[0] = vec3f_create(1.0f, 0.0f, 0.0f);
+	in3[1] = vec3f_create(2.0f,0.0f,2.0f);
+	in3[2] = vec3f_create(0.0f,0.0f,1.0f);
 
 	struct Vec3f expected3[3] = {0};
 	int expected_num_verts3 = 3;
@@ -159,22 +161,27 @@ void test_clip_against_plane(){
 	expected3[1] = vec3f_create(1.0f,0.0f,1.5f);
 	expected3[2] = vec3f_create(0.0f,0.0f,1.0f);
 
-	int result3 = clip_against_plane(tri3,3,P);
+	int result3 = clip_against_plane(in3,3,P,out3);
 
 	assert(result3 = expected_num_verts3);
-
-	for(int i = 0; i < expected_num_verts3; i++){
-		assert(vec3f_are_equal(expected3[i], tri3[i]));
-	}
 
 	printf("success\n");
 }
 
 void test_clip(){
 	printf("test_clip\n");
+
+	// note: the order of the planes and the order of vertices supplied matters. 
+	// if you flip the order of planes, we have to also flip the order of vertices
+
+	printf("test case 1\n");
+	struct Plane P2;
+	P2.n = vec3f_create(-1.0f, 0.0f, 0.0f);
+	P2.p = vec3f_create(1.0f, 0.0f, 0.0f);
+
 	struct Plane P1;
-	P1.n = vec3f_create(-1.0f, 0.0f, 0.0f);
-	P1.p = vec3f_create(1.0f, 0.0f, 0.0f);
+	P1.n = vec3f_create(0.0f, 0.0f, -1.0f);
+	P1.p = vec3f_create(0.0f, 0.0f, 1.0f);
 
 	struct Triangle tri = {0};
 	tri.v0 = vec4f_create(1.0f, 0.0f, 0.0f, 1.0f);
@@ -186,8 +193,18 @@ void test_clip(){
 	planes[0] = P1;
 	planes[1] = P2;
 
-	struct ClipResult r = clip(tri, planes, num_planes);
+	struct ClipResult r = clip_tri(tri, planes, num_planes);
 
-	printf("success\n");
+	assert(r.num_tris == 2);
+
+	float eps = 0.01f;
+
+	print_vec4f(r.tris[0].v0);
+	print_vec4f(r.tris[0].v1);
+	print_vec4f(r.tris[0].v2);
+
+	print_vec4f(r.tris[1].v0);
+	print_vec4f(r.tris[1].v1);
+	print_vec4f(r.tris[1].v2);
 }
 

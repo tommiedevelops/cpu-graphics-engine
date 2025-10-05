@@ -7,6 +7,17 @@ void print_vec3f(struct Vec3f v){
 void print_vec2f(struct Vec2f v) {
 	printf("(x = %f, y = %f)\n", v.x, v.y);
 }
+bool vec3f_are_about_equal(struct Vec3f a, struct Vec3f b, float allowance) {
+	bool x_equal = fabs(a.x - b.x) < allowance;
+	bool y_equal = fabs(a.y - b.y) < allowance;
+	bool z_equal = fabs(a.z - b.z) < allowance;
+
+	if(x_equal && y_equal && z_equal) {
+		return true; 
+	} else {
+		return false;
+	}
+}
 
 struct Vec2f vec2f_create(float x, float y) {
 	struct Vec2f v = {

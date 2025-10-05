@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
 
 #include "triangle.h"
 #include "constants.h"
@@ -22,8 +23,8 @@ struct Vec3f intersect(struct Plane P, struct Vec3f u, struct Vec3f v);
 bool inside(struct Plane P, struct Vec3f x, float eps);
 float sdf(struct Plane P, struct Vec3f x);
 struct Vec3f lerp(struct Vec3f u, struct Vec3f v, float t);
-int clip_against_plane(struct Vec3f* verts, int num_verts, struct Plane P);
+int clip_against_plane(struct Vec3f* in, int in_n, struct Plane P, struct Vec3f* out);
 
-struct ClipResult clip(struct Triangle tri, struct Plane * planes, int num_planes);
+struct ClipResult clip_tri(struct Triangle tri, struct Plane * planes, int num_planes);
 
 #endif
