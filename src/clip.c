@@ -56,7 +56,8 @@ int clip_against_plane(struct Vec3f* in, int in_n, struct Plane P, struct Vec3f*
 		}
 
 		if(inside(P,s,epsilon) && !inside(P,e,epsilon)){
-			out[n++] = intersect(P,s,e);
+			struct Vec3f i = intersect(P,s,e);
+			if(!vec3f_are_about_equal(i,s, 0.01f)) out[n++] = intersect(P,s,e);
 			continue;
 		}
 
@@ -79,6 +80,11 @@ int clip_against_plane(struct Vec3f* in, int in_n, struct Plane P, struct Vec3f*
 	
 	return n;
 }
+
+// In the case that s lies on an edge and e is not inside the convex region, the algorithm
+// will incorrectly add s to the output array, thus leading to a degenerate triangle being
+// generated. I choose to simply ignore this degeneracy as I have not worked out how to fix
+// it.
 
 struct ClipResult clip_tri(struct Triangle tri, struct Plane * planes, int num_planes){
 	struct Vec3f in[9] = {0}, out[9] = {0};
@@ -103,21 +109,23 @@ struct ClipResult clip_tri(struct Triangle tri, struct Plane * planes, int num_p
 	if(out_n == 3){
 		r.num_tris = 1;
 		r.tris[0] = tri;
-		tri.v0 = vec3f_to_vec4f(out[0], 1.0f);
-		tri.v1 = vec3f_to_vec4f(out[1], 1.0f);
-		tri.v2 = vec3f_to_vec4f(out[2], 1.0f);
+		r.tris[0].v0 = vec3f_to_vec4f(out[0], 1.0f);
+		r.tris[0].v1 = vec3f_to_vec4f(out[1], 1.0f);
+		r.tris[0].v2 = vec3f_to_vec4f(out[2], 1.0f);
 	} else if(out_n == 4){
 		r.num_tris = 2;
 
 		r.tris[0] = tri;
-		tri.v0 = vec3f_to_vec4f(out[0], 1.0f);
-		tri.v1 = vec3f_to_vec4f(out[1], 1.0f);
-		tri.v2 = vec3f_to_vec4f(out[2], 1.0f);
+
+		r.tris[0].v0 = vec3f_to_vec4f(out[0], 1.0f);
+		r.tris[0].v1 = vec3f_to_vec4f(out[1], 1.0f);
+		r.tris[0].v2 = vec3f_to_vec4f(out[2], 1.0f);
 
 		r.tris[1] = tri;
-		tri.v0 = vec3f_to_vec4f(out[0], 1.0f);
-		tri.v1 = vec3f_to_vec4f(out[2], 1.0f);
-		tri.v2 = vec3f_to_vec4f(out[3], 1.0f);
+
+		r.tris[1].v0 = vec3f_to_vec4f(out[0], 1.0f);
+		r.tris[1].v1 = vec3f_to_vec4f(out[2], 1.0f);
+		r.tris[1].v2 = vec3f_to_vec4f(out[3], 1.0f);
 
 	} else {
 		r.num_tris = 0;

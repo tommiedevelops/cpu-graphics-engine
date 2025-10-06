@@ -168,12 +168,9 @@ void test_clip_against_plane(){
 	printf("success\n");
 }
 
-void test_clip(){
-	printf("test_clip\n");
 
-	// note: the order of the planes and the order of vertices supplied matters. 
-	// if you flip the order of planes, we have to also flip the order of vertices
-
+void test_clip_case_1(){
+	// edge
 	printf("test case 1\n");
 	struct Plane P2;
 	P2.n = vec3f_create(-1.0f, 0.0f, 0.0f);
@@ -195,16 +192,55 @@ void test_clip(){
 
 	struct ClipResult r = clip_tri(tri, planes, num_planes);
 
-	assert(r.num_tris == 2);
+	assert(r.num_tris == 1);
 
 	float eps = 0.01f;
 
-	print_vec4f(r.tris[0].v0);
-	print_vec4f(r.tris[0].v1);
-	print_vec4f(r.tris[0].v2);
+	struct Vec4f v0_e = vec4f_create(1.0f, 0.0f, 1.0f, 1.0f);
+	struct Vec4f v1_e = vec4f_create(0.0f, 0.0f, 1.0f, 1.0f);
+	struct Vec4f v2_e = vec4f_create(1.0f, 0.0f, 0.0f, 1.0f);
 
-	print_vec4f(r.tris[1].v0);
-	print_vec4f(r.tris[1].v1);
-	print_vec4f(r.tris[1].v2);
+	assert(vec4f_are_about_equal(r.tris[0].v0, v0_e, eps));
+	assert(vec4f_are_about_equal(r.tris[0].v1, v1_e, eps));
+	assert(vec4f_are_about_equal(r.tris[0].v2, v2_e, eps));
+}
+
+void test_clip_case_2(){
+	// positive
+	printf("test case 2\n");
+
+	struct Plane P1;
+	P1.n = vec3f_create(0.0f, 0.0f, -1.0f);
+	P1.p = vec3f_create(0.0f, 0.0f, 3.0f);
+
+	struct Triangle tri = {0};
+	tri.v0 = vec4f_create(0.0f, 0.0f, 0.0f, 1.0f);
+	tri.v1 = vec4f_create(1.0f, 0.0f, 1.0f, 1.0f);
+	tri.v2 = vec4f_create(0.0f, 0.0f, 1.0f, 1.0f);
+	
+	int num_planes = 1;
+	struct Plane planes[1];
+	planes[0] = P1;
+
+	struct ClipResult r = clip_tri(tri, planes, num_planes);
+
+	assert(r.num_tris == 1);
+
+
+	struct Vec4f v0_e = vec4f_create(1.0f, 0.0f, 1.0f, 1.0f);
+	struct Vec4f v1_e = vec4f_create(0.0f, 0.0f, 1.0f, 1.0f);
+	struct Vec4f v2_e = vec4f_create(0.0f, 0.0f, 0.0f, 1.0f);
+
+	float eps = 0.01f;
+	assert(vec4f_are_about_equal(r.tris[0].v0, v0_e, eps));
+	assert(vec4f_are_about_equal(r.tris[0].v1, v1_e, eps));
+	assert(vec4f_are_about_equal(r.tris[0].v2, v2_e, eps));
+}
+
+void test_clip(){
+	printf("test_clip\n");
+	test_clip_case_1();
+	test_clip_case_2();
+	printf("success\n");
 }
 
