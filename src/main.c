@@ -77,25 +77,16 @@ int main(void) {
 		// First Person Camera	
 		float cam_speed = 4.0f;	
 		float cam_ang_vel = 1.0f;	
-
-		struct Vec3f forward = quat_get_forward(scene.cam->transform.rotation);
-		struct Vec3f right = quat_get_right(scene.cam->transform.rotation);	
-
-		// camera rotation
-		struct Vec3f forward_projected = vec3f_create(forward.x, 0.0f, forward.z);
-		struct Vec3f lr_axis = VEC3F_Y;		
-
-		struct Quaternion lr_rot = quat_angle_axis(mouse_dx * time.delta_time * cam_ang_vel, lr_axis);
-
-		scene.cam->transform.rotation =
-			quat_normalize(
-					quat_mul(
-						scene.cam->transform.rotation,
-						lr_rot
-					        )
-				      );
+			
+		float yaw = mouse_dx * time.delta_time * cam_ang_vel;
+		struct Quaternion qYaw = quat_angle_axis(yaw, VEC3F_Y);
+		scene.cam->transform.rotation = quat_mul(qYaw, scene.cam->transform.rotation);
+		quat_normalize(scene.cam->transform.rotation);
 
 		// camera translation
+		struct Vec3f forward = quat_get_forward(scene.cam->transform.rotation);
+		struct Vec3f right = quat_get_right(scene.cam->transform.rotation);
+
 		struct Vec3f move_vec = 
 			vec3f_add(
 					vec3f_scale(forward, move_input.y),

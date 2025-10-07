@@ -181,11 +181,65 @@ void test_clip_against_plane_3(){
 	}
 }
 
+void test_clip_against_plane_4(){
+	printf("test_case_4\n");
+	
+	struct Plane P;
+	P.n = vec4f_create(0.0f, 0.0f, 1.0f, 0.0f);
+	P.p = VEC4F_0;
+
+	// Triangle in homogeneous clip space (w = 1 for all)
+ 	// A is behind near plane (z < 0); B and C are inside (z >= 0)
+	
+	struct Vec4f in[3] = {
+		vec4f_create( 0.0f,  0.0f, -0.5f, 1.0f),  // A (outside)
+		vec4f_create( 0.5f,  0.0f,  0.5f, 1.0f),  // B (inside)
+		vec4f_create(-0.5f,  0.2f,  0.2f, 1.0f)   // C (inside)
+	};
+
+	struct Vec4f out[9] = {0};
+
+	// clip_against_plane signature: (in, in_count, plane, out, &out_count)
+	int out_count = clip_against_plane(in, 3, P, out);
+
+	// Expected: 4 verts in this order (Sutherland–Hodgman result)
+	// Edge A->B:  I1 then B
+	// Edge B->C:  C
+	// Edge C->A:  I2
+	const int expected_count = 4;
+
+	// Intersections on z=0 (linear in homogeneous coords)
+	// A(-0.5) -> B(0.5): t = -zA/(zB - zA) = 0.5
+	struct Vec4f I1 = vec4f_create( 0.25f,  0.0f, 0.0f, 1.0f);
+
+	// A(-0.5) -> C(0.2): t = -zA/(zC - zA) = 0.5 / 0.7 ≈ 0.7142857
+	struct Vec4f I2 = vec4f_create(-0.35714287f, 0.14285715f, 0.0f, 1.0f);
+
+	struct Vec4f expected[4] = {
+		I1,
+		vec4f_create( 0.5f,  0.0f, 0.5f, 1.0f),   // B
+		vec4f_create(-0.5f,  0.2f, 0.2f, 1.0f),   // C
+		I2
+	};
+
+	// --- Asserts ---
+	#define EPS 1e-5f
+	assert(out_count == expected_count);
+	for (int i = 0; i < expected_count; ++i) {
+		assert(fabsf(out[i].x - expected[i].x) < EPS);
+		assert(fabsf(out[i].y - expected[i].y) < EPS);
+		assert(fabsf(out[i].z - expected[i].z) < EPS);
+		assert(fabsf(out[i].w - expected[i].w) < EPS);
+	}
+}
+
+
 void test_clip_against_plane(){
 	printf("test_clip_against_plane\n");
 	test_clip_against_plane_1();
 	test_clip_against_plane_2();
 	test_clip_against_plane_3();
+	test_clip_against_plane_4();
 	printf("success\n");
 }
 
@@ -257,6 +311,45 @@ void test_clip_case_2(){
 	assert(vec4f_are_about_equal(r.tris[0].v1, v1_e, eps));
 	assert(vec4f_are_about_equal(r.tris[0].v2, v2_e, eps));
 }
+
+static inline void calculate_planes(struct Plane* planes){
+	/* all normals facing 'inside'*/
+	/* inside => -w<=x<=w, -w<=y<=w, 0<=z<=w*/
+	//top (y = w)
+	planes[0].n = vec4f_create(0.0f, -1.0f, 0.0f, 1.0f);
+	planes[0].p = vec4f_create(0.0f, 1.0f, 0.0f, 1.0f);
+
+	//bottom (y = -w)
+	planes[1].n = vec4f_create(0.0f, 1.0f, 0.0f, 1.0f);
+	planes[1].p = vec4f_create(0.0f, -1.0f, 0.0f, 1.0f);
+
+	// left (x = -w)
+	planes[2].n = vec4f_create(1.0f, 0.0f, 0.0f, 1.0f);
+	planes[2].p = vec4f_create(-1.0f, 0.0f, 0.0f, 1.0f);
+
+	// right (x = w)
+	planes[3].n = vec4f_create(-1.0f, 0.0f, 0.0f, 1.0f);
+	planes[3].p = vec4f_create(1.0f, 0.0f, 0.0f, 1.0f);
+
+	// near (z = 0)
+	planes[4].n = vec4f_create(0.0f, 0.0f, 1.0f, 0.0f);
+	planes[4].p = VEC4F_0;
+
+	// far (z = w)
+	planes[5].n = vec4f_create(0.0f, 0.0f, -1.0f, 1.0f);
+	planes[5].p = vec4f_create(0.0f, 0.0f, 1.0f, 1.0f);
+}
+
+void test_clip_case_3(){
+	// positive
+	printf("test case 3\n");
+
+	// assuming post projection matrix
+	struct Plane planes[6] = {0};
+	calculate_planes(planes);
+	
+}
+
 
 void test_clip(){
 	printf("test_clip\n");

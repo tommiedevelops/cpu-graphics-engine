@@ -37,6 +37,6 @@ void clipping_tests(){
 }
 
 int main(){
-	test_get_view_matrix();
+	test_clip_against_plane();
 }
 

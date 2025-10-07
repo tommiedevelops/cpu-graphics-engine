@@ -63,7 +63,7 @@ struct Scene create_scene(){
 	struct Material* ground_material = material_create(VEC4F_1, tex); 	
 
 	// creating game_objects
-	struct Vec3f      ground_scale = {.x = 10.0f, .y = 1.0f, .z = 10.0f};
+	struct Vec3f      ground_scale = {.x = 20.0f, .y = 1.0f, .z = 20.0f};
 	struct Vec3f pos = vec3f_create(0.0f, 0.0f, 9.0f);
 	struct Transform  ground_tr    = transform_create(pos, QUAT_IDENTITY, ground_scale);
 	struct GameObject* ground_go    = game_object_create(ground_tr, ground_mesh, ground_material);

@@ -74,9 +74,9 @@ struct RenderData prepare_render_data(struct GameObject go, struct Camera cam) {
 
 static inline bool vert_clipped(struct Vec4f v) {
 
-	if(v.z <= 0 || v.z >= v.w) return true;
-	if(v.x >= v.w || v.x <= -v.w) return true;
-	if(v.y >= v.w || v.y <= -v.w) return true;
+	if(v.z < 0 || v.z > v.w) return true;
+	if(v.x > v.w || v.x < -v.w) return true;
+	if(v.y > v.w || v.y < -v.w) return true;
 
 	return false; 
 }
@@ -132,6 +132,9 @@ void render_game_object(uint32_t* framebuffer, float* zbuffer, struct Scene scen
 
 			if(tri_clipped(tri)) {
 				struct ClipResult r = clip_tri(tri, data.clipping_planes, 6);
+				if(r.num_tris != 3 || r.num_tris != 4){
+					printf("oops: %d\n", r.num_tris);
+				}
 
 				for(int k = 0; k < r.num_tris; k++){
 					apply_perspective_divide(&r.tris[k]); // divide (x,y,z,w) by w

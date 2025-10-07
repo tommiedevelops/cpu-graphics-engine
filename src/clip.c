@@ -4,7 +4,7 @@ float sdf(struct Plane P, struct Vec4f x){
 	return vec4f_dot(P.n, vec4f_add(P.p, vec4f_scale(x, -1.0f) ));
 }	
 
-bool inside(struct Plane P, struct Vec4f x, float eps){ return sdf(P,x) - eps <= 0.0f; }
+bool inside(struct Plane P, struct Vec4f x, float eps){ return sdf(P,x) <= 0.0f; }
 
 struct Vec4f lerp(struct Vec4f u, struct Vec4f v, float t){
 	if(t > 1){
@@ -94,30 +94,15 @@ struct ClipResult clip_tri(struct Triangle tri, struct Plane * planes, int num_p
 	}
 
 	struct ClipResult r = {0};
+	if(out_n < 2) return r;
 
-	if(out_n == 3){
-		r.num_tris = 1;
-		r.tris[0] = tri;
-		r.tris[0].v0 = out[0];
-		r.tris[0].v1 = out[1];
-		r.tris[0].v2 = out[2];
-	} else if(out_n == 4){
-		r.num_tris = 2;
-
-		r.tris[0] = tri;
-
-		r.tris[0].v0 = out[0];
-		r.tris[0].v1 = out[1];
-		r.tris[0].v2 = out[2];
-
-		r.tris[1] = tri;
-
-		r.tris[1].v0 = out[0];
-		r.tris[1].v1 = out[2];
-		r.tris[1].v2 = out[3];
-
-	} else {
-		r.num_tris = 0;
+	r.num_tris = out_n - 2;
+	
+	for(int k = 0; k < r.num_tris; k++){
+		r.tris[k] = tri;
+		r.tris[k].v0 = out[0];
+		r.tris[k].v1 = out[k+1];
+		r.tris[k].v2 = out[k+2];	
 	}
 
 	return r;

@@ -230,3 +230,26 @@ struct Mat4 quat_to_mat4(struct Quaternion q) {
 	return result;
 }
 
+// Rotates a Vec3f by a Quaternion (chat-gpt)
+struct Vec3f quat_mul_vec3(struct Quaternion q, struct Vec3f v)
+{
+    // Extract quaternion components
+    struct Vec3f u = vec3f_create(q.q1, q.q2, q.q3);
+    float s = q.q0;
+
+    // 2 * dot(u, v) * u + (s^2 - dot(u,u)) * v + 2*s * cross(u, v)
+    float dot_uv = vec3f_dot(u, v);
+    struct Vec3f cross_uv = vec3f_cross(u, v);
+    float uu = vec3f_dot(u, u);
+
+    struct Vec3f result = vec3f_add(
+        vec3f_add(
+            vec3f_scale(u, 2.0f * dot_uv),
+            vec3f_scale(v, s * s - uu)
+        ),
+        vec3f_scale(cross_uv, 2.0f * s)
+    );
+
+    return result;
+}
+

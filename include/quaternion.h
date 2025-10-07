@@ -27,5 +27,7 @@ float quat_norm(struct Quaternion q);
 struct Quaternion quat_inverse(struct Quaternion q);
 struct Mat4 quat_to_mat4(struct Quaternion q);
 struct Quaternion euler_to_quat(struct Vec3f euler_rotation);
+struct Vec3f quat_mul_vec3(struct Quaternion q, struct Vec3f v);
+
 #endif
 

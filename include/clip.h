@@ -11,7 +11,7 @@
 
 struct ClipResult {
 	int num_tris;
-	struct Triangle tris[2];
+	struct Triangle tris[6];
 };
 
 struct Plane { 
