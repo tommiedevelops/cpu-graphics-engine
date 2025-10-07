@@ -109,3 +109,6 @@ it was around 5fps.
 01/10/25
 * There is a bug with clipping. I'm trying to write a clipping algorithm to correctly clip the triangles but there must be a bug in my projection matrix functions because far plane clipping in particular is not working as expected. The energy that will go into debugging outweights the importance of the issue so I will leave it broken for now and try to work around it.
 * quat_mul is not passing basic test cases so I rewrote it but that version breaks the code that worked before. so i'm leaving it as before. the corrected version is quat_mul_m
+
+07/10/25
+* just noticed a bug where w is always the z value of the rev update so it is never equal to z of curr. thus, far plane is never clipped. how to fix?

@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include "clip.h"
 #include <stdbool.h>
 #include <stdio.h>
 
@@ -80,8 +81,6 @@ int main(void) {
 		struct Vec3f forward = quat_get_forward(scene.cam->transform.rotation);
 		struct Vec3f right = quat_get_right(scene.cam->transform.rotation);	
 
-		print_vec3f(forward);
-
 		// camera rotation
 		struct Vec3f forward_projected = vec3f_create(forward.x, 0.0f, forward.z);
 		struct Vec3f lr_axis = VEC3F_Y;		
@@ -99,8 +98,8 @@ int main(void) {
 		// camera translation
 		struct Vec3f move_vec = 
 			vec3f_add(
-					vec3f_scale(forward, -move_input.y),
-					vec3f_scale(right, -move_input.x)
+					vec3f_scale(forward, move_input.y),
+					vec3f_scale(right, move_input.x)
 				 );
 
 		
@@ -110,32 +109,12 @@ int main(void) {
 					vec3f_scale(move_vec, cam_speed * time.delta_time)
 				 );
 			
-		// Game Objects
-		//
-		struct Vec3f rot_axis1 = {.x = -1.0f, .y = 1.0f, .z = 1.0f};
-		struct Vec3f rot_axis2 = {.x = 1.0f, .y = 1.0f, .z = -1.0f};
-		
-		struct Quaternion rot1 = quat_angle_axis(5.0 * time.delta_time, rot_axis1);
-		struct Quaternion rot2 = quat_angle_axis(2.0 * time.delta_time, rot_axis2);
-
-		struct GameObject* go = scene.gameObjects[0];
-		struct GameObject* go1 = scene.gameObjects[1];
-		struct GameObject* go2 = scene.gameObjects[2];
-
-		struct Vec3f rot_axis = {.x = 0.0f, .y = 1.0f, .z = 0.0f};
-		struct Quaternion rot = quat_angle_axis(2.0f * time.delta_time, rot_axis);
-
-		go->transform.rotation = quat_normalize(quat_mul(go->transform.rotation, rot));
-		go1->transform.rotation = quat_mul(go1->transform.rotation, rot1);
-		go2->transform.rotation = quat_mul(go2->transform.rotation, rot2);
-
 		// ----- Rendering -----
 		render_scene(framebuffer, zbuffer, scene);
 
 		// ---- Merging -----
                 update_window(window_data, framebuffer);
-        }
-
+	}
         /* Clean Up */
 
 	// destroy_scene(scene);

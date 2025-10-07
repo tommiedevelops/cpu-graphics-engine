@@ -13,7 +13,7 @@ struct Mat4 get_translation_matrix(struct Transform tr);
 struct Mat4 get_model_matrix(struct Transform tr);
 
 struct Mat4 get_view_matrix(struct Camera cam);
-struct Mat4 get_projection_matrix(struct Camera cam);
+struct Mat4 get_projection_matrix(struct Camera cam, float aspect);
 struct Mat4 get_viewport_matrix(struct Camera cam);
 
 struct Vec4f perspective_divide(struct Vec4f v);

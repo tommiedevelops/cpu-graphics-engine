@@ -71,19 +71,20 @@ struct Mat4 get_view_matrix(struct Camera cam){
 	return mat4_affine_orthonormal_inverse(get_model_matrix(cam.transform));
 }
 
-struct Mat4 get_projection_matrix(struct Camera cam) {
+struct Mat4 get_projection_matrix(struct Camera cam, float aspect) {
 
 	float fov = cam.fov;
-	float aspect = (float) HEIGHT/WIDTH;
 	float zn = cam.near;
 	float zf = cam.far;
 
 	struct Mat4 P = {0};
-	P.m[0][0] = aspect/tan(0.5f*fov);
-	P.m[1][1] = 1/tan(0.5f*fov);
-	P.m[2][2] = (float)-1.0f/ (zn - zf);
-	P.m[2][3] = (float)(zn)/(zn-zf); 
+
+	P.m[0][0] = (float)aspect/tan(0.5f*fov);
+	P.m[1][1] = (float)1.0f/tan(0.5f*fov);
+	P.m[2][2] = (float)-1.0f*zf/ (zn - zf);
+	P.m[2][3] = (float)(zn)*zf/(zn-zf); 
 	P.m[3][2] = 1.0f;
+
 	return P;
 }
 
@@ -107,7 +108,7 @@ struct Mat4 get_viewport_matrix(struct Camera cam){
 
 	struct Mat4 P = {0};
 	P.m[0][0] = WIDTH/2;
-	P.m[1][1] = HEIGHT/2;
+	P.m[1][1] = -HEIGHT/2; // positive y is downwards rel to screen
 	P.m[0][3] = WIDTH/2;
 	P.m[1][3] = HEIGHT/2;
 	P.m[2][2] = (far - near);

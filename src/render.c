@@ -12,9 +12,62 @@ struct RenderData {
 	int num_triangles;
 	int* triangles;	
 	struct Material mat;
+	struct Plane* clipping_planes;
 };
 
-struct RenderData prepare_render_data(struct GameObject go) {
+static inline void ensure_inside(struct Plane* P, struct Vec4f point_inside){
+
+	struct Vec4f x = vec4f_add(point_inside, vec4f_scale(P->p, -1.0f));		
+
+	if(vec4f_dot(P->n, x) > 0){
+		// n needs to be flipped
+		P->n = vec4f_scale(P->n, -1.0f);
+	}
+
+}
+
+static inline void calculate_planes(struct Plane* planes, float near, float far){
+
+	struct Vec4f point_inside = vec4f_create(0.0f, 0.0f, 0.0f, 1.0f);
+
+	//top
+	planes[0].n = vec4f_create(0.0f, 1.0f, 0.0f, -1.0f);
+	planes[0].p = vec4f_create(0.0f, 1.0f, 0.0f, 1.0f);
+
+	ensure_inside(&planes[0], point_inside);
+
+	//bottom
+	planes[1].n = vec4f_create(0.0f, 1.0f, 0.0f, 1.0f);
+	planes[1].p = vec4f_create(0.0f, -1.0f, 0.0f, 1.0f);
+
+	ensure_inside(&planes[1], point_inside);
+
+	// left
+	planes[2].n = vec4f_create(1.0f, 0.0f, 0.0f, 1.0f);
+	planes[2].p = vec4f_create(1.0f, 0.0f, 0.0f, -1.0f);
+
+	ensure_inside(&planes[2], point_inside);
+
+	// right
+	planes[3].n = vec4f_create(-1.0f, 0.0f, 0.0f, 1.0f);
+	planes[3].p = vec4f_create(1.0f, 0.0f, 0.0f, 1.0f);
+
+	ensure_inside(&planes[3], point_inside);
+
+	// near
+	planes[4].n = vec4f_create(0.0f, 0.0f, -1.0f, 0.0f);
+	planes[4].p = vec4f_create(0.0f, 0.0f, 1.0f, 0.0f);
+
+	ensure_inside(&planes[4], point_inside);
+
+	// far
+	planes[5].n = vec4f_create(0.0f, 0.0f, 1.0f, -1.0f);
+	planes[5].p = vec4f_create(0.0f, 0.0f, 1.0f, 1.0f);
+
+	ensure_inside(&planes[5], point_inside);
+}
+
+struct RenderData prepare_render_data(struct GameObject go, struct Camera cam) {
 
 	struct RenderData r = {0};
 
@@ -37,19 +90,19 @@ struct RenderData prepare_render_data(struct GameObject go) {
 	struct Material mat = material_default();
 	if(go.material != NULL) r.mat = *go.material;
 
+	// Clipping Planes
+	struct Plane planes[6] = {0};
+	calculate_planes(planes, cam.near, cam.far);	
+	r.clipping_planes = planes;
+
 	return r;
 }
 
-
-struct ClipResult {
-	int num_tris;
-};
-
 static inline bool vert_clipped(struct Vec4f v) {
 
-	if(v.z > 0) return true;
-	if(v.x < v.w || v.x > -v.w) return true;
-	if(v.y < v.w || v.y > -v.w) return true;
+	if(v.z <= 0 || v.z >= v.w) return true;
+	if(v.x >= v.w || v.x <= -v.w) return true;
+	if(v.y >= v.w || v.y <= -v.w) return true;
 
 	return false; 
 }
@@ -60,7 +113,7 @@ static inline bool tri_clipped(struct Triangle tri){
 
 void render_game_object(uint32_t* framebuffer, float* zbuffer, struct Scene scene, struct GameObject go){
 		
-		struct RenderData data = prepare_render_data(go);
+		struct RenderData data = prepare_render_data(go, *scene.cam);
 
 		if(NULL == data.vertices) return; // required
 
@@ -96,22 +149,45 @@ void render_game_object(uint32_t* framebuffer, float* zbuffer, struct Scene scen
 
 			model = get_model_matrix(go.transform);
 			view = get_view_matrix(*scene.cam);
-			projection = get_projection_matrix(*scene.cam);
+			projection = get_projection_matrix(*scene.cam, (float)HEIGHT/WIDTH);
 			view_port = get_viewport_matrix(*scene.cam);
 
+			printf("cam pos:");
+			print_vec3f(scene.cam->transform.position);
+			printf("camera forward:"); 
+			print_vec3f(quat_get_forward(scene.cam->transform.rotation));
+
+			printf("object space:");
+			print_vec4f(tri.v0);
 			apply_transformation(model, &tri);
+
+			printf("far = %f\n", scene.cam->far);
+
+			printf("world space:");
+			print_vec4f(tri.v0);
 			apply_transformation(view, &tri);
+
+			printf("camera space:");
+			print_vec4f(tri.v0);
 			apply_transformation(projection, &tri);
 
-			// white = clipped
+			printf("clip space:");
+			print_vec4f(tri.v0);
+
 			if(tri_clipped(tri)) {
 				// clipping algorithm
 				return;
 			}
 
 			apply_perspective_divide(&tri); // divide (x,y,z,w) by w
+
+			printf("after perspective divide");
+			print_vec4f(tri.v0);
+
 			apply_transformation(view_port, &tri);
 
+			printf("screen space");
+			print_vec4f(tri.v0);
 			// Fragment Shader
 			rasterize_triangle(tri, &data.mat, framebuffer, zbuffer);
 		}

@@ -198,7 +198,7 @@ bool vec3f_are_equal(struct Vec3f a, struct Vec3f b) {
 }
 
 bool vec4f_are_equal(struct Vec4f a, struct Vec4f b) {
-	printf("checking {%f,%f,%f} == {%f,%f,%f}\n", a.x,a.y,a.z,b.x,b.y,b.z);
+	printf("checking {%f,%f,%f,%f} == {%f,%f,%f,%f}\n", a.x,a.y,a.z,a.w,b.x,b.y,b.z,b.w);
 	if(a.x != b.x){ return false; }
 	if(a.y != b.y){ return false; }
 	if(a.z != b.z){ return false; }
@@ -207,11 +207,11 @@ bool vec4f_are_equal(struct Vec4f a, struct Vec4f b) {
 }
 
 bool vec4f_are_about_equal(struct Vec4f a, struct Vec4f b, float allowance) {
-	printf("checking {%f,%f,%f} == {%f,%f,%f}\n", a.x,a.y,a.z,b.x,b.y,b.z);
-	if( abs(a.x - b.x) > allowance ) { return false; }
-	if( abs(a.y - b.y) > allowance ) { return false; }
-	if( abs(a.z - b.z) > allowance ) { return false; }
-	if( abs(a.w - b.w) > allowance ) { return false; }
+	printf("checking {%f,%f,%f,%f} == {%f,%f,%f,%f}\n", a.x,a.y,a.z,a.w,b.x,b.y,b.z,b.w);
+	if( fabs(a.x - b.x) > allowance ) { return false; }
+	if( fabs(a.y - b.y) > allowance ) { return false; }
+	if( fabs(a.z - b.z) > allowance ) { return false; }
+	if( fabs(a.w - b.w) > allowance ) { return false; }
 
 	return true;
 }

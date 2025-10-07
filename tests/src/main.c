@@ -3,6 +3,7 @@
 #include "scene_manager_tests.h"
 #include "quaternion_tests.h"
 #include "clip_tests.h"
+#include "transformation_tests.h"
 
 void scene_manager_tests(){
 	test_get_scale_matrix();
@@ -10,6 +11,7 @@ void scene_manager_tests(){
 	test_get_rotation_matrix();
 	test_get_model_matrix();
 	test_get_view_matrix();
+	test_get_projection_matrix();
 }
 
 void matrix_tests(){
@@ -24,12 +26,17 @@ void quaternion_tests(){
 	/* test_quat_mul(); */
 	/* test_quat_slerp(); */
 }
-int main(){
+
+void clipping_tests(){
 	test_lerp();
 	test_sdf();
 	test_inside();
 	test_intersect();
 	test_clip_against_plane();
 	test_clip();
+}
+
+int main(){
+	test_get_view_matrix();
 }
 

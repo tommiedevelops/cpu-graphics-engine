@@ -53,29 +53,6 @@ struct Scene {
 	struct LightSource light;
 };
 
-// --- FUNCTIONS ---
-
-// this function basically applies a simple rotation matrix
-struct Vec4f* apply_model_matrix(struct GameObject go);
-
-struct Mat3 get_screen_space_matrix();
-
-struct Mat4 get_scale_matrix(struct Transform tr); 
-
-struct Mat4 get_translation_matrix(struct Transform tr); 
-
-struct Mat4 get_rotation_matrix(struct Transform tr);
-
-struct Mat4 get_model_matrix(struct Transform tr);
-
-struct Mat4 get_view_matrix(struct Camera cam);
-
-struct Mat4 get_projection_matrix(struct Camera cam);
-
 void normalize_vertices(float sidelength, struct Vec3f* vertices, int num_vertices);
-
-struct Vec4f perspective_divide(struct Vec4f v);
-
-struct Mat4 get_viewport_matrix(struct Camera cam);
 
 #endif

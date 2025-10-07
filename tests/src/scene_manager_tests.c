@@ -1,16 +1,10 @@
 #include <stdio.h>
 #include <assert.h>
+
 #include "transformation.h"
 #include "scene_manager.h"
 #include "matrix.h"
 #include "quaternion.h"
-
-void test_clipping(){
-	printf("test_clipping\n");
-	
-
-	printf("succes\n");
-}
 
 void test_mat4_affine_orthonormal_inverse(){
 	printf("test_mat4_affine_orthonormal_inverse\n");
@@ -144,70 +138,129 @@ void test_get_model_matrix(){
 	printf("success\n");
 }
 
+static inline float deg_to_rad(float deg){
+	return (float)PI*deg/180.0f;
+}
+
+#define SQRT_2 (1.41421356237)
+
+void test_get_view_matrix_1(){
+	printf("test_case_1\n");
+	struct Camera cam;
+	struct Quaternion rot = quat_angle_axis(deg_to_rad(45),VEC3F_Y);
+
+	cam.transform = transform_create(VEC3F_0, rot, VEC3F_1);
+	struct Vec4f point = vec4f_create(1.0f, 0.0f, 1.0f, 1.0f);
+
+	struct Vec4f expected = vec4f_create(0.0f, 0.0f, SQRT_2, 1.0f);
+
+	struct Mat4 m = get_view_matrix(cam);
+
+	struct Vec4f result = mat4_mul_vec4(m, point);
+
+	float eps = 0.01f;
+	assert(vec4f_are_about_equal(expected,result,eps));
+}
+
+void test_get_view_matrix_2(){
+	printf("test_case_2\n");
+	struct Camera cam;
+	cam.transform = transform_create(VEC3F_0, QUAT_IDENTITY, VEC3F_1);
+	struct Vec4f point = vec4f_create(0.0f, 0.0f, -1.0f, 1.0f);
+
+	struct Vec4f expected = vec4f_create(0.0f, 0.0f, -1.0f, 1.0f);
+	struct Mat4 m = get_view_matrix(cam);
+
+	struct Vec4f result = mat4_mul_vec4(m, point);
+
+	float eps = 0.01f;
+	assert(vec4f_are_about_equal(expected,result,eps));
+}
+
+void test_get_view_matrix_3(){
+	printf("test_case_3\n");
+
+	struct Camera cam;
+
+	struct Vec3f pos = vec3f_create(2.0f, 0.0f, 2.0f);
+	struct Quaternion rot = quat_angle_axis(deg_to_rad(225.0f),VEC3F_Y);
+
+	cam.transform = transform_create(pos, rot, VEC3F_1);
+
+	struct Vec4f point_front = vec4f_create(0.0f, 0.0f, 0.0f, 1.0f);
+	struct Vec4f point_behind = vec4f_create(3.0f, 0.0f, 3.0f, 1.0f);
+
+	struct Vec4f expected_front = vec4f_create(0.0f, 0.0f, 2*SQRT_2, 1.0f);
+	struct Vec4f expected_behind = vec4f_create(0.0f, 0.0f, -SQRT_2, 1.0f);
+
+	struct Mat4 m = get_view_matrix(cam);
+
+	struct Vec4f result_front = mat4_mul_vec4(m, point_front);
+	struct Vec4f result_behind = mat4_mul_vec4(m, point_behind);
+
+	float eps = 0.01f;
+	assert(vec4f_are_about_equal(expected_front,result_front,eps));
+	assert(vec4f_are_about_equal(expected_behind,result_behind,eps));
+}
+
+
 void test_get_view_matrix(){
 	printf("test_get_view_matrix\n");
-	// ok how tf do i test this bad boy
-	// C on (0,0), facing +x
-	// v on x = 2, y = 0, z = 0
-	// after Model - View, v should be (0,0,2)
+	test_get_view_matrix_1();
+	test_get_view_matrix_2();
+	test_get_view_matrix_3();
+	printf("success\n");
+}
 
+#define SQRT_3 (1.73205080757)
+
+void test_get_projection_matrix_1(){
 	printf("test_case_1\n");
-	struct Quaternion z_to_x = quat_normalize(euler_to_quat((struct Vec3f){0.0f, PI/2, 0.0f}));
-	
-	struct Transform cam_transform = {
-		.scale = VEC3F_1,
-		.position = VEC3F_0,
-		.rotation = z_to_x
-	};
 
 	struct Camera cam = {0};
-	cam.transform = cam_transform;
+	cam.fov = (float)PI/3.0f;
+	cam.near = 1.0f;
+	cam.far = 2.0f;
+	float aspect = 2.0f; // h / w
+	
+	struct Mat4 m = get_projection_matrix(cam, aspect);	
 
-	struct Vec3f test_pos = (struct Vec3f){2.0f, 0.0f, 0.0f,};
+	struct Vec4f near = vec4f_create(0.0f,0.0f,cam.near, 1.0f);
+	struct Vec4f far = vec4f_create(0.0f,0.0f, cam.far, 1.0f);
+	// using equation y = 1/sqrt(3) * z and z = 1.5
+	struct Vec4f top = vec4f_create(0.0f, (float)1.5f/SQRT_3, 1.5f, 1.0f);
+	// using equation y = -1/sqrt(3) * z and z = 1.5
+	struct Vec4f bot = vec4f_create(0.0f, (float)-1.5f/SQRT_3, 1.5f, 1.0f);
+	// using equation x = sqrt(3)/2 * z and z = 1.5 (derive using fov and aspect)
+	struct Vec4f right = vec4f_create(1.5f*0.5f*(float)1.0f/SQRT_3, 0.0f, 1.5f, 1.0f);
+	// using equation x = -sqrt(3)/2 * z and z = 1.5 (derive using fov and aspect)
+	struct Vec4f left = vec4f_create(1.5f*-0.5f*(float)1.0f/SQRT_3, 0.0f, 1.5f, 1.0f);
+	
+	struct Vec4f results[6];
+	results[0] = mat4_mul_vec4(m,near);
+	results[1] = mat4_mul_vec4(m,far);
+	results[2] = mat4_mul_vec4(m,top);
+	results[3] = mat4_mul_vec4(m,bot);
+	results[4] = mat4_mul_vec4(m,right);
+	results[5] = mat4_mul_vec4(m,left);
 
-	struct Transform test = {
-		.position = test_pos,
-		.rotation = QUAT_IDENTITY,
-		.scale = VEC3F_1
-	};
+	struct Vec4f expected[6];
+	expected[0] = vec4f_create(0.0f,0.0f,0.0f,1.0f); // z = 0
+	expected[1] = vec4f_create(0.0f,0.0f,2.0f,2.0f); // z = w
+	expected[2] = vec4f_create(0.0f,1.5f,1.0f,1.5f); // y = w
+	expected[3] = vec4f_create(0.0f,-1.5f,1.0f,1.5f); // y = -w 
+	expected[4] = vec4f_create(1.5f,0.0f,1.0f,1.5f); // x = w
+	expected[5] = vec4f_create(-1.5f,0.0f,1.0f,1.5f); // x = -w
 
-	struct Mat4 model = get_model_matrix(test);
-	struct Mat4 view = get_view_matrix(cam);
+	float eps = 0.01f;
+	for(int i = 0; i < 6; i++){
+		assert(vec4f_are_about_equal(expected[i], results[i], eps));
+	}
 
-	// In the frame of the test transform
-	struct Vec4f test_vec4 = VEC4F_0;
-	test_vec4.w = 1.0f;
+}
 
-	struct Vec4f result_vec4 = mat4_mul_vec4(model,test_vec4);
-	result_vec4 = mat4_mul_vec4(view, result_vec4);
-
-	struct Vec3f result = {
-		.x = result_vec4.x, .y = result_vec4.y, .z = result_vec4.z
-	};
-
-	struct Vec3f expected = (struct Vec3f){0.0f, 0.0f, 2.0f};
-
-	assert(vectors_are_equal(result,expected));
-	printf("test_case_2\n");
-
-	cam_transform.rotation = QUAT_IDENTITY;
-	cam.transform = cam_transform;
-	view = get_view_matrix(cam);
-
-	// In the frame of the test transform
-	test_vec4 = VEC4F_0;
-	test_vec4.w = 1.0f;
-	test_vec4.z = -1.0f;
-
-	result_vec4 = mat4_mul_vec4(view, test_vec4);
-
-	result.x = result_vec4.x;
-	result.y = result_vec4.y;
-	result.z = result_vec4.z;
-
-	expected = (struct Vec3f){0.0f, 0.0f, -1.0f};
-
-	assert(vectors_are_equal(result,expected));
-
+void test_get_projection_matrix(){
+	printf("test_get_projection_matrix\n");
+	test_get_projection_matrix_1();
 	printf("success\n");
 }
