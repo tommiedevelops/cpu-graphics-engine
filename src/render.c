@@ -12,59 +12,35 @@ struct RenderData {
 	int num_triangles;
 	int* triangles;	
 	struct Material mat;
-	struct Plane* clipping_planes;
+	struct Plane clipping_planes[6];
 };
 
-static inline void ensure_inside(struct Plane* P, struct Vec4f point_inside){
-
-	struct Vec4f x = vec4f_add(point_inside, vec4f_scale(P->p, -1.0f));		
-
-	if(vec4f_dot(P->n, x) > 0){
-		// n needs to be flipped
-		P->n = vec4f_scale(P->n, -1.0f);
-	}
-
-}
-
-static inline void calculate_planes(struct Plane* planes, float near, float far){
-
-	struct Vec4f point_inside = vec4f_create(0.0f, 0.0f, 0.0f, 1.0f);
-
-	//top
-	planes[0].n = vec4f_create(0.0f, 1.0f, 0.0f, -1.0f);
+static inline void calculate_planes(struct Plane* planes){
+	/* all normals facing 'inside'*/
+	/* inside => -w<=x<=w, -w<=y<=w, 0<=z<=w*/
+	//top (y = w)
+	planes[0].n = vec4f_create(0.0f, -1.0f, 0.0f, 1.0f);
 	planes[0].p = vec4f_create(0.0f, 1.0f, 0.0f, 1.0f);
 
-	ensure_inside(&planes[0], point_inside);
-
-	//bottom
+	//bottom (y = -w)
 	planes[1].n = vec4f_create(0.0f, 1.0f, 0.0f, 1.0f);
 	planes[1].p = vec4f_create(0.0f, -1.0f, 0.0f, 1.0f);
 
-	ensure_inside(&planes[1], point_inside);
-
-	// left
+	// left (x = -w)
 	planes[2].n = vec4f_create(1.0f, 0.0f, 0.0f, 1.0f);
-	planes[2].p = vec4f_create(1.0f, 0.0f, 0.0f, -1.0f);
+	planes[2].p = vec4f_create(-1.0f, 0.0f, 0.0f, 1.0f);
 
-	ensure_inside(&planes[2], point_inside);
-
-	// right
+	// right (x = w)
 	planes[3].n = vec4f_create(-1.0f, 0.0f, 0.0f, 1.0f);
 	planes[3].p = vec4f_create(1.0f, 0.0f, 0.0f, 1.0f);
 
-	ensure_inside(&planes[3], point_inside);
+	// near (z = 0)
+	planes[4].n = vec4f_create(0.0f, 0.0f, 1.0f, 0.0f);
+	planes[4].p = VEC4F_0;
 
-	// near
-	planes[4].n = vec4f_create(0.0f, 0.0f, -1.0f, 0.0f);
-	planes[4].p = vec4f_create(0.0f, 0.0f, 1.0f, 0.0f);
-
-	ensure_inside(&planes[4], point_inside);
-
-	// far
-	planes[5].n = vec4f_create(0.0f, 0.0f, 1.0f, -1.0f);
+	// far (z = w)
+	planes[5].n = vec4f_create(0.0f, 0.0f, -1.0f, 1.0f);
 	planes[5].p = vec4f_create(0.0f, 0.0f, 1.0f, 1.0f);
-
-	ensure_inside(&planes[5], point_inside);
 }
 
 struct RenderData prepare_render_data(struct GameObject go, struct Camera cam) {
@@ -91,9 +67,7 @@ struct RenderData prepare_render_data(struct GameObject go, struct Camera cam) {
 	if(go.material != NULL) r.mat = *go.material;
 
 	// Clipping Planes
-	struct Plane planes[6] = {0};
-	calculate_planes(planes, cam.near, cam.far);	
-	r.clipping_planes = planes;
+	calculate_planes(r.clipping_planes);
 
 	return r;
 }
@@ -152,44 +126,26 @@ void render_game_object(uint32_t* framebuffer, float* zbuffer, struct Scene scen
 			projection = get_projection_matrix(*scene.cam, (float)HEIGHT/WIDTH);
 			view_port = get_viewport_matrix(*scene.cam);
 
-			printf("cam pos:");
-			print_vec3f(scene.cam->transform.position);
-			printf("camera forward:"); 
-			print_vec3f(quat_get_forward(scene.cam->transform.rotation));
-
-			printf("object space:");
-			print_vec4f(tri.v0);
 			apply_transformation(model, &tri);
-
-			printf("far = %f\n", scene.cam->far);
-
-			printf("world space:");
-			print_vec4f(tri.v0);
 			apply_transformation(view, &tri);
-
-			printf("camera space:");
-			print_vec4f(tri.v0);
 			apply_transformation(projection, &tri);
 
-			printf("clip space:");
-			print_vec4f(tri.v0);
-
 			if(tri_clipped(tri)) {
-				// clipping algorithm
-				return;
+				struct ClipResult r = clip_tri(tri, data.clipping_planes, 6);
+
+				for(int k = 0; k < r.num_tris; k++){
+					apply_perspective_divide(&r.tris[k]); // divide (x,y,z,w) by w
+					apply_transformation(view_port, &r.tris[k]);
+					rasterize_triangle(r.tris[k], &data.mat, framebuffer, zbuffer);
+				}
+
+			} else {
+				apply_perspective_divide(&tri); // divide (x,y,z,w) by w
+				apply_transformation(view_port, &tri);
+
+				// Fragment Shader
+				rasterize_triangle(tri, &data.mat, framebuffer, zbuffer);
 			}
-
-			apply_perspective_divide(&tri); // divide (x,y,z,w) by w
-
-			printf("after perspective divide");
-			print_vec4f(tri.v0);
-
-			apply_transformation(view_port, &tri);
-
-			printf("screen space");
-			print_vec4f(tri.v0);
-			// Fragment Shader
-			rasterize_triangle(tri, &data.mat, framebuffer, zbuffer);
 		}
 
 }

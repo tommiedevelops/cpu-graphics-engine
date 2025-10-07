@@ -79,11 +79,6 @@ int clip_against_plane(struct Vec4f* in, int in_n, struct Plane P, struct Vec4f*
 	return n;
 }
 
-// In the case that s lies on an edge and e is not inside the convex region, the algorithm
-// will incorrectly add s to the output array, thus leading to a degenerate triangle being
-// generated. I choose to simply ignore this degeneracy as I have not worked out how to fix
-// it.
-
 struct ClipResult clip_tri(struct Triangle tri, struct Plane * planes, int num_planes){
 	struct Vec4f in[9] = {0}, out[9] = {0};
 	int in_n = 3, out_n = 0;
