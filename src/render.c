@@ -133,7 +133,7 @@ void render_game_object(uint32_t* framebuffer, float* zbuffer, struct Scene scen
 				precompute_interpolated_values(&r.tris[k]);			
 				apply_perspective_divide(&r.tris[k]); // divide (x,y,z,w) by w
 				apply_transformation(view_port, &r.tris[k]);
-				rasterize_triangle(r.tris[k], &data.mat, framebuffer, zbuffer);
+				rasterize_triangle(r.tris[k], scene.light, &data.mat, framebuffer, zbuffer);
 			}
 
 		}

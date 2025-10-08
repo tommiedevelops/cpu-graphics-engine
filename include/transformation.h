@@ -4,7 +4,6 @@
 #include "matrix.h"
 #include "vector.h"
 #include "scene_manager.h"
-
 struct Mat4 mat4_affine_orthonormal_inverse(struct Mat4 mat);
 
 struct Mat4 get_rotation_matrix(struct Transform tr);

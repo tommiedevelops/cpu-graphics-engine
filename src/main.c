@@ -11,7 +11,7 @@
 #include "app.h"
 
 #define MAX_Z (100000.0f)
-#define CLEAR_COLOR (0);
+#define CLEAR_COLOR (0x87CEEBFF);
 
 static inline void clear_buffers(uint32_t* framebuffer, float* zbuffer){
 	for(int i = 0; i < WIDTH*HEIGHT; i++) zbuffer[i] = MAX_Z;

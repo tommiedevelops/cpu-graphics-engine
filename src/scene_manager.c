@@ -65,7 +65,7 @@ struct GameObject* game_object_create(struct Transform tr, struct Mesh* mesh, st
 }
 
 
-struct Scene* scene_create(struct Camera* cam, struct GameObject** gos, int num_gos){
+struct Scene* scene_create(struct Camera* cam, struct GameObject** gos, int num_gos, struct LightSource ls){
 
 	struct Scene* scene = malloc(sizeof(struct Scene));
 	if(NULL == scene) {
@@ -76,6 +76,7 @@ struct Scene* scene_create(struct Camera* cam, struct GameObject** gos, int num_
 	scene->cam = cam;
 	scene->gos = gos;
 	scene->num_gos = num_gos;
+	scene->light = ls;
 
 	return scene;
 }

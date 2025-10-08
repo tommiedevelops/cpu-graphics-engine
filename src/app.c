@@ -116,6 +116,14 @@ struct Camera* prepare_camera(){
 	return cam;
 }
 
+struct LightSource prepare_light_source(){
+	/* User Defined */	
+	struct LightSource ls = {
+		.direction = vec3f_create(-1.0f, -1.0f, -1.0f)
+	};
+	return ls;
+}
+
 // --- Event Handling ---
 struct EventData {
 	struct Vec3f mouse_input;
@@ -215,7 +223,9 @@ struct Scene* app_create_scene(struct AppAssets assets){
 		return NULL;
 	}
 
-	struct Scene* scene = scene_create(cam, go_ctr.gos, go_ctr.num_gos);
+	struct LightSource ls = prepare_light_source();
+
+	struct Scene* scene = scene_create(cam, go_ctr.gos, go_ctr.num_gos, ls);
 	if(NULL == scene){
 		LOG_ERROR("scene is null");
 		return NULL;

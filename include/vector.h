@@ -32,6 +32,7 @@ struct Vec2f vec2f_add(struct Vec2f a, struct Vec2f b);
 
 struct Vec3f vec3f_create(float x, float y, float z);
 
+
 float vec2f_magnitude(struct Vec2f v);
 void vec2f_normalize(struct Vec2f* v);
 void print_vec2f(struct Vec2f v);
@@ -67,6 +68,7 @@ static inline struct Vec4f vec3f_to_vec4f(struct Vec3f v, float w) {
 
 struct Vec4f vec4f_create(float x, float y, float z, float w);
 
+struct Vec3f vec4f_to_vec3f(struct Vec4f v);
 float vec4f_dot(struct Vec4f a, struct Vec4f b);
 struct Vec4f vec4f_normalize(struct Vec4f v);
 float vec4f_magnitude(struct Vec4f v);

@@ -20,6 +20,9 @@ bool vec3f_are_about_equal(struct Vec3f a, struct Vec3f b, float allowance) {
 	}
 }
 
+struct Vec3f vec4f_to_vec3f(struct Vec4f v) {
+    return (struct Vec3f){ v.x, v.y, v.z };
+}
 struct Vec2f vec2f_create(float x, float y) {
 	struct Vec2f v = {
 		.x = x,

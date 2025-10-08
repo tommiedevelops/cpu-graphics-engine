@@ -4,11 +4,11 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#pragma once
-#include "vector.h"
 #include "matrix.h"
 #include "shading.h"
+#include "vector.h" 
 
+struct Material;
 struct Vec3f;
 
 struct Triangle {
@@ -41,5 +41,5 @@ struct Vec3f calculate_normal(struct Triangle tri);
 struct Triangle tri_perspective_divide(struct Triangle tri); 
 
 // array size 3 of struct Vec3f ptrs
-void rasterize_triangle(struct Triangle tri, struct Material* mat, uint32_t* framebuffer, float* zbuffer);
+void rasterize_triangle(struct Triangle tri, struct LightSource light, struct Material* mat, uint32_t* framebuffer, float* zbuffer);
 #endif

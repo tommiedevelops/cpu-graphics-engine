@@ -2,10 +2,8 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
+
 #include "triangle.h"
-#include "render.h"
-#include "constants.h"
-#include "bounds.h"
 
 struct Bounds get_bounds_from_tri(struct Triangle tri){
         /* return: [xmin, xmax, ymin, ymax, zmin, zmax] */
@@ -124,10 +122,24 @@ void draw_pixel(int x, int y, uint32_t* framebuffer, float* zbuffer, float depth
 	}
 }
 
-void rasterize_triangle(struct Triangle tri, struct Material* mat, uint32_t* framebuffer, float* zbuffer) {
+static inline struct Vec3f compute_tri_normal(struct Triangle tri) {
+	struct Vec3f v0 = vec4f_to_vec3f(tri.v0);
+	struct Vec3f v1 = vec4f_to_vec3f(tri.v1);
+	struct Vec3f v2 = vec4f_to_vec3f(tri.v2);
+
+	struct Vec3f x = vec3f_add(v0, vec3f_scale(v1, -1.0f));
+	struct Vec3f y = vec3f_add(v0, vec3f_scale(v2, -1.0f));
+	struct Vec3f n = vec3f_cross(x,y);
+
+	return vec3f_normalize(n);
+}
+
+void rasterize_triangle(struct Triangle tri, struct LightSource ls, struct Material* mat, uint32_t* framebuffer, float* zbuffer) {
+
+	// precompuite tri normal
+	struct Vec3f norm = compute_tri_normal(tri);
 
 	struct Bounds bounds = get_bounds_from_tri(tri);
-	
 	for(int y = (int)bounds.ymin; y <= (int)bounds.ymax; y++){
 		for(int x = (int)bounds.xmin; x <= (int)bounds.xmax; x++) {
 
@@ -136,13 +148,14 @@ void rasterize_triangle(struct Triangle tri, struct Material* mat, uint32_t* fra
 			float gamma = 1 - alpha - beta;
 
 			if( inside_triangle(alpha, beta, gamma) ) {
-				
+			
+				// Fragment Shader	
 				float depth = interpolate_depth(tri, alpha, beta, gamma);	
 				struct Vec2f uv = interpolate_uv(tri, alpha, beta, gamma);
 
 				struct Vec4f albedo = material_get_albedo(mat,uv);
-				uint32_t color = vec4f_to_rgba32(albedo);
 
+				uint32_t color = vec4f_to_rgba32(albedo);
 				draw_pixel(x,y,framebuffer,zbuffer,depth,color);
 			} 
 

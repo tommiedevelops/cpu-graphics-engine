@@ -1,5 +1,6 @@
 #ifndef SCENE_MANAGER_H 
 #define SCENE_MANAGER_H
+
 #include "vector.h"
 #include "obj_parser.h"
 #include "bounds.h"
@@ -30,7 +31,7 @@ struct Scene {
 struct Transform transform_create(struct Vec3f pos, struct Quaternion rot, struct Vec3f scale);
 struct Transform transform_default();
 
-struct Scene* scene_create(struct Camera* cam, struct GameObject** gos, int num_gos);
+struct Scene* scene_create(struct Camera* cam, struct GameObject** gos, int num_gos, struct LightSource ls);
 
 struct Camera* camera_create(struct Transform tr);
 
