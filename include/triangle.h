@@ -17,16 +17,22 @@ struct Triangle {
 	struct Vec4f v0;
 	struct Vec2f uv0;
 	struct Vec3f n0;
+	struct Vec2f uv0_over_w;
+	float w0_inv;
 
 	// Vertex 1
 	struct Vec4f v1;
 	struct Vec2f uv1;
 	struct Vec3f n1;
+	struct Vec2f uv1_over_w;
+	float w1_inv;
 
 	// Vertex 2
 	struct Vec4f v2;
 	struct Vec2f uv2;
 	struct Vec3f n2;
+	struct Vec2f uv2_over_w;	
+	float w2_inv;
 };
 
 struct Bounds get_bounds_from_tri(struct Triangle tri);

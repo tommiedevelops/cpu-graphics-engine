@@ -86,6 +86,13 @@ struct Vec3f vec3f_scale(struct Vec3f v, float value){
 	return result;
 }	
 
+struct Vec2f vec2f_scale(struct Vec2f v, float value){
+	struct Vec2f result;
+	result.x = v.x * value;
+	result.y = v.y * value;
+	return result;
+}	
+
 float vec3f_magnitude(struct Vec3f v) {
 	return sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
 }

@@ -61,20 +61,20 @@ bool point_inside(struct Vec4f point){
 }
 
 struct Vec2f interpolate_uv(struct Triangle tri, float alpha, float beta, float gamma){
-	float u0 = tri.uv0.x;
-	float u1 = tri.uv1.x;
-	float u2 = tri.uv2.x;
+	float u0 = tri.uv0_over_w.x;
+	float u1 = tri.uv1_over_w.x;
+	float u2 = tri.uv2_over_w.x;
 
-	float v0 = tri.uv0.y;
-	float v1 = tri.uv1.y;
-	float v2 = tri.uv2.y;
+	float v0 = tri.uv0_over_w.y;
+	float v1 = tri.uv1_over_w.y;
+	float v2 = tri.uv2_over_w.y;
 
-	/* printf("uv0=%f,%f\n", u0, v0); */
-	/* printf("uv1=%f,%f\n", u1, v1); */
-	/* printf("uv2=%f,%f\n", u2, v2); */
+	float w_inv = alpha*tri.w0_inv + beta*tri.w1_inv + gamma*tri.w2_inv;
+	float u_over_w = alpha*u0 + beta*u1 + gamma*u2;
+	float v_over_w = alpha*v0 + beta*v1 + gamma*v2;
 
-	float u = alpha*u0 + beta*u1 + gamma*u2;
-	float v = alpha*v0 + beta*v1 + gamma*v2;
+	float u = (float)u_over_w / w_inv;
+	float v = (float)v_over_w / w_inv;
 
 	struct Vec2f uv = vec2f_create(u,v);
 	

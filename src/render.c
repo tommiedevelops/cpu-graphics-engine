@@ -93,6 +93,18 @@ void assemble_triangle(struct Triangle* tri, int tri_idx, struct RenderData data
 
 }
 
+			
+
+void precompute_interpolated_values(struct Triangle* tri) {
+	tri->w0_inv = (float)1.0f/tri->v0.w;
+	tri->w1_inv = (float)1.0f/tri->v1.w;
+	tri->w2_inv = (float)1.0f/tri->v2.w;
+
+	tri->uv0_over_w = vec2f_scale(tri->uv0, tri->w0_inv);
+	tri->uv1_over_w = vec2f_scale(tri->uv1, tri->w1_inv);
+	tri->uv2_over_w = vec2f_scale(tri->uv2, tri->w2_inv);
+}
+
 void render_game_object(uint32_t* framebuffer, float* zbuffer, struct Scene scene, struct GameObject go){
 		
 		struct RenderData data = prepare_render_data(go, *scene.cam);
@@ -115,6 +127,8 @@ void render_game_object(uint32_t* framebuffer, float* zbuffer, struct Scene scen
 
 			assemble_triangle(&tri, tri_idx, data);
 			apply_transformation(MVP,&tri);
+
+			precompute_interpolated_values(&tri);			
 
 			struct ClipResult r = clip_tri(tri, data.clipping_planes, 6);
 			for(int k = 0; k < r.num_tris; k++){

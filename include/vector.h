@@ -35,7 +35,7 @@ float vec2f_magnitude(struct Vec2f v);
 void vec2f_normalize(struct Vec2f* v);
 void print_vec2f(struct Vec2f v);
 struct Vec2f vec2f_create(float x, float y);
-
+struct Vec2f vec2f_scale(struct Vec2f v, float value);
 float vec3f_dot(struct Vec3f a, struct Vec3f b);
 struct Vec3f vec3f_cross(struct Vec3f a, struct Vec3f b);
 void print_vec3f(struct Vec3f v);

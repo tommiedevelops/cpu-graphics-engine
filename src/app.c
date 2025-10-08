@@ -72,23 +72,24 @@ struct MeshData load_meshes(){
 struct GameObjectContainer prepare_game_objects(struct AppAssets assets){
 
 	/* User Defined */
-
-	if(assets.td.textures == NULL) printf("hello\n");
+	struct Texture** textures = assets.td.textures;
+	struct Mesh** meshes = assets.md.meshes;
 
 	// Ground
-	struct Material* ground_material = material_create(VEC4F_1, assets.td.textures[0]); 	
+	struct Material* ground_material = material_create(VEC4F_1, textures[BRICK]); 	
 	
 	struct Vec3f ground_pos = vec3f_create(0.0, -1.0f, 0.0f);
-	struct GameObject* ground_go  = game_object_create(transform_default(),assets.md.meshes[0], ground_material);
+	struct Vec3f ground_scale = vec3f_create(10.0f, 1.0f, 10.0f);
+	struct Transform ground_tr = transform_create(ground_pos, QUAT_IDENTITY, ground_scale);
 
-	printf("5\n");
+	struct GameObject* ground_go  = game_object_create(ground_tr,meshes[GROUND], ground_material);
+
 	ground_go->transform.position = ground_pos;
 
 	int num_gos = 1;
 	struct GameObject** gos = malloc(sizeof(struct GameObject*)*num_gos);
 	gos[GROUND] = ground_go;
 
-	printf("6\n");
 	struct GameObjectContainer ctr = {
 		.gos = gos,
 		.num_gos = num_gos
