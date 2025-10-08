@@ -3,30 +3,12 @@
 
 
 // ----- STRUCT DEFINITIONS (DO NOT MODIFY) -----
-
-struct AppAssets {
-	int num_meshes, num_textures;
-	struct Mesh** meshes;
-	struct Texture** textures;
-};
-
 struct GameObjectContainer {
 	struct GameObject** gos;
 	int num_gos;
 };
 
-struct TexData {
-	struct Texture** textures;
-	int num_textures;
-};
-
-struct MeshData {
-	int num_meshes;
-	struct Mesh** meshes;
-};
 // ------ USER DEFINED SECTION ------
-
-// Defining Handles 
 
 enum MeshHandles {
 /* User Defined */
@@ -59,8 +41,6 @@ struct TexData load_textures(){
 	return data;
 }
 
-void destroy_textures(struct TexData* textures);
-
 struct MeshData load_meshes(){
 	/* User Defined */
 
@@ -88,22 +68,27 @@ struct MeshData load_meshes(){
 	return data;
 }
 
-void destroy_meshes(struct MeshData* meshes);
-
 // --- Preparing Scene ---
 struct GameObjectContainer prepare_game_objects(struct AppAssets assets){
+
 	/* User Defined */
 
+	if(assets.td.textures == NULL) printf("hello\n");
+
 	// Ground
-	struct Material* ground_material = material_create(VEC4F_1, assets.textures[0]); 	
+	struct Material* ground_material = material_create(VEC4F_1, assets.td.textures[0]); 	
+	
 	struct Vec3f ground_pos = vec3f_create(0.0, -1.0f, 0.0f);
-	struct GameObject* ground_go  = game_object_create(transform_default(), assets.meshes[0], ground_material);
+	struct GameObject* ground_go  = game_object_create(transform_default(),assets.md.meshes[0], ground_material);
+
+	printf("5\n");
 	ground_go->transform.position = ground_pos;
 
 	int num_gos = 1;
 	struct GameObject** gos = malloc(sizeof(struct GameObject*)*num_gos);
 	gos[GROUND] = ground_go;
 
+	printf("6\n");
 	struct GameObjectContainer ctr = {
 		.gos = gos,
 		.num_gos = num_gos
@@ -187,23 +172,18 @@ void update_scene(struct Scene* scene, float dt, SDL_Event* event, bool* running
 
 // ------ API USED BY CORE (DO NOT MODIFY) ------
 struct AppAssets app_load_assets(){
-	/* User Defined */	
+
 	struct MeshData md = load_meshes();
 	struct TexData td = load_textures();
 
-	struct AppAssets assets = {
-		.meshes = md.meshes,
-		.num_meshes = md.num_meshes,
-		.textures = td.textures,
-		.num_textures = td.num_textures
-	};
-
+	struct AppAssets assets;
+	assets.md = md;
+	assets.td = td;
+	
 	return assets;
 }
 
-struct Scene* app_create_scene(){
-
-	struct AppAssets assets = app_load_assets();
+struct Scene* app_create_scene(struct AppAssets assets){
 
 	struct GameObjectContainer go_ctr = prepare_game_objects(assets);
 	if(NULL == go_ctr.gos){
@@ -213,7 +193,7 @@ struct Scene* app_create_scene(){
 
 	struct Camera* cam = prepare_camera();
 	if(NULL == cam){
-		LOG_ERROR("cam is nul");
+		LOG_ERROR("cam is null");
 		return NULL;
 	}
 
@@ -226,9 +206,37 @@ struct Scene* app_create_scene(){
 	return scene;
 }
 
-
 void app_update_scene(struct Scene* scene, float dt, SDL_Event* event, bool* running){
 	update_scene(scene, dt, event, running);
 }
 
+void app_destroy_scene(struct Scene* scene){
+	if(NULL == scene) return;
+	for(int i =0; i < scene->num_gos; i++){
+		free(scene->gos[i]);		
+	}
+	free(scene->cam);
+	free(scene);
+}
 
+void destroy_textures(struct TexData textures) {
+
+	for(int i = 0; i < textures.num_textures; i++){
+		free(textures.textures[i]);
+	}
+
+	free(textures.textures);
+}
+
+void destroy_meshes(struct MeshData meshes) {
+	for(int i = 0; i < meshes.num_meshes; i++){
+		free(meshes.meshes[i]);
+	}
+
+	free(meshes.meshes);
+}
+
+void app_destroy_assets(struct AppAssets assets){
+	destroy_meshes(assets.md);
+	destroy_textures(assets.td);
+}

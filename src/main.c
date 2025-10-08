@@ -1,18 +1,12 @@
 #include <stdint.h>
-#include "clip.h"
 #include <stdbool.h>
 #include <stdio.h>
 
 #include "constants.h"
 #include "render.h"
-#include "obj_parser.h"
-#include "triangle.h"
 #include "window.h"
 #include "scene_manager.h"
 #include "game_time.h"
-#include "quaternion.h"
-#include "construct_plane.h"
-#include "shading.h"
 
 #include "app.h"
 
@@ -26,12 +20,8 @@ static inline void clear_buffers(uint32_t* framebuffer, float* zbuffer){
 
 int main(void) {
 
-	struct Scene* scene = app_create_scene();
-
-	if(NULL == scene) {
-		printf("scene is null\n");
-	       	exit(-1);
-	}
+	struct AppAssets assets = app_load_assets();
+	struct Scene* scene = app_create_scene(assets);
 
 	struct Time time;
 	time_init(&time);
@@ -47,14 +37,15 @@ int main(void) {
         while(running) {
 		clear_buffers(framebuffer, zbuffer);
 		update_time(&time);
+
 		app_update_scene(scene, time.delta_time, &event, &running);
+
 		render_scene(framebuffer, zbuffer, *scene);
                 update_window(window_data, framebuffer);
 	}
 
-        /* Clean Up */
-
-	// destroy_scene(scene);
-        destroy_window(window_data);
+	app_destroy_scene(scene);
+	app_destroy_assets(assets);
+       	destroy_window(window_data);
         return 0;
 }
