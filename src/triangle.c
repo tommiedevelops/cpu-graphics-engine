@@ -117,8 +117,10 @@ static inline float compute_beta(int x, int y, struct Triangle tri, float alpha)
 }
 
 void draw_pixel(int x, int y, uint32_t* framebuffer, float* zbuffer, float depth, uint32_t color){
+	if(x >= WIDTH || x <= 0.0f) return;
+	if(y >= HEIGHT || y <= 0.0f) return;
 
-	if(depth >= zbuffer[x + y*WIDTH]){
+	if(depth <= zbuffer[x + y*WIDTH]){
 		framebuffer[x + y*WIDTH] = color;			
 		zbuffer[x + y*WIDTH] = depth;
 	}
@@ -137,7 +139,6 @@ void rasterize_triangle(struct Triangle tri, struct Material* mat, uint32_t* fra
 
 			if( inside_triangle(alpha, beta, gamma) ) {
 				
-				// Fragment Shader
 				float depth = interpolate_depth(tri, alpha, beta, gamma);	
 				struct Vec2f uv = interpolate_uv(tri, alpha, beta, gamma);
 

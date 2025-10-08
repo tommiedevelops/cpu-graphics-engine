@@ -7,22 +7,22 @@ float sdf(struct Plane P, struct Vec4f x){
 bool inside(struct Plane P, struct Vec4f x, float eps){ return sdf(P,x) <= 0.0f; }
 
 struct Vec4f lerp(struct Vec4f u, struct Vec4f v, float t){
-	if(t > 1){
+	if(t > 1.0f){
 		//LOG_ERROR("invalid t supplied");
-		t = 1;
+		t = 0.99f;
 	}
 
-	if( t < 0){
+	if( t < 0.0f){
 		//LOG_ERROR("invalid t supplied");
-		t = 0;	
+		t = 0.01f;	
 	}
 
 	return vec4f_add(vec4f_scale(u, 1-t), vec4f_scale(v, t));
 }
 
 struct Vec4f intersect(struct Plane P, struct Vec4f u, struct Vec4f v){
-	float t = vec4f_dot(P.n, vec4f_add(u, vec4f_scale(P.p, -1.0f) ))
-		/ vec4f_dot(P.n, vec4f_add(u, vec4f_scale(v, -1.0f) ));
+	float t = (float)vec4f_dot(P.n, vec4f_add(u, vec4f_scale(P.p, -1.0f) ))
+		/ (float)vec4f_dot(P.n, vec4f_add(u, vec4f_scale(v, -1.0f) ));
 	return lerp(u,v,t);
 }
 
@@ -44,9 +44,9 @@ int clip_against_plane(struct Vec4f* in, int in_n, struct Plane P, struct Vec4f*
 		struct Vec4f s = in[v];
 		struct Vec4f e = in[(v+1)%in_n];
 
-		float epsilon = 0.01f; // some allowance
-		bool sIn = inside(P,s,epsilon);
-		bool eIn = inside(P,e,epsilon);
+		float eps = 0.001f; // some allowance
+		bool sIn = inside(P,s,eps);
+		bool eIn = inside(P,e,eps);
 
 		if(sIn && eIn) {
 			out[n++] = e;	
@@ -55,7 +55,7 @@ int clip_against_plane(struct Vec4f* in, int in_n, struct Plane P, struct Vec4f*
 
 		if(sIn && !eIn){
 			struct Vec4f i = intersect(P,s,e);
-			if(!vec4f_are_about_equal(i,s, 0.01f)) out[n++] = intersect(P,s,e);
+			if(!vec4f_are_equal(i,s)) out[n++] = intersect(P,s,e);
 			continue;
 		}
 
@@ -63,7 +63,7 @@ int clip_against_plane(struct Vec4f* in, int in_n, struct Plane P, struct Vec4f*
 			struct Vec4f i  = intersect(P,s,e);
 			out[n++] = i;
 			
-			if(!vec4f_are_about_equal(i,e,0.01f)) {
+			if(!vec4f_are_equal(i,e)) {
 				out[n++] = e;
 			}
 

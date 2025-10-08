@@ -13,16 +13,24 @@ struct Transform {
 	struct Vec3f scale;
 };
 
-struct Transform transform_create(struct Vec3f pos, struct Quaternion rot, struct Vec3f scale);
-
-struct Scene create_scene();
-
 struct Camera { 
 	struct Transform transform;
 	float fov;
 	float near;
 	float far;
 };
+
+struct Scene {
+	struct Camera *cam;
+	struct GameObject **gos;
+	int num_gos;
+	struct LightSource light;
+};
+
+struct Transform transform_create(struct Vec3f pos, struct Quaternion rot, struct Vec3f scale);
+struct Transform transform_default();
+
+struct Scene* scene_create(struct Camera* cam, struct GameObject** gos, int num_gos);
 
 struct Camera* camera_create(struct Transform tr);
 
@@ -45,13 +53,6 @@ struct GameObject {
 };
 
 struct GameObject* game_object_create(struct Transform tr, struct Mesh* mesh, struct Material* mat);
-
-struct Scene {
-	struct Camera *cam;
-	struct GameObject **gameObjects;
-	int num_gameObjects;
-	struct LightSource light;
-};
 
 void normalize_vertices(float sidelength, struct Vec3f* vertices, int num_vertices);
 

@@ -1,1 +1,234 @@
+#include <SDL2/SDL.h>
+#include "app.h"
+
+
+// ----- STRUCT DEFINITIONS (DO NOT MODIFY) -----
+
+struct AppAssets {
+	int num_meshes, num_textures;
+	struct Mesh** meshes;
+	struct Texture** textures;
+};
+
+struct GameObjectContainer {
+	struct GameObject** gos;
+	int num_gos;
+};
+
+struct TexData {
+	struct Texture** textures;
+	int num_textures;
+};
+
+struct MeshData {
+	int num_meshes;
+	struct Mesh** meshes;
+};
+// ------ USER DEFINED SECTION ------
+
+// Defining Handles 
+
+enum MeshHandles {
+/* User Defined */
+	GROUND = 0,
+	BUNNY = 1,
+	TEAPOT = 2
+};
+
+enum TexHandles {
+/* User Defined */
+	BRICK = 0
+};
+
+// Loading & Destroying Assets 
+struct TexData load_textures(){
+	/* User Defined */
+
+	int num_textures = 1;
+	struct Texture** textures = malloc(sizeof(struct Texture*)*num_textures);
+
+	struct Texture* tex = texture_load("./assets/textures/brickwall.png");
+
+	textures[BRICK] = tex;
+
+	struct TexData data = {
+		.textures = textures,
+		.num_textures = num_textures
+	};
+
+	return data;
+}
+
+void destroy_textures(struct TexData* textures);
+
+struct MeshData load_meshes(){
+	/* User Defined */
+
+	int num_meshes = 3;
+	struct Mesh** meshes = malloc(sizeof(struct Mesh*)*num_meshes);
+
+	struct Mesh* teapot_mesh = malloc(sizeof(struct Mesh));
+	*teapot_mesh = parse_obj("./assets/models/teapot.obj");	
+
+	struct Mesh* bunny_mesh = malloc(sizeof(struct Mesh));
+	*bunny_mesh = parse_obj("./assets/models/bunny.obj");	
+
+	struct Mesh* ground_mesh = malloc(sizeof(struct Mesh));
+	*ground_mesh = create_square_plane();
+
+	meshes[GROUND] = ground_mesh;
+	meshes[BUNNY] = bunny_mesh;
+	meshes[TEAPOT] = teapot_mesh;
+
+	struct MeshData data = {
+		.meshes = meshes,
+		.num_meshes = num_meshes
+	};
+	
+	return data;
+}
+
+void destroy_meshes(struct MeshData* meshes);
+
+// --- Preparing Scene ---
+struct GameObjectContainer prepare_game_objects(struct AppAssets assets){
+	/* User Defined */
+
+	// Ground
+	struct Material* ground_material = material_create(VEC4F_1, assets.textures[0]); 	
+	struct Vec3f ground_pos = vec3f_create(0.0, -1.0f, 0.0f);
+	struct GameObject* ground_go  = game_object_create(transform_default(), assets.meshes[0], ground_material);
+	ground_go->transform.position = ground_pos;
+
+	int num_gos = 1;
+	struct GameObject** gos = malloc(sizeof(struct GameObject*)*num_gos);
+	gos[GROUND] = ground_go;
+
+	struct GameObjectContainer ctr = {
+		.gos = gos,
+		.num_gos = num_gos
+	};
+
+	return ctr;
+}
+
+struct Camera* prepare_camera(){
+	/* User Defined */
+	struct Transform tr = transform_default();
+	tr.position = vec3f_create(0.0f, 0.0f, -5.0f);
+	struct Camera* cam = camera_create(tr);
+	return cam;
+}
+
+// --- Event Handling ---
+struct EventData {
+	struct Vec3f mouse_input;
+	struct Vec2f move_input;
+};
+
+struct EventData handle_event(SDL_Event* event, bool* running){
+	/* User Can Register More Cases */
+	struct EventData data = {0};
+
+	while (SDL_PollEvent(event)) {
+		switch(event->type) {
+			case SDL_QUIT: running = false; break;
+			case SDL_MOUSEMOTION:
+				       data.mouse_input.x += event->motion.xrel;
+				       data.mouse_input.y += event->motion.yrel;
+				       break;
+			case SDL_KEYDOWN:
+				       if(event->key.keysym.scancode == SDL_SCANCODE_ESCAPE) *running = false;
+				       break;
+		}
+	}	
+
+	const Uint8* kb = SDL_GetKeyboardState(NULL);
+	if(kb[SDL_SCANCODE_W]) data.move_input.y += 1.0f;
+	if(kb[SDL_SCANCODE_A]) data.move_input.x -= 1.0f; 
+	if(kb[SDL_SCANCODE_S]) data.move_input.y -= 1.0f;
+	if(kb[SDL_SCANCODE_D]) data.move_input.x += 1.0f; 
+
+	vec2f_normalize(&data.move_input);
+
+	return data;
+}
+
+void update_scene(struct Scene* scene, float dt, SDL_Event* event, bool* running){
+	struct EventData ed = handle_event(event, running);
+
+	/* User Defined */
+	
+	// First Person Camera	
+	float cam_speed = 4.0f;	
+	float cam_ang_vel = 1.0f;	
+
+	float yaw = ed.mouse_input.x * dt * cam_ang_vel;
+	float pitch = ed.mouse_input.y * dt * cam_ang_vel;
+
+	struct Camera* cam = scene->cam;
+
+	struct Vec3f forward = quat_get_forward(cam->transform.rotation);
+	struct Vec3f right = quat_get_right(cam->transform.rotation);
+
+	struct Quaternion q_yaw = quat_angle_axis(yaw, VEC3F_Y);
+
+	cam->transform.rotation = quat_mul(q_yaw, cam->transform.rotation);
+	quat_normalize(cam->transform.rotation);
+
+	// camera translation
+	struct Vec3f fwd_delta = vec3f_scale(forward, ed.move_input.y);
+	struct Vec3f side_delta = vec3f_scale(right, ed.move_input.x);
+	struct Vec3f move_vec = vec3f_add(fwd_delta, side_delta);
+	struct Vec3f delta_pos = vec3f_scale(move_vec, cam_speed * dt);
+	cam->transform.position = vec3f_add(cam->transform.position, delta_pos);
+
+}
+
+// ------ API USED BY CORE (DO NOT MODIFY) ------
+struct AppAssets app_load_assets(){
+	/* User Defined */	
+	struct MeshData md = load_meshes();
+	struct TexData td = load_textures();
+
+	struct AppAssets assets = {
+		.meshes = md.meshes,
+		.num_meshes = md.num_meshes,
+		.textures = td.textures,
+		.num_textures = td.num_textures
+	};
+
+	return assets;
+}
+
+struct Scene* app_create_scene(){
+
+	struct AppAssets assets = app_load_assets();
+
+	struct GameObjectContainer go_ctr = prepare_game_objects(assets);
+	if(NULL == go_ctr.gos){
+		LOG_ERROR("gameobjects is null");
+		return NULL;
+	}
+
+	struct Camera* cam = prepare_camera();
+	if(NULL == cam){
+		LOG_ERROR("cam is nul");
+		return NULL;
+	}
+
+	struct Scene* scene = scene_create(cam, go_ctr.gos, go_ctr.num_gos);
+	if(NULL == scene){
+		LOG_ERROR("scene is null");
+		return NULL;
+	}
+
+	return scene;
+}
+
+
+void app_update_scene(struct Scene* scene, float dt, SDL_Event* event, bool* running){
+	update_scene(scene, dt, event, running);
+}
+
 

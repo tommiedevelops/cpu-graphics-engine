@@ -37,6 +37,6 @@ void clipping_tests(){
 }
 
 int main(){
-	test_clip_against_plane();
+	clipping_tests();
 }
 

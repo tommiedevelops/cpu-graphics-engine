@@ -6,38 +6,9 @@
 
 #include "shading.h"
 #include "scene_manager.h"
+#include "construct_plane.h"
 
-struct Assets {
-	struct Mesh* meshes;
-	struct Texture* textures;
-};
-
-struct InputData {
-	struct Vec2f mouse_input;
-	struct Vec2f move_input;
-};
-
-struct Assets app_load_assets(){
-	// User Defined
-}
-
-struct Scene app_create_scene(){
-	// User Defined		
-}
-
-void app_update_scene(struct Scene* scene, float delta_time, SDL_Event* event){
-	// User Defined	
-}
-
-void app_destroy_assets(struct Assets* assets){
-	//TODO
-}
-
-void app_destroy_scene(struct Scene* scene){
-	//TODO
-}
-
-void update_inputs(SDL_Event* event, struct InputData* input) {
-	//TODO
-}
+struct Scene* app_create_scene();
+void app_update_scene(struct Scene* scene, float delta_time, SDL_Event* event, bool* running);
+void app_destroy_scene(struct Scene* scene);
 #endif

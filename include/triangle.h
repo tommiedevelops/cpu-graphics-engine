@@ -27,10 +27,6 @@ struct Triangle {
 	struct Vec4f v2;
 	struct Vec2f uv2;
 	struct Vec3f n2;
-
-	bool has_uv;
-	bool has_normal;
-	bool is_clipped;
 };
 
 struct Bounds get_bounds_from_tri(struct Triangle tri);

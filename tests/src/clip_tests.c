@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <stdbool.h>
+#include <math.h>
 
 #include "clip.h"
 
@@ -340,21 +341,86 @@ static inline void calculate_planes(struct Plane* planes){
 	planes[5].p = vec4f_create(0.0f, 0.0f, 1.0f, 1.0f);
 }
 
-void test_clip_case_3(){
-	// positive
-	printf("test case 3\n");
-
-	// assuming post projection matrix
-	struct Plane planes[6] = {0};
-	calculate_planes(planes);
-	
+// Small helpers used only in this test
+static inline int approxf(float a, float b, float eps) { return fabsf(a-b) <= eps; }
+static inline int v4_near(struct Vec4f a, struct Vec4f b, float eps) {
+    return approxf(a.x,b.x,eps) && approxf(a.y,b.y,eps) &&
+           approxf(a.z,b.z,eps) && approxf(a.w,b.w,eps);
 }
+static inline int inside_clip(struct Vec4f v, float eps) {
+    const float w = v.w;
+    if (v.x < -w - eps) return 0;
+    if (v.x >  w + eps) return 0;
+    if (v.y < -w - eps) return 0;
+    if (v.y >  w + eps) return 0;
+    if (v.z <  0.0f - eps) return 0;
+    if (v.z >  w + eps) return 0;
+    return 1;
+}
+
+void test_clip_case_3(void) {
+    printf("test case 3\n");
+
+    // --- Frustum planes (clip space, normals facing inward)
+    struct Plane planes[6] = {0};
+    calculate_planes(planes);
+
+    // --- Input triangle in homogeneous clip space (post-projection)
+    // A is outside LEFT, B is behind the NEAR plane, C is fully inside.
+    struct Triangle t;
+    t.v0 = vec4f_create(-1.2f,  0.2f,  0.5f, 1.0f);   // A: x < -w
+    t.v1 = vec4f_create( 0.8f,  0.8f, -0.2f, 1.0f);   // B: z < 0
+    t.v2 = vec4f_create( 0.8f, -0.8f,  0.8f, 1.0f);   // C: inside
+
+    struct ClipResult r = clip_tri(t, planes, 6);
+
+    // Expect a pentagon after clipping (triangulated as a fan => 3 tris)
+    assert(r.num_tris == 3);
+
+    // Expected unique vertices after clipping (order-agnostic):
+    // Intersections with LEFT plane
+    struct Vec4f I1 = vec4f_create(-1.0f, 0.26f,       0.43f,      1.0f); // A->B @ x=-1
+    struct Vec4f I2 = vec4f_create(-1.0f, 0.10f,       0.53f,      1.0f); // A->C @ x=-1
+    // Intersections with NEAR plane (z=0)
+    struct Vec4f J1 = vec4f_create( 0.22857143f, 0.62857145f, 0.0f, 1.0f); // I1->B @ z=0
+    struct Vec4f J2 = vec4f_create( 0.8f,        0.48f,       0.0f, 1.0f); // B->C  @ z=0
+    struct Vec4f  C = vec4f_create( 0.8f,       -0.8f,       0.8f,  1.0f); // original C
+
+    struct Vec4f expected[5] = { J1, J2, C, I2, I1 };
+    int found[5] = {0};
+
+    // 1) Every output vertex must be inside the clip volume
+    for (int k = 0; k < r.num_tris; ++k) {
+        assert(inside_clip(r.tris[k].v0, EPS));
+        assert(inside_clip(r.tris[k].v1, EPS));
+        assert(inside_clip(r.tris[k].v2, EPS));
+    }
+
+    // 2) All expected vertices must appear among the output (order doesn't matter)
+    struct Vec4f out_verts[9];
+    int out_n = 0;
+    for (int k = 0; k < r.num_tris; ++k) {
+        out_verts[out_n++] = r.tris[k].v0;
+        out_verts[out_n++] = r.tris[k].v1;
+        out_verts[out_n++] = r.tris[k].v2;
+    }
+    for (int e = 0; e < 5; ++e) {
+        for (int i = 0; i < out_n; ++i) {
+            if (v4_near(expected[e], out_verts[i], 1e-4f)) { found[e] = 1; break; }
+        }
+        assert(found[e] && "Missing expected clipped vertex");
+    }
+
+    printf("test_case_3 passed (num_tris=%d)\n", r.num_tris);
+}
+
 
 
 void test_clip(){
 	printf("test_clip\n");
 	test_clip_case_1();
 	test_clip_case_2();
+	test_clip_case_3();
 	printf("success\n");
 }
 

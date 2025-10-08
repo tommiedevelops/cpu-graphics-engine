@@ -79,8 +79,8 @@ struct Mat4 get_projection_matrix(struct Camera cam, float aspect) {
 
 	struct Mat4 P = {0};
 
-	P.m[0][0] = (float)aspect/tan(0.5f*fov);
-	P.m[1][1] = (float)1.0f/tan(0.5f*fov);
+	P.m[0][0] = (float)aspect/tanf(0.5f*fov);
+	P.m[1][1] = (float)1.0f/tanf(0.5f*fov);
 	P.m[2][2] = (float)-1.0f*zf/ (zn - zf);
 	P.m[2][3] = (float)(zn)*zf/(zn-zf); 
 	P.m[3][2] = 1.0f;
