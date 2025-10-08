@@ -14,7 +14,8 @@ enum MeshHandles {
 /* User Defined */
 	GROUND = 0,
 	BUNNY = 1,
-	TEAPOT = 2
+	TEAPOT = 2,
+	WALL = 3
 };
 
 enum TexHandles {
@@ -44,7 +45,7 @@ struct TexData load_textures(){
 struct MeshData load_meshes(){
 	/* User Defined */
 
-	int num_meshes = 3;
+	int num_meshes = 4;
 	struct Mesh** meshes = malloc(sizeof(struct Mesh*)*num_meshes);
 
 	struct Mesh* teapot_mesh = malloc(sizeof(struct Mesh));
@@ -56,9 +57,13 @@ struct MeshData load_meshes(){
 	struct Mesh* ground_mesh = malloc(sizeof(struct Mesh));
 	*ground_mesh = create_square_plane();
 
+	struct Mesh* wall_mesh = malloc(sizeof(struct Mesh));
+	*wall_mesh = create_square_plane_xy();
+
 	meshes[GROUND] = ground_mesh;
 	meshes[BUNNY] = bunny_mesh;
 	meshes[TEAPOT] = teapot_mesh;
+	meshes[WALL] = wall_mesh;
 
 	struct MeshData data = {
 		.meshes = meshes,
@@ -77,18 +82,23 @@ struct GameObjectContainer prepare_game_objects(struct AppAssets assets){
 
 	// Ground
 	struct Material* ground_material = material_create(VEC4F_1, textures[BRICK]); 	
-	
 	struct Vec3f ground_pos = vec3f_create(0.0, -1.0f, 0.0f);
 	struct Vec3f ground_scale = vec3f_create(10.0f, 1.0f, 10.0f);
 	struct Transform ground_tr = transform_create(ground_pos, QUAT_IDENTITY, ground_scale);
-
 	struct GameObject* ground_go  = game_object_create(ground_tr,meshes[GROUND], ground_material);
 
-	ground_go->transform.position = ground_pos;
+	// Bunny
+	struct Vec4f lavender = vec4f_create(0.90,0.90,0.98,1.0);
+	struct Material* bunny_material = material_create(lavender, NULL); 	
+	struct Vec3f bunny_pos = vec3f_create(0.0, 2.0f, 0.0f);
+	struct Vec3f bunny_scale = vec3f_create(3.0f, 3.0f, 3.0f);
+	struct Transform bunny_tr = transform_create(bunny_pos, QUAT_IDENTITY, bunny_scale);
+	struct GameObject* bunny_go  = game_object_create(bunny_tr, meshes[BUNNY], bunny_material);
 
-	int num_gos = 1;
+	int num_gos = 2;
 	struct GameObject** gos = malloc(sizeof(struct GameObject*)*num_gos);
 	gos[GROUND] = ground_go;
+	gos[BUNNY] = bunny_go;
 
 	struct GameObjectContainer ctr = {
 		.gos = gos,
@@ -169,6 +179,13 @@ void update_scene(struct Scene* scene, float dt, SDL_Event* event, bool* running
 	struct Vec3f delta_pos = vec3f_scale(move_vec, cam_speed * dt);
 	cam->transform.position = vec3f_add(cam->transform.position, delta_pos);
 
+	// Spin the bunny
+	float bunny_ang_vel = 2.0f;
+	struct Vec3f rot_axis = vec3f_create(1.0f, -1.0f, 0.0f);
+	struct Quaternion bunny_rot = quat_angle_axis(dt*bunny_ang_vel, rot_axis);
+
+	struct Quaternion* curr_rot = &scene->gos[BUNNY]->transform.rotation;
+	*curr_rot = quat_normalize(quat_mul(*curr_rot, bunny_rot));
 }
 
 // ------ API USED BY CORE (DO NOT MODIFY) ------

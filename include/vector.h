@@ -28,6 +28,7 @@ struct Vec3f {
 struct Vec2f {
 	float x, y;
 };
+struct Vec2f vec2f_add(struct Vec2f a, struct Vec2f b);
 
 struct Vec3f vec3f_create(float x, float y, float z);
 

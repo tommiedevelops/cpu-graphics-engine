@@ -10,7 +10,7 @@ struct Texture* texture_load(char* filename){
 	uint8_t* img = stbi_load(filename, &width, &height, &channels, 4);
 
 	if(NULL == img){
-		//LOG_ERROR("something went wrong loading the .png");
+		LOG_ERROR("something went wrong loading the .png");
 	}
 
 	struct Vec4f* map = malloc(sizeof(struct Vec4f)*width*height);
@@ -45,33 +45,30 @@ void texture_free(struct Texture tex){
 
 struct Vec4f get_pixel(struct Vec4f* data, int width, int height, int x, int y){
 
-	if (x < 0) x = 0;
-	if (y < 0) y = 0;
-	if (x >= width) x = width - 1;
-	if (y >= height) y = height - 1;
+	int j = y%(height-1);
+	int i = x%(width-1);
 
-	int index = y * width + x;
+	int index = j * width + i;
+	/* printf("index = %d", index); */
+	/* printf("size = %d\n", width*height); */
+
 	return data[index];
 }
 
+static inline float clamp01(float x) {return x < 0 ? 0 : (x > 1 ? 1 : x); }
+
 struct Vec4f texture_sample(struct Texture* tex, float u, float v){
-	if(NULL == tex){
-		// LOG_ERROR("tex is a NULL ptr");
-		return VEC4F_0;	
-	}
+	if(!tex || !tex->map) {LOG_ERROR("null texture"); return VEC4F_0;}
 
-	if(NULL == tex->map){
-		// LOG_ERROR("texture map is a NULL ptr");
-		return VEC4F_0;
-	}
+	u = clamp01(u);
+	v = clamp01(v);
+	
+	int x = (int)floorf(u *(tex->width - 1));
+	int y = (int)floorf(v *(tex->height - 1));
 
-	int x = (int)(u * (tex->width - 1));
-	int y = (int)(v * (tex->height - 1));
-
-	struct Vec4f col = get_pixel(tex->map, tex->width, tex->height, x, y);
-
-	return col;
+	return get_pixel(tex->map, tex->width, tex->height, x, y);
 }
+
 
 struct Material material_default(){
 	struct Material mat = {

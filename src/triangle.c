@@ -68,15 +68,13 @@ struct Vec2f interpolate_uv(struct Triangle tri, float alpha, float beta, float 
 	float v0 = tri.uv0_over_w.y;
 	float v1 = tri.uv1_over_w.y;
 	float v2 = tri.uv2_over_w.y;
+	
+	float u = alpha*u0 + beta*u1 + gamma*u2;
+	float v = alpha*v0 + beta*v1 + gamma*v2;
 
 	float w_inv = alpha*tri.w0_inv + beta*tri.w1_inv + gamma*tri.w2_inv;
-	float u_over_w = alpha*u0 + beta*u1 + gamma*u2;
-	float v_over_w = alpha*v0 + beta*v1 + gamma*v2;
 
-	float u = (float)u_over_w / w_inv;
-	float v = (float)v_over_w / w_inv;
-
-	struct Vec2f uv = vec2f_create(u,v);
+	struct Vec2f uv = vec2f_scale(vec2f_create(u,v), (float)1.0f/w_inv);
 	
 	return uv;
 }

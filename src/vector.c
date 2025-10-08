@@ -7,6 +7,7 @@ void print_vec3f(struct Vec3f v){
 void print_vec2f(struct Vec2f v) {
 	printf("(x = %f, y = %f)\n", v.x, v.y);
 }
+
 bool vec3f_are_about_equal(struct Vec3f a, struct Vec3f b, float allowance) {
 	bool x_equal = fabs(a.x - b.x) < allowance;
 	bool y_equal = fabs(a.y - b.y) < allowance;
@@ -70,6 +71,15 @@ void scale_vector(struct Vec3f* vector, float scalar){
 	vector->y *= scalar;
 	vector->z *= scalar;
 }
+
+struct Vec2f vec2f_add(struct Vec2f a, struct Vec2f b){
+	struct Vec2f result;
+	result.x = a.x + b.x;
+	result.y = a.y + b.y;
+	return result;
+}
+
+
 struct Vec3f vec3f_add(struct Vec3f a, struct Vec3f b){
 	struct Vec3f result;
 	result.x = a.x + b.x;

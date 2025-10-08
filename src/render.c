@@ -128,10 +128,9 @@ void render_game_object(uint32_t* framebuffer, float* zbuffer, struct Scene scen
 			assemble_triangle(&tri, tri_idx, data);
 			apply_transformation(MVP,&tri);
 
-			precompute_interpolated_values(&tri);			
-
 			struct ClipResult r = clip_tri(tri, data.clipping_planes, 6);
 			for(int k = 0; k < r.num_tris; k++){
+				precompute_interpolated_values(&r.tris[k]);			
 				apply_perspective_divide(&r.tris[k]); // divide (x,y,z,w) by w
 				apply_transformation(view_port, &r.tris[k]);
 				rasterize_triangle(r.tris[k], &data.mat, framebuffer, zbuffer);
