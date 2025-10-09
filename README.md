@@ -1,28 +1,31 @@
-**A software rasterizer written in C**  
+.obj models: https://drive.google.com/drive/folders/1wxrPdNxu02eeTgZSTUKd_N_un35_3PKn?usp=drive_link
 
-![Demo of Software Rasterizer](thumbnail.gif)
+WSL:
+git clone git@github.com:tommiedevelops/c-software-rasterizer.git
 
-A lightweight software rasterizer written in C that renders 3D models entirely on the CPU.  
-It implements a basic graphics pipeline — transforming vertices, rasterizing triangles, and shading pixels — without relying on OpenGL or DirectX.  
-This project is meant as a learning tool to understand how modern GPU pipelines work under the hood.
+Installing dependencies: 
 
-**SETUP**  
-Please install: 
-- sdl2 version 2.26.5
-- sdl2-ttf version 2.0.18 (for rendering text)
+Windows (WSL):
+sudo apt update
+sudo apt install build-essential -y
+sudo apt install libsdl2-dev
 
-If using linux: 
-- sudo apt install libsdl2-dev
-- sudo apt-get install libsdl2-ttf-dev
+Mac:
+brew install gcc make
+brew install sdl2
 
-Otherwise just google it.
+Verify dependencies: 
+gcc --version
+make --version
+sdl2-config --version
 
-To run the program, ensure there is a **clean .obj** file in the models/ folder (helper shell scripts are provided in /shell_scripts for cleaning). Then run **make build** and **make run ARGS=[filename]**. Do not include the .obj file extension.
+Commands to switch branches:
 
-Use the following command to clean up the directory afterwards.
-- make clean
-
-**Note on ASAN**  
-- Please note that SDL2 has in-built memory leaks so you may need to run the program multiple times to prevent ASAN from complaining. Pay close attention to memory leak details as it may not pertain to your actual code. 
-- It may start spamming ASAN error messages. Just quit and restart.
-
+git checkout remotes/origin/tech-talk/depth-demo
+git checkout remotes/origin/tech-talk/material-demo
+git checkout remotes/origin/tech-talk/phong-shading-demo
+git checkout remotes/origin/tech-talk/projection-demo
+git checkout remotes/origin/tech-talk/rotation-demo
+git checkout remotes/origin/tech-talk/texture-demo
+git checkout remotes/origin/tech-talk/triangle-rasterization
+git checkout remotes/origin/tech-talk/wireframe-demo
