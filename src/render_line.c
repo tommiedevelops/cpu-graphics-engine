@@ -54,20 +54,10 @@ int render_lines(uint32_t *framebuffer, int* coords, int num_coords) {
 
 		struct Point* line = draw_line_easy(x0,y0,x1,y1);
 		int num_points = compute_num_points(x0,y0,x1,y1);
-		printf("render_lines:num_points={%d}\n", num_points);
 		draw_points_to_framebuffer(line, framebuffer, num_points);
 		free(line);
 	}
 	return 0;
-}
-
-/* Assuming wireframe_vertices are centred at (0,0) */
-/* and structured like so: [x0,y0,z0,x1,y1,z1...]*/
-void render_wireframe_from_3D_vertices(float* wireframe_vertices, int num_vertices){
-	int centre_x = round(WIDTH / 2);
-	int centre_y = round(HEIGHT / 2);
-
-	//TODO
 }
 
 

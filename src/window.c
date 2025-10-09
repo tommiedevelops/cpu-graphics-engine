@@ -36,19 +36,6 @@ int main() {
 
 	uint32_t framebuffer[WIDTH * HEIGHT] = {0};
 
-	// parse file into arrays of coords
-//	FILE* fp = open_input_file("line.input");
-//	int num_coords = extract_num_coords(fp); //side-effect: advanced line cursor to line 2
-//	int* coords = malloc(num_coords*sizeof(int)*4);
-//	memset(coords, 0x0, num_coords*sizeof(int)*4);
-
-	//parse_coords(fp, coords, num_coords); //assumes line cursor is at line 2
-
-	// render lines
-	//close_input_file(fp);
-
-// MOVE THE BELOW INTO RENDER.C
-
 	// render an obj
 	char* obj_file_path = "./models/bunny.obj";
 	int* coords = parse_obj_to_2D_coord_array(obj_file_path);
