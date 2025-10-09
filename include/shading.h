@@ -19,7 +19,6 @@ struct Texture* texture_load(char* filename);
 void texture_free(struct Texture tex);
 struct Vec4f texture_sample(struct Texture* tex, float u, float v);
 
-
 struct Material {
 	struct Vec4f color; // fallback color if no texture
 	struct Texture *tex; // for base

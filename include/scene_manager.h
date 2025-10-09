@@ -44,7 +44,9 @@ struct Mesh {
 	struct Vec2f* uvs;
 	int num_vertices;
 	int* triangles;
+	int* triangle_uvs;
 	int num_triangles;
+	int num_uvs;
 };
 
 struct GameObject {

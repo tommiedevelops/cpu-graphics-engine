@@ -89,11 +89,11 @@ struct GameObjectContainer prepare_game_objects(struct AppAssets assets){
 
 	// Bunny
 	struct Vec4f lavender = vec4f_create(0.40,0.70,0.38,0.4);
-	struct Material* bunny_material = material_create(lavender, NULL); 	
+	struct Material* bunny_material = material_create(lavender, textures[BRICK]); 	
 	struct Vec3f bunny_pos = vec3f_create(0.0, 0.0f, 0.0f);
 	struct Vec3f bunny_scale = vec3f_create(3.0f, 3.0f, 3.0f);
 	struct Transform bunny_tr = transform_create(bunny_pos, QUAT_IDENTITY, bunny_scale);
-	struct GameObject* bunny_go  = game_object_create(bunny_tr, meshes[BUNNY], bunny_material);
+	struct GameObject* bunny_go  = game_object_create(bunny_tr, meshes[TEAPOT], bunny_material);
 
 	int num_gos = 1;
 	struct GameObject** gos = malloc(sizeof(struct GameObject*)*num_gos);

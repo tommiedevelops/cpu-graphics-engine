@@ -98,3 +98,4 @@ struct Vec4f material_get_albedo(struct Material* mat, struct Vec2f uv) {
 
 	return texture_sample(mat->tex, uv.x, uv.y);
 }
+
