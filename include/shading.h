@@ -6,6 +6,7 @@
 
 struct LightSource {
 	struct Vec3f direction;
+	struct Vec4f color;
 };
 
 struct Texture {
@@ -22,6 +23,8 @@ struct Vec4f texture_sample(struct Texture* tex, float u, float v);
 struct Material {
 	struct Vec4f color; // fallback color if no texture
 	struct Texture *tex; // for base
+	struct Vec4f diffuse;
+	struct Vec4f specular;
 };
 
 struct Material* material_create(struct Vec4f color, struct Texture* tex);

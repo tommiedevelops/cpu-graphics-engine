@@ -81,24 +81,24 @@ struct GameObjectContainer prepare_game_objects(struct AppAssets assets){
 	struct Mesh** meshes = assets.md.meshes;
 
 	// Ground
-	struct Material* ground_material = material_create(VEC4F_1, textures[BRICK]); 	
-	struct Vec3f ground_pos = vec3f_create(0.0, -1.0f, 0.0f);
-	struct Vec3f ground_scale = vec3f_create(10.0f, 1.0f, 10.0f);
-	struct Transform ground_tr = transform_create(ground_pos, QUAT_IDENTITY, ground_scale);
-	struct GameObject* ground_go  = game_object_create(ground_tr,meshes[GROUND], ground_material);
+	/* struct Material* ground_material = material_create(VEC4F_1, textures[BRICK]); */ 	
+	/* struct Vec3f ground_pos = vec3f_create(0.0, -1.0f, 0.0f); */
+	/* struct Vec3f ground_scale = vec3f_create(10.0f, 1.0f, 10.0f); */
+	/* struct Transform ground_tr = transform_create(ground_pos, QUAT_IDENTITY, ground_scale); */
+	/* struct GameObject* ground_go  = game_object_create(ground_tr,meshes[GROUND], ground_material); */
 
 	// Bunny
-	struct Vec4f lavender = vec4f_create(0.90,0.90,0.98,1.0);
+	struct Vec4f lavender = vec4f_create(0.40,0.70,0.38,0.4);
 	struct Material* bunny_material = material_create(lavender, NULL); 	
-	struct Vec3f bunny_pos = vec3f_create(0.0, 2.0f, 0.0f);
+	struct Vec3f bunny_pos = vec3f_create(0.0, 0.0f, 0.0f);
 	struct Vec3f bunny_scale = vec3f_create(3.0f, 3.0f, 3.0f);
 	struct Transform bunny_tr = transform_create(bunny_pos, QUAT_IDENTITY, bunny_scale);
 	struct GameObject* bunny_go  = game_object_create(bunny_tr, meshes[BUNNY], bunny_material);
 
-	int num_gos = 2;
+	int num_gos = 1;
 	struct GameObject** gos = malloc(sizeof(struct GameObject*)*num_gos);
-	gos[GROUND] = ground_go;
-	gos[BUNNY] = bunny_go;
+	gos[0] = bunny_go;
+	/* gos[BUNNY] = bunny_go; */
 
 	struct GameObjectContainer ctr = {
 		.gos = gos,
@@ -119,7 +119,8 @@ struct Camera* prepare_camera(){
 struct LightSource prepare_light_source(){
 	/* User Defined */	
 	struct LightSource ls = {
-		.direction = vec3f_create(-1.0f, -1.0f, -1.0f)
+		.direction = vec3f_create(1.0f, -1.0f, 0.0f),
+		.color = VEC4F_1
 	};
 	return ls;
 }
@@ -192,7 +193,7 @@ void update_scene(struct Scene* scene, float dt, SDL_Event* event, bool* running
 	struct Vec3f rot_axis = vec3f_create(1.0f, -1.0f, 0.0f);
 	struct Quaternion bunny_rot = quat_angle_axis(dt*bunny_ang_vel, rot_axis);
 
-	struct Quaternion* curr_rot = &scene->gos[BUNNY]->transform.rotation;
+	struct Quaternion* curr_rot = &scene->gos[0]->transform.rotation;
 	*curr_rot = quat_normalize(quat_mul(*curr_rot, bunny_rot));
 }
 

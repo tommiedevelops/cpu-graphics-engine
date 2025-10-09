@@ -121,23 +121,11 @@ void draw_pixel(int x, int y, uint32_t* framebuffer, float* zbuffer, float depth
 		zbuffer[x + y*WIDTH] = depth;
 	}
 }
-
-static inline struct Vec3f compute_tri_normal(struct Triangle tri) {
-	struct Vec3f v0 = vec4f_to_vec3f(tri.v0);
-	struct Vec3f v1 = vec4f_to_vec3f(tri.v1);
-	struct Vec3f v2 = vec4f_to_vec3f(tri.v2);
-
-	struct Vec3f x = vec3f_add(v0, vec3f_scale(v1, -1.0f));
-	struct Vec3f y = vec3f_add(v0, vec3f_scale(v2, -1.0f));
-	struct Vec3f n = vec3f_cross(x,y);
-
-	return vec3f_normalize(n);
+static inline struct Vec4f vec4f_mul(struct Vec4f a, struct Vec4f b) {
+    return (struct Vec4f){ a.x * b.x, a.y * b.y, a.z * b.z, a.w * b.w };
 }
 
 void rasterize_triangle(struct Triangle tri, struct LightSource ls, struct Material* mat, uint32_t* framebuffer, float* zbuffer) {
-
-	// precompuite tri normal
-	struct Vec3f norm = compute_tri_normal(tri);
 
 	struct Bounds bounds = get_bounds_from_tri(tri);
 	for(int y = (int)bounds.ymin; y <= (int)bounds.ymax; y++){
@@ -152,10 +140,13 @@ void rasterize_triangle(struct Triangle tri, struct LightSource ls, struct Mater
 				// Fragment Shader	
 				float depth = interpolate_depth(tri, alpha, beta, gamma);	
 				struct Vec2f uv = interpolate_uv(tri, alpha, beta, gamma);
-
 				struct Vec4f albedo = material_get_albedo(mat,uv);
-
-				uint32_t color = vec4f_to_rgba32(albedo);
+				
+				
+				struct Vec4f diffuse = vec4f_mul(albedo, mat->diffuse);
+				struct Vec4f final = vec4f_add(diffuse, mat->specular);
+				
+				uint32_t color = vec4f_to_rgba32(final);
 				draw_pixel(x,y,framebuffer,zbuffer,depth,color);
 			} 
 
