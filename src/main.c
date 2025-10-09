@@ -14,17 +14,10 @@
 
 int main(int argc, char* argv[]) {
 
-	/* Handle CLI */
-	if(argc != 2) {
-		printf("Please provide exactly one filename. ./models/{filename}.obj\n");
-		exit(EXIT_FAILURE);
-	}
-
 	char filename[256] = {0};
-	snprintf(filename, sizeof(filename), "./models/%s.obj", argv[1]);
 
 	/* Parse Mesh from .obj file */
-	struct Mesh mesh = parse_obj(filename);
+	struct Mesh mesh = parse_obj("./models/bunny.obj");
 
 	struct Transform transform = {
 		.position = VEC3F_0, 
