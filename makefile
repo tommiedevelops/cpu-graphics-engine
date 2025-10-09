@@ -11,12 +11,4 @@ build: ./build/window
 clean:
 	rm ./build/window ./tests/build/testing
 run:
-	ASAN_OPTIONS=detect_leaks=1:leak_check_at_exit=0 ./build/window $(ARGS)
-run-normal:
-	./build/window $(ARGS)
-tbuild:
-		$(CC) $(TEST_FILES) $(SRC_FILES) -Iinclude -Itests/include $(DEBUGFLAGS) -o ./tests/build/testing $(CFLAGS) $(LDFLAGS)
-trun:
-		ASAN_OPTIONS=detect_leaks=1:leak_check_at_exit=0 ./tests/build/testing
-trun-normal:
-	./tests/build/testing
+	./build/window
