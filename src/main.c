@@ -15,18 +15,8 @@
 
 int main(int argc, char* argv[]) {
 
-	/* Handle CLI */
-	if(argc != 2) {
-		printf("Please provide exactly one filename. ./models/{filename}.obj\n");
-		exit(EXIT_FAILURE);
-	}
-	
-	// Extract filename from CLI
-	char filename[256] = {0};
-	snprintf(filename, sizeof(filename), "./models/%s.obj", argv[1]);
-
 	/* Parse Mesh from .obj file */
-	struct Mesh mesh = parse_obj(filename);
+	struct Mesh mesh = parse_obj("./models/bunny.obj");
 	
 	struct Mesh ground_mesh = {
 	};
@@ -143,7 +133,6 @@ int main(int argc, char* argv[]) {
 				case SDL_QUIT: running = false; break;
 				case SDL_MOUSEMOTION:
 					mouse_dx += event.motion.xrel;
-					mouse_dy += event.motion.yrel;
 					break;
 				case SDL_KEYDOWN:
 					if(event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) running = false;
