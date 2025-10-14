@@ -15,7 +15,8 @@ enum MeshHandles {
 	GROUND = 0,
 	BUNNY = 1,
 	TEAPOT = 2,
-	WALL = 3
+	WALL = 3,
+	HOMER = 4	
 };
 
 enum TexHandles {
@@ -45,14 +46,18 @@ struct TexData load_textures(){
 struct MeshData load_meshes(){
 	/* User Defined */
 
-	int num_meshes = 4;
+	int num_meshes = 5;
 	struct Mesh** meshes = malloc(sizeof(struct Mesh*)*num_meshes);
 
+	struct Mesh* homer_mesh = malloc(sizeof(struct Mesh));
+	*homer_mesh = parse_obj("./assets/models/lucy.obj");
+	
 	struct Mesh* teapot_mesh = malloc(sizeof(struct Mesh));
 	*teapot_mesh = parse_obj("./assets/models/teapot.obj");	
 
 	struct Mesh* bunny_mesh = malloc(sizeof(struct Mesh));
 	*bunny_mesh = parse_obj("./assets/models/bunny.obj");	
+	recalculate_normals(bunny_mesh);
 
 	struct Mesh* ground_mesh = malloc(sizeof(struct Mesh));
 	*ground_mesh = create_square_plane();
@@ -64,6 +69,7 @@ struct MeshData load_meshes(){
 	meshes[BUNNY] = bunny_mesh;
 	meshes[TEAPOT] = teapot_mesh;
 	meshes[WALL] = wall_mesh;
+	meshes[HOMER] = homer_mesh;
 
 	struct MeshData data = {
 		.meshes = meshes,
@@ -92,9 +98,9 @@ struct GameObjectContainer prepare_game_objects(struct AppAssets assets){
 	struct Material* bunny_material = material_create(lavender, textures[BRICK]); 	
 	struct Vec3f bunny_pos = vec3f_create(0.0, 0.0f, 0.0f);
 	struct Vec3f bunny_scale = vec3f_create(3.0f, 3.0f, 3.0f);
-	struct Transform bunny_tr = transform_create(bunny_pos, QUAT_IDENTITY, bunny_scale);
-	struct GameObject* bunny_go  = game_object_create(bunny_tr, meshes[TEAPOT], bunny_material);
 
+	struct Transform bunny_tr = transform_create(bunny_pos, QUAT_IDENTITY, bunny_scale);
+	struct GameObject* bunny_go  = game_object_create(bunny_tr, meshes[BUNNY], bunny_material);
 	int num_gos = 1;
 	struct GameObject** gos = malloc(sizeof(struct GameObject*)*num_gos);
 	gos[0] = bunny_go;
@@ -190,7 +196,7 @@ void update_scene(struct Scene* scene, float dt, SDL_Event* event, bool* running
 
 	// Spin the bunny
 	float bunny_ang_vel = 2.0f;
-	struct Vec3f rot_axis = vec3f_create(1.0f, -1.0f, 0.0f);
+	struct Vec3f rot_axis = vec3f_create(0.0f, -1.0f, 0.0f);
 	struct Quaternion bunny_rot = quat_angle_axis(dt*bunny_ang_vel, rot_axis);
 
 	struct Quaternion* curr_rot = &scene->gos[0]->transform.rotation;

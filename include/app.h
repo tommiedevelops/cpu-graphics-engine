@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <SDL2/SDL.h>
 
+#include "normals.h"
 #include "shading.h"
 #include "scene_manager.h"
 #include "construct_plane.h"

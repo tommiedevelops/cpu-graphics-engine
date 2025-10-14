@@ -278,7 +278,7 @@ static void scale_lengths(float target_length, struct Bounds bounds, struct Vec3
         }
 }
 
-void normalize_vertices(float sidelength, struct Vec3f* vertices, int num_vertices) {
+void normalize_vertices(struct Vec3f* vertices, int num_vertices) {
         struct Bounds bounds = get_bounds(vertices, num_vertices);
 
         shift_to_origin(bounds, vertices, num_vertices);
@@ -286,8 +286,6 @@ void normalize_vertices(float sidelength, struct Vec3f* vertices, int num_vertic
 
         normalize_lengths(bounds, vertices, num_vertices);
 	bounds = get_bounds(vertices, num_vertices);
-
-        scale_lengths(sidelength, bounds, vertices, num_vertices);
 }
 
 struct Mesh parse_obj(char* filename){
@@ -296,13 +294,12 @@ struct Mesh parse_obj(char* filename){
 	int num_vertices = parse_num_vertices(fp);
 	struct Vec3f* vertices = parse_vertices(fp, num_vertices);
 
-	normalize_vertices(LENGTH_SCALE, vertices, num_vertices);
+	normalize_vertices(vertices, num_vertices);
 
 	int num_triangles = parse_num_triangles(fp);
 	int* triangles = parse_triangles(fp, num_triangles, num_vertices, vertices);
 	int num_uvs = parse_num_uvs(fp);
 	struct Vec2f* uvs = parse_uvs(fp, num_uvs);
-
 	int* triangle_uvs = parse_triangle_uvs(fp, num_triangles, num_uvs, uvs);
 
 	close_obj(fp);

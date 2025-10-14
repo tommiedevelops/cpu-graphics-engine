@@ -8,6 +8,14 @@ void print_vec2f(struct Vec2f v) {
 	printf("(x = %f, y = %f)\n", v.x, v.y);
 }
 
+struct Vec3f vec3f_sub(struct Vec3f u, struct Vec3f v) {
+	struct Vec3f result;
+	result.x = u.x - v.x;
+	result.y = u.y - v.y;
+	result.z = u.z - v.z;
+	return result;
+}
+
 bool vec3f_are_about_equal(struct Vec3f a, struct Vec3f b, float allowance) {
 	bool x_equal = fabs(a.x - b.x) < allowance;
 	bool y_equal = fabs(a.y - b.y) < allowance;

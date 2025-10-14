@@ -50,6 +50,7 @@ void scale_vector(struct Vec3f* vec3f, float scalar);
 void translate_vector(struct Vec3f* vec3f, float dx, float dy, float dz);
 bool vectors_are_equal(struct Vec3f a, struct Vec3f b);
 
+struct Vec3f vec3f_sub(struct Vec3f u, struct Vec3f v);
 
 #define VEC4F_X ((struct Vec4f){1.0f, 0.0f, 0.0f, 0.0f})
 #define VEC4F_Y ((struct Vec4f){0.0f, 1.0f, 0.0f, 0.0f},)

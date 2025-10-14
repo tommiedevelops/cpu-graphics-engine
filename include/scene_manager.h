@@ -40,13 +40,16 @@ void camera_set_near(struct Camera* cam, float near);
 void camera_set_far(struct Camera* cam, float far);
 
 struct Mesh {
-	struct Vec3f* vertices;
-	struct Vec2f* uvs;
 	int num_vertices;
-	int* triangles;
-	int* triangle_uvs;
-	int num_triangles;
+	struct Vec3f* vertices;
 	int num_uvs;
+	struct Vec2f* uvs;
+	int num_normals;
+	struct Vec3f* normals;
+	int num_triangles;
+	int* triangle_uvs;
+	int* triangles;
+	int* triangle_normals;
 };
 
 struct GameObject {
@@ -56,7 +59,5 @@ struct GameObject {
 };
 
 struct GameObject* game_object_create(struct Transform tr, struct Mesh* mesh, struct Material* mat);
-
-void normalize_vertices(float sidelength, struct Vec3f* vertices, int num_vertices);
 
 #endif

@@ -6,7 +6,6 @@
 #define WIDTH (1280)
 #define HEIGHT (720)
 #define COLOR_RED (0xFF0000FF)
-#define LENGTH_SCALE (1.0f)
 #define PI (3.14159265359)
 #define COLOR_BLUE (0x0000FFFF)
 
