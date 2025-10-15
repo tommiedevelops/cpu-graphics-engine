@@ -7,7 +7,6 @@
 #include "normals.h"
 #include "shading.h"
 #include "scene_manager.h"
-#include "construct_plane.h"
 
 struct TexData {
 	struct Texture** textures;

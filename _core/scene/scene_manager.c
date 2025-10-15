@@ -7,7 +7,6 @@
 #include "app.h"
 #include "matrix.h"
 #include "constants.h"
-#include "construct_plane.h"
 
 // Transforms 
 struct Transform transform_create(struct Vec3f pos, struct Quaternion rot, struct Vec3f scale){

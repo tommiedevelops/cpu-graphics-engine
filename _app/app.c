@@ -12,11 +12,9 @@ struct GameObjectContainer {
 
 enum MeshHandles {
 /* User Defined */
-	GROUND = 0,
-	BUNNY = 1,
-	TEAPOT = 2,
-	WALL = 3,
-	HOMER = 4	
+	BUNNY = 0,
+	TEAPOT = 1,
+	HOMER = 2	
 };
 
 enum TexHandles {
@@ -46,7 +44,7 @@ struct TexData load_textures(){
 struct MeshData load_meshes(){
 	/* User Defined */
 
-	int num_meshes = 5;
+	int num_meshes = 3;
 	struct Mesh** meshes = malloc(sizeof(struct Mesh*)*num_meshes);
 
 	struct Mesh* homer_mesh = malloc(sizeof(struct Mesh));
@@ -59,16 +57,8 @@ struct MeshData load_meshes(){
 	*bunny_mesh = parse_obj("./assets/models/bunny.obj");	
 	recalculate_normals(bunny_mesh);
 
-	struct Mesh* ground_mesh = malloc(sizeof(struct Mesh));
-	*ground_mesh = create_square_plane();
-
-	struct Mesh* wall_mesh = malloc(sizeof(struct Mesh));
-	*wall_mesh = create_square_plane_xy();
-
-	meshes[GROUND] = ground_mesh;
 	meshes[BUNNY] = bunny_mesh;
 	meshes[TEAPOT] = teapot_mesh;
-	meshes[WALL] = wall_mesh;
 	meshes[HOMER] = homer_mesh;
 
 	struct MeshData data = {

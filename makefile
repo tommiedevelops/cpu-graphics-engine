@@ -1,13 +1,13 @@
 CC = gcc
 CFLAGS = -I/opt/homebrew/include -I/opt/homebrew/include/SDL2
-LDFLAGS = -L/opt/homebrew/lib -lSDL2 -lm -Iinclude -Isrc/math -Isrc/renderer
+LDFLAGS = -L/opt/homebrew/lib -lSDL2 -lm -Iinclude -I_core/math -I_core/renderer -I_core/scene -I_core/window -I_app/
 DEBUGFLAGS = -fsanitize=address
-SRC_FILES := $(filter-out src/main.c, $(wildcard src/*.c))
-TEST_FILES := $(wildcard tests/src/*.c)
+SRC_FILES := _core/math/*.c _core/renderer/*.c _core/window/*.c _core/*.c _core/scene/*.c _app/*.c
+TEST_FILES := $(wildcard tests/_core/*.c)
 
 build: ./build/window
 ./build/window:
-	$(CC) src/*.c src/math/*.c src/renderer/*.c $(DEBUGFLAGS) -o ./build/window $(CFLAGS) $(LDFLAGS)
+	$(CC) $(SRC_FILES) $(DEBUGFLAGS) -o ./build/window $(CFLAGS) $(LDFLAGS)
 clean:
 	rm ./build/window ./tests/build/testing
 run:
