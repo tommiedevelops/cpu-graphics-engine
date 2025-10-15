@@ -260,8 +260,8 @@ static void normalize_lengths(struct Bounds bounds, struct Vec3f* vectors, int n
                 vectors[i].x = (float)vectors[i].x / max;
                 vectors[i].y = (float)vectors[i].y / max;
                 vectors[i].z = (float)vectors[i].z / max;
-		//vectors[i] = vec3f_scale(vectors[i], 2.0f);
-		//vectors[i] = vec3f_sub(vectors[i], VEC3F_1);
+		vectors[i] = vec3f_scale(vectors[i], 2.0f);
+		vectors[i] = vec3f_sub(vectors[i], VEC3F_1);
         }
 }
 

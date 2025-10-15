@@ -1,5 +1,28 @@
 #include "vector.h"
 
+struct Vec3f vec4f_to_vec3f(struct Vec4f v) {
+    return (struct Vec3f){ v.x, v.y, v.z };
+}
+
+bool vec4f_are_equal(struct Vec4f a, struct Vec4f b) {
+	//printf("checking {%f,%f,%f,%f} == {%f,%f,%f,%f}\n", a.x,a.y,a.z,a.w,b.x,b.y,b.z,b.w);
+	if(a.x != b.x){ return false; }
+	if(a.y != b.y){ return false; }
+	if(a.z != b.z){ return false; }
+	if(a.w != b.w){ return false; }
+	return true;
+}
+
+bool vec4f_are_about_equal(struct Vec4f a, struct Vec4f b, float allowance) {
+	//printf("checking {%f,%f,%f,%f} == {%f,%f,%f,%f}\n", a.x,a.y,a.z,a.w,b.x,b.y,b.z,b.w);
+	if( fabs(a.x - b.x) > allowance ) { return false; }
+	if( fabs(a.y - b.y) > allowance ) { return false; }
+	if( fabs(a.z - b.z) > allowance ) { return false; }
+	if( fabs(a.w - b.w) > allowance ) { return false; }
+
+	return true;
+}
+
 void print_vec4f(struct Vec4f v){
 	printf("(x = %f, y = %f, z = %f, w = %f)\n", v.x, v.y, v.z, v.w);
 }
@@ -37,7 +60,6 @@ struct Vec4f vec4f_scale(struct Vec4f v, float value){
 float vec4f_magnitude(struct Vec4f v) {
 	return sqrt(v.x * v.x + v.y * v.y + v.z * v.z + v.w * v.w);
 }
-
 struct Vec4f vec4f_normalize(struct Vec4f v){
 	struct Vec4f result;
 	float mag = vec4f_magnitude(v);	
@@ -57,29 +79,6 @@ struct Vec4f vec4f_translate(struct Vec4f vector, float dx, float dy, float dz, 
 	vector.y += dy;
 	vector.z += dz;
 	vector.w += dw;
-}
-
-bool vec4f_are_equal(struct Vec4f a, struct Vec4f b) {
-	//printf("checking {%f,%f,%f,%f} == {%f,%f,%f,%f}\n", a.x,a.y,a.z,a.w,b.x,b.y,b.z,b.w);
-	if(a.x != b.x){ return false; }
-	if(a.y != b.y){ return false; }
-	if(a.z != b.z){ return false; }
-	if(a.w != b.w){ return false; }
-	return true;
-}
-
-bool vec4f_are_about_equal(struct Vec4f a, struct Vec4f b, float allowance) {
-	//printf("checking {%f,%f,%f,%f} == {%f,%f,%f,%f}\n", a.x,a.y,a.z,a.w,b.x,b.y,b.z,b.w);
-	if( fabs(a.x - b.x) > allowance ) { return false; }
-	if( fabs(a.y - b.y) > allowance ) { return false; }
-	if( fabs(a.z - b.z) > allowance ) { return false; }
-	if( fabs(a.w - b.w) > allowance ) { return false; }
-
-	return true;
-}
-
-struct Vec3f vec4f_to_vec3f(struct Vec4f v) {
-    return (struct Vec3f){ v.x, v.y, v.z };
 }
 
 
