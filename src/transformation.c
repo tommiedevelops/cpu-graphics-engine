@@ -118,24 +118,12 @@ struct Mat4 get_viewport_matrix(struct Camera cam){
 }
 
 void apply_perspective_divide(struct Triangle* tri) {
-	
-	if(NULL == tri){
-		//LOG_ERROR("tri is null")
-		return;
-	}
-
 	tri->v0 = perspective_divide(tri->v0);
 	tri->v1 = perspective_divide(tri->v1);
 	tri->v2 = perspective_divide(tri->v2);
 }
 
-
 void apply_transformation(struct Mat4 tr, struct Triangle* tri) {
-	if(NULL == tri){
-		//LOG_ERROR("tri is null");
-		return;
-	}
-
 	tri->v0 = mat4_mul_vec4(tr, tri->v0);
 	tri->v1 = mat4_mul_vec4(tr, tri->v1);
 	tri->v2 = mat4_mul_vec4(tr, tri->v2);

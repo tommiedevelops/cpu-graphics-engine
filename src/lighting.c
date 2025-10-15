@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include "lighting.h"
-
 static inline struct Vec3f compute_tri_normal(struct Triangle tri) {
 
 	struct Vec3f v0 = vec4f_to_vec3f(tri.v0);
@@ -12,17 +11,17 @@ static inline struct Vec3f compute_tri_normal(struct Triangle tri) {
 	return vec3f_normalize(n);
 }
 
-static inline struct Vec3f compute_reflection_vector(struct Vec3f l, struct Vec3f n){
+struct Vec3f compute_reflection_vector(struct Vec3f l, struct Vec3f n){
 	float dot = vec3f_dot(l,n);
 	struct Vec3f r = vec3f_add(vec3f_scale(n, 2*dot),vec3f_scale(l, -1.0f));
 	return vec3f_normalize(r);
 }
 
-static inline struct Vec3f compute_eyesight_vector(struct Vec3f cam_pos, struct Vec3f origin){
+struct Vec3f compute_eyesight_vector(struct Vec3f cam_pos, struct Vec3f origin){
 	return vec3f_normalize(vec3f_add(cam_pos, vec3f_scale(origin, -1.0f)));	
 }
 
-static inline struct Vec4f compute_specular(float exponent, struct Vec4f light_col, struct Vec3f norm, struct Vec3f cam_pos, struct Vec3f light_dir, struct Triangle tri){	
+struct Vec4f compute_specular(float exponent, struct Vec4f light_col, struct Vec3f norm, struct Vec3f cam_pos, struct Vec3f light_dir, struct Triangle tri){	
 	// current heuristic: select random vertex as origin for eye vec
 	
 	struct Vec3f e = compute_eyesight_vector(cam_pos, vec4f_to_vec3f(tri.v0));
@@ -34,19 +33,23 @@ static inline struct Vec4f compute_specular(float exponent, struct Vec4f light_c
 	return spec_vec;
 }
 
-static inline struct Vec4f compute_diffuse(struct Vec3f light_dir, struct Vec4f light_col, struct Vec3f norm){
+struct Vec4f compute_diffuse(struct Vec4f albedo, struct Vec3f light_dir, struct Vec4f light_col, struct Vec3f norm){
 	float n_dot_l = fmaxf(vec3f_dot(norm, light_dir), 0.0f);
 	struct Vec4f diffuse = vec4f_scale(light_col, n_dot_l);
+	diffuse.x = diffuse.x * albedo.x;
+	diffuse.y = diffuse.y * albedo.y;
+	diffuse.z = diffuse.z * albedo.z;
 	return diffuse;
 }
 
-void precompute_lighting(struct Material* mat, struct Triangle tri, struct LightSource ls, struct Camera cam){
+void precompute_lighting(struct Material* mat, struct Triangle tri, struct Scene scene){
 	struct Vec3f norm = compute_tri_normal(tri);
-	struct Vec3f light_dir = vec3f_normalize(ls.direction);
+	struct Vec3f light_dir = vec3f_normalize(scene.light.direction);
 
-	struct Vec4f diffuse = compute_diffuse(ls.direction, ls.color, norm);
+	struct Vec4f albedo = mat->color;
+	struct Vec4f diffuse = compute_diffuse(albedo,scene.light.direction, scene.light.color, norm);
 	float specular_intensity = 32.0f;
-	struct Vec4f specular = compute_specular(specular_intensity, ls.color, norm, cam.transform.position, ls.direction, tri);
+	struct Vec4f specular = compute_specular(specular_intensity, scene.light.color, norm, scene.cam->transform.position, scene.light.direction, tri);
 	mat->specular = specular;
 	mat->diffuse = diffuse;
 }

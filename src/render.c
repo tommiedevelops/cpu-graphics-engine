@@ -9,6 +9,7 @@ struct RenderData {
 	int num_triangles;
 	int* triangles;	
 	int* triangle_uvs;
+	int* triangle_normals;
 	struct Material mat;
 	struct Plane clipping_planes[6];
 };
@@ -56,7 +57,8 @@ struct RenderData prepare_render_data(struct GameObject go, struct Camera cam) {
 	r.num_uvs = go.mesh->num_uvs;
 	r.uvs = go.mesh->uvs;
 	r.triangle_uvs = go.mesh->triangle_uvs;
-	r.normals = NULL; // FIX!!
+	r.normals = go.mesh->normals;
+	r.triangle_normals = go.mesh->triangle_normals;
 
 	// Triangle Data
 	r.num_triangles = go.mesh->num_triangles;
@@ -130,17 +132,17 @@ void render_game_object(uint32_t* framebuffer, float* zbuffer, struct Scene scen
 
 			assemble_triangle(&tri, tri_idx, data);
 			apply_transformation(model,&tri);
-			// computed in world space
-			precompute_lighting(&data.mat, tri, scene.light, *scene.cam);
 			apply_transformation(view,&tri);
+			precompute_lighting(&data.mat, tri, scene);
 			apply_transformation(projection,&tri);
 
 			struct ClipResult r = clip_tri(tri, data.clipping_planes, 6);
+
 			for(int k = 0; k < r.num_tris; k++){
 				precompute_interpolated_values(&r.tris[k]);			
 				apply_perspective_divide(&r.tris[k]); // divide (x,y,z,w) by w
 				apply_transformation(view_port, &r.tris[k]);
-				rasterize_triangle(r.tris[k], scene.light, &data.mat, framebuffer, zbuffer);
+				rasterize_triangle(r.tris[k], scene.cam, &scene.light, &data.mat, framebuffer, zbuffer);
 			}
 
 		}

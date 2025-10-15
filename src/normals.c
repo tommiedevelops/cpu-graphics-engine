@@ -37,9 +37,8 @@ int recalculate_normals(struct Mesh* m){
 
 		struct Vec3f x = vec3f_sub(v0,v1);
 		struct Vec3f y = vec3f_sub(v0,v2);
-		struct Vec3f n = vec3f_cross(x,y);
+		struct Vec3f n = vec3f_cross(y,x);
 		
-		// do not normalize normal here
 		normals[v0_idx] = vec3f_add(normals[v0_idx], n);
 		tri_num_normals[v0_idx]++;	
 
@@ -49,10 +48,6 @@ int recalculate_normals(struct Mesh* m){
 		normals[v2_idx] = vec3f_add(normals[v2_idx], n);
 		tri_num_normals[v2_idx]++;	
 	}	
-
-	for(int i = 0; i < n; i++){
-		vec3f_scale(normals[i], (float)1.0f/tri_num_normals[i]);
-	}
 
 	for(int i = 0; i < n; i++){
 		normals[i] = vec3f_normalize(normals[i]);

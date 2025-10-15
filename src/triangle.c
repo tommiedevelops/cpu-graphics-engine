@@ -58,6 +58,15 @@ bool point_inside(struct Vec4f point){
                (point.z >= 0) && (point.z <= w);	       
 }
 
+struct Vec3f interpolate_normal(struct Triangle tri, float alpha, float beta, float gamma){
+	float nx = alpha*tri.n0.x + beta*tri.n1.x + gamma*tri.n2.x;
+	float ny = alpha*tri.n0.y + beta*tri.n1.y + gamma*tri.n2.y;
+	float nz = alpha*tri.n0.z + beta*tri.n1.z + gamma*tri.n2.z;
+
+	struct Vec3f n = vec3f_normalize(vec3f_create(nx,ny,nz));
+	return n;
+}
+
 struct Vec2f interpolate_uv(struct Triangle tri, float alpha, float beta, float gamma){
 	float u0 = tri.uv0_over_w.x;
 	float u1 = tri.uv1_over_w.x;
@@ -121,11 +130,12 @@ void draw_pixel(int x, int y, uint32_t* framebuffer, float* zbuffer, float depth
 		zbuffer[x + y*WIDTH] = depth;
 	}
 }
+
 static inline struct Vec4f vec4f_mul(struct Vec4f a, struct Vec4f b) {
     return (struct Vec4f){ a.x * b.x, a.y * b.y, a.z * b.z, a.w * b.w };
 }
 
-void rasterize_triangle(struct Triangle tri, struct LightSource ls, struct Material* mat, uint32_t* framebuffer, float* zbuffer) {
+void rasterize_triangle(struct Triangle tri, struct Camera* cam, struct LightSource* ls, struct Material* mat, uint32_t* framebuffer, float* zbuffer) {
 
 	struct Bounds bounds = get_bounds_from_tri(tri);
 	for(int y = (int)bounds.ymin; y <= (int)bounds.ymax; y++){
@@ -140,13 +150,11 @@ void rasterize_triangle(struct Triangle tri, struct LightSource ls, struct Mater
 				// Fragment Shader	
 				float depth = interpolate_depth(tri, alpha, beta, gamma);	
 				struct Vec2f uv = interpolate_uv(tri, alpha, beta, gamma);
-				struct Vec4f albedo = material_get_albedo(mat,uv);
-				
-				
-				struct Vec4f diffuse = vec4f_mul(albedo, mat->diffuse);
-				struct Vec4f final = vec4f_add(diffuse, mat->specular);
-				
-				uint32_t color = vec4f_to_rgba32(final);
+				struct Vec3f n = interpolate_normal(tri, alpha, beta, gamma);
+
+				struct Vec4f diffuse = 
+				compute_diffuse(material_get_albedo(mat,uv), ls->direction, ls->color, n);
+				uint32_t color = vec4f_to_rgba32(diffuse);
 				draw_pixel(x,y,framebuffer,zbuffer,depth,color);
 			} 
 

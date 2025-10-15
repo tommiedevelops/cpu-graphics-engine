@@ -200,7 +200,7 @@ void update_scene(struct Scene* scene, float dt, SDL_Event* event, bool* running
 	struct Quaternion bunny_rot = quat_angle_axis(dt*bunny_ang_vel, rot_axis);
 
 	struct Quaternion* curr_rot = &scene->gos[0]->transform.rotation;
-	*curr_rot = quat_normalize(quat_mul(*curr_rot, bunny_rot));
+//	*curr_rot = quat_normalize(quat_mul(*curr_rot, bunny_rot));
 }
 
 // ------ API USED BY CORE (DO NOT MODIFY) ------
