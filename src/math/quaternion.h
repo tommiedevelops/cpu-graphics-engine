@@ -6,28 +6,30 @@
 
 #define QUAT_IDENTITY (struct Quaternion){1.0f, 0.0f, 0.0f, 0.0f}
 
-struct Quaternion {
-	float q0; // real
-	float q1; // i
-	float q2; // j
-	float q3; // k
-};
+typedef struct Quaternion {
+	float q0, q1, q2, q3;
+} Quat;
 
-struct Quaternion quat_slerp(struct Quaternion q, struct Quaternion p, float t);
-struct Vec3f quat_get_forward(struct Quaternion q);
-struct Vec3f quat_get_right(struct Quaternion q);
-void print_quat(struct Quaternion q);
-bool quat_are_about_equal(struct Quaternion q0, struct Quaternion q1, float epsilon);
-struct Quaternion quat_angle_axis(float angle, struct Vec3f axis); 
-bool quat_are_equal(struct Quaternion q0, struct Quaternion q1);
-struct Quaternion quat_mul(struct Quaternion q0, struct Quaternion q1);
-struct Quaternion quat_conjugate(struct Quaternion q);
-struct Quaternion quat_normalize(struct Quaternion q);
-float quat_norm(struct Quaternion q);
-struct Quaternion quat_inverse(struct Quaternion q);
-struct Mat4 quat_to_mat4(struct Quaternion q);
-struct Quaternion euler_to_quat(struct Vec3f euler_rotation);
-struct Vec3f quat_mul_vec3(struct Quaternion q, struct Vec3f v);
+void print_quat(Quat q);
+
+Vec3f quat_get_forward(Quat q);
+Vec3f quat_get_right(Quat q);
+
+bool quat_are_about_equal(Quat q0, Quat q1, float epsilon);
+bool quat_are_equal(Quat q0, Quat q1);
+
+Quat quat_slerp(Quat q, Quat p, float t);
+Quat quat_angle_axis(float angle, Vec3f axis); 
+Quat quat_mul(Quat q0, Quat q1);
+Quat quat_conjugate(Quat q);
+Quat quat_normalize(Quat q);
+float quat_norm(Quat q);
+Quat quat_inverse(Quat q);
+Vec3f quat_mul_vec3(Quat q, Vec3f v);
+
+Mat4 quat_to_mat4(Quat q);
+Quat euler_to_quat(Vec3f euler_rotation);
+
 
 #endif
 

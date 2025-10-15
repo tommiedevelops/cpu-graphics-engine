@@ -4,6 +4,10 @@ void print_vec3f(struct Vec3f v){
 	printf("(x = %f, y = %f, z = %f)\n", v.x, v.y, v.z);
 }
 
+struct Vec4f vec3f_to_vec4f(struct Vec3f v, float w) {
+	return (Vec4f){v.x, v.y, v.z, w};	
+}
+
 bool vec3f_are_about_equal(struct Vec3f a, struct Vec3f b, float allowance) {
 	bool x_equal = fabs(a.x - b.x) < allowance;
 	bool y_equal = fabs(a.y - b.y) < allowance;
