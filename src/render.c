@@ -74,6 +74,7 @@ struct RenderData prepare_render_data(struct GameObject go, struct Camera cam) {
 	return r;
 }
 
+
 void assemble_triangle(struct Triangle* tri, int tri_idx, struct RenderData data){
 
 	int v0_idx = data.triangles[tri_idx];
@@ -111,6 +112,9 @@ void precompute_interpolated_values(struct Triangle* tri) {
 	tri->uv1_over_w = vec2f_scale(tri->uv1, tri->w1_inv);
 	tri->uv2_over_w = vec2f_scale(tri->uv2, tri->w2_inv);
 }
+
+void default_vert_shader();
+void default_frag_shader();
 
 void render_game_object(uint32_t* framebuffer, float* zbuffer, struct Scene scene, struct GameObject go){
 		
