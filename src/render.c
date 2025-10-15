@@ -123,7 +123,7 @@ void render_game_object(uint32_t* framebuffer, float* zbuffer, struct Scene scen
 		if(NULL == data.vertices) return; // required
 						  
 		// pre-compute matrices
-		struct Mat4 model, view, projection, view_port;
+		Mat4 model, view, projection, view_port;
 		model = get_model_matrix(go.transform);
 		view = get_view_matrix(*scene.cam);
 		projection = get_projection_matrix(*scene.cam, (float)HEIGHT/WIDTH);

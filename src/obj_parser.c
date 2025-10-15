@@ -255,26 +255,13 @@ static void shift_to_origin(struct Bounds bounds, struct Vec3f* vectors, int num
 
 /* Normalizes values to between [-1,1] - assumes min = 0 for all axes */
 static void normalize_lengths(struct Bounds bounds, struct Vec3f* vectors, int num_vectors) {
-
-        // normalizes between [0,1]
 	float max = fmax(fmax(bounds.xmax, bounds.ymax), bounds.zmax);
         for(int i = 0; i < num_vectors; i++){
                 vectors[i].x = (float)vectors[i].x / max;
                 vectors[i].y = (float)vectors[i].y / max;
                 vectors[i].z = (float)vectors[i].z / max;
-        }
-
-        // scale and translate to [-1,1]
-        for(int i = 0; i < num_vectors; i++){
-                scale_vector(vectors + i, 2);
-                translate_vector(vectors + i, -1.0f,-1.0f,-1.0f);
-        }
-}
-
-/* Takes normalized vectors between [-1,1] and scales them to [-target_length/2, target_length/2] */
-static void scale_lengths(float target_length, struct Bounds bounds, struct Vec3f* vectors, int num_vectors) {
-        for(int i = 0; i < num_vectors; i++){
-                scale_vector(vectors + i, (float)target_length/2.0f);
+		//vectors[i] = vec3f_scale(vectors[i], 2.0f);
+		//vectors[i] = vec3f_sub(vectors[i], VEC3F_1);
         }
 }
 
