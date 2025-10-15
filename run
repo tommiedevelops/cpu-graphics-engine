@@ -1,4 +1,4 @@
 #!/bin/bash
 make clean
 make build
-make run-normal ARGS=bunny
+make run

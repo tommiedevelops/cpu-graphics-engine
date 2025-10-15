@@ -4,17 +4,18 @@
 #include "matrix.h"
 #include "vector.h"
 #include "scene_manager.h"
+#include "triangle.h"
 
 Mat4 mat4_affine_orthonormal_inverse(Mat4 mat);
 
-Mat4 get_rotation_matrix(struct Transform tr);
-Mat4 get_scale_matrix(struct Transform tr);
-Mat4 get_translation_matrix(struct Transform tr); 
-Mat4 get_model_matrix(struct Transform tr);
+Mat4 get_rotation_matrix(Transform tr);
+Mat4 get_scale_matrix(Transform tr);
+Mat4 get_translation_matrix(Transform tr); 
+Mat4 get_model_matrix(Transform tr);
 
-Mat4 get_view_matrix(struct Camera cam);
-Mat4 get_projection_matrix(struct Camera cam, float aspect);
-Mat4 get_viewport_matrix(struct Camera cam);
+Mat4 get_view_matrix(Camera cam);
+Mat4 get_projection_matrix(Camera cam, float aspect);
+Mat4 get_viewport_matrix(Camera cam);
 
 Vec4f perspective_divide(Vec4f v);
 

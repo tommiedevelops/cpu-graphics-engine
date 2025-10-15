@@ -1,22 +1,22 @@
 #include "vector.h"
 
-void print_vec2f(struct Vec2f v) {
+void print_vec2f(Vec2f v) {
 	printf("(x = %f, y = %f)\n", v.x, v.y);
 }
 
-struct Vec2f vec2f_create(float x, float y) {
-	struct Vec2f v = {
+Vec2f vec2f_create(float x, float y) {
+	Vec2f v = {
 		.x = x,
 		.y = y
 	};
 
 	return v;
 }
-float vec2f_magnitude(struct Vec2f v){
+float vec2f_magnitude(Vec2f v){
 	return sqrt(v.x*v.x + v.y*v.y);	
 }
 
-void vec2f_normalize(struct Vec2f* v){
+void vec2f_normalize(Vec2f* v){
 	if(NULL == v) {
 		// LOG_ERROR("vector is null");
 		return;
@@ -33,15 +33,15 @@ void vec2f_normalize(struct Vec2f* v){
 	v->y = (float)v->y / mag;
 }
 
-struct Vec2f vec2f_add(struct Vec2f a, struct Vec2f b){
-	struct Vec2f result;
+Vec2f vec2f_add(Vec2f a, Vec2f b){
+	Vec2f result;
 	result.x = a.x + b.x;
 	result.y = a.y + b.y;
 	return result;
 }
 
-struct Vec2f vec2f_scale(struct Vec2f v, float value){
-	struct Vec2f result;
+Vec2f vec2f_scale(Vec2f v, float value){
+	Vec2f result;
 	result.x = v.x * value;
 	result.y = v.y * value;
 	return result;

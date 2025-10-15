@@ -7,10 +7,10 @@
 
 void test_lerp(){
 	printf("test_lerp\n");
-	struct Vec4f v = vec4f_create(0.0,0.0,0.0,0.0);
-	struct Vec4f u = vec4f_create(1.0,1.0,1.0, 0.0);
-	struct Vec4f r = lerp(u,v,0.5f);
-	struct Vec4f e = vec4f_create(0.5f,0.5f,0.5f, 0.0);
+	Vec4f v = vec4f_create(0.0,0.0,0.0,0.0);
+	Vec4f u = vec4f_create(1.0,1.0,1.0, 0.0);
+	Vec4f r = lerp(u,v,0.5f);
+	Vec4f e = vec4f_create(0.5f,0.5f,0.5f, 0.0);
 
 	assert(vec4f_are_equal(e,r));
 
@@ -26,9 +26,9 @@ void test_sdf(){
 	P.n = vec4f_create(0.0,-1.0,0.0, 0.0);
 	P.p = vec4f_create(0.0,1.0,0.0, 0.0);
 
-	struct Vec4f v0 = vec4f_create(0.0, 2.0, 0.0, 0.0);
-	struct Vec4f v1 = vec4f_create(0.0, 0.0, 0.0, 0.0);
-	struct Vec4f v2 = vec4f_create(0.0,1.0,0.0, 0.0);
+	Vec4f v0 = vec4f_create(0.0, 2.0, 0.0, 0.0);
+	Vec4f v1 = vec4f_create(0.0, 0.0, 0.0, 0.0);
+	Vec4f v2 = vec4f_create(0.0,1.0,0.0, 0.0);
 
 	assert( sdf(P,v0) > 0.0f );
 	assert( sdf(P,v1) < 0.0f );
@@ -43,15 +43,15 @@ void test_inside(){
 	P.n = vec4f_create(0.0f, 0.0f, -1.0f, 0.0);
 	P.p = vec4f_create(0.0f, 0.0f, 1.0f, 0.0);
 
-	struct Vec4f v0 = VEC4F_0;
-	struct Vec4f v1 = vec4f_create(0.0, 2.0, 5.0, 0.0);	
+	Vec4f v0 = VEC4F_0;
+	Vec4f v1 = vec4f_create(0.0, 2.0, 5.0, 0.0);	
 	float eps = 0.01;
 	assert(true == inside(P, v0, eps));
 	assert(false == inside(P, v1, eps));
 
 	printf("test_case_2\n");
 
-	struct Vec4f v2 = vec4f_create(2.0f, 0.0f, 1.0f,0.0f);
+	Vec4f v2 = vec4f_create(2.0f, 0.0f, 1.0f,0.0f);
 	assert(true == inside(P, v2, eps));
 
 	printf("success\n");
@@ -65,11 +65,11 @@ void test_intersect(){
 	P.n = vec4f_create(-1.0f, 0.0f, 0.0f, 0.0f);
 	P.p = vec4f_create(1.0f, 0.0f, 0.0f, 0.0f);
 
-	struct Vec4f start = VEC4F_0;
-	struct Vec4f end = vec4f_create(3.0f, 3.0f, 3.0f, 0.0f);
+	Vec4f start = VEC4F_0;
+	Vec4f end = vec4f_create(3.0f, 3.0f, 3.0f, 0.0f);
 
-	struct Vec4f e = vec4f_create(1.0f, 1.0f, 1.0f,0.0f);
-	struct Vec4f r = intersect(P, start, end);
+	Vec4f e = vec4f_create(1.0f, 1.0f, 1.0f,0.0f);
+	Vec4f r = intersect(P, start, end);
 
 	assert(vec4f_are_equal(e,r));
 
@@ -78,11 +78,11 @@ void test_intersect(){
 	P1.n = vec4f_create(-1.0f, -1.0f, -1.0f, 0.0f);
 	P1.p = vec4f_create(3.0f,3.0f,3.0f, 0.0f);
 
-	struct Vec4f start1 = VEC4F_0;
-	struct Vec4f end1 = vec4f_create(3.0f, 3.0f, 3.0f,0.0f);
+	Vec4f start1 = VEC4F_0;
+	Vec4f end1 = vec4f_create(3.0f, 3.0f, 3.0f,0.0f);
 
-	struct Vec4f e1 = vec4f_create(3.0f, 3.0f, 3.0f, 0.0f);
-	struct Vec4f r1 = intersect(P1, start, end);
+	Vec4f e1 = vec4f_create(3.0f, 3.0f, 3.0f, 0.0f);
+	Vec4f r1 = intersect(P1, start, end);
 
 	assert(vec4f_are_equal(e1,r1));
 
@@ -97,13 +97,13 @@ void test_clip_against_plane_1(){
 	P.n = vec4f_create(-1.0f, 0.0f, 0.0f, 0.0f);	
 	P.p = vec4f_create(1.0f, 0.0f, 0.0f, 0.0f);
 
-	struct Vec4f in1[9] = {0};
-	struct Vec4f out1[9] = {0}; // added more space just in case
+	Vec4f in1[9] = {0};
+	Vec4f out1[9] = {0}; // added more space just in case
 	in1[0] = vec4f_create(0.0f,2.0f,0.0f, 0.0f);
 	in1[1] = vec4f_create(2.0f, 0.0f, 0.0f, 0.0f);
 	in1[2] = vec4f_create(0.0f,-2.0f,0.0f, 0.0f);
 
-	struct Vec4f expected[4] = {0};
+	Vec4f expected[4] = {0};
 	int expected_num_verts = 4;
 
 	expected[0] = vec4f_create(1.0f,1.0f,0.0f, 0.0f);
@@ -127,14 +127,14 @@ void test_clip_against_plane_2(){
 	P.n = vec4f_create(-1.0f, 0.0f, 0.0f, 0.0f);	
 	P.p = vec4f_create(1.0f, 0.0f, 0.0f, 0.0f);
 
-	struct Vec4f in2[9] = {0};
-	struct Vec4f out2[9] = {0};
+	Vec4f in2[9] = {0};
+	Vec4f out2[9] = {0};
 	
 	in2[0] = vec4f_create(0.0f, 0.0f, 0.0f, 0.0f);
 	in2[1] = vec4f_create(2.0f,2.0f,0.0f, 0.0f);
 	in2[2] = vec4f_create(2.0f,-2.0f,0.0f, 0.0f);
 
-	struct Vec4f expected2[3] = {0};
+	Vec4f expected2[3] = {0};
 	int expected_num_verts2 = 3;
 
 	expected2[0] = vec4f_create(1.0f,1.0f,0.0f, 0.0f);
@@ -159,14 +159,14 @@ void test_clip_against_plane_3(){
 	P.n = vec4f_create(0.0f, 0.0f, -1.0f, 0.0f);	
 	P.p = vec4f_create(0.0f, 0.0f, 1.0f, 0.0f);
 
-	struct Vec4f in3[9] = {0};
-	struct Vec4f out3[9] = {0};
+	Vec4f in3[9] = {0};
+	Vec4f out3[9] = {0};
 	
 	in3[0] = vec4f_create(1.0f, 0.0f, 0.0f, 0.0f);
 	in3[1] = vec4f_create(2.0f,0.0f,2.0f, 0.0f);
 	in3[2] = vec4f_create(0.0f,0.0f,1.0f, 0.0f);
 
-	struct Vec4f expected3[3] = {0};
+	Vec4f expected3[3] = {0};
 	int expected_num_verts3 = 3;
 		
 	expected3[0] = vec4f_create(1.5f, 0.0f, 1.0f, 0.0f);
@@ -192,13 +192,13 @@ void test_clip_against_plane_4(){
 	// Triangle in homogeneous clip space (w = 1 for all)
  	// A is behind near plane (z < 0); B and C are inside (z >= 0)
 	
-	struct Vec4f in[3] = {
+	Vec4f in[3] = {
 		vec4f_create( 0.0f,  0.0f, -0.5f, 1.0f),  // A (outside)
 		vec4f_create( 0.5f,  0.0f,  0.5f, 1.0f),  // B (inside)
 		vec4f_create(-0.5f,  0.2f,  0.2f, 1.0f)   // C (inside)
 	};
 
-	struct Vec4f out[9] = {0};
+	Vec4f out[9] = {0};
 
 	// clip_against_plane signature: (in, in_count, plane, out, &out_count)
 	int out_count = clip_against_plane(in, 3, P, out);
@@ -211,12 +211,12 @@ void test_clip_against_plane_4(){
 
 	// Intersections on z=0 (linear in homogeneous coords)
 	// A(-0.5) -> B(0.5): t = -zA/(zB - zA) = 0.5
-	struct Vec4f I1 = vec4f_create( 0.25f,  0.0f, 0.0f, 1.0f);
+	Vec4f I1 = vec4f_create( 0.25f,  0.0f, 0.0f, 1.0f);
 
 	// A(-0.5) -> C(0.2): t = -zA/(zC - zA) = 0.5 / 0.7 ≈ 0.7142857
-	struct Vec4f I2 = vec4f_create(-0.35714287f, 0.14285715f, 0.0f, 1.0f);
+	Vec4f I2 = vec4f_create(-0.35714287f, 0.14285715f, 0.0f, 1.0f);
 
-	struct Vec4f expected[4] = {
+	Vec4f expected[4] = {
 		I1,
 		vec4f_create( 0.5f,  0.0f, 0.5f, 1.0f),   // B
 		vec4f_create(-0.5f,  0.2f, 0.2f, 1.0f),   // C
@@ -272,9 +272,9 @@ void test_clip_case_1(){
 
 	float eps = 0.01f;
 
-	struct Vec4f v0_e = vec4f_create(1.0f, 0.0f, 1.0f, 0.0f);
-	struct Vec4f v1_e = vec4f_create(0.0f, 0.0f, 1.0f, 0.0f);
-	struct Vec4f v2_e = vec4f_create(1.0f, 0.0f, 0.0f, 0.0f);
+	Vec4f v0_e = vec4f_create(1.0f, 0.0f, 1.0f, 0.0f);
+	Vec4f v1_e = vec4f_create(0.0f, 0.0f, 1.0f, 0.0f);
+	Vec4f v2_e = vec4f_create(1.0f, 0.0f, 0.0f, 0.0f);
 
 	assert(vec4f_are_about_equal(r.tris[0].v0, v0_e, eps));
 	assert(vec4f_are_about_equal(r.tris[0].v1, v1_e, eps));
@@ -303,9 +303,9 @@ void test_clip_case_2(){
 	assert(r.num_tris == 1);
 
 
-	struct Vec4f v0_e = vec4f_create(1.0f, 0.0f, 1.0f, 1.0f);
-	struct Vec4f v1_e = vec4f_create(0.0f, 0.0f, 1.0f, 1.0f);
-	struct Vec4f v2_e = vec4f_create(0.0f, 0.0f, 0.0f, 1.0f);
+	Vec4f v0_e = vec4f_create(1.0f, 0.0f, 1.0f, 1.0f);
+	Vec4f v1_e = vec4f_create(0.0f, 0.0f, 1.0f, 1.0f);
+	Vec4f v2_e = vec4f_create(0.0f, 0.0f, 0.0f, 1.0f);
 
 	float eps = 0.01f;
 	assert(vec4f_are_about_equal(r.tris[0].v0, v0_e, eps));
@@ -343,11 +343,11 @@ static inline void calculate_planes(struct Plane* planes){
 
 // Small helpers used only in this test
 static inline int approxf(float a, float b, float eps) { return fabsf(a-b) <= eps; }
-static inline int v4_near(struct Vec4f a, struct Vec4f b, float eps) {
+static inline int v4_near(Vec4f a, Vec4f b, float eps) {
     return approxf(a.x,b.x,eps) && approxf(a.y,b.y,eps) &&
            approxf(a.z,b.z,eps) && approxf(a.w,b.w,eps);
 }
-static inline int inside_clip(struct Vec4f v, float eps) {
+static inline int inside_clip(Vec4f v, float eps) {
     const float w = v.w;
     if (v.x < -w - eps) return 0;
     if (v.x >  w + eps) return 0;
@@ -379,14 +379,14 @@ void test_clip_case_3(void) {
 
     // Expected unique vertices after clipping (order-agnostic):
     // Intersections with LEFT plane
-    struct Vec4f I1 = vec4f_create(-1.0f, 0.26f,       0.43f,      1.0f); // A->B @ x=-1
-    struct Vec4f I2 = vec4f_create(-1.0f, 0.10f,       0.53f,      1.0f); // A->C @ x=-1
+    Vec4f I1 = vec4f_create(-1.0f, 0.26f,       0.43f,      1.0f); // A->B @ x=-1
+    Vec4f I2 = vec4f_create(-1.0f, 0.10f,       0.53f,      1.0f); // A->C @ x=-1
     // Intersections with NEAR plane (z=0)
-    struct Vec4f J1 = vec4f_create( 0.22857143f, 0.62857145f, 0.0f, 1.0f); // I1->B @ z=0
-    struct Vec4f J2 = vec4f_create( 0.8f,        0.48f,       0.0f, 1.0f); // B->C  @ z=0
-    struct Vec4f  C = vec4f_create( 0.8f,       -0.8f,       0.8f,  1.0f); // original C
+    Vec4f J1 = vec4f_create( 0.22857143f, 0.62857145f, 0.0f, 1.0f); // I1->B @ z=0
+    Vec4f J2 = vec4f_create( 0.8f,        0.48f,       0.0f, 1.0f); // B->C  @ z=0
+    Vec4f  C = vec4f_create( 0.8f,       -0.8f,       0.8f,  1.0f); // original C
 
-    struct Vec4f expected[5] = { J1, J2, C, I2, I1 };
+    Vec4f expected[5] = { J1, J2, C, I2, I1 };
     int found[5] = {0};
 
     // 1) Every output vertex must be inside the clip volume
@@ -397,7 +397,7 @@ void test_clip_case_3(void) {
     }
 
     // 2) All expected vertices must appear among the output (order doesn't matter)
-    struct Vec4f out_verts[9];
+    Vec4f out_verts[9];
     int out_n = 0;
     for (int k = 0; k < r.num_tris; ++k) {
         out_verts[out_n++] = r.tris[k].v0;

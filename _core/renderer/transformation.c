@@ -1,10 +1,10 @@
 #include "transformation.h"
 
-Mat4 get_rotation_matrix(struct Transform tr) {
+Mat4 get_rotation_matrix(Transform tr) {
 	return quat_to_mat4(quat_normalize(tr.rotation));
 }
 
-Mat4 get_scale_matrix(struct Transform tr) {
+Mat4 get_scale_matrix(Transform tr) {
 	Vec3f scale = tr.scale;
 	Mat4 scale_matrix = {{
 		{scale.x, 0,       0,       0},
@@ -15,7 +15,7 @@ Mat4 get_scale_matrix(struct Transform tr) {
 	return scale_matrix;
 }
 
-Mat4 get_translation_matrix(struct Transform tr) {
+Mat4 get_translation_matrix(Transform tr) {
 	Vec3f pos = tr.position;
     	Mat4 translation_matrix = {{
        		{1.0f, 0, 0, pos.x},
@@ -26,7 +26,7 @@ Mat4 get_translation_matrix(struct Transform tr) {
     	return translation_matrix;	
 }
 
-Mat4 get_model_matrix(struct Transform tr){
+Mat4 get_model_matrix(Transform tr){
 	Mat4 result;
 	result = get_scale_matrix(tr);
 	result = mat4_mul_mat4(get_rotation_matrix(tr), result);
@@ -66,11 +66,11 @@ Mat4 mat4_affine_orthonormal_inverse(Mat4 mat) {
 	return result;
 }
 
-Mat4 get_view_matrix(struct Camera cam){
+Mat4 get_view_matrix(Camera cam){
 	return mat4_affine_orthonormal_inverse(get_model_matrix(cam.transform));
 }
 
-Mat4 get_projection_matrix(struct Camera cam, float aspect) {
+Mat4 get_projection_matrix(Camera cam, float aspect) {
 
 	float fov = cam.fov;
 	float zn = cam.near;
@@ -100,7 +100,7 @@ Vec4f perspective_divide(Vec4f v){
 	return result;
 }
 
-Mat4 get_viewport_matrix(struct Camera cam){
+Mat4 get_viewport_matrix(Camera cam){
 
 	float near = cam.near;
 	float far = cam.far;

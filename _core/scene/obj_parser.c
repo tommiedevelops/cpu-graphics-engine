@@ -5,7 +5,6 @@
 #include <math.h>
 
 #include "bounds.h"
-#include "obj_parser.h"
 #include "constants.h"
 #include "scene_manager.h"
 
@@ -66,7 +65,7 @@ static int parse_num_uvs(FILE* fp){
 }
 
 
-static struct Vec3f* parse_vertices(FILE* fp, int num_vertices){
+static Vec3f* parse_vertices(FILE* fp, int num_vertices){
 
 	// NULL CHECK
 	if(fp==NULL){
@@ -74,7 +73,7 @@ static struct Vec3f* parse_vertices(FILE* fp, int num_vertices){
 		exit(EXIT_FAILURE);
 	}
 
-	struct Vec3f* vertices = malloc(sizeof(struct Vec3f)*num_vertices);
+	Vec3f* vertices = malloc(sizeof(Vec3f)*num_vertices);
 
 	char buf[256] = {0};
 	float x,y,z;
@@ -94,7 +93,7 @@ static struct Vec3f* parse_vertices(FILE* fp, int num_vertices){
 	return vertices;
 }
 
-static struct Vec2f* parse_uvs(FILE* fp, int num_uvs){
+static Vec2f* parse_uvs(FILE* fp, int num_uvs){
 
 	// NULL CHECK
 	if(fp==NULL){
@@ -102,7 +101,7 @@ static struct Vec2f* parse_uvs(FILE* fp, int num_uvs){
 		exit(EXIT_FAILURE);
 	}
 
-	struct Vec2f* uvs = malloc(sizeof(struct Vec2f)*num_uvs);
+	Vec2f* uvs = malloc(sizeof(Vec2f)*num_uvs);
 
 	char buf[256] = {0};
 	float x,y,z;
@@ -138,7 +137,7 @@ static int parse_num_triangles(FILE* fp) {
 	return face_count;
 }
 
-static int* parse_triangle_uvs(FILE* fp, int num_triangles, int num_uvs, struct Vec2f* uvs){
+static int* parse_triangle_uvs(FILE* fp, int num_triangles, int num_uvs, Vec2f* uvs){
 
 	// NULL check
 	if( (uvs  == NULL) || (fp == NULL) ){
@@ -191,7 +190,7 @@ static int* parse_triangle_uvs(FILE* fp, int num_triangles, int num_uvs, struct 
 }
 
 
-static int* parse_triangles(FILE* fp, int num_triangles, int num_vertices, struct Vec3f* vertices){
+static int* parse_triangles(FILE* fp, int num_triangles, int num_vertices, Vec3f* vertices){
 
 	// NULL check
 	if( (vertices == NULL) || (fp == NULL) ){
@@ -245,7 +244,7 @@ static int* parse_triangles(FILE* fp, int num_triangles, int num_vertices, struc
 	return triangles;
 }
 
-static void shift_to_origin(struct Bounds bounds, struct Vec3f* vectors, int num_vectors) {
+static void shift_to_origin(struct Bounds bounds, Vec3f* vectors, int num_vectors) {
         for(int i = 0; i < num_vectors; i++){
                 vectors[i].x -= bounds.xmin;
                 vectors[i].y -= bounds.ymin;
@@ -254,7 +253,7 @@ static void shift_to_origin(struct Bounds bounds, struct Vec3f* vectors, int num
 }
 
 /* Normalizes values to between [-1,1] - assumes min = 0 for all axes */
-static void normalize_lengths(struct Bounds bounds, struct Vec3f* vectors, int num_vectors) {
+static void normalize_lengths(struct Bounds bounds, Vec3f* vectors, int num_vectors) {
 	float max = fmax(fmax(bounds.xmax, bounds.ymax), bounds.zmax);
         for(int i = 0; i < num_vectors; i++){
                 vectors[i].x = (float)vectors[i].x / max;
@@ -265,7 +264,7 @@ static void normalize_lengths(struct Bounds bounds, struct Vec3f* vectors, int n
         }
 }
 
-void normalize_vertices(struct Vec3f* vertices, int num_vertices) {
+void normalize_vertices(Vec3f* vertices, int num_vertices) {
         struct Bounds bounds = get_bounds(vertices, num_vertices);
 
         shift_to_origin(bounds, vertices, num_vertices);
@@ -275,23 +274,23 @@ void normalize_vertices(struct Vec3f* vertices, int num_vertices) {
 	bounds = get_bounds(vertices, num_vertices);
 }
 
-struct Mesh parse_obj(char* filename){
+Mesh parse_obj(char* filename){
 	FILE* fp = open_obj(filename);
 
 	int num_vertices = parse_num_vertices(fp);
-	struct Vec3f* vertices = parse_vertices(fp, num_vertices);
+	Vec3f* vertices = parse_vertices(fp, num_vertices);
 
 	normalize_vertices(vertices, num_vertices);
 
 	int num_triangles = parse_num_triangles(fp);
 	int* triangles = parse_triangles(fp, num_triangles, num_vertices, vertices);
 	int num_uvs = parse_num_uvs(fp);
-	struct Vec2f* uvs = parse_uvs(fp, num_uvs);
+	Vec2f* uvs = parse_uvs(fp, num_uvs);
 	int* triangle_uvs = parse_triangle_uvs(fp, num_triangles, num_uvs, uvs);
 
 	close_obj(fp);
 
-	struct Mesh data = {
+	Mesh data = {
 		.num_uvs = num_uvs,
 		.uvs = uvs,
 		.num_vertices = num_vertices,

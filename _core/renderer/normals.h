@@ -7,5 +7,5 @@
 
 #include <stdio.h>
 #include <string.h>
-int recalculate_normals(struct Mesh* m);
+int recalculate_normals(Mesh* m);
 #endif

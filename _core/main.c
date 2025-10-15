@@ -21,7 +21,7 @@ static inline void clear_buffers(uint32_t* framebuffer, float* zbuffer){
 int main(void) {
 
 	struct AppAssets assets = app_load_assets();
-	struct Scene* scene = app_create_scene(assets);
+	Scene* scene = app_create_scene(assets);
 
 	struct Time time;
 	time_init(&time);
@@ -32,14 +32,11 @@ int main(void) {
         struct SDL_Data window_data = initialise_window();
         SDL_Event event;
 
-        /* Render Loop */
         bool running = true;
         while(running) {
 		clear_buffers(framebuffer, zbuffer);
 		update_time(&time);
-
 		app_update_scene(scene, time.delta_time, &event, &running);
-
 		render_scene(framebuffer, zbuffer, *scene);
                 update_window(window_data, framebuffer);
 	}

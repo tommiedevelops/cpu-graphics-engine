@@ -4,7 +4,7 @@
 
 // ----- STRUCT DEFINITIONS (DO NOT MODIFY) -----
 struct GameObjectContainer {
-	struct GameObject** gos;
+	GameObject** gos;
 	int num_gos;
 };
 
@@ -45,15 +45,15 @@ struct MeshData load_meshes(){
 	/* User Defined */
 
 	int num_meshes = 3;
-	struct Mesh** meshes = malloc(sizeof(struct Mesh*)*num_meshes);
+	Mesh** meshes = malloc(sizeof(Mesh*)*num_meshes);
 
-	struct Mesh* homer_mesh = malloc(sizeof(struct Mesh));
+	Mesh* homer_mesh = malloc(sizeof(Mesh));
 	*homer_mesh = parse_obj("./assets/models/lucy.obj");
 	
-	struct Mesh* teapot_mesh = malloc(sizeof(struct Mesh));
+	Mesh* teapot_mesh = malloc(sizeof(Mesh));
 	*teapot_mesh = parse_obj("./assets/models/teapot.obj");	
 
-	struct Mesh* bunny_mesh = malloc(sizeof(struct Mesh));
+	Mesh* bunny_mesh = malloc(sizeof(Mesh));
 	*bunny_mesh = parse_obj("./assets/models/bunny.obj");	
 	recalculate_normals(bunny_mesh);
 
@@ -74,25 +74,25 @@ struct GameObjectContainer prepare_game_objects(struct AppAssets assets){
 
 	/* User Defined */
 	struct Texture** textures = assets.td.textures;
-	struct Mesh** meshes = assets.md.meshes;
+	Mesh** meshes = assets.md.meshes;
 
 	// Ground
 	/* struct Material* ground_material = material_create(VEC4F_1, textures[BRICK]); */ 	
-	/* struct Vec3f ground_pos = vec3f_create(0.0, -1.0f, 0.0f); */
-	/* struct Vec3f ground_scale = vec3f_create(10.0f, 1.0f, 10.0f); */
-	/* struct Transform ground_tr = transform_create(ground_pos, QUAT_IDENTITY, ground_scale); */
-	/* struct GameObject* ground_go  = game_object_create(ground_tr,meshes[GROUND], ground_material); */
+	/* Vec3f ground_pos = vec3f_create(0.0, -1.0f, 0.0f); */
+	/* Vec3f ground_scale = vec3f_create(10.0f, 1.0f, 10.0f); */
+	/* Transform ground_tr = transform_create(ground_pos, QUAT_IDENTITY, ground_scale); */
+	/* GameObject* ground_go  = game_object_create(ground_tr,meshes[GROUND], ground_material); */
 
 	// Bunny
-	struct Vec4f lavender = vec4f_create(0.40,0.70,0.38,0.4);
+	Vec4f lavender = vec4f_create(0.40,0.70,0.38,0.4);
 	struct Material* bunny_material = material_create(lavender, textures[BRICK]); 	
-	struct Vec3f bunny_pos = vec3f_create(0.0, 0.0f, 0.0f);
-	struct Vec3f bunny_scale = vec3f_create(3.0f, 3.0f, 3.0f);
+	Vec3f bunny_pos = vec3f_create(0.0, 0.0f, 0.0f);
+	Vec3f bunny_scale = vec3f_create(3.0f, 3.0f, 3.0f);
 
-	struct Transform bunny_tr = transform_create(bunny_pos, QUAT_IDENTITY, bunny_scale);
-	struct GameObject* bunny_go  = game_object_create(bunny_tr, meshes[BUNNY], bunny_material);
+	Transform bunny_tr = transform_create(bunny_pos, QUAT_IDENTITY, bunny_scale);
+	GameObject* bunny_go  = game_object_create(bunny_tr, meshes[BUNNY], bunny_material);
 	int num_gos = 1;
-	struct GameObject** gos = malloc(sizeof(struct GameObject*)*num_gos);
+	GameObject** gos = malloc(sizeof(GameObject*)*num_gos);
 	gos[0] = bunny_go;
 	/* gos[BUNNY] = bunny_go; */
 
@@ -104,11 +104,11 @@ struct GameObjectContainer prepare_game_objects(struct AppAssets assets){
 	return ctr;
 }
 
-struct Camera* prepare_camera(){
+Camera* prepare_camera(){
 	/* User Defined */
-	struct Transform tr = transform_default();
+	Transform tr = transform_default();
 	tr.position = vec3f_create(0.0f, 0.0f, -5.0f);
-	struct Camera* cam = camera_create(tr);
+	Camera* cam = camera_create(tr);
 	return cam;
 }
 
@@ -123,8 +123,8 @@ struct LightSource prepare_light_source(){
 
 // --- Event Handling ---
 struct EventData {
-	struct Vec3f mouse_input;
-	struct Vec2f move_input;
+	Vec3f mouse_input;
+	Vec2f move_input;
 };
 
 struct EventData handle_event(SDL_Event* event, bool* running){
@@ -155,7 +155,7 @@ struct EventData handle_event(SDL_Event* event, bool* running){
 	return data;
 }
 
-void update_scene(struct Scene* scene, float dt, SDL_Event* event, bool* running){
+void update_scene(Scene* scene, float dt, SDL_Event* event, bool* running){
 	struct EventData ed = handle_event(event, running);
 
 	/* User Defined */
@@ -167,29 +167,29 @@ void update_scene(struct Scene* scene, float dt, SDL_Event* event, bool* running
 	float yaw = ed.mouse_input.x * dt * cam_ang_vel;
 	float pitch = ed.mouse_input.y * dt * cam_ang_vel;
 
-	struct Camera* cam = scene->cam;
+	Camera* cam = scene->cam;
 
-	struct Vec3f forward = quat_get_forward(cam->transform.rotation);
-	struct Vec3f right = quat_get_right(cam->transform.rotation);
+	Vec3f forward = quat_get_forward(cam->transform.rotation);
+	Vec3f right = quat_get_right(cam->transform.rotation);
 
-	struct Quaternion q_yaw = quat_angle_axis(yaw, VEC3F_Y);
+	Quat q_yaw = quat_angle_axis(yaw, VEC3F_Y);
 
 	cam->transform.rotation = quat_mul(q_yaw, cam->transform.rotation);
 	quat_normalize(cam->transform.rotation);
 
 	// camera translation
-	struct Vec3f fwd_delta = vec3f_scale(forward, ed.move_input.y);
-	struct Vec3f side_delta = vec3f_scale(right, ed.move_input.x);
-	struct Vec3f move_vec = vec3f_add(fwd_delta, side_delta);
-	struct Vec3f delta_pos = vec3f_scale(move_vec, cam_speed * dt);
+	Vec3f fwd_delta = vec3f_scale(forward, ed.move_input.y);
+	Vec3f side_delta = vec3f_scale(right, ed.move_input.x);
+	Vec3f move_vec = vec3f_add(fwd_delta, side_delta);
+	Vec3f delta_pos = vec3f_scale(move_vec, cam_speed * dt);
 	cam->transform.position = vec3f_add(cam->transform.position, delta_pos);
 
 	// Spin the bunny
 	float bunny_ang_vel = 2.0f;
-	struct Vec3f rot_axis = vec3f_create(0.0f, -1.0f, 0.0f);
-	struct Quaternion bunny_rot = quat_angle_axis(dt*bunny_ang_vel, rot_axis);
+	Vec3f rot_axis = vec3f_create(0.0f, -1.0f, 0.0f);
+	Quat bunny_rot = quat_angle_axis(dt*bunny_ang_vel, rot_axis);
 
-	struct Quaternion* curr_rot = &scene->gos[0]->transform.rotation;
+	Quat* curr_rot = &scene->gos[0]->transform.rotation;
 //	*curr_rot = quat_normalize(quat_mul(*curr_rot, bunny_rot));
 }
 
@@ -206,7 +206,7 @@ struct AppAssets app_load_assets(){
 	return assets;
 }
 
-struct Scene* app_create_scene(struct AppAssets assets){
+Scene* app_create_scene(struct AppAssets assets){
 
 	struct GameObjectContainer go_ctr = prepare_game_objects(assets);
 	if(NULL == go_ctr.gos){
@@ -214,7 +214,7 @@ struct Scene* app_create_scene(struct AppAssets assets){
 		return NULL;
 	}
 
-	struct Camera* cam = prepare_camera();
+	Camera* cam = prepare_camera();
 	if(NULL == cam){
 		LOG_ERROR("cam is null");
 		return NULL;
@@ -222,7 +222,7 @@ struct Scene* app_create_scene(struct AppAssets assets){
 
 	struct LightSource ls = prepare_light_source();
 
-	struct Scene* scene = scene_create(cam, go_ctr.gos, go_ctr.num_gos, ls);
+	Scene* scene = scene_create(cam, go_ctr.gos, go_ctr.num_gos, ls);
 	if(NULL == scene){
 		LOG_ERROR("scene is null");
 		return NULL;
@@ -231,11 +231,11 @@ struct Scene* app_create_scene(struct AppAssets assets){
 	return scene;
 }
 
-void app_update_scene(struct Scene* scene, float dt, SDL_Event* event, bool* running){
+void app_update_scene(Scene* scene, float dt, SDL_Event* event, bool* running){
 	update_scene(scene, dt, event, running);
 }
 
-void app_destroy_scene(struct Scene* scene){
+void app_destroy_scene(Scene* scene){
 	if(NULL == scene) return;
 	for(int i =0; i < scene->num_gos; i++){
 		free(scene->gos[i]);		

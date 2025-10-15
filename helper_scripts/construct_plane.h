@@ -3,6 +3,6 @@
 
 #include "scene_manager.h"
 
-struct Mesh create_square_plane();
-struct Mesh create_square_plane_xy();
+Mesh create_square_plane();
+Mesh create_square_plane_xy();
 #endif

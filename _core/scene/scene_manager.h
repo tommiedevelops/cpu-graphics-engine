@@ -2,62 +2,59 @@
 #define SCENE_MANAGER_H
 
 #include "vector.h"
-#include "obj_parser.h"
 #include "bounds.h"
 #include "quaternion.h"
 #include "constants.h"
+#include "shading.h"
 
 // --- STRUCT DEFINITIONS --- 
-struct Transform {
-	struct Vec3f position;  // in world coords
-	struct Quaternion rotation;  
-	struct Vec3f scale;
-};
+typedef struct Transform {
+	Vec3f position;  // in world coords
+	Quat rotation;  
+	Vec3f scale;
+} Transform;
 
-struct Camera { 
-	struct Transform transform;
-	float fov;
-	float near;
-	float far;
-};
-
-struct Scene {
-	struct Camera *cam;
-	struct GameObject **gos;
-	int num_gos;
-	struct LightSource light;
-};
-
-struct Transform transform_create(struct Vec3f pos, struct Quaternion rot, struct Vec3f scale);
-struct Transform transform_default();
-
-struct Scene* scene_create(struct Camera* cam, struct GameObject** gos, int num_gos, struct LightSource ls);
-
-struct Camera* camera_create(struct Transform tr);
-
-void camera_set_fov_degrees(struct Camera* cam, float fov_degrees);
-void camera_set_near(struct Camera* cam, float near);
-void camera_set_far(struct Camera* cam, float far);
-
-struct Mesh {
+typedef struct Mesh {
 	int num_vertices;
-	struct Vec3f* vertices;
+	Vec3f* vertices;
 	int num_uvs;
-	struct Vec2f* uvs;
+	Vec2f* uvs;
 	int num_normals;
-	struct Vec3f* normals;
+	Vec3f* normals;
 	int num_triangles;
 	int* triangle_uvs;
 	int* triangles;
 	int* triangle_normals;
-};
+} Mesh;
 
-struct GameObject {
-	struct Transform transform;
-	struct Mesh* mesh;
+typedef struct GameObject {
+	Transform transform;
+	Mesh* mesh;
 	struct Material* material;
-};
+} GameObject;
 
-struct GameObject* game_object_create(struct Transform tr, struct Mesh* mesh, struct Material* mat);
+typedef struct Camera { 
+	Transform transform;
+	float fov;
+	float near;
+	float far;
+} Camera;
 
+typedef struct Scene {
+	Camera *cam;
+	GameObject **gos;
+	int num_gos;
+	struct LightSource light;
+} Scene;
+
+Transform transform_create(Vec3f pos, Quat rot, Vec3f scale);
+Scene* scene_create(Camera* cam, GameObject** gos, int num_gos, struct LightSource ls);
+Camera* camera_create(Transform tr);
+Transform transform_default();
+void camera_set_fov_degrees(Camera* cam, float fov_degrees);
+void camera_set_near(Camera* cam, float near);
+void camera_set_far(Camera* cam, float far);
+GameObject* game_object_create(Transform tr, Mesh* mesh, struct Material* mat);
+
+Mesh parse_obj(char* filename);
 #endif

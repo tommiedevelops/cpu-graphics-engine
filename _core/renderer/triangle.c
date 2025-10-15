@@ -51,23 +51,23 @@ float interpolate_depth(struct Triangle tri, float alpha, float beta, float gamm
 	return depth;
 }
 
-bool point_inside(struct Vec4f point){	
+bool point_inside(Vec4f point){	
 	float w = point.w;
 	return (point.x >= -w) && (point.x <= w) && 
 	       (point.y >= -w) && (point.y <= w) &&
                (point.z >= 0) && (point.z <= w);	       
 }
 
-struct Vec3f interpolate_normal(struct Triangle tri, float alpha, float beta, float gamma){
+Vec3f interpolate_normal(struct Triangle tri, float alpha, float beta, float gamma){
 	float nx = alpha*tri.n0.x + beta*tri.n1.x + gamma*tri.n2.x;
 	float ny = alpha*tri.n0.y + beta*tri.n1.y + gamma*tri.n2.y;
 	float nz = alpha*tri.n0.z + beta*tri.n1.z + gamma*tri.n2.z;
 
-	struct Vec3f n = vec3f_normalize(vec3f_create(nx,ny,nz));
+	Vec3f n = vec3f_normalize(vec3f_create(nx,ny,nz));
 	return n;
 }
 
-struct Vec2f interpolate_uv(struct Triangle tri, float alpha, float beta, float gamma){
+Vec2f interpolate_uv(struct Triangle tri, float alpha, float beta, float gamma){
 	float u0 = tri.uv0_over_w.x;
 	float u1 = tri.uv1_over_w.x;
 	float u2 = tri.uv2_over_w.x;
@@ -81,13 +81,13 @@ struct Vec2f interpolate_uv(struct Triangle tri, float alpha, float beta, float 
 
 	float w_inv = alpha*tri.w0_inv + beta*tri.w1_inv + gamma*tri.w2_inv;
 
-	struct Vec2f uv = vec2f_scale(vec2f_create(u,v), (float)1.0f/w_inv);
+	Vec2f uv = vec2f_scale(vec2f_create(u,v), (float)1.0f/w_inv);
 	
 	return uv;
 }
 
 // FROM CHAT-GPT
-static inline uint32_t vec4f_to_rgba32(struct Vec4f c) {
+static inline uint32_t vec4f_to_rgba32(Vec4f c) {
     // Clamp
     float r = c.x < 0 ? 0 : (c.x > 1 ? 1 : c.x);
     float g = c.y < 0 ? 0 : (c.y > 1 ? 1 : c.y);
@@ -131,11 +131,11 @@ void draw_pixel(int x, int y, uint32_t* framebuffer, float* zbuffer, float depth
 	}
 }
 
-static inline struct Vec4f vec4f_mul(struct Vec4f a, struct Vec4f b) {
-    return (struct Vec4f){ a.x * b.x, a.y * b.y, a.z * b.z, a.w * b.w };
+static inline Vec4f vec4f_mul(Vec4f a, Vec4f b) {
+    return (Vec4f){ a.x * b.x, a.y * b.y, a.z * b.z, a.w * b.w };
 }
 
-void rasterize_triangle(struct Triangle tri, struct Camera* cam, struct LightSource* ls, struct Material* mat, uint32_t* framebuffer, float* zbuffer) {
+void rasterize_triangle(struct Triangle tri, Camera* cam, struct LightSource* ls, struct Material* mat, uint32_t* framebuffer, float* zbuffer) {
 
 	struct Bounds bounds = get_bounds_from_tri(tri);
 	for(int y = (int)bounds.ymin; y <= (int)bounds.ymax; y++){
@@ -149,10 +149,10 @@ void rasterize_triangle(struct Triangle tri, struct Camera* cam, struct LightSou
 			
 				// Fragment Shader	
 				float depth = interpolate_depth(tri, alpha, beta, gamma);	
-				struct Vec2f uv = interpolate_uv(tri, alpha, beta, gamma);
-				struct Vec3f n = interpolate_normal(tri, alpha, beta, gamma);
+				Vec2f uv = interpolate_uv(tri, alpha, beta, gamma);
+				Vec3f n = interpolate_normal(tri, alpha, beta, gamma);
 
-				struct Vec4f diffuse = 
+				Vec4f diffuse = 
 				compute_diffuse(material_get_albedo(mat,uv), ls->direction, ls->color, n);
 				uint32_t color = vec4f_to_rgba32(diffuse);
 				draw_pixel(x,y,framebuffer,zbuffer,depth,color);

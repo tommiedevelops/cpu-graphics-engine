@@ -6,14 +6,13 @@
 #include "shading.h"
 
 struct Triangle;
-struct Scene;
 
-struct Vec3f compute_eyesight_vector(struct Vec3f cam_pos, struct Vec3f origin);
+Vec3f compute_eyesight_vector(Vec3f cam_pos, Vec3f origin);
 
-struct Vec4f compute_specular(float exponent, struct Vec4f light_col, struct Vec3f norm, struct Vec3f cam_pos, struct Vec3f light_dir, struct Triangle tri);
+Vec4f compute_specular(float exponent, Vec4f light_col, Vec3f norm, Vec3f cam_pos, Vec3f light_dir, struct Triangle tri);
 
-struct Vec4f compute_diffuse(struct Vec4f albedo, struct Vec3f light_dir, struct Vec4f light_col, struct Vec3f norm);
+Vec4f compute_diffuse(Vec4f albedo, Vec3f light_dir, Vec4f light_col, Vec3f norm);
 
-void precompute_lighting(struct Material* mat, struct Triangle tri, struct Scene scene);
+void precompute_lighting(struct Material* mat, struct Triangle tri, Scene scene);
 
 #endif

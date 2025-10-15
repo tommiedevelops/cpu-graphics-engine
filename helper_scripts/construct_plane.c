@@ -2,36 +2,36 @@
 #include <stdlib.h>
 #include "construct_plane.h"
 
-struct Mesh create_square_plane() {
+Mesh create_square_plane() {
 
 	float w = 0.5f;
 	float l = 0.5f; 
 	
-	struct Vec3f bl = {
+	Vec3f bl = {
 		.x = -w ,
 		.y = 0.0f,
 		.z = -l
 	};
 
-	struct Vec3f br = {
+	Vec3f br = {
 		.x = w ,
 		.y = 0.0f,
 		.z = -l
 	};
 
-	struct Vec3f tl = {
+	Vec3f tl = {
 		.x = -w ,
 		.y = 0.0f,
 		.z = l
 	};
 
-	struct Vec3f tr = {
+	Vec3f tr = {
 		.x = w ,
 		.y = 0.0f,
 		.z = l
 	};
 
-	struct Vec3f *vertices = malloc(4*sizeof(struct Vec3f));
+	Vec3f *vertices = malloc(4*sizeof(Vec3f));
 	vertices[0] = bl;
 	vertices[1] = tl;
 	vertices[2] = br;
@@ -45,13 +45,13 @@ struct Mesh create_square_plane() {
 	triangles[4] = 3;
 	triangles[5] = 2;
 
-	struct Vec2f* uvs = malloc(4*sizeof(struct Vec2f));
+	Vec2f* uvs = malloc(4*sizeof(Vec2f));
 	uvs[0] = vec2f_create(0.0f,0.0f);
 	uvs[1] = vec2f_create(0.0f,1.0f);
 	uvs[2] = vec2f_create(1.0f,0.0f);
 	uvs[3] = vec2f_create(1.0f,1.0f);
 
-	struct Mesh mesh = {
+	Mesh mesh = {
 		.num_vertices = 4,
 		.vertices = vertices,
 	    	.triangles = triangles,
@@ -63,36 +63,36 @@ struct Mesh create_square_plane() {
 	
 }
 	
-struct Mesh create_square_plane_xy() {
+Mesh create_square_plane_xy() {
 
 	float w = 0.5f;
 	float l = 0.5f; 
 	
-	struct Vec3f bl = {
+	Vec3f bl = {
 		.x = -w ,
 		.y = -l,
 		.z = 0.0f
 	};
 
-	struct Vec3f br = {
+	Vec3f br = {
 		.x = w ,
 		.y = -l,
 		.z = 0.0f
 	};
 
-	struct Vec3f tl = {
+	Vec3f tl = {
 		.x = -w ,
 		.y = l,
 		.z = 0.0f
 	};
 
-	struct Vec3f tr = {
+	Vec3f tr = {
 		.x = w ,
 		.y = l,
 		.z = 0.0f 
 	};
 
-	struct Vec3f *vertices = malloc(4*sizeof(struct Vec3f));
+	Vec3f *vertices = malloc(4*sizeof(Vec3f));
 	vertices[0] = bl;
 	vertices[1] = tl;
 	vertices[2] = br;
@@ -106,7 +106,7 @@ struct Mesh create_square_plane_xy() {
 	triangles[4] = 3;
 	triangles[5] = 2;
 
-	struct Mesh mesh = {
+	Mesh mesh = {
 		.num_vertices = 4,
 		.vertices = vertices,
 	    	.triangles = triangles,
@@ -117,36 +117,36 @@ struct Mesh create_square_plane_xy() {
 	
 }
 
-struct Mesh create_square_vertical_plane() {
+Mesh create_square_vertical_plane() {
 
 	float w = 0.5f;
 	float l = 0.5f; 
 	
-	struct Vec3f bl = {
+	Vec3f bl = {
 		.x = -w,
 		.y = -l,
 		.z = 0.0f 
 	};
 
-	struct Vec3f br = {
+	Vec3f br = {
 		.x = w,
 		.y = -l,
 		.z = 0.0f
 	};
 
-	struct Vec3f tl = {
+	Vec3f tl = {
 		.x = -w,
 		.y = l,
 		.z = 0.0f
 	};
 
-	struct Vec3f tr = {
+	Vec3f tr = {
 		.x = w,
 		.y = l,
 		.z = 0.0f
 	};
 
-	struct Vec3f *vertices = malloc(4*sizeof(struct Vec3f));
+	Vec3f *vertices = malloc(4*sizeof(Vec3f));
 	vertices[0] = bl;
 	vertices[1] = tl;
 	vertices[2] = br;
@@ -160,13 +160,13 @@ struct Mesh create_square_vertical_plane() {
 	triangles[4] = 3;
 	triangles[5] = 2;
 
-	struct Vec2f* uvs = malloc(4*sizeof(struct Vec2f));
+	Vec2f* uvs = malloc(4*sizeof(Vec2f));
 	uvs[0] = vec2f_create(0.0f,0.0f);
 	uvs[1] = vec2f_create(0.0f,1.0f);
 	uvs[2] = vec2f_create(1.0f,0.0f);
 	uvs[3] = vec2f_create(1.0f,1.0f);
 
-	struct Mesh mesh = {
+	Mesh mesh = {
 		.num_vertices = 4,
 		.vertices = vertices,
 	    	.triangles = triangles,

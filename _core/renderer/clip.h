@@ -15,15 +15,15 @@ struct ClipResult {
 };
 
 struct Plane { 
-	struct Vec4f n; //normal
-	struct Vec4f p; // point on the plane
+	Vec4f n; //normal
+	Vec4f p; // point on the plane
 };
 
-struct Vec4f intersect(struct Plane P, struct Vec4f u, struct Vec4f v);
-bool inside(struct Plane P, struct Vec4f x, float eps);
-float sdf(struct Plane P, struct Vec4f x);
-struct Vec4f lerp(struct Vec4f u, struct Vec4f v, float t);
-int clip_against_plane(struct Vec4f* in,struct Vec2f* in_uv, int in_n, struct Plane P, struct Vec4f* out, struct Vec2f* out_uv);
+Vec4f intersect(struct Plane P, Vec4f u, Vec4f v);
+bool inside(struct Plane P, Vec4f x, float eps);
+float sdf(struct Plane P, Vec4f x);
+Vec4f lerp(Vec4f u, Vec4f v, float t);
+int clip_against_plane(Vec4f* in,Vec2f* in_uv, int in_n, struct Plane P, Vec4f* out, Vec2f* out_uv);
 
 struct ClipResult clip_tri(struct Triangle tri, struct Plane * planes, int num_planes);
 

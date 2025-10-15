@@ -9,16 +9,16 @@
 #include "constants.h"
 
 // Transforms 
-struct Transform transform_create(struct Vec3f pos, struct Quaternion rot, struct Vec3f scale){
-	struct Transform tr;
+Transform transform_create(Vec3f pos, Quat rot, Vec3f scale){
+	Transform tr;
 	tr.position = pos;
 	tr.rotation = rot;
 	tr.scale = scale;
 	return tr;
 }
 
-struct Transform transform_default(){
-	struct Transform tr;
+Transform transform_default(){
+	Transform tr;
 	tr.position = VEC3F_0;
 	tr.rotation = QUAT_IDENTITY;
 	tr.scale = VEC3F_1;
@@ -26,8 +26,8 @@ struct Transform transform_default(){
 }
 
 // Camera
-struct Camera* camera_create(struct Transform tr){
-	struct Camera* cam = malloc(sizeof(struct Camera));
+Camera* camera_create(Transform tr){
+	Camera* cam = malloc(sizeof(Camera));
 	cam->transform = tr;
 	cam->fov = PI*0.33f;
 	cam->near = 0.01f;
@@ -35,7 +35,7 @@ struct Camera* camera_create(struct Transform tr){
 	return cam;
 }
 
-void camera_set_fov_degrees(struct Camera* cam, float fov_degrees){
+void camera_set_fov_degrees(Camera* cam, float fov_degrees){
 
 	if(fov_degrees < 0.0f) fov_degrees = 0.0f;
 	if(fov_degrees > 180.0f) fov_degrees = 180.0f;
@@ -45,18 +45,18 @@ void camera_set_fov_degrees(struct Camera* cam, float fov_degrees){
 }
 
 
-void camera_set_near(struct Camera* cam, float near){
+void camera_set_near(Camera* cam, float near){
 	if(near < 0.0f) near = 0.0f;
 	cam->near = near;
 }
 
-void camera_set_far(struct Camera* cam, float far){
+void camera_set_far(Camera* cam, float far){
 	cam->far = far;
 }
 
 // GameObject
-struct GameObject* game_object_create(struct Transform tr, struct Mesh* mesh, struct Material* mat){
-	struct GameObject* go = malloc(sizeof(struct GameObject));
+GameObject* game_object_create(Transform tr, Mesh* mesh, struct Material* mat){
+	GameObject* go = malloc(sizeof(GameObject));
 	go->transform = tr;
 	go->mesh = mesh;
 	go->material = mat;
@@ -64,9 +64,9 @@ struct GameObject* game_object_create(struct Transform tr, struct Mesh* mesh, st
 }
 
 
-struct Scene* scene_create(struct Camera* cam, struct GameObject** gos, int num_gos, struct LightSource ls){
+Scene* scene_create(Camera* cam, GameObject** gos, int num_gos, struct LightSource ls){
 
-	struct Scene* scene = malloc(sizeof(struct Scene));
+	Scene* scene = malloc(sizeof(Scene));
 	if(NULL == scene) {
 		LOG_ERROR("malloc failed"); 
 		return NULL;

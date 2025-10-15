@@ -3,7 +3,7 @@
 
 // have to detect adjacent faces
 // average of the normals in adjacent faces
-int recalculate_normals(struct Mesh* m){
+int recalculate_normals(Mesh* m){
 	if(NULL == m) return -1;
 	
 	int n = m->num_vertices;
@@ -12,7 +12,7 @@ int recalculate_normals(struct Mesh* m){
 	memset(tri_num_normals,0x0,sizeof(int)*n);
 
 	m->num_normals = n;
-	struct Vec3f* normals = malloc(sizeof(struct Vec3f)*n);
+	Vec3f* normals = malloc(sizeof(Vec3f)*n);
 	for(int i = 0; i < n; i++) normals[i] = VEC3F_0;
 	
 	int t = m->num_triangles;
@@ -31,13 +31,13 @@ int recalculate_normals(struct Mesh* m){
 		int v1_idx = m->triangles[tri_idx + 1];
 		int v2_idx = m->triangles[tri_idx + 2];
 
-		struct Vec3f v0 = m->vertices[v0_idx];
-		struct Vec3f v1 = m->vertices[v1_idx];
-		struct Vec3f v2 = m->vertices[v2_idx];
+		Vec3f v0 = m->vertices[v0_idx];
+		Vec3f v1 = m->vertices[v1_idx];
+		Vec3f v2 = m->vertices[v2_idx];
 
-		struct Vec3f x = vec3f_sub(v0,v1);
-		struct Vec3f y = vec3f_sub(v0,v2);
-		struct Vec3f n = vec3f_cross(y,x);
+		Vec3f x = vec3f_sub(v0,v1);
+		Vec3f y = vec3f_sub(v0,v2);
+		Vec3f n = vec3f_cross(y,x);
 		
 		normals[v0_idx] = vec3f_add(normals[v0_idx], n);
 		tri_num_normals[v0_idx]++;	

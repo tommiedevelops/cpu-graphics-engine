@@ -2,10 +2,10 @@
 
 struct RenderData {
 	int num_vertices;
-	struct Vec3f* vertices;
-	struct Vec2f* uvs;
+	Vec3f* vertices;
+	Vec2f* uvs;
 	int num_uvs;
-	struct Vec3f* normals;
+	Vec3f* normals;
 	int num_triangles;
 	int* triangles;	
 	int* triangle_uvs;
@@ -14,7 +14,7 @@ struct RenderData {
 	struct Plane clipping_planes[6];
 };
 
-static inline void calculate_planes(struct Plane* planes){
+static inline void get_clipping_planes(struct Plane* planes){
 	/* all normals facing 'inside'*/
 	/* inside => -w<=x<=w, -w<=y<=w, 0<=z<=w*/
 	//top (y = w)
@@ -42,12 +42,12 @@ static inline void calculate_planes(struct Plane* planes){
 	planes[5].p = vec4f_create(0.0f, 0.0f, 1.0f, 1.0f);
 }
 
-struct RenderData prepare_render_data(struct GameObject go, struct Camera cam) {
+struct RenderData prepare_render_data(GameObject go, Camera cam) {
 
 	struct RenderData r = {0};
 
 	if(go.mesh == NULL){
-		//LOG_ERROR("No mesh to render");
+		perror("mesh was null");
 		return r;
 	}
 
@@ -69,7 +69,7 @@ struct RenderData prepare_render_data(struct GameObject go, struct Camera cam) {
 	if(go.material != NULL) r.mat = *go.material;
 
 	// Clipping Planes
-	calculate_planes(r.clipping_planes);
+	get_clipping_planes(r.clipping_planes);
 
 	return r;
 }
@@ -113,10 +113,7 @@ void precompute_interpolated_values(struct Triangle* tri) {
 	tri->uv2_over_w = vec2f_scale(tri->uv2, tri->w2_inv);
 }
 
-void default_vert_shader();
-void default_frag_shader();
-
-void render_game_object(uint32_t* framebuffer, float* zbuffer, struct Scene scene, struct GameObject go){
+void render_game_object(uint32_t* framebuffer, float* zbuffer, Scene scene, GameObject go){
 		
 		struct RenderData data = prepare_render_data(go, *scene.cam);
 		
@@ -153,10 +150,10 @@ void render_game_object(uint32_t* framebuffer, float* zbuffer, struct Scene scen
 
 }
 
-void render_scene(uint32_t* framebuffer, float* zbuffer, struct Scene scene) {
+void render_scene(uint32_t* framebuffer, float* zbuffer, Scene scene) {
 	
 	for(int i = 0; i < scene.num_gos; i++) {
-		struct GameObject go = *scene.gos[i];
+		GameObject go = *scene.gos[i];
 		render_game_object(framebuffer, zbuffer, scene, go);
 	}
 }

@@ -5,23 +5,23 @@
 #include <math.h>
 #include <stdbool.h>
 
-#define VEC2F_X ((struct Vec2f){1.0f, 0.0f})
-#define VEC2F_Y ((struct Vec2f){0.0f, 1.0f})
-#define VEC2F_0 ((struct Vec2f){0.0f, 0.0f})
-#define VEC2F_1 ((struct Vec2f){1.0f, 1.0f})
+#define VEC2F_X ((Vec2f){1.0f, 0.0f})
+#define VEC2F_Y ((Vec2f){0.0f, 1.0f})
+#define VEC2F_0 ((Vec2f){0.0f, 0.0f})
+#define VEC2F_1 ((Vec2f){1.0f, 1.0f})
 
-#define VEC3F_X ((struct Vec3f){1.0f, 0.0f, 0.0f})
-#define VEC3F_Y ((struct Vec3f){0.0f, 1.0f, 0.0f})
-#define VEC3F_Z ((struct Vec3f){0.0f, 0.0f, 1.0f})
-#define VEC3F_0 ((struct Vec3f){0.0f, 0.0f, 0.0f})
-#define VEC3F_1 ((struct Vec3f){1.0f, 1.0f, 1.0f})
+#define VEC3F_X ((Vec3f){1.0f, 0.0f, 0.0f})
+#define VEC3F_Y ((Vec3f){0.0f, 1.0f, 0.0f})
+#define VEC3F_Z ((Vec3f){0.0f, 0.0f, 1.0f})
+#define VEC3F_0 ((Vec3f){0.0f, 0.0f, 0.0f})
+#define VEC3F_1 ((Vec3f){1.0f, 1.0f, 1.0f})
 
-#define VEC4F_X ((struct Vec4f){1.0f, 0.0f, 0.0f, 0.0f})
-#define VEC4F_Y ((struct Vec4f){0.0f, 1.0f, 0.0f, 0.0f},)
-#define VEC4F_Z ((struct Vec4f){0.0f, 0.0f, 1.0f, 0.0f})
-#define VEC4F_W ((struct Vec4f){0.0f, 0.0f, 0.0f, 1.0f})
-#define VEC4F_0 ((struct Vec4f){0.0f, 0.0f, 0.0f, 0.0f})
-#define VEC4F_1 ((struct Vec4f){1.0f, 1.0f, 1.0f, 1.0f})
+#define VEC4F_X ((Vec4f){1.0f, 0.0f, 0.0f, 0.0f})
+#define VEC4F_Y ((Vec4f){0.0f, 1.0f, 0.0f, 0.0f},)
+#define VEC4F_Z ((Vec4f){0.0f, 0.0f, 1.0f, 0.0f})
+#define VEC4F_W ((Vec4f){0.0f, 0.0f, 0.0f, 1.0f})
+#define VEC4F_0 ((Vec4f){0.0f, 0.0f, 0.0f, 0.0f})
+#define VEC4F_1 ((Vec4f){1.0f, 1.0f, 1.0f, 1.0f})
 
 typedef struct Vec2f {
 	float x, y;

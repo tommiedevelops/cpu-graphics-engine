@@ -15,7 +15,7 @@ struct TexData {
 
 struct MeshData {
 	int num_meshes;
-	struct Mesh** meshes;
+	Mesh** meshes;
 };
 
 struct AppAssets {
@@ -26,7 +26,7 @@ struct AppAssets {
 struct AppAssets app_load_assets();
 void app_destroy_assets(struct AppAssets assets);
 
-struct Scene* app_create_scene();
-void app_update_scene(struct Scene* scene, float delta_time, SDL_Event* event, bool* running);
-void app_destroy_scene(struct Scene* scene);
+Scene* app_create_scene();
+void app_update_scene(Scene* scene, float delta_time, SDL_Event* event, bool* running);
+void app_destroy_scene(Scene* scene);
 #endif

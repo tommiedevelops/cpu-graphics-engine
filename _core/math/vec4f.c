@@ -1,10 +1,10 @@
 #include "vector.h"
 
-struct Vec3f vec4f_to_vec3f(struct Vec4f v) {
-    return (struct Vec3f){ v.x, v.y, v.z };
+Vec3f vec4f_to_vec3f(Vec4f v) {
+    return (Vec3f){ v.x, v.y, v.z };
 }
 
-bool vec4f_are_equal(struct Vec4f a, struct Vec4f b) {
+bool vec4f_are_equal(Vec4f a, Vec4f b) {
 	//printf("checking {%f,%f,%f,%f} == {%f,%f,%f,%f}\n", a.x,a.y,a.z,a.w,b.x,b.y,b.z,b.w);
 	if(a.x != b.x){ return false; }
 	if(a.y != b.y){ return false; }
@@ -13,7 +13,7 @@ bool vec4f_are_equal(struct Vec4f a, struct Vec4f b) {
 	return true;
 }
 
-bool vec4f_are_about_equal(struct Vec4f a, struct Vec4f b, float allowance) {
+bool vec4f_are_about_equal(Vec4f a, Vec4f b, float allowance) {
 	//printf("checking {%f,%f,%f,%f} == {%f,%f,%f,%f}\n", a.x,a.y,a.z,a.w,b.x,b.y,b.z,b.w);
 	if( fabs(a.x - b.x) > allowance ) { return false; }
 	if( fabs(a.y - b.y) > allowance ) { return false; }
@@ -23,12 +23,12 @@ bool vec4f_are_about_equal(struct Vec4f a, struct Vec4f b, float allowance) {
 	return true;
 }
 
-void print_vec4f(struct Vec4f v){
+void print_vec4f(Vec4f v){
 	printf("(x = %f, y = %f, z = %f, w = %f)\n", v.x, v.y, v.z, v.w);
 }
 
-struct Vec4f vec4f_create(float x, float y, float z, float w){
-	struct Vec4f v = {
+Vec4f vec4f_create(float x, float y, float z, float w){
+	Vec4f v = {
 		.x = x,
 		.y = y,
 		.z = z,
@@ -38,8 +38,8 @@ struct Vec4f vec4f_create(float x, float y, float z, float w){
 	return v;
 }
 
-struct Vec4f vec4f_add(struct Vec4f a, struct Vec4f b){
-	struct Vec4f result;
+Vec4f vec4f_add(Vec4f a, Vec4f b){
+	Vec4f result;
 	result.x = a.x + b.x;
 	result.y = a.y + b.y;
 	result.z = a.z + b.z;
@@ -47,8 +47,8 @@ struct Vec4f vec4f_add(struct Vec4f a, struct Vec4f b){
 	return result;
 }
 
-struct Vec4f vec4f_scale(struct Vec4f v, float value){
-	struct Vec4f result;
+Vec4f vec4f_scale(Vec4f v, float value){
+	Vec4f result;
 	result.x = v.x * value;
 	result.y = v.y * value;
 	result.z = v.z * value;
@@ -57,11 +57,11 @@ struct Vec4f vec4f_scale(struct Vec4f v, float value){
 	return result;
 }	
 
-float vec4f_magnitude(struct Vec4f v) {
+float vec4f_magnitude(Vec4f v) {
 	return sqrt(v.x * v.x + v.y * v.y + v.z * v.z + v.w * v.w);
 }
-struct Vec4f vec4f_normalize(struct Vec4f v){
-	struct Vec4f result;
+Vec4f vec4f_normalize(Vec4f v){
+	Vec4f result;
 	float mag = vec4f_magnitude(v);	
 	result.x = v.x/mag;
 	result.y = v.y/mag;
@@ -70,11 +70,11 @@ struct Vec4f vec4f_normalize(struct Vec4f v){
 	return result;
 }
 
-float vec4f_dot(struct Vec4f a, struct Vec4f b){
+float vec4f_dot(Vec4f a, Vec4f b){
 	return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
 }
 
-struct Vec4f vec4f_translate(struct Vec4f vector, float dx, float dy, float dz, float dw){
+Vec4f vec4f_translate(Vec4f vector, float dx, float dy, float dz, float dw){
 	vector.x += dx;
 	vector.y += dy;
 	vector.z += dz;
