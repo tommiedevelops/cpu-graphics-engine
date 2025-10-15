@@ -5,7 +5,7 @@ Mat4 get_rotation_matrix(struct Transform tr) {
 }
 
 Mat4 get_scale_matrix(struct Transform tr) {
-	struct Vec3f scale = tr.scale;
+	Vec3f scale = tr.scale;
 	Mat4 scale_matrix = {{
 		{scale.x, 0,       0,       0},
 		{0,       scale.y, 0,       0},
@@ -16,7 +16,7 @@ Mat4 get_scale_matrix(struct Transform tr) {
 }
 
 Mat4 get_translation_matrix(struct Transform tr) {
-	struct Vec3f pos = tr.position;
+	Vec3f pos = tr.position;
     	Mat4 translation_matrix = {{
        		{1.0f, 0, 0, pos.x},
         	{0, 1.0f, 0, pos.y},
@@ -44,11 +44,11 @@ Mat4 mat4_affine_orthonormal_inverse(Mat4 mat) {
 		{m[2][0], m[2][1], m[2][2]}
 	}};
 
-	struct Vec3f t = {.x = m[0][3], .y = m[1][3], .z = m[2][3]};
+	Vec3f t = {.x = m[0][3], .y = m[1][3], .z = m[2][3]};
 	Mat3 r_T = mat3_transpose(sub);
 	Mat3 mR_T = scal_mul_mat3(-1.0f, r_T);
 
-	struct Vec3f final_vec = mat3_mul_vec3(mR_T, t);
+	Vec3f final_vec = mat3_mul_vec3(mR_T, t);
 
 	Mat4 result = {0};
 	
@@ -67,7 +67,6 @@ Mat4 mat4_affine_orthonormal_inverse(Mat4 mat) {
 }
 
 Mat4 get_view_matrix(struct Camera cam){
-	// i guess you'd just apply the inverse model matrix of the camera
 	return mat4_affine_orthonormal_inverse(get_model_matrix(cam.transform));
 }
 
@@ -88,8 +87,8 @@ Mat4 get_projection_matrix(struct Camera cam, float aspect) {
 	return P;
 }
 
-struct Vec4f perspective_divide(struct Vec4f v){
-	struct Vec4f result = {0};
+Vec4f perspective_divide(Vec4f v){
+	Vec4f result = {0};
 	
 	if(v.w != 0){
 		result.x = v.x/v.w;

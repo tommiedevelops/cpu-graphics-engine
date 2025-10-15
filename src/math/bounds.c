@@ -1,6 +1,6 @@
 #include "bounds.h"
 
-bool bounds_are_equal(struct Bounds a, struct Bounds b){
+bool bounds_are_equal(Bounds3 a, Bounds3 b){
 	if(a.xmin != b.xmin) return false;
 	if(a.xmax != b.xmax) return false;
 	if(a.ymin != b.ymin) return false;
@@ -9,15 +9,8 @@ bool bounds_are_equal(struct Bounds a, struct Bounds b){
 	if(a.zmax != b.zmax) return false;
 	return true;
 }
-struct Bounds get_bounds(struct Vec3f* vertices, int num_vertices) {
-        /* return: [xmin, xmax, ymin, ymax, zmin, zmax] */
-        struct Bounds bounds = BOUNDS_DEFAULT;
-
-	if( vertices == NULL ) {
-		perror("bounds.c/get_bounds");
-		exit(EXIT_FAILURE);
-	}
-
+Bounds3 get_bounds(Vec3f* vertices, int num_vertices) {
+        Bounds3 bounds = BOUNDS_DEFAULT;
         for(int i = 0; i < num_vertices; i++){
                 if( vertices[i].x > bounds.xmax ){ bounds.xmax = vertices[i].x; }
                 if( vertices[i].x < bounds.xmin ){ bounds.xmin = vertices[i].x; }
@@ -26,11 +19,10 @@ struct Bounds get_bounds(struct Vec3f* vertices, int num_vertices) {
                 if( vertices[i].z > bounds.zmax ){ bounds.zmax = vertices[i].z; }
                 if( vertices[i].z < bounds.zmin ){ bounds.zmin = vertices[i].z; }
         }
-
         return bounds;
 }
 
-void update_bounds(struct Bounds* bounds, struct Vec3f* vertices, int num_vertices) {
+void update_bounds(Bounds3* bounds, Vec3f* vertices, int num_vertices) {
         for(int i = 0; i < num_vertices; i++){
                 if( vertices[i].x > bounds->xmax ){ bounds->xmax = vertices[i].x; }
                 if( vertices[i].x < bounds->xmin ){ bounds->xmin = vertices[i].x; }
@@ -41,7 +33,7 @@ void update_bounds(struct Bounds* bounds, struct Vec3f* vertices, int num_vertic
         }
 }
 
-void print_bounds(struct Bounds bounds){
+void print_bounds(Bounds3 bounds){
 	printf("|   |    x    |    y    |    z    |\n");
 	printf("|max|%f|%f|%f|\n", bounds.xmax,bounds.ymax,bounds.zmax);
 	printf("|min|%f|%f|%f|\n", bounds.xmin,bounds.ymin,bounds.zmin);
