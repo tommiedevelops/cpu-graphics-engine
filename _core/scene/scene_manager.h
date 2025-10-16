@@ -30,7 +30,7 @@ typedef struct Mesh {
 typedef struct GameObject {
 	Transform transform;
 	Mesh* mesh;
-	struct Material* material;
+	Material* material;
 } GameObject;
 
 typedef struct Camera { 

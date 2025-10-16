@@ -1,11 +1,18 @@
-#include <stdio.h>
 
-#include "shading.h" 
+#include "vector.h"
+#include "constants.h"
+
 #define STB_IMAGE_IMPLEMENTATION
-
 #include "stb_image.h"
 
-struct Texture* texture_load(char* filename){
+typedef struct Texture {
+	int width;
+	int height;
+	Vec4f* map;
+} Texture;
+
+
+Texture* texture_load(char* filename){
 	int width, height, channels;
 	uint8_t* img = stbi_load(filename, &width, &height, &channels, 4);
 
@@ -16,7 +23,7 @@ struct Texture* texture_load(char* filename){
 	Vec4f* map = malloc(sizeof(Vec4f)*width*height);
 	memset(map, 0x0, sizeof(Vec4f)*width*height);
 
-	struct Texture* tex = malloc(sizeof(struct Texture));
+	Texture* tex = malloc(sizeof(Texture));
 	tex->width = width;
 	tex->height = height;
 	tex->map = map;
@@ -39,7 +46,7 @@ struct Texture* texture_load(char* filename){
 	return tex;
 }
 
-void texture_free(struct Texture tex){
+void texture_free(Texture tex){
 	if(tex.map != NULL) free(tex.map);
 }
 
@@ -57,7 +64,7 @@ Vec4f get_pixel(Vec4f* data, int width, int height, int x, int y){
 
 static inline float clamp01(float x) {return x < 0 ? 0 : (x > 1 ? 1 : x); }
 
-Vec4f texture_sample(struct Texture* tex, float u, float v){
+Vec4f texture_sample(Texture* tex, float u, float v){
 	if(!tex || !tex->map) {LOG_ERROR("null texture"); return VEC4F_0;}
 
 	u = clamp01(u);
@@ -67,35 +74,5 @@ Vec4f texture_sample(struct Texture* tex, float u, float v){
 	int y = (int)floorf(v *(tex->height - 1));
 
 	return get_pixel(tex->map, tex->width, tex->height, x, y);
-}
-
-
-struct Material material_default(){
-	struct Material mat = {
-		.color = VEC4F_0,
-		.tex = NULL
-	};
-
-	return mat;
-}
-
-struct Material* material_create(Vec4f color, struct Texture* tex){
-	struct Material* mat = malloc(sizeof(struct Material));
-	mat->color = color;
-	mat->tex = tex;
-	return mat;
-}
-
-Vec4f material_get_albedo(struct Material* mat, Vec2f uv) {
-	if(NULL == mat){
-		//LOG_ERROR("mat is NULL ptr");
-		return VEC4F_0;
-	}
-	
-	if(NULL == mat->tex){
-		return mat->color;
-	}
-
-	return texture_sample(mat->tex, uv.x, uv.y);
 }
 

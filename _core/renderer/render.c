@@ -1,4 +1,11 @@
-#include "render.h"
+#include <stdlib.h>
+#include <string.h>
+
+#include "shading.h"
+#include "clip.h"
+#include "triangle.h"
+#include "vector.h"
+#include "transformation.h"
 
 struct RenderData {
 	int num_vertices;
@@ -10,7 +17,7 @@ struct RenderData {
 	int* triangles;	
 	int* triangle_uvs;
 	int* triangle_normals;
-	struct Material mat;
+	Material* mat;
 	struct Plane clipping_planes[6];
 };
 
@@ -42,31 +49,31 @@ static inline void get_clipping_planes(struct Plane* planes){
 	planes[5].p = vec4f_create(0.0f, 0.0f, 1.0f, 1.0f);
 }
 
-struct RenderData prepare_render_data(GameObject go, Camera cam) {
+struct RenderData prepare_render_data(GameObject* go, Camera* cam) {
 
 	struct RenderData r = {0};
 
-	if(go.mesh == NULL){
+	if(go->mesh == NULL){
 		perror("mesh was null");
 		return r;
 	}
 
 	// Vertex Data
-	r.num_vertices = go.mesh->num_vertices;
-	r.vertices = go.mesh->vertices;
-	r.num_uvs = go.mesh->num_uvs;
-	r.uvs = go.mesh->uvs;
-	r.triangle_uvs = go.mesh->triangle_uvs;
-	r.normals = go.mesh->normals;
-	r.triangle_normals = go.mesh->triangle_normals;
+	r.num_vertices = go->mesh->num_vertices;
+	r.vertices = go->mesh->vertices;
+	r.num_uvs = go->mesh->num_uvs;
+	r.uvs = go->mesh->uvs;
+	r.triangle_uvs = go->mesh->triangle_uvs;
+	r.normals = go->mesh->normals;
+	r.triangle_normals = go->mesh->triangle_normals;
 
 	// Triangle Data
-	r.num_triangles = go.mesh->num_triangles;
-	r.triangles = go.mesh->triangles;
+	r.num_triangles = go->mesh->num_triangles;
+	r.triangles = go->mesh->triangles;
 
 	// Material Data
-	struct Material mat = material_default();
-	if(go.material != NULL) r.mat = *go.material;
+	r.mat = material_default();
+	if(go->material != NULL) r.mat = go->material;
 
 	// Clipping Planes
 	get_clipping_planes(r.clipping_planes);
@@ -113,18 +120,18 @@ void precompute_interpolated_values(struct Triangle* tri) {
 	tri->uv2_over_w = vec2f_scale(tri->uv2, tri->w2_inv);
 }
 
-void render_game_object(uint32_t* framebuffer, float* zbuffer, Scene scene, GameObject go){
+void render_game_object(uint32_t* framebuffer, float* zbuffer, Scene* scene, GameObject* go){
 		
-		struct RenderData data = prepare_render_data(go, *scene.cam);
+		struct RenderData data = prepare_render_data(go, scene->cam);
 		
 		if(NULL == data.vertices) return; // required
 						  
 		// pre-compute matrices
 		Mat4 model, view, projection, view_port;
-		model = get_model_matrix(go.transform);
-		view = get_view_matrix(*scene.cam);
-		projection = get_projection_matrix(*scene.cam, (float)HEIGHT/WIDTH);
-		view_port = get_viewport_matrix(*scene.cam);
+		model = get_model_matrix(go->transform);
+		view = get_view_matrix(*scene->cam);
+		projection = get_projection_matrix(*scene->cam, (float)HEIGHT/WIDTH);
+		view_port = get_viewport_matrix(*scene->cam);
 
 		for(int t = 0; t < data.num_triangles; t++) {
 
@@ -134,7 +141,7 @@ void render_game_object(uint32_t* framebuffer, float* zbuffer, Scene scene, Game
 			assemble_triangle(&tri, tri_idx, data);
 			apply_transformation(model,&tri);
 			apply_transformation(view,&tri);
-			precompute_lighting(&data.mat, tri, scene);
+			precompute_lighting(data.mat, tri, scene);
 			apply_transformation(projection,&tri);
 
 			struct ClipResult r = clip_tri(tri, data.clipping_planes, 6);
@@ -143,17 +150,17 @@ void render_game_object(uint32_t* framebuffer, float* zbuffer, Scene scene, Game
 				precompute_interpolated_values(&r.tris[k]);			
 				apply_perspective_divide(&r.tris[k]); // divide (x,y,z,w) by w
 				apply_transformation(view_port, &r.tris[k]);
-				rasterize_triangle(r.tris[k], scene.cam, &scene.light, &data.mat, framebuffer, zbuffer);
+				rasterize_triangle(r.tris[k], scene->cam, &scene->light, data.mat, framebuffer, zbuffer);
 			}
 
 		}
 
 }
 
-void render_scene(uint32_t* framebuffer, float* zbuffer, Scene scene) {
+void render_scene(uint32_t* framebuffer, float* zbuffer, Scene* scene) {
 	
-	for(int i = 0; i < scene.num_gos; i++) {
-		GameObject go = *scene.gos[i];
+	for(int i = 0; i < scene->num_gos; i++) {
+		GameObject* go = scene->gos[i];
 		render_game_object(framebuffer, zbuffer, scene, go);
 	}
 }

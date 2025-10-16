@@ -1,6 +1,7 @@
 #include <SDL2/SDL.h>
 #include "app.h"
 
+#include "texture.h"
 
 // ----- STRUCT DEFINITIONS (DO NOT MODIFY) -----
 struct GameObjectContainer {
@@ -27,9 +28,9 @@ struct TexData load_textures(){
 	/* User Defined */
 
 	int num_textures = 1;
-	struct Texture** textures = malloc(sizeof(struct Texture*)*num_textures);
+	Texture** textures = malloc(sizeof(Texture*)*num_textures);
 
-	struct Texture* tex = texture_load("./assets/textures/brickwall.png");
+	Texture* tex = texture_load("./assets/textures/brickwall.png");
 
 	textures[BRICK] = tex;
 
@@ -73,7 +74,7 @@ struct MeshData load_meshes(){
 struct GameObjectContainer prepare_game_objects(struct AppAssets assets){
 
 	/* User Defined */
-	struct Texture** textures = assets.td.textures;
+	Texture** textures = assets.td.textures;
 	Mesh** meshes = assets.md.meshes;
 
 	// Ground

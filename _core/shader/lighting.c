@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include "lighting.h"
-static inline Vec3f compute_tri_normal(struct Triangle tri) {
 
+typedef struct Material Material;
+
+static inline Vec3f compute_tri_normal(struct Triangle tri) {
 	Vec3f v0 = vec4f_to_vec3f(tri.v0);
 	Vec3f v1 = vec4f_to_vec3f(tri.v1);
 	Vec3f v2 = vec4f_to_vec3f(tri.v2);
@@ -42,16 +44,15 @@ Vec4f compute_diffuse(Vec4f albedo, Vec3f light_dir, Vec4f light_col, Vec3f norm
 	return diffuse;
 }
 
-void precompute_lighting(struct Material* mat, struct Triangle tri, Scene scene){
+void precompute_lighting(Material* mat, Triangle tri, Scene* scene){
 	Vec3f norm = compute_tri_normal(tri);
-	Vec3f light_dir = vec3f_normalize(scene.light.direction);
-
-	Vec4f albedo = mat->color;
-	Vec4f diffuse = compute_diffuse(albedo,scene.light.direction, scene.light.color, norm);
+	Vec3f light_dir = vec3f_normalize(scene->light.direction);
+	Vec4f albedo = material_get_albedo(mat, VEC2F_0);
+	Vec4f diffuse = compute_diffuse(albedo,scene->light.direction, scene->light.color, norm);
 	float specular_intensity = 32.0f;
-	Vec4f specular = compute_specular(specular_intensity, scene.light.color, norm, scene.cam->transform.position, scene.light.direction, tri);
-	mat->specular = specular;
-	mat->diffuse = diffuse;
+	Vec4f specular = compute_specular(specular_intensity, scene->light.color, norm, scene->cam->transform.position, scene->light.direction, tri);
+	/* mat->specular = specular; */
+	/* mat->diffuse = diffuse; */
 }
 
 
