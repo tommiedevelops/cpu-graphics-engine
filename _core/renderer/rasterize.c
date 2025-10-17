@@ -4,37 +4,19 @@
 #include <stdbool.h>
 #include "triangle.h"
 
+Bounds get_bounds_from_tri(Triangle tri){
+        Bounds bounds = BOUNDS_DEFAULT;
+	for(int i = 0; i <= 2; i++){
+		if(tri.v[i].pos.x > bounds.xmax) {bounds.xmax = tri.v[i].pos.x;}
+		if(tri.v[i].pos.y > bounds.ymax) {bounds.ymax = tri.v[i].pos.y;}
+		if(tri.v[i].pos.z > bounds.zmax) {bounds.zmax = tri.v[i].pos.z;}
+		if(tri.v[i].pos.x < bounds.xmin) {bounds.xmin = tri.v[i].pos.x;}
+		if(tri.v[i].pos.y < bounds.ymin) {bounds.ymin = tri.v[i].pos.y;}
+		if(tri.v[i].pos.z < bounds.zmin) {bounds.zmin = tri.v[i].pos.z;}
 
-struct Bounds get_bounds_from_tri(Triangle tri){
-        /* return: [xmin, xmax, ymin, ymax, zmin, zmax] */
-        struct Bounds bounds = BOUNDS_DEFAULT;
-	if (tri.v[0].pos.x > bounds.xmax) {bounds.xmax = tri.v[0].pos.x;}
-	if (tri.v[0].pos.y > bounds.ymax) {bounds.ymax = tri.v[0].pos.y;}
-	if (tri.v[0].pos.z > bounds.zmax) {bounds.zmax = tri.v[0].pos.z;}
-
-	if (tri.v[1].pos.x > bounds.xmax) {bounds.xmax = tri.v[1].pos.x;}
-	if (tri.v[1].pos.y > bounds.ymax) {bounds.ymax = tri.v[1].pos.y;}
-	if (tri.v[1].pos.z > bounds.zmax) {bounds.zmax = tri.v[1].pos.z;}
-
-	if (tri.v[2].pos.x > bounds.xmax) {bounds.xmax = tri.v[2].pos.x;}
-	if (tri.v[2].pos.y > bounds.ymax) {bounds.ymax = tri.v[2].pos.y;}
-	if (tri.v[2].pos.z > bounds.zmax) {bounds.zmax = tri.v[2].pos.z;}
-
-	if (tri.v[0].pos.x < bounds.xmin) {bounds.xmin = tri.v[0].pos.x;}
-	if (tri.v[0].pos.y < bounds.ymin) {bounds.ymin = tri.v[0].pos.y;}
-	if (tri.v[0].pos.z < bounds.zmin) {bounds.zmin = tri.v[0].pos.z;}
-
-	if (tri.v[1].pos.x < bounds.xmin) {bounds.xmin = tri.v[1].pos.x;}
-	if (tri.v[1].pos.y < bounds.ymin) {bounds.ymin = tri.v[1].pos.y;}
-	if (tri.v[1].pos.z < bounds.zmin) {bounds.zmin = tri.v[1].pos.z;}
-
-	if (tri.v[2].pos.x < bounds.xmin) {bounds.xmin = tri.v[2].pos.x;}
-	if (tri.v[2].pos.y < bounds.ymin) {bounds.ymin = tri.v[2].pos.y;}
-	if (tri.v[2].pos.z < bounds.zmin) {bounds.zmin = tri.v[2].pos.z;}
-
+	}
         return bounds;
 }
-
 
 bool inside_triangle(float alpha, float beta, float gamma){
 	return (alpha > 0) && (beta > 0) && (gamma > 0) && (alpha <= 1) && (beta <= 1) && (gamma <= 1);

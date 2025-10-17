@@ -256,7 +256,7 @@ void test_clip_case_1(){
 	P2.n = vec4f_create(-1.0f, 0.0f, 0.0f, 0.0f);
 	P2.p = vec4f_create(1.0f, 0.0f, 0.0f, 0.0f);
 
-	struct Triangle tri = {0};
+	Triangle tri = {0};
 	tri.v0 = vec4f_create(1.0f, 0.0f, 0.0f, 0.0f);
 	tri.v1 = vec4f_create(2.0f, 0.0f, 2.0f, 0.0f);
 	tri.v2 = vec4f_create(0.0f, 0.0f, 1.0f, 0.0f);
@@ -289,7 +289,7 @@ void test_clip_case_2(){
 	P1.n = vec4f_create(0.0f, 0.0f, -1.0f, 0.0f);
 	P1.p = vec4f_create(0.0f, 0.0f, 3.0f, 0.0f);
 
-	struct Triangle tri = {0};
+	Triangle tri = {0};
 	tri.v0 = vec4f_create(0.0f, 0.0f, 0.0f, 1.0f);
 	tri.v1 = vec4f_create(1.0f, 0.0f, 1.0f, 1.0f);
 	tri.v2 = vec4f_create(0.0f, 0.0f, 1.0f, 1.0f);
@@ -367,7 +367,7 @@ void test_clip_case_3(void) {
 
     // --- Input triangle in homogeneous clip space (post-projection)
     // A is outside LEFT, B is behind the NEAR plane, C is fully inside.
-    struct Triangle t;
+    Triangle t;
     t.v0 = vec4f_create(-1.2f,  0.2f,  0.5f, 1.0f);   // A: x < -w
     t.v1 = vec4f_create( 0.8f,  0.8f, -0.2f, 1.0f);   // B: z < 0
     t.v2 = vec4f_create( 0.8f, -0.8f,  0.8f, 1.0f);   // C: inside
