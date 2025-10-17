@@ -3,7 +3,7 @@
 
 typedef struct Material Material;
 
-static inline Vec3f compute_tri_normal(struct Triangle tri) {
+static inline Vec3f compute_tri_normal(Triangle tri) {
 	Vec3f v0 = vec4f_to_vec3f(tri.v[0].pos);
 	Vec3f v1 = vec4f_to_vec3f(tri.v[1].pos);
 	Vec3f v2 = vec4f_to_vec3f(tri.v[2].pos);
@@ -23,7 +23,7 @@ Vec3f compute_eyesight_vector(Vec3f cam_pos, Vec3f origin){
 	return vec3f_normalize(vec3f_add(cam_pos, vec3f_scale(origin, -1.0f)));	
 }
 
-Vec4f compute_specular(float exponent, Vec4f light_col, Vec3f norm, Vec3f cam_pos, Vec3f light_dir, struct Triangle tri){	
+Vec4f compute_specular(float exponent, Vec4f light_col, Vec3f norm, Vec3f cam_pos, Vec3f light_dir, Triangle tri){	
 	// current heuristic: select random vertex as origin for eye vec
 	
 	Vec3f e = compute_eyesight_vector(cam_pos, vec4f_to_vec3f(tri.v[0].pos));

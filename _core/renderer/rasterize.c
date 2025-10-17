@@ -5,7 +5,7 @@
 #include "triangle.h"
 
 
-struct Bounds get_bounds_from_tri(struct Triangle tri){
+struct Bounds get_bounds_from_tri(Triangle tri){
         /* return: [xmin, xmax, ymin, ymax, zmin, zmax] */
         struct Bounds bounds = BOUNDS_DEFAULT;
 	if (tri.v[0].pos.x > bounds.xmax) {bounds.xmax = tri.v[0].pos.x;}
@@ -40,7 +40,7 @@ bool inside_triangle(float alpha, float beta, float gamma){
 	return (alpha > 0) && (beta > 0) && (gamma > 0) && (alpha <= 1) && (beta <= 1) && (gamma <= 1);
 }
 
-float interpolate_depth(struct Triangle tri, float alpha, float beta, float gamma){
+float interpolate_depth(Triangle tri, float alpha, float beta, float gamma){
 	// the basic idea is that each point x,y has a z value. i just need to calculate it
 	float z0 = tri.v[0].pos.z;
 	float z1 = tri.v[1].pos.z;
@@ -51,7 +51,7 @@ float interpolate_depth(struct Triangle tri, float alpha, float beta, float gamm
 	return depth;
 }
 
-Vec3f interpolate_normal(struct Triangle tri, float alpha, float beta, float gamma){
+Vec3f interpolate_normal(Triangle tri, float alpha, float beta, float gamma){
 	float nx = alpha*tri.v[0].n.x + beta*tri.v[1].n.x + gamma*tri.v[2].n.x;
 	float ny = alpha*tri.v[0].n.y + beta*tri.v[1].n.y + gamma*tri.v[2].n.y;
 	float nz = alpha*tri.v[0].n.z + beta*tri.v[1].n.z + gamma*tri.v[2].n.z;
@@ -60,7 +60,7 @@ Vec3f interpolate_normal(struct Triangle tri, float alpha, float beta, float gam
 	return n;
 }
 
-Vec2f interpolate_uv(struct Triangle tri, float alpha, float beta, float gamma){
+Vec2f interpolate_uv(Triangle tri, float alpha, float beta, float gamma){
 	float u0 = tri.v[0].uv_over_w.x;
 	float u1 = tri.v[1].uv_over_w.x;
 	float u2 = tri.v[2].uv_over_w.x;
@@ -99,7 +99,7 @@ static inline uint32_t vec4f_to_rgba32(Vec4f c) {
            ((uint32_t)B << 8)  |
            ((uint32_t)A);
 }
-static inline float compute_alpha(int x, int y, struct Triangle tri) {
+static inline float compute_alpha(int x, int y, Triangle tri) {
 
 	// calculate barycentric coords
 	float alpha = (tri.v[0].pos.x*(tri.v[2].pos.y-tri.v[0].pos.y)+(y-tri.v[0].pos.y)*(tri.v[2].pos.x-tri.v[0].pos.x)-x*(tri.v[2].pos.y-tri.v[0].pos.y))
@@ -108,7 +108,7 @@ static inline float compute_alpha(int x, int y, struct Triangle tri) {
 	return alpha;
 }
 
-static inline float compute_beta(int x, int y, struct Triangle tri, float alpha) {
+static inline float compute_beta(int x, int y, Triangle tri, float alpha) {
 	float beta = ((y-tri.v[0].pos.y) - alpha*(tri.v[1].pos.y-tri.v[0].pos.y))/(tri.v[2].pos.y-tri.v[0].pos.y);
 	return beta;
 }
@@ -129,7 +129,7 @@ static inline Vec4f vec4f_mul(Vec4f a, Vec4f b) {
 }
 
 
-void rasterize_triangle(struct Triangle tri, Camera* cam, struct LightSource* ls, struct Material* mat, uint32_t* framebuffer, float* zbuffer) {
+void rasterize_triangle(Triangle tri, Camera* cam, struct LightSource* ls, struct Material* mat, uint32_t* framebuffer, float* zbuffer) {
 
 	struct Bounds bounds = get_bounds_from_tri(tri);
 	for(int y = (int)bounds.ymin; y <= (int)bounds.ymax; y++){

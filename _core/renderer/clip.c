@@ -117,7 +117,7 @@ int clip_against_plane(Vec4f* in, Vec2f* in_uv, int in_n, struct Plane P, Vec4f*
 	return n;
 }
 
-struct ClipResult clip_tri(struct Triangle tri, struct Plane * planes, int num_planes){
+struct ClipResult clip_tri(Triangle tri, struct Plane * planes, int num_planes){
 	Vec4f in[9] = {0}, out[9] = {0};
 	Vec2f in_uv[9] = {0}, out_uv[9] = {0};
 

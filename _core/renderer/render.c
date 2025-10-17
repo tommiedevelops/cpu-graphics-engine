@@ -83,7 +83,7 @@ struct RenderData prepare_render_data(GameObject* go, Camera* cam) {
 }
 
 
-void assemble_triangle(struct Triangle* tri, int tri_idx, struct RenderData data){
+void assemble_triangle(Triangle* tri, int tri_idx, struct RenderData data){
 
 	int v0_idx = data.triangles[tri_idx];
 	int v1_idx = data.triangles[tri_idx + 1];
@@ -111,7 +111,7 @@ void assemble_triangle(struct Triangle* tri, int tri_idx, struct RenderData data
 
 }
 
-void precompute_interpolated_values(struct Triangle* tri) {
+void precompute_interpolated_values(Triangle* tri) {
 	tri->v[0].w_inv = (float)1.0f/tri->v[0].pos.w;
 	tri->v[1].w_inv = (float)1.0f/tri->v[1].pos.w;
 	tri->v[2].w_inv = (float)1.0f/tri->v[2].pos.w;
@@ -136,7 +136,7 @@ void render_game_object(uint32_t* framebuffer, float* zbuffer, Scene* scene, Gam
 
 		for(int t = 0; t < data.num_triangles; t++) {
 
-			struct Triangle tri = {0};
+			Triangle tri = {0};
 			int tri_idx = 3*t;
 
 			assemble_triangle(&tri, tri_idx, data);

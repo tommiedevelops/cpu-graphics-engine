@@ -116,13 +116,13 @@ Mat4 get_viewport_matrix(Camera cam){
 	return P;
 }
 
-void apply_perspective_divide(struct Triangle* tri) {
+void apply_perspective_divide(Triangle* tri) {
 	tri->v[0].pos = perspective_divide(tri->v[0].pos);
 	tri->v[1].pos = perspective_divide(tri->v[1].pos);
 	tri->v[2].pos = perspective_divide(tri->v[2].pos);
 }
 
-void apply_transformation(Mat4 tr, struct Triangle* tri) {
+void apply_transformation(Mat4 tr, Triangle* tri) {
 	tri->v[0].pos = mat4_mul_vec4(tr, tri->v[0].pos);
 	tri->v[1].pos = mat4_mul_vec4(tr, tri->v[1].pos);
 	tri->v[2].pos = mat4_mul_vec4(tr, tri->v[2].pos);

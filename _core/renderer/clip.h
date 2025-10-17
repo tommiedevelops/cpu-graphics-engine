@@ -11,7 +11,7 @@
 
 struct ClipResult {
 	int num_tris;
-	struct Triangle tris[6];
+	Triangle tris[6];
 };
 
 struct Plane { 
@@ -25,6 +25,6 @@ float sdf(struct Plane P, Vec4f x);
 Vec4f lerp(Vec4f u, Vec4f v, float t);
 int clip_against_plane(Vec4f* in,Vec2f* in_uv, int in_n, struct Plane P, Vec4f* out, Vec2f* out_uv);
 
-struct ClipResult clip_tri(struct Triangle tri, struct Plane * planes, int num_planes);
+struct ClipResult clip_tri(Triangle tri, struct Plane * planes, int num_planes);
 
 #endif

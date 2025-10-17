@@ -10,6 +10,8 @@
 #include "lighting.h"
 #include "scene_manager.h"
 
+typedef struct Bounds Bounds;
+
 typedef struct Vertex {
 	Vec4f pos;
 	Vec2f uv;
@@ -18,10 +20,10 @@ typedef struct Vertex {
 	float w_inv;
 } Vertex;
 
-struct Triangle {
+typedef struct Triangle {
 	Vertex v[3];
-};
+} Triangle;
 
-struct Bounds get_bounds_from_tri(struct Triangle tri);
-Vec3f calculate_normal(struct Triangle tri);
+Bounds get_bounds_from_tri(Triangle tri);
+Vec3f calculate_normal(Triangle tri);
 #endif

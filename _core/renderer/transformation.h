@@ -19,6 +19,6 @@ Mat4 get_viewport_matrix(Camera cam);
 
 Vec4f perspective_divide(Vec4f v);
 
-void apply_perspective_divide(struct Triangle* tri); 
-void apply_transformation(Mat4 tr, struct Triangle* tri);
+void apply_perspective_divide(Triangle* tri); 
+void apply_transformation(Mat4 tr, Triangle* tri);
 #endif
