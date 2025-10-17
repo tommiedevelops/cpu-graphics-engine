@@ -37,8 +37,6 @@ struct Triangle {
 struct Bounds get_bounds_from_tri(struct Triangle tri);
 
 Vec3f calculate_normal(struct Triangle tri);
-struct Triangle tri_perspective_divide(struct Triangle tri); 
 
 // array size 3 of Vec3f ptrs
-void rasterize_triangle(struct Triangle tri, Camera* cam, struct LightSource* ls, struct Material* mat, uint32_t* framebuffer, float* zbuffer);
 #endif

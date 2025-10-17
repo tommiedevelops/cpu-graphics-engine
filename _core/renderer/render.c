@@ -6,6 +6,7 @@
 #include "triangle.h"
 #include "vector.h"
 #include "transformation.h"
+#include "rasterize.h"
 
 struct RenderData {
 	int num_vertices;
