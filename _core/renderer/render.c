@@ -93,32 +93,32 @@ void assemble_triangle(struct Triangle* tri, int tri_idx, struct RenderData data
 		int uv0_idx = data.triangle_uvs[tri_idx];
 		int uv1_idx = data.triangle_uvs[tri_idx + 1];
 		int uv2_idx = data.triangle_uvs[tri_idx + 2];
-		tri->uv0 = data.uvs[uv0_idx];
-		tri->uv1 = data.uvs[uv1_idx];
-		tri->uv2 = data.uvs[uv2_idx];
+		tri->v[0].uv = data.uvs[uv0_idx];
+		tri->v[1].uv = data.uvs[uv1_idx];
+		tri->v[2].uv = data.uvs[uv2_idx];
 	}
 
 	// convert to homogenous coordinates
-	tri->v0 = vec3f_to_vec4f(data.vertices[v0_idx], 1.0f);
-	tri->v1 = vec3f_to_vec4f(data.vertices[v1_idx], 1.0f);
-	tri->v2 = vec3f_to_vec4f(data.vertices[v2_idx], 1.0f);
+	tri->v[0].pos = vec3f_to_vec4f(data.vertices[v0_idx], 1.0f);
+	tri->v[1].pos = vec3f_to_vec4f(data.vertices[v1_idx], 1.0f);
+	tri->v[2].pos = vec3f_to_vec4f(data.vertices[v2_idx], 1.0f);
 
 	if(data.normals != NULL) { //optional
-		tri->n0 = data.normals[v0_idx];
-		tri->n1 = data.normals[v1_idx];
-		tri->n2 = data.normals[v2_idx];
+		tri->v[0].n = data.normals[v0_idx];
+		tri->v[1].n = data.normals[v1_idx];
+		tri->v[2].n = data.normals[v2_idx];
 	}
 
 }
 
 void precompute_interpolated_values(struct Triangle* tri) {
-	tri->w0_inv = (float)1.0f/tri->v0.w;
-	tri->w1_inv = (float)1.0f/tri->v1.w;
-	tri->w2_inv = (float)1.0f/tri->v2.w;
+	tri->v[0].w_inv = (float)1.0f/tri->v[0].pos.w;
+	tri->v[1].w_inv = (float)1.0f/tri->v[1].pos.w;
+	tri->v[2].w_inv = (float)1.0f/tri->v[2].pos.w;
 
-	tri->uv0_over_w = vec2f_scale(tri->uv0, tri->w0_inv);
-	tri->uv1_over_w = vec2f_scale(tri->uv1, tri->w1_inv);
-	tri->uv2_over_w = vec2f_scale(tri->uv2, tri->w2_inv);
+	tri->v[0].uv_over_w = vec2f_scale(tri->v[0].uv, tri->v[0].w_inv);
+	tri->v[1].uv_over_w = vec2f_scale(tri->v[1].uv, tri->v[0].w_inv);
+	tri->v[2].uv_over_w = vec2f_scale(tri->v[2].uv, tri->v[0].w_inv);
 }
 
 void render_game_object(uint32_t* framebuffer, float* zbuffer, Scene* scene, GameObject* go){

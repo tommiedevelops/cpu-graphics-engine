@@ -10,33 +10,18 @@
 #include "lighting.h"
 #include "scene_manager.h"
 
+typedef struct Vertex {
+	Vec4f pos;
+	Vec2f uv;
+	Vec3f n;
+	Vec2f uv_over_w;
+	float w_inv;
+} Vertex;
+
 struct Triangle {
-
-	// Vertex 0
-	Vec4f v0;
-	Vec2f uv0;
-	Vec3f n0;
-	Vec2f uv0_over_w;
-	float w0_inv;
-
-	// Vertex 1
-	Vec4f v1;
-	Vec2f uv1;
-	Vec3f n1;
-	Vec2f uv1_over_w;
-	float w1_inv;
-
-	// Vertex 2
-	Vec4f v2;
-	Vec2f uv2;
-	Vec3f n2;
-	Vec2f uv2_over_w;	
-	float w2_inv;
+	Vertex v[3];
 };
 
 struct Bounds get_bounds_from_tri(struct Triangle tri);
-
 Vec3f calculate_normal(struct Triangle tri);
-
-// array size 3 of Vec3f ptrs
 #endif

@@ -4,9 +4,9 @@
 typedef struct Material Material;
 
 static inline Vec3f compute_tri_normal(struct Triangle tri) {
-	Vec3f v0 = vec4f_to_vec3f(tri.v0);
-	Vec3f v1 = vec4f_to_vec3f(tri.v1);
-	Vec3f v2 = vec4f_to_vec3f(tri.v2);
+	Vec3f v0 = vec4f_to_vec3f(tri.v[0].pos);
+	Vec3f v1 = vec4f_to_vec3f(tri.v[1].pos);
+	Vec3f v2 = vec4f_to_vec3f(tri.v[2].pos);
 	Vec3f x = vec3f_add(v0, vec3f_scale(v1, -1.0f));
 	Vec3f y = vec3f_add(v0, vec3f_scale(v2, -1.0f));
 	Vec3f n = vec3f_cross(x,y);
@@ -26,7 +26,7 @@ Vec3f compute_eyesight_vector(Vec3f cam_pos, Vec3f origin){
 Vec4f compute_specular(float exponent, Vec4f light_col, Vec3f norm, Vec3f cam_pos, Vec3f light_dir, struct Triangle tri){	
 	// current heuristic: select random vertex as origin for eye vec
 	
-	Vec3f e = compute_eyesight_vector(cam_pos, vec4f_to_vec3f(tri.v0));
+	Vec3f e = compute_eyesight_vector(cam_pos, vec4f_to_vec3f(tri.v[0].pos));
 	Vec3f r = compute_reflection_vector(light_dir, norm);
 	float r_dot_e = fmaxf(vec3f_dot(r,e), 0.0f);
 	float specular = pow(r_dot_e,exponent); 

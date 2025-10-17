@@ -8,29 +8,29 @@
 struct Bounds get_bounds_from_tri(struct Triangle tri){
         /* return: [xmin, xmax, ymin, ymax, zmin, zmax] */
         struct Bounds bounds = BOUNDS_DEFAULT;
-	if (tri.v0.x > bounds.xmax) {bounds.xmax = tri.v0.x;}
-	if (tri.v0.y > bounds.ymax) {bounds.ymax = tri.v0.y;}
-	if (tri.v0.z > bounds.zmax) {bounds.zmax = tri.v0.z;}
+	if (tri.v[0].pos.x > bounds.xmax) {bounds.xmax = tri.v[0].pos.x;}
+	if (tri.v[0].pos.y > bounds.ymax) {bounds.ymax = tri.v[0].pos.y;}
+	if (tri.v[0].pos.z > bounds.zmax) {bounds.zmax = tri.v[0].pos.z;}
 
-	if (tri.v1.x > bounds.xmax) {bounds.xmax = tri.v1.x;}
-	if (tri.v1.y > bounds.ymax) {bounds.ymax = tri.v1.y;}
-	if (tri.v1.z > bounds.zmax) {bounds.zmax = tri.v1.z;}
+	if (tri.v[1].pos.x > bounds.xmax) {bounds.xmax = tri.v[1].pos.x;}
+	if (tri.v[1].pos.y > bounds.ymax) {bounds.ymax = tri.v[1].pos.y;}
+	if (tri.v[1].pos.z > bounds.zmax) {bounds.zmax = tri.v[1].pos.z;}
 
-	if (tri.v2.x > bounds.xmax) {bounds.xmax = tri.v2.x;}
-	if (tri.v2.y > bounds.ymax) {bounds.ymax = tri.v2.y;}
-	if (tri.v2.z > bounds.zmax) {bounds.zmax = tri.v2.z;}
+	if (tri.v[2].pos.x > bounds.xmax) {bounds.xmax = tri.v[2].pos.x;}
+	if (tri.v[2].pos.y > bounds.ymax) {bounds.ymax = tri.v[2].pos.y;}
+	if (tri.v[2].pos.z > bounds.zmax) {bounds.zmax = tri.v[2].pos.z;}
 
-	if (tri.v0.x < bounds.xmin) {bounds.xmin = tri.v0.x;}
-	if (tri.v0.y < bounds.ymin) {bounds.ymin = tri.v0.y;}
-	if (tri.v0.z < bounds.zmin) {bounds.zmin = tri.v0.z;}
+	if (tri.v[0].pos.x < bounds.xmin) {bounds.xmin = tri.v[0].pos.x;}
+	if (tri.v[0].pos.y < bounds.ymin) {bounds.ymin = tri.v[0].pos.y;}
+	if (tri.v[0].pos.z < bounds.zmin) {bounds.zmin = tri.v[0].pos.z;}
 
-	if (tri.v1.x < bounds.xmin) {bounds.xmin = tri.v1.x;}
-	if (tri.v1.y < bounds.ymin) {bounds.ymin = tri.v1.y;}
-	if (tri.v1.z < bounds.zmin) {bounds.zmin = tri.v1.z;}
+	if (tri.v[1].pos.x < bounds.xmin) {bounds.xmin = tri.v[1].pos.x;}
+	if (tri.v[1].pos.y < bounds.ymin) {bounds.ymin = tri.v[1].pos.y;}
+	if (tri.v[1].pos.z < bounds.zmin) {bounds.zmin = tri.v[1].pos.z;}
 
-	if (tri.v2.x < bounds.xmin) {bounds.xmin = tri.v2.x;}
-	if (tri.v2.y < bounds.ymin) {bounds.ymin = tri.v2.y;}
-	if (tri.v2.z < bounds.zmin) {bounds.zmin = tri.v2.z;}
+	if (tri.v[2].pos.x < bounds.xmin) {bounds.xmin = tri.v[2].pos.x;}
+	if (tri.v[2].pos.y < bounds.ymin) {bounds.ymin = tri.v[2].pos.y;}
+	if (tri.v[2].pos.z < bounds.zmin) {bounds.zmin = tri.v[2].pos.z;}
 
         return bounds;
 }
@@ -42,44 +42,37 @@ bool inside_triangle(float alpha, float beta, float gamma){
 
 float interpolate_depth(struct Triangle tri, float alpha, float beta, float gamma){
 	// the basic idea is that each point x,y has a z value. i just need to calculate it
-	float z0 = tri.v0.z;
-	float z1 = tri.v1.z;
-	float z2 = tri.v2.z;
+	float z0 = tri.v[0].pos.z;
+	float z1 = tri.v[1].pos.z;
+	float z2 = tri.v[2].pos.z;
 
 	float depth = alpha*z0 + beta*z1 + gamma*z2;
 
 	return depth;
 }
 
-bool point_inside(Vec4f point){	
-	float w = point.w;
-	return (point.x >= -w) && (point.x <= w) && 
-	       (point.y >= -w) && (point.y <= w) &&
-               (point.z >= 0) && (point.z <= w);	       
-}
-
 Vec3f interpolate_normal(struct Triangle tri, float alpha, float beta, float gamma){
-	float nx = alpha*tri.n0.x + beta*tri.n1.x + gamma*tri.n2.x;
-	float ny = alpha*tri.n0.y + beta*tri.n1.y + gamma*tri.n2.y;
-	float nz = alpha*tri.n0.z + beta*tri.n1.z + gamma*tri.n2.z;
+	float nx = alpha*tri.v[0].n.x + beta*tri.v[1].n.x + gamma*tri.v[2].n.x;
+	float ny = alpha*tri.v[0].n.y + beta*tri.v[1].n.y + gamma*tri.v[2].n.y;
+	float nz = alpha*tri.v[0].n.z + beta*tri.v[1].n.z + gamma*tri.v[2].n.z;
 
 	Vec3f n = vec3f_normalize(vec3f_create(nx,ny,nz));
 	return n;
 }
 
 Vec2f interpolate_uv(struct Triangle tri, float alpha, float beta, float gamma){
-	float u0 = tri.uv0_over_w.x;
-	float u1 = tri.uv1_over_w.x;
-	float u2 = tri.uv2_over_w.x;
+	float u0 = tri.v[0].uv_over_w.x;
+	float u1 = tri.v[1].uv_over_w.x;
+	float u2 = tri.v[2].uv_over_w.x;
 
-	float v0 = tri.uv0_over_w.y;
-	float v1 = tri.uv1_over_w.y;
-	float v2 = tri.uv2_over_w.y;
+	float v0 = tri.v[0].uv_over_w.y;
+	float v1 = tri.v[1].uv_over_w.y;
+	float v2 = tri.v[2].uv_over_w.y;
 	
 	float u = alpha*u0 + beta*u1 + gamma*u2;
 	float v = alpha*v0 + beta*v1 + gamma*v2;
 
-	float w_inv = alpha*tri.w0_inv + beta*tri.w1_inv + gamma*tri.w2_inv;
+	float w_inv = alpha*tri.v[0].w_inv + beta*tri.v[1].w_inv + gamma*tri.v[2].w_inv;
 
 	Vec2f uv = vec2f_scale(vec2f_create(u,v), (float)1.0f/w_inv);
 	
@@ -106,20 +99,20 @@ static inline uint32_t vec4f_to_rgba32(Vec4f c) {
            ((uint32_t)B << 8)  |
            ((uint32_t)A);
 }
-
 static inline float compute_alpha(int x, int y, struct Triangle tri) {
 
 	// calculate barycentric coords
-	float alpha = (tri.v0.x*(tri.v2.y-tri.v0.y)+(y-tri.v0.y)*(tri.v2.x-tri.v0.x)-x*(tri.v2.y-tri.v0.y))
-		/((tri.v1.y-tri.v0.y)*(tri.v2.x-tri.v0.x)-(tri.v1.x-tri.v0.x)*(tri.v2.y-tri.v0.y));
+	float alpha = (tri.v[0].pos.x*(tri.v[2].pos.y-tri.v[0].pos.y)+(y-tri.v[0].pos.y)*(tri.v[2].pos.x-tri.v[0].pos.x)-x*(tri.v[2].pos.y-tri.v[0].pos.y))
+		/((tri.v[1].pos.y-tri.v[0].pos.y)*(tri.v[2].pos.x-tri.v[0].pos.x)-(tri.v[1].pos.x-tri.v[0].pos.x)*(tri.v[2].pos.y-tri.v[0].pos.y));
 
 	return alpha;
 }
 
 static inline float compute_beta(int x, int y, struct Triangle tri, float alpha) {
-	float beta = ((y-tri.v0.y) - alpha*(tri.v1.y-tri.v0.y))/(tri.v2.y-tri.v0.y);
+	float beta = ((y-tri.v[0].pos.y) - alpha*(tri.v[1].pos.y-tri.v[0].pos.y))/(tri.v[2].pos.y-tri.v[0].pos.y);
 	return beta;
 }
+
 
 void draw_pixel(int x, int y, uint32_t* framebuffer, float* zbuffer, float depth, uint32_t color){
 	if(x >= WIDTH || x <= 0.0f) return;

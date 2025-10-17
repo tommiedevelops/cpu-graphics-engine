@@ -123,13 +123,13 @@ struct ClipResult clip_tri(struct Triangle tri, struct Plane * planes, int num_p
 
 	int in_n = 3, out_n = 0;
 
-	in[0] = tri.v0;
-	in[1] = tri.v1;
-	in[2] = tri.v2;
+	in[0] = tri.v[0].pos;
+	in[1] = tri.v[1].pos;
+	in[2] = tri.v[2].pos;
 	
-	in_uv[0] = tri.uv0;
-	in_uv[1] = tri.uv1;
-	in_uv[2] = tri.uv2;
+	in_uv[0] = tri.v[0].uv;
+	in_uv[1] = tri.v[1].uv;
+	in_uv[2] = tri.v[2].uv;
 
 	for(int i = 0; i < num_planes && in_n > 0; i++){
 		out_n = clip_against_plane(in,in_uv, in_n, planes[i], out, out_uv);
@@ -145,12 +145,12 @@ struct ClipResult clip_tri(struct Triangle tri, struct Plane * planes, int num_p
 	
 	for(int k = 0; k < r.num_tris; k++){
 		r.tris[k] = tri;
-		r.tris[k].v0 = out[0];
-		r.tris[k].v1 = out[k+1];
-		r.tris[k].v2 = out[k+2];	
-		r.tris[k].uv0 = out_uv[0];
-		r.tris[k].uv1 = out_uv[k+1];
-		r.tris[k].uv2 = out_uv[k+2];
+		r.tris[k].v[0].pos = out[0];
+		r.tris[k].v[1].pos = out[k+1];
+		r.tris[k].v[2].pos = out[k+2];	
+		r.tris[k].v[0].uv = out_uv[0];
+		r.tris[k].v[1].uv = out_uv[k+1];
+		r.tris[k].v[2].uv = out_uv[k+2];
 	}
 
 	return r;
