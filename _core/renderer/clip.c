@@ -2,12 +2,6 @@
 #include "lerp.h"
 #include "plane.h"
 
-float compute_t(Plane4 P, Vec4f u, Vec4f v){
-	float t = (float)vec4f_dot(P.n, vec4f_add(u, vec4f_scale(P.p, -1.0f) ))
-		/ (float)vec4f_dot(P.n, vec4f_add(u, vec4f_scale(v, -1.0f) ));
-	return t;	
-}
-
 static inline void copy_uvs(Vec2f* from, Vec2f* to, int num_verts){
 	for(int i = 0; i < num_verts; i++){
 		to[i] = from[i];
@@ -46,7 +40,7 @@ int clip_against_plane(Vec4f* in, Vec2f* in_uv, int in_n, Plane4 P, Vec4f* out, 
 
 		if(sIn && !eIn){
 
-			float t = compute_t(P,s,e);
+			float t = plane4_compute_intersect_t(P,s,e);
 			Vec4f i = lerp_vec4f(s,e,t);
 			Vec2f uv = lerp_vec2f(s_uv,e_uv,t);
 
@@ -59,7 +53,7 @@ int clip_against_plane(Vec4f* in, Vec2f* in_uv, int in_n, Plane4 P, Vec4f* out, 
 		}
 
 		if(!sIn && eIn){
-			float t = compute_t(P,s,e);
+			float t = plane4_compute_intersect_t(P,s,e);
 			Vec4f i  = lerp_vec4f(s,e,t);
 			Vec2f uv = lerp_vec2f(s_uv,e_uv,t);
 
