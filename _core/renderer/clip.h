@@ -8,23 +8,9 @@
 #include "triangle.h"
 #include "constants.h"
 #include "vector.h"
+typedef struct Plane4 Plane4;
 
-typedef struct ClipResult {
-	int num_tris;
-	Triangle tris[6];
-} ClipResult;
-
-typedef struct Plane { 
-	Vec4f n; //normal
-	Vec4f p; // point on the plane
-} Plane;
-
-Vec4f intersect(Plane P, Vec4f u, Vec4f v);
-bool inside(Plane P, Vec4f x, float eps);
-float sdf(Plane P, Vec4f x);
-Vec4f lerp(Vec4f u, Vec4f v, float t);
-int clip_against_plane(Vec4f* in,Vec2f* in_uv, int in_n, Plane P, Vec4f* out, Vec2f* out_uv);
-
+int clip_against_plane(Vec4f* in,Vec2f* in_uv, int in_n, Plane4 P, Vec4f* out, Vec2f* out_uv);
 int clip_tri(const Triangle* tri, Triangle* clip_result);
 
 #endif

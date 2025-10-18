@@ -1,13 +1,8 @@
 #include "clip.h"
 #include "lerp.h"
+#include "plane.h"
 
-float sdf(Plane P, Vec4f x){
-	return vec4f_dot(P.n, vec4f_add(P.p, vec4f_scale(x, -1.0f) ));
-}	
-
-bool inside(Plane P, Vec4f x, float eps){ return sdf(P,x) <= 0.0f; }
-
-float compute_t(Plane P, Vec4f u, Vec4f v){
+float compute_t(Plane4 P, Vec4f u, Vec4f v){
 	float t = (float)vec4f_dot(P.n, vec4f_add(u, vec4f_scale(P.p, -1.0f) ))
 		/ (float)vec4f_dot(P.n, vec4f_add(u, vec4f_scale(v, -1.0f) ));
 	return t;	
@@ -25,7 +20,7 @@ static inline void copy_vals(Vec4f* from, Vec4f* to, int num_verts){
 	}
 }
 
-int clip_against_plane(Vec4f* in, Vec2f* in_uv, int in_n, Plane P, Vec4f* out, Vec2f* out_uv){
+int clip_against_plane(Vec4f* in, Vec2f* in_uv, int in_n, Plane4 P, Vec4f* out, Vec2f* out_uv){
 
 	// assuming verts represents a convex polygon that is in clockwise order
 	if(in_n == 0) return 0;
@@ -40,9 +35,8 @@ int clip_against_plane(Vec4f* in, Vec2f* in_uv, int in_n, Plane P, Vec4f* out, V
 		Vec4f e = in[(v+1)%in_n];
 		Vec2f e_uv = in_uv[(v+1)%in_n];
 
-		float eps = 0.001f; // some allowance
-		bool sIn = inside(P,s,eps);
-		bool eIn = inside(P,e,eps);
+		bool sIn = plane4_inside(P,s);
+		bool eIn = plane4_inside(P,e);
 
 		if(sIn && eIn) {
 			out[n] = e;	
@@ -89,9 +83,9 @@ int clip_against_plane(Vec4f* in, Vec2f* in_uv, int in_n, Plane P, Vec4f* out, V
 	return n;
 }
 
-static inline void get_clipping_planes(struct Plane* planes){
-	/* all normals facing 'inside'*/
-	/* inside => -w<=x<=w, -w<=y<=w, 0<=z<=w*/
+static inline void get_clipping_planes(struct Plane4* planes){
+	/* all normals facing 'plane4_inside'*/
+	/* plane4_inside => -w<=x<=w, -w<=y<=w, 0<=z<=w*/
 	//top (y = w)
 	planes[0].n = vec4f_create(0.0f, -1.0f, 0.0f, 1.0f);
 	planes[0].p = vec4f_create(0.0f, 1.0f, 0.0f, 1.0f);
@@ -131,7 +125,7 @@ int clip_tri(const Triangle* tri, Triangle* tris_out){
 	in_uv[1] = tri->v[1].uv;
 	in_uv[2] = tri->v[2].uv;
 
-	Plane planes[6];
+	Plane4 planes[6];
 	int num_planes = 6;
 	get_clipping_planes(planes);
 
@@ -142,12 +136,11 @@ int clip_tri(const Triangle* tri, Triangle* tris_out){
 		in_n = out_n;
 	}
 
-	ClipResult r = {0};
 	if(out_n < 2) return 0;
 
-	r.num_tris = out_n - 2;
+	int num_tris = out_n - 2;
 	
-	for(int k = 0; k < r.num_tris; k++){
+	for(int k = 0; k < num_tris; k++){
 		tris_out[k] = *tri;
 		tris_out[k].v[0].pos = out[0];
 		tris_out[k].v[1].pos = out[k+1];
@@ -157,7 +150,7 @@ int clip_tri(const Triangle* tri, Triangle* tris_out){
 		tris_out[k].v[2].uv = out_uv[k+2];
 	}
 
-	return r.num_tris;
+	return num_tris;
 
 }
 
