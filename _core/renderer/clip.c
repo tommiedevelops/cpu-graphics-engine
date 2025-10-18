@@ -15,7 +15,6 @@ static inline void copy_vals(Vec4f* from, Vec4f* to, int num_verts){
 }
 
 int clip_against_plane(Vec4f* in, Vec2f* in_uv, int in_n, Plane4 P, Vec4f* out, Vec2f* out_uv){
-
 	// assuming verts represents a convex polygon that is in clockwise order
 	if(in_n == 0) return 0;
 	copy_vals(in,out,in_n);					
@@ -35,7 +34,6 @@ int clip_against_plane(Vec4f* in, Vec2f* in_uv, int in_n, Plane4 P, Vec4f* out, 
 		if(sIn && eIn) {
 			out[n] = e;	
 			out_uv[n++] = e_uv;
-			continue;
 		}
 
 		if(sIn && !eIn){
@@ -49,7 +47,6 @@ int clip_against_plane(Vec4f* in, Vec2f* in_uv, int in_n, Plane4 P, Vec4f* out, 
 				out_uv[n++] = uv;
 			}
 
-			continue;
 		}
 
 		if(!sIn && eIn){
@@ -65,11 +62,6 @@ int clip_against_plane(Vec4f* in, Vec2f* in_uv, int in_n, Plane4 P, Vec4f* out, 
 				out_uv[n++] = e_uv;
 			}
 
-			continue;
-		}
-
-		if(!sIn && !eIn){
-			continue;	
 		}
 
 	}
@@ -111,13 +103,8 @@ int clip_tri(const Triangle* tri, Triangle* tris_out){
 
 	int in_n = 3, out_n = 0;
 
-	in[0] = tri->v[0].pos;
-	in[1] = tri->v[1].pos;
-	in[2] = tri->v[2].pos;
-	
-	in_uv[0] = tri->v[0].uv;
-	in_uv[1] = tri->v[1].uv;
-	in_uv[2] = tri->v[2].uv;
+	for(int i = 0; i <= 2; i++) in[i] = tri->v[i].pos;
+	for(int i = 0; i <= 2; i++) in_uv[i] = tri->v[i].uv;
 
 	Plane4 planes[6];
 	int num_planes = 6;

@@ -3,7 +3,7 @@
 
 #include "shading.h"
 #include "clip.h"
-#include "triangle.h"
+#include "primitive.h"
 #include "vector.h"
 #include "transformation.h"
 #include "rasterize.h"

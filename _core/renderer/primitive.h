@@ -1,14 +1,7 @@
-#ifndef TRIANGLE_H
-#define TRIANGLE_H
+#ifndef PRIMITIVE_H
+#define PRIMITIVE_H
 
-#include <stdbool.h>
-#include <stdint.h>
-
-#include "matrix.h"
-#include "shading.h"
-#include "vector.h" 
-#include "lighting.h"
-#include "scene_manager.h"
+#include "vector.h"
 
 typedef struct Bounds Bounds;
 
@@ -25,5 +18,5 @@ typedef struct Triangle {
 } Triangle;
 
 Bounds triangle_get_bounds(const Triangle* tri);
-Vec3f calculate_normal(Triangle tri);
+
 #endif

@@ -4,7 +4,7 @@
 #include "matrix.h"
 #include "vector.h"
 #include "scene_manager.h"
-#include "triangle.h"
+#include "primitive.h"
 
 Mat4 mat4_affine_orthonormal_inverse(Mat4 mat);
 

@@ -2,8 +2,14 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include "triangle.h"
+
+#include "constants.h"
+#include "shading.h"
+#include "lighting.h"
+#include "material.h"
+#include "primitive.h"
 #include "barycentric.h"
+#include "bounds.h"
 
 // FROM CHAT-GPT
 static inline uint32_t vec4f_to_rgba32(Vec4f c) {

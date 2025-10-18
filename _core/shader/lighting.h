@@ -1,7 +1,7 @@
 #ifndef LIGHTING_H
 #define LIGHTING_H
 
-#include "triangle.h"
+#include "primitive.h"
 #include "scene_manager.h"
 #include "shading.h"
 
