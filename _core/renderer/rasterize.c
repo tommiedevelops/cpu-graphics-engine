@@ -26,12 +26,15 @@ static inline uint32_t vec4f_to_rgba32(Vec4f c) {
            ((uint32_t)A);
 }
 
-void draw_pixel(int x, int y, uint32_t* framebuffer, float* zbuffer, float depth, uint32_t color){
+void draw_pixel(int x, int y, uint32_t* framebuffer, float* zbuffer, float depth, Vec4f color){
 	if(x >= WIDTH || x <= 0.0f) return;
 	if(y >= HEIGHT || y <= 0.0f) return;
 
+
+	uint32_t value = vec4f_to_rgba32(color);
+
 	if(depth <= zbuffer[x + y*WIDTH]){
-		framebuffer[x + y*WIDTH] = color;			
+		framebuffer[x + y*WIDTH] = value;			
 		zbuffer[x + y*WIDTH] = depth;
 	}
 }
@@ -40,16 +43,17 @@ static inline bool inside_triangle(BaryCoords b){
 	return (b.alpha > 0) && (b.beta > 0) && (b.gamma > 0) && (b.alpha <= 1) && (b.beta <= 1) && (b.gamma <= 1);
 }
 
-void rasterize_triangle(Triangle tri, Camera* cam, struct LightSource* ls, struct Material* mat, uint32_t* framebuffer, float* zbuffer) {
-	Vertex v0 = tri.v[0];
-	Vertex v1 = tri.v[1];
-	Vertex v2 = tri.v[2];
+void rasterize_triangle(Triangle* tri, Light* lights, Material* mat, uint32_t* framebuffer, float* zbuffer) {
+
+	Vertex v0 = tri->v[0];
+	Vertex v1 = tri->v[1];
+	Vertex v2 = tri->v[2];
 
 	Vec2f A = vec2f_create(v0.pos.x, v0.pos.y);
 	Vec2f B = vec2f_create(v1.pos.x, v1.pos.y);
 	Vec2f C = vec2f_create(v2.pos.x, v2.pos.y);
 
-	Bounds bounds = triangle_get_bounds(tri);
+	Bounds bounds = triangle_get_bounds(*tri);
 	for(int y = (int)bounds.ymin; y <= (int)bounds.ymax; y++){
 		for(int x = (int)bounds.xmin; x <= (int)bounds.xmax; x++) {
 
@@ -66,9 +70,9 @@ void rasterize_triangle(Triangle tri, Camera* cam, struct LightSource* ls, struc
 				Vec3f n = bary_interpolate_vec3f(b,v0.n, v1.n, v2.n);
 
 				Vec4f diffuse = 
-				compute_diffuse(material_get_albedo(mat,uv), ls->direction, ls->color, n);
-				uint32_t color = vec4f_to_rgba32(diffuse);
-				draw_pixel(x,y,framebuffer,zbuffer,depth,color);
+				compute_diffuse(material_get_albedo(mat,uv), lights->direction, lights->color, n);
+
+				draw_pixel(x,y,framebuffer,zbuffer,depth,diffuse);
 			} 
 
 		}

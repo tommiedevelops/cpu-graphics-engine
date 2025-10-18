@@ -64,7 +64,7 @@ GameObject* game_object_create(Transform tr, Mesh* mesh, struct Material* mat){
 }
 
 
-Scene* scene_create(Camera* cam, GameObject** gos, int num_gos, struct LightSource ls){
+Scene* scene_create(Camera* cam, GameObject** gos, int num_gos, Light light){
 
 	Scene* scene = malloc(sizeof(Scene));
 	if(NULL == scene) {
@@ -75,7 +75,7 @@ Scene* scene_create(Camera* cam, GameObject** gos, int num_gos, struct LightSour
 	scene->cam = cam;
 	scene->gos = gos;
 	scene->num_gos = num_gos;
-	scene->light = ls;
+	scene->light = light;
 
 	return scene;
 }

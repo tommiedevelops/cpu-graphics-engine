@@ -44,11 +44,11 @@ typedef struct Scene {
 	Camera *cam;
 	GameObject **gos;
 	int num_gos;
-	struct LightSource light;
+	Light light;
 } Scene;
 
 Transform transform_create(Vec3f pos, Quat rot, Vec3f scale);
-Scene* scene_create(Camera* cam, GameObject** gos, int num_gos, struct LightSource ls);
+Scene* scene_create(Camera* cam, GameObject** gos, int num_gos, Light light);
 Camera* camera_create(Transform tr);
 Transform transform_default();
 void camera_set_fov_degrees(Camera* cam, float fov_degrees);

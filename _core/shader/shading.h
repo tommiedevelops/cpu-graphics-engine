@@ -6,10 +6,10 @@
 #include "vector.h"
 #include "constants.h"
 
-struct LightSource {
+typedef struct Light {
 	Vec3f direction;
 	Vec4f color;
-};
+} Light;
 
 typedef struct FragShaderInput {
 } FragShaderInput;

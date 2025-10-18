@@ -113,13 +113,13 @@ Camera* prepare_camera(){
 	return cam;
 }
 
-struct LightSource prepare_light_source(){
+Light prepare_light_source(){
 	/* User Defined */	
-	struct LightSource ls = {
+	Light light = {
 		.direction = vec3f_create(1.0f, -1.0f, 0.0f),
 		.color = VEC4F_1
 	};
-	return ls;
+	return light;
 }
 
 // --- Event Handling ---
@@ -221,9 +221,9 @@ Scene* app_create_scene(struct AppAssets assets){
 		return NULL;
 	}
 
-	struct LightSource ls = prepare_light_source();
+	Light light = prepare_light_source();
 
-	Scene* scene = scene_create(cam, go_ctr.gos, go_ctr.num_gos, ls);
+	Scene* scene = scene_create(cam, go_ctr.gos, go_ctr.num_gos, light);
 	if(NULL == scene){
 		LOG_ERROR("scene is null");
 		return NULL;
