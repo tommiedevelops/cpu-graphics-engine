@@ -8,7 +8,7 @@
 #include "transformation.h"
 #include "rasterize.h"
 
-struct RenderData {
+typedef struct RenderData {
 	int num_vertices;
 	Vec3f* vertices;
 	Vec2f* uvs;
@@ -20,7 +20,7 @@ struct RenderData {
 	int* triangle_normals;
 	Material* mat;
 	struct Plane clipping_planes[6];
-};
+} RenderData;
 
 static inline void get_clipping_planes(struct Plane* planes){
 	/* all normals facing 'inside'*/
@@ -82,31 +82,30 @@ struct RenderData prepare_render_data(GameObject* go, Camera* cam) {
 	return r;
 }
 
+void assemble_triangle(Triangle* tri, int tri_idx, const RenderData* data){
 
-void assemble_triangle(Triangle* tri, int tri_idx, struct RenderData data){
+	int v0_idx = data->triangles[tri_idx];
+	int v1_idx = data->triangles[tri_idx + 1];
+	int v2_idx = data->triangles[tri_idx + 2];
 
-	int v0_idx = data.triangles[tri_idx];
-	int v1_idx = data.triangles[tri_idx + 1];
-	int v2_idx = data.triangles[tri_idx + 2];
-
-	if( (data.uvs != NULL) && (data.triangle_uvs != NULL) ) {
-		int uv0_idx = data.triangle_uvs[tri_idx];
-		int uv1_idx = data.triangle_uvs[tri_idx + 1];
-		int uv2_idx = data.triangle_uvs[tri_idx + 2];
-		tri->v[0].uv = data.uvs[uv0_idx];
-		tri->v[1].uv = data.uvs[uv1_idx];
-		tri->v[2].uv = data.uvs[uv2_idx];
+	if( (data->uvs != NULL) && (data->triangle_uvs != NULL) ) {
+		int uv0_idx = data->triangle_uvs[tri_idx];
+		int uv1_idx = data->triangle_uvs[tri_idx + 1];
+		int uv2_idx = data->triangle_uvs[tri_idx + 2];
+		tri->v[0].uv = data->uvs[uv0_idx];
+		tri->v[1].uv = data->uvs[uv1_idx];
+		tri->v[2].uv = data->uvs[uv2_idx];
 	}
 
 	// convert to homogenous coordinates
-	tri->v[0].pos = vec3f_to_vec4f(data.vertices[v0_idx], 1.0f);
-	tri->v[1].pos = vec3f_to_vec4f(data.vertices[v1_idx], 1.0f);
-	tri->v[2].pos = vec3f_to_vec4f(data.vertices[v2_idx], 1.0f);
+	tri->v[0].pos = vec3f_to_vec4f(data->vertices[v0_idx], 1.0f);
+	tri->v[1].pos = vec3f_to_vec4f(data->vertices[v1_idx], 1.0f);
+	tri->v[2].pos = vec3f_to_vec4f(data->vertices[v2_idx], 1.0f);
 
-	if(data.normals != NULL) { //optional
-		tri->v[0].n = data.normals[v0_idx];
-		tri->v[1].n = data.normals[v1_idx];
-		tri->v[2].n = data.normals[v2_idx];
+	if(data->normals != NULL) { //optional
+		tri->v[0].n = data->normals[v0_idx];
+		tri->v[1].n = data->normals[v1_idx];
+		tri->v[2].n = data->normals[v2_idx];
 	}
 
 }
@@ -121,37 +120,34 @@ void precompute_interpolated_values(Triangle* tri) {
 	tri->v[2].uv_over_w = vec2f_scale(tri->v[2].uv, tri->v[0].w_inv);
 }
 
-void render_game_object(uint32_t* framebuffer, float* zbuffer, Scene* scene, GameObject* go){
+void render_game_object(uint32_t* framebuffer, float* zbuffer, Light* lights, int num_lights, Camera* cam, GameObject* go){
 		
-		struct RenderData data = prepare_render_data(go, scene->cam);
+		struct RenderData data = prepare_render_data(go, cam);
 		
 		if(NULL == data.vertices) return; // required
 						  
 		// pre-compute matrices
 		Mat4 model, view, projection, view_port;
 		model = get_model_matrix(go->transform);
-		view = get_view_matrix(*scene->cam);
-		projection = get_projection_matrix(*scene->cam, (float)HEIGHT/WIDTH);
-		view_port = get_viewport_matrix(*scene->cam);
+		view = get_view_matrix(*cam);
+		projection = get_projection_matrix(*cam, (float)HEIGHT/WIDTH);
+		view_port = get_viewport_matrix(*cam);
 
 		for(int t = 0; t < data.num_triangles; t++) {
-
-			Triangle tri = {0};
 			int tri_idx = 3*t;
-
-			assemble_triangle(&tri, tri_idx, data);
+			Triangle tri = {0};
+			assemble_triangle(&tri, tri_idx, &data);
 			apply_transformation(model,&tri);
 			apply_transformation(view,&tri);
-			precompute_lighting(data.mat, tri, scene);
 			apply_transformation(projection,&tri);
 
-			struct ClipResult r = clip_tri(tri, data.clipping_planes, 6);
+			ClipResult r = clip_tri(&tri, data.clipping_planes, 6);
 
 			for(int k = 0; k < r.num_tris; k++){
 				precompute_interpolated_values(&r.tris[k]);			
 				apply_perspective_divide(&r.tris[k]); // divide (x,y,z,w) by w
 				apply_transformation(view_port, &r.tris[k]);
-				rasterize_triangle(&r.tris[k], &scene->light, data.mat, framebuffer, zbuffer);
+				rasterize_triangle(&r.tris[k], lights, data.mat, framebuffer, zbuffer);
 			}
 
 		}
@@ -162,7 +158,10 @@ void render_scene(uint32_t* framebuffer, float* zbuffer, Scene* scene) {
 	
 	for(int i = 0; i < scene->num_gos; i++) {
 		GameObject* go = scene->gos[i];
-		render_game_object(framebuffer, zbuffer, scene, go);
+		Camera* cam = scene->cam;
+		Light* lights = &scene->light;
+		int num_lights = 1; // CHANGE
+		render_game_object(framebuffer, zbuffer, lights, num_lights, cam, go);
 	}
 }
 

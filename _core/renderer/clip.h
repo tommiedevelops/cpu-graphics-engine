@@ -9,22 +9,22 @@
 #include "constants.h"
 #include "vector.h"
 
-struct ClipResult {
+typedef struct ClipResult {
 	int num_tris;
 	Triangle tris[6];
-};
+} ClipResult;
 
-struct Plane { 
+typedef struct Plane { 
 	Vec4f n; //normal
 	Vec4f p; // point on the plane
-};
+} Plane;
 
-Vec4f intersect(struct Plane P, Vec4f u, Vec4f v);
-bool inside(struct Plane P, Vec4f x, float eps);
-float sdf(struct Plane P, Vec4f x);
+Vec4f intersect(Plane P, Vec4f u, Vec4f v);
+bool inside(Plane P, Vec4f x, float eps);
+float sdf(Plane P, Vec4f x);
 Vec4f lerp(Vec4f u, Vec4f v, float t);
-int clip_against_plane(Vec4f* in,Vec2f* in_uv, int in_n, struct Plane P, Vec4f* out, Vec2f* out_uv);
+int clip_against_plane(Vec4f* in,Vec2f* in_uv, int in_n, Plane P, Vec4f* out, Vec2f* out_uv);
 
-struct ClipResult clip_tri(Triangle tri, struct Plane * planes, int num_planes);
+ClipResult clip_tri(const Triangle* tri, Plane * planes, int num_planes);
 
 #endif

@@ -1,10 +1,10 @@
 #include "clip.h"
 
-float sdf(struct Plane P, Vec4f x){
+float sdf(Plane P, Vec4f x){
 	return vec4f_dot(P.n, vec4f_add(P.p, vec4f_scale(x, -1.0f) ));
 }	
 
-bool inside(struct Plane P, Vec4f x, float eps){ return sdf(P,x) <= 0.0f; }
+bool inside(Plane P, Vec4f x, float eps){ return sdf(P,x) <= 0.0f; }
 
 Vec2f lerp2(Vec2f u, Vec2f v, float t){
 	if(t > 1.0f){
@@ -35,7 +35,7 @@ Vec4f lerp4(Vec4f u, Vec4f v, float t){
 	return vec4f_add(vec4f_scale(u, 1-t), vec4f_scale(v, t));
 }
 
-float compute_t(struct Plane P, Vec4f u, Vec4f v){
+float compute_t(Plane P, Vec4f u, Vec4f v){
 	float t = (float)vec4f_dot(P.n, vec4f_add(u, vec4f_scale(P.p, -1.0f) ))
 		/ (float)vec4f_dot(P.n, vec4f_add(u, vec4f_scale(v, -1.0f) ));
 	return t;	
@@ -53,7 +53,7 @@ static inline void copy_vals(Vec4f* from, Vec4f* to, int num_verts){
 	}
 }
 
-int clip_against_plane(Vec4f* in, Vec2f* in_uv, int in_n, struct Plane P, Vec4f* out, Vec2f* out_uv){
+int clip_against_plane(Vec4f* in, Vec2f* in_uv, int in_n, Plane P, Vec4f* out, Vec2f* out_uv){
 
 	// assuming verts represents a convex polygon that is in clockwise order
 	if(in_n == 0) return 0;
@@ -117,19 +117,19 @@ int clip_against_plane(Vec4f* in, Vec2f* in_uv, int in_n, struct Plane P, Vec4f*
 	return n;
 }
 
-struct ClipResult clip_tri(Triangle tri, struct Plane * planes, int num_planes){
+ClipResult clip_tri(const Triangle* tri, Plane * planes, int num_planes){
 	Vec4f in[9] = {0}, out[9] = {0};
 	Vec2f in_uv[9] = {0}, out_uv[9] = {0};
 
 	int in_n = 3, out_n = 0;
 
-	in[0] = tri.v[0].pos;
-	in[1] = tri.v[1].pos;
-	in[2] = tri.v[2].pos;
+	in[0] = tri->v[0].pos;
+	in[1] = tri->v[1].pos;
+	in[2] = tri->v[2].pos;
 	
-	in_uv[0] = tri.v[0].uv;
-	in_uv[1] = tri.v[1].uv;
-	in_uv[2] = tri.v[2].uv;
+	in_uv[0] = tri->v[0].uv;
+	in_uv[1] = tri->v[1].uv;
+	in_uv[2] = tri->v[2].uv;
 
 	for(int i = 0; i < num_planes && in_n > 0; i++){
 		out_n = clip_against_plane(in,in_uv, in_n, planes[i], out, out_uv);
@@ -138,13 +138,13 @@ struct ClipResult clip_tri(Triangle tri, struct Plane * planes, int num_planes){
 		in_n = out_n;
 	}
 
-	struct ClipResult r = {0};
+	ClipResult r = {0};
 	if(out_n < 2) return r;
 
 	r.num_tris = out_n - 2;
 	
 	for(int k = 0; k < r.num_tris; k++){
-		r.tris[k] = tri;
+		r.tris[k] = *tri;
 		r.tris[k].v[0].pos = out[0];
 		r.tris[k].v[1].pos = out[k+1];
 		r.tris[k].v[2].pos = out[k+2];	

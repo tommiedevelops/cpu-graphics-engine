@@ -24,6 +24,6 @@ typedef struct Triangle {
 	Vertex v[3];
 } Triangle;
 
-Bounds triangle_get_bounds(Triangle tri);
+Bounds triangle_get_bounds(const Triangle* tri);
 Vec3f calculate_normal(Triangle tri);
 #endif
