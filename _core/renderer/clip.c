@@ -1,39 +1,11 @@
 #include "clip.h"
+#include "lerp.h"
 
 float sdf(Plane P, Vec4f x){
 	return vec4f_dot(P.n, vec4f_add(P.p, vec4f_scale(x, -1.0f) ));
 }	
 
 bool inside(Plane P, Vec4f x, float eps){ return sdf(P,x) <= 0.0f; }
-
-Vec2f lerp2(Vec2f u, Vec2f v, float t){
-	if(t > 1.0f){
-		//LOG_ERROR("invalid t supplied");
-		t = 0.99f;
-	}
-
-	if( t < 0.0f){
-		//LOG_ERROR("invalid t supplied");
-		t = 0.01f;	
-	}
-
-	return vec2f_add(vec2f_scale(u, 1-t), vec2f_scale(v, t));
-}
-
-
-Vec4f lerp4(Vec4f u, Vec4f v, float t){
-	if(t > 1.0f){
-		//LOG_ERROR("invalid t supplied");
-		t = 0.99f;
-	}
-
-	if( t < 0.0f){
-		//LOG_ERROR("invalid t supplied");
-		t = 0.01f;	
-	}
-
-	return vec4f_add(vec4f_scale(u, 1-t), vec4f_scale(v, t));
-}
 
 float compute_t(Plane P, Vec4f u, Vec4f v){
 	float t = (float)vec4f_dot(P.n, vec4f_add(u, vec4f_scale(P.p, -1.0f) ))
@@ -81,8 +53,8 @@ int clip_against_plane(Vec4f* in, Vec2f* in_uv, int in_n, Plane P, Vec4f* out, V
 		if(sIn && !eIn){
 
 			float t = compute_t(P,s,e);
-			Vec4f i = lerp4(s,e,t);
-			Vec2f uv = lerp2(s_uv,e_uv,t);
+			Vec4f i = lerp_vec4f(s,e,t);
+			Vec2f uv = lerp_vec2f(s_uv,e_uv,t);
 
 			if(!vec4f_are_equal(i,s)) {
 				out[n] = i;
@@ -94,8 +66,8 @@ int clip_against_plane(Vec4f* in, Vec2f* in_uv, int in_n, Plane P, Vec4f* out, V
 
 		if(!sIn && eIn){
 			float t = compute_t(P,s,e);
-			Vec4f i  = lerp4(s,e,t);
-			Vec2f uv = lerp2(s_uv,e_uv,t);
+			Vec4f i  = lerp_vec4f(s,e,t);
+			Vec2f uv = lerp_vec2f(s_uv,e_uv,t);
 
 			out[n] = i;
 			out_uv[n++] = uv;
