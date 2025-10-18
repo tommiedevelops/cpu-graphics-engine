@@ -25,6 +25,6 @@ float sdf(Plane P, Vec4f x);
 Vec4f lerp(Vec4f u, Vec4f v, float t);
 int clip_against_plane(Vec4f* in,Vec2f* in_uv, int in_n, Plane P, Vec4f* out, Vec2f* out_uv);
 
-ClipResult clip_tri(const Triangle* tri, Plane * planes, int num_planes);
+int clip_tri(const Triangle* tri, Triangle* clip_result);
 
 #endif

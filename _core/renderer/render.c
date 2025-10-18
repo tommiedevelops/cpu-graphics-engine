@@ -19,36 +19,7 @@ typedef struct RenderData {
 	int* triangle_uvs;
 	int* triangle_normals;
 	Material* mat;
-	struct Plane clipping_planes[6];
 } RenderData;
-
-static inline void get_clipping_planes(struct Plane* planes){
-	/* all normals facing 'inside'*/
-	/* inside => -w<=x<=w, -w<=y<=w, 0<=z<=w*/
-	//top (y = w)
-	planes[0].n = vec4f_create(0.0f, -1.0f, 0.0f, 1.0f);
-	planes[0].p = vec4f_create(0.0f, 1.0f, 0.0f, 1.0f);
-
-	//bottom (y = -w)
-	planes[1].n = vec4f_create(0.0f, 1.0f, 0.0f, 1.0f);
-	planes[1].p = vec4f_create(0.0f, -1.0f, 0.0f, 1.0f);
-
-	// left (x = -w)
-	planes[2].n = vec4f_create(1.0f, 0.0f, 0.0f, 1.0f);
-	planes[2].p = vec4f_create(-1.0f, 0.0f, 0.0f, 1.0f);
-
-	// right (x = w)
-	planes[3].n = vec4f_create(-1.0f, 0.0f, 0.0f, 1.0f);
-	planes[3].p = vec4f_create(1.0f, 0.0f, 0.0f, 1.0f);
-
-	// near (z = 0)
-	planes[4].n = vec4f_create(0.0f, 0.0f, 1.0f, 0.0f);
-	planes[4].p = VEC4F_0;
-
-	// far (z = w)
-	planes[5].n = vec4f_create(0.0f, 0.0f, -1.0f, 1.0f);
-	planes[5].p = vec4f_create(0.0f, 0.0f, 1.0f, 1.0f);
-}
 
 struct RenderData prepare_render_data(GameObject* go, Camera* cam) {
 
@@ -75,9 +46,6 @@ struct RenderData prepare_render_data(GameObject* go, Camera* cam) {
 	// Material Data
 	r.mat = material_default();
 	if(go->material != NULL) r.mat = go->material;
-
-	// Clipping Planes
-	get_clipping_planes(r.clipping_planes);
 
 	return r;
 }
@@ -132,7 +100,8 @@ void render_game_object(uint32_t* framebuffer, float* zbuffer, Light* lights, in
 		view = get_view_matrix(*cam);
 		projection = get_projection_matrix(*cam, (float)HEIGHT/WIDTH);
 		view_port = get_viewport_matrix(*cam);
-
+		
+		Triangle clip_result[6] = {0};
 		for(int t = 0; t < data.num_triangles; t++) {
 			int tri_idx = 3*t;
 			Triangle tri = {0};
@@ -141,13 +110,13 @@ void render_game_object(uint32_t* framebuffer, float* zbuffer, Light* lights, in
 			apply_transformation(view,&tri);
 			apply_transformation(projection,&tri);
 
-			ClipResult r = clip_tri(&tri, data.clipping_planes, 6);
+			int num_tris = clip_tri(&tri, clip_result);
 
-			for(int k = 0; k < r.num_tris; k++){
-				precompute_interpolated_values(&r.tris[k]);			
-				apply_perspective_divide(&r.tris[k]); // divide (x,y,z,w) by w
-				apply_transformation(view_port, &r.tris[k]);
-				rasterize_triangle(&r.tris[k], lights, data.mat, framebuffer, zbuffer);
+			for(int k = 0; k < num_tris; k++){
+				precompute_interpolated_values(&clip_result[k]);			
+				apply_perspective_divide(&clip_result[k]); // divide (x,y,z,w) by w
+				apply_transformation(view_port, &clip_result[k]);
+				rasterize_triangle(&clip_result[k], lights, data.mat, framebuffer, zbuffer);
 			}
 
 		}
