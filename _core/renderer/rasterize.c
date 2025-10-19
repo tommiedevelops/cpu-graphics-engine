@@ -4,7 +4,6 @@
 #include <stdbool.h>
 
 #include "constants.h"
-#include "shading.h"
 #include "lighting.h"
 #include "material.h"
 #include "primitive.h"

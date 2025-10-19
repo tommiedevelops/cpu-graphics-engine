@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "shading.h"
+#include "material.h"
 #include "clip.h"
 #include "primitive.h"
 #include "vector.h"

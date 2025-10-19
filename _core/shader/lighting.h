@@ -3,7 +3,7 @@
 
 #include "primitive.h"
 #include "scene_manager.h"
-#include "shading.h"
+typedef struct Material Material;
 
 typedef struct Triangle Triangle;
 

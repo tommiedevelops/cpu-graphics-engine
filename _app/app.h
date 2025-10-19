@@ -5,7 +5,7 @@
 #include <SDL2/SDL.h>
 
 #include "normals.h"
-#include "shading.h"
+#include "material.h"
 #include "scene_manager.h"
 
 struct TexData {

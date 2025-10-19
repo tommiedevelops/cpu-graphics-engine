@@ -5,7 +5,7 @@
 #include "bounds.h"
 #include "quaternion.h"
 #include "constants.h"
-#include "shading.h"
+#include "material.h"
 
 // --- STRUCT DEFINITIONS --- 
 typedef struct Transform {
@@ -39,6 +39,11 @@ typedef struct Camera {
 	float near;
 	float far;
 } Camera;
+
+typedef struct Light {
+	Vec3f direction;
+	Vec4f color;
+} Light;
 
 typedef struct Scene {
 	Camera *cam;
