@@ -109,17 +109,18 @@ void render_game_object(uint32_t* framebuffer, float* zbuffer, Light* lights, in
 		for(int t = 0; t < data.num_triangles; t++) {
 			int tri_idx = 3*t;
 			Triangle tri = {0};
+
 			assemble_triangle(&tri, tri_idx, &data);
-			apply_transformation(model,&tri);
-			apply_transformation(view,&tri);
-			apply_transformation(projection,&tri);
+			tri_apply_transformation(model,&tri);
+			tri_apply_transformation(view,&tri);
+			tri_apply_transformation(projection,&tri);
 
 			int num_tris = clip_tri(&tri, clip_result);
 
 			for(int k = 0; k < num_tris; k++){
 				precompute_interpolated_values(&clip_result[k]);			
-				apply_perspective_divide(&clip_result[k]); // divide (x,y,z,w) by w
-				apply_transformation(view_port, &clip_result[k]);
+				tri_apply_perspective_divide(&clip_result[k]); // divide (x,y,z,w) by w
+				tri_apply_transformation(view_port, &clip_result[k]);
 				rasterize_triangle(&clip_result[k], lights, data.mat, framebuffer, zbuffer);
 			}
 

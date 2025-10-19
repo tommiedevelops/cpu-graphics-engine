@@ -1,7 +1,7 @@
 #include "primitive.h"
 #include "bounds.h"
 
-Bounds triangle_get_bounds(const Triangle* tri){
+Bounds tri_get_bounds(const Triangle* tri){
 	Bounds bounds = BOUNDS_DEFAULT;
 	for(int i = 0; i <= 2; i++){
 		if(tri->v[i].pos.x > bounds.xmax) {bounds.xmax = tri->v[i].pos.x;}
@@ -14,4 +14,16 @@ Bounds triangle_get_bounds(const Triangle* tri){
 	}
 	return bounds;
 }
+
+void tri_apply_perspective_divide(Triangle* tri) {
+	tri->v[0].pos = vec4f_homogeneous_divide(tri->v[0].pos);
+	tri->v[1].pos = vec4f_homogeneous_divide(tri->v[1].pos);
+	tri->v[2].pos = vec4f_homogeneous_divide(tri->v[2].pos);
+}
+
+void tri_apply_transformation(Mat4 tr, Triangle* tri) {
+	tri->v[0].pos = mat4_mul_vec4(tr, tri->v[0].pos);
+	tri->v[1].pos = mat4_mul_vec4(tr, tri->v[1].pos);
+	tri->v[2].pos = mat4_mul_vec4(tr, tri->v[2].pos);
+}	
 

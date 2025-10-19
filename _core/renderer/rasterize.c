@@ -58,7 +58,7 @@ void rasterize_triangle(Triangle* tri, Light* lights, Material* mat, uint32_t* f
 	Vec2f B = vec2f_create(v1.pos.x, v1.pos.y);
 	Vec2f C = vec2f_create(v2.pos.x, v2.pos.y);
 
-	Bounds bounds = triangle_get_bounds(tri);
+	Bounds bounds = tri_get_bounds(tri);
 	for(int y = (int)bounds.ymin; y <= (int)bounds.ymax; y++){
 		for(int x = (int)bounds.xmin; x <= (int)bounds.xmax; x++) {
 
