@@ -49,14 +49,14 @@ struct MeshData load_meshes(){
 	Mesh** meshes = malloc(sizeof(Mesh*)*num_meshes);
 
 	Mesh* homer_mesh = malloc(sizeof(Mesh));
-	*homer_mesh = parse_obj("./assets/models/lucy.obj");
+	*homer_mesh = mesh_parse_from_obj("./assets/models/lucy.obj");
 	
 	Mesh* teapot_mesh = malloc(sizeof(Mesh));
-	*teapot_mesh = parse_obj("./assets/models/teapot.obj");	
+	*teapot_mesh = mesh_parse_from_obj("./assets/models/teapot.obj");	
 
 	Mesh* bunny_mesh = malloc(sizeof(Mesh));
-	*bunny_mesh = parse_obj("./assets/models/bunny.obj");	
-	recalculate_normals(bunny_mesh);
+	*bunny_mesh = mesh_parse_from_obj("./assets/models/bunny.obj");	
+	mesh_recalculate_normals(bunny_mesh);
 
 	meshes[BUNNY] = bunny_mesh;
 	meshes[TEAPOT] = teapot_mesh;

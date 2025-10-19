@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <SDL2/SDL.h>
 
-#include "normals.h"
 #include "material.h"
 #include "scene_manager.h"
 

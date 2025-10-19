@@ -17,5 +17,6 @@ typedef struct Mesh {
 	int num_triangles;
 } Mesh;
 
-Mesh parse_obj(char* filename);
+int mesh_recalculate_normals(Mesh* m);
+Mesh mesh_parse_from_obj(char* obj_filename);
 #endif
