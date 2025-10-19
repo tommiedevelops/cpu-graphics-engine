@@ -6,8 +6,9 @@
 #include "primitive.h"
 #include "vector.h"
 #include "transformation.h"
-#include "rasterize.h"
+#include "scene_manager.h"
 
+#include "rasterize.h"
 typedef struct RenderData {
 	int num_vertices;
 	Vec3f* vertices;
@@ -96,10 +97,10 @@ void render_game_object(uint32_t* framebuffer, float* zbuffer, Light* lights, in
 						  
 		// pre-compute matrices
 		Mat4 model, view, projection, view_port;
-		model = get_model_matrix(go->transform);
-		view = get_view_matrix(*cam);
-		projection = get_projection_matrix(*cam, (float)HEIGHT/WIDTH);
-		view_port = get_viewport_matrix(*cam);
+		model = get_model_matrix(&go->transform);
+		view = get_view_matrix(cam);
+		projection = get_projection_matrix(cam, (float)HEIGHT/WIDTH);
+		view_port = get_viewport_matrix(cam);
 		
 		Triangle clip_result[6] = {0};
 		for(int t = 0; t < data.num_triangles; t++) {

@@ -25,6 +25,6 @@ Mat4 mat4_mul_mat4(Mat4 m0, Mat4 m1);
 Vec4f mat4_mul_vec4(Mat4 m, Vec4f v);
 Mat3 mat3_transpose(Mat3 m);
 Mat3 scal_mul_mat3(float s, Mat3 m);
-
+Mat4 mat4_affine_orthonormal_inverse(Mat4 mat);
 #endif
 

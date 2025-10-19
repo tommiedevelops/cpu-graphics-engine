@@ -74,4 +74,6 @@ bool vec3f_are_equal(Vec3f a, Vec3f b);
 bool vec4f_are_about_equal(Vec4f a, Vec4f b, float allowance); 
 bool vec3f_are_about_equal(Vec3f a, Vec3f b, float allowance); 
 
+Vec4f vec4f_homogeneous_divide(Vec4f v);
+
 #endif

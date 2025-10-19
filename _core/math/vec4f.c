@@ -1,7 +1,21 @@
 #include "vector.h"
 
+
 Vec3f vec4f_to_vec3f(Vec4f v) {
     return (Vec3f){ v.x, v.y, v.z };
+}
+
+Vec4f vec4f_homogeneous_divide(Vec4f v){
+	Vec4f result = {0};
+	
+	if(v.w != 0){
+		result.x = v.x/v.w;
+		result.y = v.y/v.w;
+		result.z = v.z/v.w;		
+		result.w = 1.0f;
+	}
+	
+	return result;
 }
 
 bool vec4f_are_equal(Vec4f a, Vec4f b) {

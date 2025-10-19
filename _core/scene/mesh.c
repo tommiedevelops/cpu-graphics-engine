@@ -97,9 +97,7 @@ int mesh_recalculate_normals(Mesh* m){
 		Vec3f n = vec3f_cross(y,x);
 		
 		normals[v0_idx] = vec3f_add(normals[v0_idx], n);
-
 		normals[v1_idx] = vec3f_add(normals[v1_idx], n);
-
 		normals[v2_idx] = vec3f_add(normals[v2_idx], n);
 	}	
 

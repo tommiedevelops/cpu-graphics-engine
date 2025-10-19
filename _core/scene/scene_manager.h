@@ -47,6 +47,6 @@ Transform transform_default();
 void camera_set_fov_degrees(Camera* cam, float fov_degrees);
 void camera_set_near(Camera* cam, float near);
 void camera_set_far(Camera* cam, float far);
-GameObject* game_object_create(Transform tr, Mesh* mesh, struct Material* mat);
+GameObject* game_object_create(Transform tr, Mesh* mesh, Material* mat);
 
 #endif
