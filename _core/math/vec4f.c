@@ -1,6 +1,5 @@
 #include "vector.h"
 
-
 Vec3f vec4f_to_vec3f(Vec4f v) {
     return (Vec3f){ v.x, v.y, v.z };
 }

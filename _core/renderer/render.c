@@ -97,10 +97,13 @@ void render_game_object(uint32_t* framebuffer, float* zbuffer, Light* lights, in
 						  
 		// pre-compute matrices
 		Mat4 model, view, projection, view_port;
-		model = get_model_matrix(&go->transform);
-		view = get_view_matrix(cam);
-		projection = get_projection_matrix(cam, (float)HEIGHT/WIDTH);
-		view_port = get_viewport_matrix(cam);
+		Transform tr = go->transform;
+		Transform cam_tr = cam->transform;
+
+		model = get_model_matrix(tr.position, tr.rotation, tr.scale);
+		view = get_view_matrix(cam_tr.position, cam_tr.rotation, cam_tr.scale);
+		projection = get_projection_matrix(cam->fov, cam->near, cam->far, (float)HEIGHT/WIDTH);
+		view_port = get_viewport_matrix(cam->near, cam->far, WIDTH, HEIGHT);
 		
 		Triangle clip_result[6] = {0};
 		for(int t = 0; t < data.num_triangles; t++) {
