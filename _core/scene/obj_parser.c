@@ -8,11 +8,7 @@
 #include "constants.h"
 #include "scene_manager.h"
 
-/*
-Purpose: create .input files that can be understood by my line renderer from .obj file
-*/
-
-FILE* open_obj(char* filename){
+FILE* obj_open(char* filename){
 	FILE* fp = fopen(filename, "r");
 
 	if(fp == NULL){
@@ -23,7 +19,7 @@ FILE* open_obj(char* filename){
 	return fp;
 }
 
-void close_obj(FILE* fp){
+void obj_close(FILE* fp){
 	if(fp==NULL){
 		perror("provided file pointer was null");
 		return;
@@ -32,8 +28,7 @@ void close_obj(FILE* fp){
 }
 
 
-static int parse_num_vertices(FILE* fp){
-
+int obj_parse_num_vertices(FILE* fp){
 	char buf[256] = {0};
 	const char * target = "# vertex count =";
 	int vertex_count = 0;
@@ -48,7 +43,7 @@ static int parse_num_vertices(FILE* fp){
 	return vertex_count;
 }
 
-static int parse_num_uvs(FILE* fp){
+int obj_parse_num_uvs(FILE* fp){
 
 	char buf[256] = {0};
 	const char * target = "# uv count =";
@@ -65,7 +60,7 @@ static int parse_num_uvs(FILE* fp){
 }
 
 
-static Vec3f* parse_vertices(FILE* fp, int num_vertices){
+Vec3f* obj_parse_vertices(FILE* fp, int num_vertices){
 
 	// NULL CHECK
 	if(fp==NULL){
@@ -93,7 +88,7 @@ static Vec3f* parse_vertices(FILE* fp, int num_vertices){
 	return vertices;
 }
 
-static Vec2f* parse_uvs(FILE* fp, int num_uvs){
+Vec2f* obj_parse_uvs(FILE* fp, int num_uvs){
 
 	// NULL CHECK
 	if(fp==NULL){
@@ -121,7 +116,7 @@ static Vec2f* parse_uvs(FILE* fp, int num_uvs){
 	return uvs;
 }
 
-static int parse_num_triangles(FILE* fp) {
+int obj_parse_num_triangles(FILE* fp) {
 
 	char buf[256] = {0};
 	const char * target = "# face count =";
@@ -137,7 +132,7 @@ static int parse_num_triangles(FILE* fp) {
 	return face_count;
 }
 
-static int* parse_triangle_uvs(FILE* fp, int num_triangles, int num_uvs, Vec2f* uvs){
+int* obj_parse_triangle_uvs(FILE* fp, int num_triangles, int num_uvs, Vec2f* uvs){
 
 	// NULL check
 	if( (uvs  == NULL) || (fp == NULL) ){
@@ -190,7 +185,7 @@ static int* parse_triangle_uvs(FILE* fp, int num_triangles, int num_uvs, Vec2f* 
 }
 
 
-static int* parse_triangles(FILE* fp, int num_triangles, int num_vertices, Vec3f* vertices){
+int* obj_parse_triangles(FILE* fp, int num_triangles, int num_vertices, Vec3f* vertices){
 
 	// NULL check
 	if( (vertices == NULL) || (fp == NULL) ){
@@ -244,61 +239,3 @@ static int* parse_triangles(FILE* fp, int num_triangles, int num_vertices, Vec3f
 	return triangles;
 }
 
-static void shift_to_origin(struct Bounds bounds, Vec3f* vectors, int num_vectors) {
-        for(int i = 0; i < num_vectors; i++){
-                vectors[i].x -= bounds.xmin;
-                vectors[i].y -= bounds.ymin;
-                vectors[i].z -= bounds.zmin;
-        }
-}
-
-/* Normalizes values to between [-1,1] - assumes min = 0 for all axes */
-static void normalize_lengths(struct Bounds bounds, Vec3f* vectors, int num_vectors) {
-	float max = fmax(fmax(bounds.xmax, bounds.ymax), bounds.zmax);
-        for(int i = 0; i < num_vectors; i++){
-                vectors[i].x = (float)vectors[i].x / max;
-                vectors[i].y = (float)vectors[i].y / max;
-                vectors[i].z = (float)vectors[i].z / max;
-		vectors[i] = vec3f_scale(vectors[i], 2.0f);
-		vectors[i] = vec3f_sub(vectors[i], VEC3F_1);
-        }
-}
-
-void normalize_vertices(Vec3f* vertices, int num_vertices) {
-        struct Bounds bounds = get_bounds(vertices, num_vertices);
-
-        shift_to_origin(bounds, vertices, num_vertices);
-	bounds = get_bounds(vertices, num_vertices);
-
-        normalize_lengths(bounds, vertices, num_vertices);
-	bounds = get_bounds(vertices, num_vertices);
-}
-
-Mesh parse_obj(char* filename){
-	FILE* fp = open_obj(filename);
-
-	int num_vertices = parse_num_vertices(fp);
-	Vec3f* vertices = parse_vertices(fp, num_vertices);
-
-	normalize_vertices(vertices, num_vertices);
-
-	int num_triangles = parse_num_triangles(fp);
-	int* triangles = parse_triangles(fp, num_triangles, num_vertices, vertices);
-	int num_uvs = parse_num_uvs(fp);
-	Vec2f* uvs = parse_uvs(fp, num_uvs);
-	int* triangle_uvs = parse_triangle_uvs(fp, num_triangles, num_uvs, uvs);
-
-	close_obj(fp);
-
-	Mesh data = {
-		.num_uvs = num_uvs,
-		.uvs = uvs,
-		.num_vertices = num_vertices,
-		.vertices = vertices,
-		.num_triangles = num_triangles,
-		.triangles = triangles,
-		.triangle_uvs = triangle_uvs
-	};
-
-	return data;
-}

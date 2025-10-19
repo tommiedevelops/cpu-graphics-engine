@@ -6,26 +6,14 @@
 #include "quaternion.h"
 #include "constants.h"
 #include "material.h"
+#include "mesh.h"
 
 // --- STRUCT DEFINITIONS --- 
 typedef struct Transform {
-	Vec3f position;  // in world coords
+	Vec3f position;
 	Quat rotation;  
 	Vec3f scale;
 } Transform;
-
-typedef struct Mesh {
-	int num_vertices;
-	Vec3f* vertices;
-	int num_uvs;
-	Vec2f* uvs;
-	int num_normals;
-	Vec3f* normals;
-	int num_triangles;
-	int* triangle_uvs;
-	int* triangles;
-	int* triangle_normals;
-} Mesh;
 
 typedef struct GameObject {
 	Transform transform;
@@ -61,5 +49,4 @@ void camera_set_near(Camera* cam, float near);
 void camera_set_far(Camera* cam, float far);
 GameObject* game_object_create(Transform tr, Mesh* mesh, struct Material* mat);
 
-Mesh parse_obj(char* filename);
 #endif

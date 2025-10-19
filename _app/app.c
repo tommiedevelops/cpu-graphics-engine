@@ -1,7 +1,7 @@
 #include <SDL2/SDL.h>
 #include "app.h"
-
 #include "texture.h"
+#include "mesh.h"
 
 // ----- STRUCT DEFINITIONS (DO NOT MODIFY) -----
 struct GameObjectContainer {
