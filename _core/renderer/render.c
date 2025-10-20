@@ -79,7 +79,7 @@ void assemble_triangle(Triangle* tri, int tri_idx, const RenderData* data){
 
 }
 
-void render_game_object(uint32_t* framebuffer, float* zbuffer, Light* lights, int num_lights, Camera* cam, GameObject* go){
+void render_game_object(FrameBuffer* fb, Light* lights, int num_lights, Camera* cam, GameObject* go){
 		
 		RenderData data = {0};
 		renderer_prepare_render_data(&data, NULL, NULL, go, cam);
@@ -113,14 +113,14 @@ void render_game_object(uint32_t* framebuffer, float* zbuffer, Light* lights, in
 				tri_apply_perspective_divide(&clip_result[k]); // divide (x,y,z,w) by w
 				tri_apply_transformation(view_port, &clip_result[k]);
 
-				rasterize_triangle(&clip_result[k], lights, data.mat, framebuffer, zbuffer);
+				rasterize_triangle(&clip_result[k], lights, data.mat, fb);
 			}
 
 		}
 
 }
 
-void render_scene(uint32_t* framebuffer, float* zbuffer, Scene* scene, Pipeline* pl) {
+void render_scene(FrameBuffer* fb, Scene* scene, Pipeline* pl) {
 	
 	int num_gos = scene_get_num_gos(scene);
 
@@ -128,7 +128,7 @@ void render_scene(uint32_t* framebuffer, float* zbuffer, Scene* scene, Pipeline*
 		GameObject* go = scene_get_game_object(scene, i);
 		Camera* cam = scene_get_camera(scene);
 		Light* lighting = scene_get_light(scene, 0);		
-		render_game_object(framebuffer, zbuffer, lighting, 1, cam, go);
+		render_game_object(fb, lighting, 1, cam, go);
 	}
 }
 

@@ -9,6 +9,7 @@
 #include "triangle.h"
 #include "barycentric.h"
 #include "bounds.h"
+#include "framebuffer.h"
 
 // FROM CHAT-GPT
 static inline uint32_t vec4f_to_rgba32(Vec4f c) {
@@ -31,24 +32,11 @@ static inline uint32_t vec4f_to_rgba32(Vec4f c) {
            ((uint32_t)A);
 }
 
-void draw_pixel(int x, int y, uint32_t* framebuffer, float* zbuffer, float depth, Vec4f color){
-	if(x >= WIDTH || x <= 0.0f) return;
-	if(y >= HEIGHT || y <= 0.0f) return;
-
-
-	uint32_t value = vec4f_to_rgba32(color);
-
-	if(depth <= zbuffer[x + y*WIDTH]){
-		framebuffer[x + y*WIDTH] = value;			
-		zbuffer[x + y*WIDTH] = depth;
-	}
-}
-
 static inline bool inside_triangle(BaryCoords b){
 	return (b.alpha > 0) && (b.beta > 0) && (b.gamma > 0) && (b.alpha <= 1) && (b.beta <= 1) && (b.gamma <= 1);
 }
 
-void rasterize_triangle(Triangle* tri, Light* lights, Material* mat, uint32_t* framebuffer, float* zbuffer) {
+void rasterize_triangle(Triangle* tri, Light* lights, Material* mat, FrameBuffer* fb) {
 
 	Vertex v0 = tri->v[0];
 	Vertex v1 = tri->v[1];
@@ -77,7 +65,7 @@ void rasterize_triangle(Triangle* tri, Light* lights, Material* mat, uint32_t* f
 				Vec4f diffuse = 
 				compute_diffuse(material_get_albedo(mat,uv), lights->direction, lights->color, n);
 
-				draw_pixel(x,y,framebuffer,zbuffer,depth,diffuse);
+				frame_buffer_draw_pixel(fb, x, y, vec4f_to_rgba32(diffuse), depth);
 			} 
 
 		}
