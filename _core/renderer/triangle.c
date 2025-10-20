@@ -1,4 +1,4 @@
-#include "primitive.h"
+#include "triangle.h"
 #include "bounds.h"
 
 Bounds tri_get_bounds(const Triangle* tri){

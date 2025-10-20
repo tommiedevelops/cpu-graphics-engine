@@ -71,18 +71,11 @@ struct MeshData load_meshes(){
 }
 
 // --- Preparing Scene ---
-struct GameObjectContainer prepare_game_objects(struct AppAssets assets){
+GameObject* prepare_game_objects(struct AppAssets assets){
 
 	/* User Defined */
 	Texture** textures = assets.td.textures;
 	Mesh** meshes = assets.md.meshes;
-
-	// Ground
-	/* struct Material* ground_material = material_create(VEC4F_1, textures[BRICK]); */ 	
-	/* Vec3f ground_pos = vec3f_create(0.0, -1.0f, 0.0f); */
-	/* Vec3f ground_scale = vec3f_create(10.0f, 1.0f, 10.0f); */
-	/* Transform ground_tr = transform_create(ground_pos, QUAT_IDENTITY, ground_scale); */
-	/* GameObject* ground_go  = game_object_create(ground_tr,meshes[GROUND], ground_material); */
 
 	// Bunny
 	Vec4f lavender = vec4f_create(0.40,0.70,0.38,0.4);
@@ -92,17 +85,8 @@ struct GameObjectContainer prepare_game_objects(struct AppAssets assets){
 
 	Transform bunny_tr = transform_create(bunny_pos, QUAT_IDENTITY, bunny_scale);
 	GameObject* bunny_go  = game_object_create(bunny_tr, meshes[BUNNY], bunny_material);
-	int num_gos = 1;
-	GameObject** gos = malloc(sizeof(GameObject*)*num_gos);
-	gos[0] = bunny_go;
-	/* gos[BUNNY] = bunny_go; */
 
-	struct GameObjectContainer ctr = {
-		.gos = gos,
-		.num_gos = num_gos
-	};
-
-	return ctr;
+	return bunny_go;
 }
 
 Camera* prepare_camera(){
@@ -168,7 +152,7 @@ void update_scene(Scene* scene, float dt, SDL_Event* event, bool* running){
 	float yaw = ed.mouse_input.x * dt * cam_ang_vel;
 	float pitch = ed.mouse_input.y * dt * cam_ang_vel;
 
-	Camera* cam = scene->cam;
+	Camera* cam = scene_get_camera(scene);
 
 	Vec3f forward = quat_get_forward(cam->transform.rotation);
 	Vec3f right = quat_get_right(cam->transform.rotation);
@@ -190,7 +174,8 @@ void update_scene(Scene* scene, float dt, SDL_Event* event, bool* running){
 	Vec3f rot_axis = vec3f_create(0.0f, -1.0f, 0.0f);
 	Quat bunny_rot = quat_angle_axis(dt*bunny_ang_vel, rot_axis);
 
-	Quat* curr_rot = &scene->gos[0]->transform.rotation;
+	GameObject* bunny_go = scene_get_game_object(scene,0);
+	Quat* curr_rot = &bunny_go->transform.rotation;
 //	*curr_rot = quat_normalize(quat_mul(*curr_rot, bunny_rot));
 }
 
@@ -209,12 +194,6 @@ struct AppAssets app_load_assets(){
 
 Scene* app_create_scene(struct AppAssets assets){
 
-	struct GameObjectContainer go_ctr = prepare_game_objects(assets);
-	if(NULL == go_ctr.gos){
-		LOG_ERROR("gameobjects is null");
-		return NULL;
-	}
-
 	Camera* cam = prepare_camera();
 	if(NULL == cam){
 		LOG_ERROR("cam is null");
@@ -223,7 +202,9 @@ Scene* app_create_scene(struct AppAssets assets){
 
 	Light light = prepare_light_source();
 
-	Scene* scene = scene_create(cam, go_ctr.gos, go_ctr.num_gos, light);
+	Scene* scene = scene_init();
+	scene_add_game_object(scene, prepare_game_objects(assets));
+
 	if(NULL == scene){
 		LOG_ERROR("scene is null");
 		return NULL;
@@ -237,12 +218,7 @@ void app_update_scene(Scene* scene, float dt, SDL_Event* event, bool* running){
 }
 
 void app_destroy_scene(Scene* scene){
-	if(NULL == scene) return;
-	for(int i =0; i < scene->num_gos; i++){
-		free(scene->gos[i]);		
-	}
-	free(scene->cam);
-	free(scene);
+	scene_uninit(scene);
 }
 
 void destroy_textures(struct TexData textures) {

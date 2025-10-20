@@ -26,27 +26,36 @@ typedef struct Camera {
 	float fov;
 	float near;
 	float far;
+	float screen_width;
+	float screen_height;
 } Camera;
 
+// Change to 'Lighting' which holds Light*, num_lights, global lighting etc.
 typedef struct Light {
 	Vec3f direction;
 	Vec4f color;
 } Light;
 
-typedef struct Scene {
-	Camera *cam;
-	GameObject **gos;
-	int num_gos;
-	Light light;
-} Scene;
+typedef struct Scene Scene;
+
+Scene*      scene_init();
+void        scene_uninit(Scene* scene);
+int         scene_get_num_gos(Scene* scene);
+Light*      scene_get_light(Scene* scene, int light_idx);
+Camera*     scene_get_camera(Scene* scene);
+int         scene_add_game_object(Scene* scene, GameObject* go); // returns go id
+GameObject* scene_get_game_object(Scene* scene, int go_idx);
+void        scene_delete_game_object(Scene* scene);
+void        scene_uninit(Scene* scene);
+
+GameObject* game_object_create(Transform tr, Mesh* mesh, Material* mat);
 
 Transform transform_create(Vec3f pos, Quat rot, Vec3f scale);
-Scene* scene_create(Camera* cam, GameObject** gos, int num_gos, Light light);
 Camera* camera_create(Transform tr);
 Transform transform_default();
+
 void camera_set_fov_degrees(Camera* cam, float fov_degrees);
 void camera_set_near(Camera* cam, float near);
 void camera_set_far(Camera* cam, float far);
-GameObject* game_object_create(Transform tr, Mesh* mesh, Material* mat);
 
 #endif

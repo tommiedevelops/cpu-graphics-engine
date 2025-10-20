@@ -5,7 +5,7 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include "primitive.h"
+#include "triangle.h"
 #include "constants.h"
 #include "vector.h"
 typedef struct Plane4 Plane4;

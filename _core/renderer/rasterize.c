@@ -6,7 +6,7 @@
 #include "constants.h"
 #include "lighting.h"
 #include "material.h"
-#include "primitive.h"
+#include "triangle.h"
 #include "barycentric.h"
 #include "bounds.h"
 

@@ -1,4 +1,3 @@
-
 #include "vector.h"
 #include "constants.h"
 

@@ -3,10 +3,10 @@
 
 typedef struct Material Material;
 
-static inline Vec3f compute_tri_normal(Triangle tri) {
-	Vec3f v0 = vec4f_to_vec3f(tri.v[0].pos);
-	Vec3f v1 = vec4f_to_vec3f(tri.v[1].pos);
-	Vec3f v2 = vec4f_to_vec3f(tri.v[2].pos);
+static inline Vec3f compute_tri_normal(Triangle* tri) {
+	Vec3f v0 = vec4f_to_vec3f(tri->v[0].pos);
+	Vec3f v1 = vec4f_to_vec3f(tri->v[1].pos);
+	Vec3f v2 = vec4f_to_vec3f(tri->v[2].pos);
 	Vec3f x = vec3f_add(v0, vec3f_scale(v1, -1.0f));
 	Vec3f y = vec3f_add(v0, vec3f_scale(v2, -1.0f));
 	Vec3f n = vec3f_cross(x,y);
@@ -23,10 +23,10 @@ Vec3f compute_eyesight_vector(Vec3f cam_pos, Vec3f origin){
 	return vec3f_normalize(vec3f_add(cam_pos, vec3f_scale(origin, -1.0f)));	
 }
 
-Vec4f compute_specular(float exponent, Vec4f light_col, Vec3f norm, Vec3f cam_pos, Vec3f light_dir, Triangle tri){	
+Vec4f compute_specular(float exponent, Vec4f light_col, Vec3f norm, Vec3f cam_pos, Vec3f light_dir, Triangle* tri){	
 	// current heuristic: select random vertex as origin for eye vec
 	
-	Vec3f e = compute_eyesight_vector(cam_pos, vec4f_to_vec3f(tri.v[0].pos));
+	Vec3f e = compute_eyesight_vector(cam_pos, vec4f_to_vec3f(tri->v[0].pos));
 	Vec3f r = compute_reflection_vector(light_dir, norm);
 	float r_dot_e = fmaxf(vec3f_dot(r,e), 0.0f);
 	float specular = pow(r_dot_e,exponent); 
@@ -43,16 +43,4 @@ Vec4f compute_diffuse(Vec4f albedo, Vec3f light_dir, Vec4f light_col, Vec3f norm
 	diffuse.z = diffuse.z * albedo.z;
 	return diffuse;
 }
-
-void precompute_lighting(Material* mat, Triangle tri, Scene* scene){
-	Vec3f norm = compute_tri_normal(tri);
-	Vec3f light_dir = vec3f_normalize(scene->light.direction);
-	Vec4f albedo = material_get_albedo(mat, VEC2F_0);
-	Vec4f diffuse = compute_diffuse(albedo,scene->light.direction, scene->light.color, norm);
-	float specular_intensity = 32.0f;
-	Vec4f specular = compute_specular(specular_intensity, scene->light.color, norm, scene->cam->transform.position, scene->light.direction, tri);
-	/* mat->specular = specular; */
-	/* mat->diffuse = diffuse; */
-}
-
 

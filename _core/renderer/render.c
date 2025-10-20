@@ -3,7 +3,7 @@
 
 #include "material.h"
 #include "clip.h"
-#include "primitive.h"
+#include "triangle.h"
 #include "vector.h"
 #include "transformation.h"
 #include "scene_manager.h"
@@ -130,12 +130,13 @@ void render_game_object(uint32_t* framebuffer, float* zbuffer, Light* lights, in
 
 void render_scene(uint32_t* framebuffer, float* zbuffer, Scene* scene) {
 	
-	for(int i = 0; i < scene->num_gos; i++) {
-		GameObject* go = scene->gos[i];
-		Camera* cam = scene->cam;
-		Light* lights = &scene->light;
-		int num_lights = 1; // CHANGE
-		render_game_object(framebuffer, zbuffer, lights, num_lights, cam, go);
+	int num_gos = scene_get_num_gos(scene);
+
+	for(int i = 0; i < num_gos; i++) {
+		GameObject* go = scene_get_game_object(scene, i);
+		Camera* cam = scene_get_camera(scene);
+		Light* lighting = scene_get_light(scene, 0);		
+		render_game_object(framebuffer, zbuffer, lighting, 1, cam, go);
 	}
 }
 
