@@ -37,7 +37,7 @@ static inline bool inside_triangle(BaryCoords b){
 	return (b.alpha > 0) && (b.beta > 0) && (b.gamma > 0) && (b.alpha <= 1) && (b.beta <= 1) && (b.gamma <= 1);
 }
 
-void rasterize_triangle(Triangle* tri, Light* lights, Material* mat, FrameBuffer* fb) {
+void rasterize_triangle(Triangle* tri, Lighting* lgt, Material* mat, FrameBuffer* fb) {
 
 	Vertex v0 = tri->v[0];
 	Vertex v1 = tri->v[1];
@@ -63,8 +63,9 @@ void rasterize_triangle(Triangle* tri, Light* lights, Material* mat, FrameBuffer
 				Vec2f uv = vec2f_scale(uv_over_w, 1.0f/w_inv);
 				Vec3f n = bary_interpolate_vec3f(b,v0.n, v1.n, v2.n);
 
+				Light* light = lighting_get_light(lgt, 0); 
 				Vec4f diffuse = 
-				compute_diffuse(material_get_albedo(mat,uv), lights->direction, lights->color, n);
+				compute_diffuse(material_get_albedo(mat,uv), light->direction, light->color, n);
 
 				frame_buffer_draw_pixel(fb, x, y, vec4f_to_rgba32(diffuse), depth);
 			} 

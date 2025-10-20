@@ -43,7 +43,7 @@ int scene_get_num_gos(Scene* scene) {
 	return scene->go_len;
 }
 
-Lighting* scene_get_lightign(Scene* scene){
+Lighting* scene_get_lighting(Scene* scene){
 	return scene->lighting;
 }
 

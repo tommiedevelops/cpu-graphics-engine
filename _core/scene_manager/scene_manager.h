@@ -36,6 +36,7 @@ typedef struct Scene Scene;
 Scene*      scene_init();
 void        scene_uninit(Scene* scene);
 int         scene_get_num_gos(Scene* scene);
+Lighting*   scene_get_lighting(Scene* scene);
 Light*      scene_get_light(Scene* scene, int light_idx);
 int         scene_add_light(Scene* scene, Light* light);
 Camera*     scene_get_camera(Scene* scene);
