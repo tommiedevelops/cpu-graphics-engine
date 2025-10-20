@@ -3,12 +3,12 @@
 
 typedef struct Vec4f Vec4f;
 
-typedef struct FragShaderInput {
-} FragShaderInput;
+typedef struct FSin {
+} FSin;
 
 typedef struct FragShader {
-	FragShaderInput input;
-	Vec4f (*shade)(FragShaderInput input);
+	FSin* in;
+	Vec4f (*shade)(const FSin* in);
 } FragShader;
 
 #endif 
