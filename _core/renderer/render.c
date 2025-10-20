@@ -79,15 +79,6 @@ void assemble_triangle(Triangle* tri, int tri_idx, const RenderData* data){
 
 }
 
-void precompute_interpolated_values(Triangle* tri) {
-	tri->v[0].w_inv = (float)1.0f/tri->v[0].pos.w;
-	tri->v[1].w_inv = (float)1.0f/tri->v[1].pos.w;
-	tri->v[2].w_inv = (float)1.0f/tri->v[2].pos.w;
-
-	tri->v[0].uv_over_w = vec2f_scale(tri->v[0].uv, tri->v[0].w_inv);
-	tri->v[1].uv_over_w = vec2f_scale(tri->v[1].uv, tri->v[0].w_inv);
-	tri->v[2].uv_over_w = vec2f_scale(tri->v[2].uv, tri->v[0].w_inv);
-}
 
 void render_game_object(uint32_t* framebuffer, float* zbuffer, Light* lights, int num_lights, Camera* cam, GameObject* go){
 		
@@ -118,7 +109,7 @@ void render_game_object(uint32_t* framebuffer, float* zbuffer, Light* lights, in
 			int num_tris = clip_tri(&tri, clip_result);
 
 			for(int k = 0; k < num_tris; k++){
-				precompute_interpolated_values(&clip_result[k]);			
+				tri_precompute_interpolated_values(&clip_result[k]);			
 				tri_apply_perspective_divide(&clip_result[k]); // divide (x,y,z,w) by w
 				tri_apply_transformation(view_port, &clip_result[k]);
 				rasterize_triangle(&clip_result[k], lights, data.mat, framebuffer, zbuffer);

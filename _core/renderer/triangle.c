@@ -27,3 +27,13 @@ void tri_apply_transformation(Mat4 tr, Triangle* tri) {
 	tri->v[2].pos = mat4_mul_vec4(tr, tri->v[2].pos);
 }	
 
+
+void tri_precompute_interpolated_values(Triangle* tri) {
+	tri->v[0].w_inv = (float)1.0f/tri->v[0].pos.w;
+	tri->v[1].w_inv = (float)1.0f/tri->v[1].pos.w;
+	tri->v[2].w_inv = (float)1.0f/tri->v[2].pos.w;
+
+	tri->v[0].uv_over_w = vec2f_scale(tri->v[0].uv, tri->v[0].w_inv);
+	tri->v[1].uv_over_w = vec2f_scale(tri->v[1].uv, tri->v[0].w_inv);
+	tri->v[2].uv_over_w = vec2f_scale(tri->v[2].uv, tri->v[0].w_inv);
+}
