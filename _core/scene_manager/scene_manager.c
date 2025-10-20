@@ -19,13 +19,6 @@ typedef struct Scene {
 
 } Scene;
 
-Light* light_default() {
-	Light* light = malloc(sizeof(Light));
-	light->direction = vec3f_scale(VEC3F_1, -1.0f);
-	light->color = VEC4F_1;
-	return light;
-}
-
 Scene* scene_init() {
 
 	Camera* cam = camera_create(transform_default());
@@ -63,30 +56,6 @@ Camera* scene_get_camera(Scene* scene) {
 	return scene->cam;
 }
 
-int scene_add_game_object(Scene* scene, GameObject* go)  {
-
-	bool at_capacity = (scene->go_cap == scene->go_len);
-
-	if(!at_capacity) {
-		scene->gos[scene->go_len++] = go;
-		return scene->go_len;
-	}
-
-	int new_cap = scene->go_cap + 2;
-	GameObject** new_array = realloc(scene->gos, new_cap*sizeof(GameObject*));	
-
-	for(int i = 0; i < scene->go_len; i++) new_array[i] = scene->gos[i];
-
-	free(scene->gos);
-	scene->gos = new_array;
-	scene->go_cap = new_cap;
-
-	int go_idx = scene->go_len;
-	scene->gos[go_idx] = go;
-	scene->go_len++;
-	return go_idx;
-}
-
 int scene_add_light(Scene* scene, Light* light) {
 
 	bool at_capacity = (scene->l_cap == scene->l_len);
@@ -119,6 +88,29 @@ Light* scene_get_light(Scene* scene, int l_idx){
 	}
 
 	return scene->lights[l_idx];
+}
+int scene_add_game_object(Scene* scene, GameObject* go)  {
+
+	bool at_capacity = (scene->go_cap == scene->go_len);
+
+	if(!at_capacity) {
+		scene->gos[scene->go_len++] = go;
+		return scene->go_len;
+	}
+
+	int new_cap = scene->go_cap + 2;
+	GameObject** new_array = realloc(scene->gos, new_cap*sizeof(GameObject*));	
+
+	for(int i = 0; i < scene->go_len; i++) new_array[i] = scene->gos[i];
+
+	free(scene->gos);
+	scene->gos = new_array;
+	scene->go_cap = new_cap;
+
+	int go_idx = scene->go_len;
+	scene->gos[go_idx] = go;
+	scene->go_len++;
+	return go_idx;
 }
 
 GameObject* scene_get_game_object(Scene* scene, int go_idx) {

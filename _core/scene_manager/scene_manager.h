@@ -7,6 +7,7 @@
 #include "constants.h"
 #include "material.h"
 #include "mesh.h"
+#include "lighting.h"
 
 // --- STRUCT DEFINITIONS --- 
 typedef struct Transform {
@@ -29,22 +30,6 @@ typedef struct Camera {
 	float screen_width;
 	float screen_height;
 } Camera;
-
-typedef enum LightType {
-	DIRECTIONAL,
-	GLOBAL
-} LightType;
-
-typedef struct Light {
-	LightType type;
-	Vec3f direction;
-	Vec4f color;
-} Light;
-
-typedef struct Lighting {
-	Light* lights;
-	int num_lights;
-} Lighting;
 
 typedef struct Scene Scene;
 
