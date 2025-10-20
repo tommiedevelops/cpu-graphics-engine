@@ -37,7 +37,7 @@ int main(void) {
 		clear_buffers(framebuffer, zbuffer);
 		update_time(&time);
 		app_update_scene(scene, time.delta_time, &event, &running);
-		render_scene(framebuffer, zbuffer, scene);
+		render_scene(framebuffer, zbuffer, scene, NULL);
                 update_window(window_data, framebuffer);
 	}
 

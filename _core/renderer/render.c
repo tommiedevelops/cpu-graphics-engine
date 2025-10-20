@@ -9,6 +9,8 @@
 #include "scene_manager.h"
 
 #include "rasterize.h"
+
+#include "pipeline.h"
 typedef struct RenderData {
 	int num_vertices;
 	Vec3f* vertices;
@@ -95,8 +97,8 @@ void render_game_object(uint32_t* framebuffer, float* zbuffer, Light* lights, in
 		view = get_view_matrix(cam_tr.position, cam_tr.rotation, cam_tr.scale);
 		projection = get_projection_matrix(cam->fov, cam->near, cam->far, (float)HEIGHT/WIDTH);
 		view_port = get_viewport_matrix(cam->near, cam->far, WIDTH, HEIGHT);
-		
 		Triangle clip_result[6] = {0};
+
 		for(int t = 0; t < data.num_triangles; t++) {
 			int tri_idx = 3*t;
 			Triangle tri = {0};
@@ -112,6 +114,7 @@ void render_game_object(uint32_t* framebuffer, float* zbuffer, Light* lights, in
 				tri_precompute_interpolated_values(&clip_result[k]);			
 				tri_apply_perspective_divide(&clip_result[k]); // divide (x,y,z,w) by w
 				tri_apply_transformation(view_port, &clip_result[k]);
+
 				rasterize_triangle(&clip_result[k], lights, data.mat, framebuffer, zbuffer);
 			}
 
@@ -119,7 +122,7 @@ void render_game_object(uint32_t* framebuffer, float* zbuffer, Light* lights, in
 
 }
 
-void render_scene(uint32_t* framebuffer, float* zbuffer, Scene* scene) {
+void render_scene(uint32_t* framebuffer, float* zbuffer, Scene* scene, Pipeline* pl) {
 	
 	int num_gos = scene_get_num_gos(scene);
 
