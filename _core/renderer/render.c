@@ -9,8 +9,9 @@
 #include "scene_manager.h"
 
 #include "rasterize.h"
-
 #include "pipeline.h"
+#include "framebuffer.h"
+
 typedef struct RenderData {
 	int num_vertices;
 	Vec3f* vertices;
@@ -24,33 +25,30 @@ typedef struct RenderData {
 	Material* mat;
 } RenderData;
 
-struct RenderData prepare_render_data(GameObject* go, Camera* cam) {
+typedef struct Renderer { 
+	RenderData* data;
+	Pipeline* pl;		
+	FrameBuffer* fb;
+} Renderer;
 
-	struct RenderData r = {0};
-
-	if(go->mesh == NULL){
-		perror("mesh was null");
-		return r;
-	}
+void renderer_prepare_render_data(RenderData* data, Renderer* r, Lighting* l, GameObject* go, Camera* cam) {
 
 	// Vertex Data
-	r.num_vertices = go->mesh->num_vertices;
-	r.vertices = go->mesh->vertices;
-	r.num_uvs = go->mesh->num_uvs;
-	r.uvs = go->mesh->uvs;
-	r.triangle_uvs = go->mesh->triangle_uvs;
-	r.normals = go->mesh->normals;
-	r.triangle_normals = go->mesh->triangle_normals;
+	data->num_vertices = go->mesh->num_vertices;
+	data->vertices = go->mesh->vertices;
+	data->num_uvs = go->mesh->num_uvs;
+	data->uvs = go->mesh->uvs;
+	data->triangle_uvs = go->mesh->triangle_uvs;
+	data->normals = go->mesh->normals;
+	data->triangle_normals = go->mesh->triangle_normals;
 
 	// Triangle Data
-	r.num_triangles = go->mesh->num_triangles;
-	r.triangles = go->mesh->triangles;
+	data->num_triangles = go->mesh->num_triangles;
+	data->triangles = go->mesh->triangles;
 
 	// Material Data
-	r.mat = material_default();
-	if(go->material != NULL) r.mat = go->material;
-
-	return r;
+	data->mat = material_default();
+	if(go->material != NULL) data->mat = go->material;
 }
 
 void assemble_triangle(Triangle* tri, int tri_idx, const RenderData* data){
@@ -81,10 +79,10 @@ void assemble_triangle(Triangle* tri, int tri_idx, const RenderData* data){
 
 }
 
-
 void render_game_object(uint32_t* framebuffer, float* zbuffer, Light* lights, int num_lights, Camera* cam, GameObject* go){
 		
-		struct RenderData data = prepare_render_data(go, cam);
+		RenderData data = {0};
+		renderer_prepare_render_data(&data, NULL, NULL, go, cam);
 		
 		if(NULL == data.vertices) return; // required
 						  

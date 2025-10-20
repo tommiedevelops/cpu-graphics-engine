@@ -31,10 +31,16 @@ typedef struct Camera {
 } Camera;
 
 // Change to 'Lighting' which holds Light*, num_lights, global lighting etc.
+
 typedef struct Light {
 	Vec3f direction;
 	Vec4f color;
 } Light;
+
+typedef struct Lighting {
+	Light* lights;
+	int num_lights;
+} Lighting;
 
 typedef struct Scene Scene;
 
