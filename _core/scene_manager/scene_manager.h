@@ -30,9 +30,13 @@ typedef struct Camera {
 	float screen_height;
 } Camera;
 
-// Change to 'Lighting' which holds Light*, num_lights, global lighting etc.
+typedef enum LightType {
+	DIRECTIONAL,
+	GLOBAL
+} LightType;
 
 typedef struct Light {
+	LightType type;
 	Vec3f direction;
 	Vec4f color;
 } Light;

@@ -31,7 +31,7 @@ typedef struct Renderer {
 	FrameBuffer* fb;
 } Renderer;
 
-void renderer_prepare_render_data(RenderData* data, Renderer* r, Lighting* l, GameObject* go, Camera* cam) {
+static void prepare_render_data(RenderData* data, Renderer* r, Lighting* l, GameObject* go, Camera* cam) {
 
 	// Vertex Data
 	data->num_vertices = go->mesh->num_vertices;
@@ -82,7 +82,7 @@ void assemble_triangle(Triangle* tri, int tri_idx, const RenderData* data){
 void render_game_object(FrameBuffer* fb, Light* lights, int num_lights, Camera* cam, GameObject* go){
 		
 		RenderData data = {0};
-		renderer_prepare_render_data(&data, NULL, NULL, go, cam);
+		prepare_render_data(&data, NULL, NULL, go, cam);
 		
 		if(NULL == data.vertices) return; // required
 						  

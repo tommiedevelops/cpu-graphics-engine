@@ -10,6 +10,7 @@
 #include "barycentric.h"
 #include "bounds.h"
 #include "framebuffer.h"
+#include "frag_shader.h"
 
 // FROM CHAT-GPT
 static inline uint32_t vec4f_to_rgba32(Vec4f c) {

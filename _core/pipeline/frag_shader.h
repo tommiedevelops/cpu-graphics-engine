@@ -19,4 +19,13 @@ typedef struct FragShader {
 	void (*shade)(const FSin* in, FSout* out, const void* uniforms);
 } FragShader;
 
+typedef struct Material Material;
+typedef struct Triangle Triangle;
+
+Vec3f compute_eyesight_vector(Vec3f cam_pos, Vec3f origin);
+
+Vec4f compute_specular(float exponent, Vec4f light_col, Vec3f norm, Vec3f cam_pos, Vec3f light_dir, Triangle* tri);
+
+Vec4f compute_diffuse(Vec4f albedo, Vec3f light_dir, Vec4f light_col, Vec3f norm);
+
 #endif 
