@@ -9,6 +9,7 @@
 #include "game_time.h"
 #include "framebuffer.h"
 #include "app.h"
+#include "pipeline.h"
 
 #define MAX_Z (100000.0f)
 #define CLEAR_COLOR (0x87CEEBFF)
@@ -22,6 +23,8 @@ int main(void) {
 	time_init(&time);
 
 	FrameBuffer* fb = frame_buffer_create(WIDTH,HEIGHT);
+	Pipeline*     p = pipeline_init();
+	Renderer*     r = renderer_init(p, fb);
 
         struct SDL_Data window_data = initialise_window();
         SDL_Event event;
@@ -31,7 +34,7 @@ int main(void) {
 		frame_buffer_clear(fb, CLEAR_COLOR);
 		update_time(&time);
 		app_update_scene(scene, time.delta_time, &event, &running);
-		render_scene(fb, scene, NULL);
+		renderer_draw_scene(r, scene);
                 update_window(window_data, fb->framebuffer);
 	}
 

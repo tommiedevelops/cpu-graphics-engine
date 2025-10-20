@@ -1,6 +1,7 @@
 #ifndef VERT_SHADER_H
 #define VERT_SHADER_H
 
+#include "vector.h"
 typedef struct VSin {
 	// model space
 	Vec4f pos;
@@ -21,5 +22,7 @@ typedef struct VertShader {
 	VSout* out;
 	void (*shade)(const VSin* in, VSout* out, const void* uniforms);
 } VertShader;
+
+VertShader vert_shader_default();
 
 #endif

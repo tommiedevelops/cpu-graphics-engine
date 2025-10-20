@@ -26,10 +26,31 @@ typedef struct RenderData {
 } RenderData;
 
 typedef struct Renderer { 
-	RenderData* data;
 	Pipeline* pl;		
 	FrameBuffer* fb;
 } Renderer;
+
+Renderer* renderer_init(Pipeline* pl, FrameBuffer* fb) {
+	if(NULL == pl) {
+		printf("Pipeline is required\n");
+		return NULL;
+	}
+
+	if(NULL == fb) {
+		printf("Framebuffer is requried\n");
+		return NULL;
+	}
+
+	Renderer* r = malloc(sizeof(Renderer));
+	r->pl = pl;
+	r->fb = fb;
+	return r;
+}
+
+void renderer_uninit(Renderer* r){
+	// pipeline and framebuffer life cycle not managed by renderer
+	free(r);
+}
 
 static void prepare_render_data(RenderData* data, Renderer* r, Lighting* l, GameObject* go, Camera* cam) {
 
@@ -79,7 +100,7 @@ void assemble_triangle(Triangle* tri, int tri_idx, const RenderData* data){
 
 }
 
-void render_game_object(FrameBuffer* fb, Lighting* lgt, Camera* cam, GameObject* go){
+static void render_game_object(FrameBuffer* fb, Lighting* lgt, Camera* cam, GameObject* go){
 		
 		RenderData data = {0};
 		prepare_render_data(&data, NULL, lgt, go, cam);
@@ -120,7 +141,7 @@ void render_game_object(FrameBuffer* fb, Lighting* lgt, Camera* cam, GameObject*
 
 }
 
-void render_scene(FrameBuffer* fb, Scene* scene, Pipeline* pl) {
+void renderer_draw_scene(Renderer* r, Scene* scene) {
 	
 	int num_gos = scene_get_num_gos(scene);
 
@@ -128,7 +149,7 @@ void render_scene(FrameBuffer* fb, Scene* scene, Pipeline* pl) {
 		GameObject* go = scene_get_game_object(scene, i);
 		Camera* cam = scene_get_camera(scene);
 		Lighting* lighting = scene_get_lighting(scene);
-		render_game_object(fb, lighting, cam, go);
+		render_game_object(r->fb, lighting, cam, go);
 	}
 }
 
