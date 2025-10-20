@@ -37,6 +37,7 @@ Scene*      scene_init();
 void        scene_uninit(Scene* scene);
 int         scene_get_num_gos(Scene* scene);
 Light*      scene_get_light(Scene* scene, int light_idx);
+int         scene_add_light(Scene* scene, Light* light);
 Camera*     scene_get_camera(Scene* scene);
 int         scene_add_game_object(Scene* scene, GameObject* go); // returns go id
 GameObject* scene_get_game_object(Scene* scene, int go_idx);
