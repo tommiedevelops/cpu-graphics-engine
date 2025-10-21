@@ -5,14 +5,14 @@
 #include "vector.h"
 
 typedef struct Texture Texture;
-typedef struct FragShader FragShader;
+typedef struct Pipeline Pipeline;
 
 typedef struct Material {
 	Vec4f color; // fallback color if no texture
 	Texture *tex; // for base
 	Vec4f diffuse;
 	Vec4f specular;
-	FragShader* frag_shader;
+	Pipeline* pipeline;
 } Material;
 
 Material* material_default(){

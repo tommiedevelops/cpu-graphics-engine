@@ -6,10 +6,10 @@
 
 typedef struct Bounds Bounds;
 
-typedef struct Vertex {
-	Vec4f pos;
-	Vec2f uv;
-	Vec3f n;
+typedef struct {
+	Vec4f clip_pos;
+	Vec3f view_pos; // view space for ligthing
+	Vec3f normal;
 	Vec2f uv_over_w;
 	float w_inv;
 } Vertex;

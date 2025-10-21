@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 #define VEC2F_X ((Vec2f){1.0f, 0.0f})
 #define VEC2F_Y ((Vec2f){0.0f, 1.0f})
@@ -75,5 +76,6 @@ bool vec4f_are_about_equal(Vec4f a, Vec4f b, float allowance);
 bool vec3f_are_about_equal(Vec3f a, Vec3f b, float allowance); 
 
 Vec4f vec4f_homogeneous_divide(Vec4f v);
+uint32_t vec4f_to_rgba32(Vec4f c);
 
 #endif

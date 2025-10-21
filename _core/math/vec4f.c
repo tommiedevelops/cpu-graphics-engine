@@ -94,4 +94,20 @@ Vec4f vec4f_translate(Vec4f vector, float dx, float dy, float dz, float dw){
 	vector.w += dw;
 }
 
+uint32_t vec4f_to_rgba32(Vec4f c) {
+    // Clamp
+    float r = c.x < 0 ? 0 : (c.x > 1 ? 1 : c.x);
+    float g = c.y < 0 ? 0 : (c.y > 1 ? 1 : c.y);
+    float b = c.z < 0 ? 0 : (c.z > 1 ? 1 : c.z);
+    float a = c.w < 0 ? 0 : (c.w > 1 ? 1 : c.w);
 
+    uint8_t R = (uint8_t)(r * 255.0f + 0.5f);
+    uint8_t G = (uint8_t)(g * 255.0f + 0.5f);
+    uint8_t B = (uint8_t)(b * 255.0f + 0.5f);
+    uint8_t A = (uint8_t)(a * 255.0f + 0.5f);
+
+    return ((uint32_t)R << 24) |
+           ((uint32_t)G << 16) |
+           ((uint32_t)B << 8)  |
+           ((uint32_t)A);
+}

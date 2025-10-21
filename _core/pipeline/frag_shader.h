@@ -1,18 +1,25 @@
 #ifndef SHADING_H
 #define SHADING_H
 
+typedef struct Light Light;
 typedef struct Vec4f Vec4f;
 
-typedef struct FSin {
+typedef struct {
 	Vec3f frag_pos; // view space
 	Vec3f normal; 
-	Vec2f uv_over_w;
-	float w_inv;
-} FSin;
+	Vec2f uv;
+	float depth;
+} Frag;
 
-typedef struct FSout {
+typedef struct {
 	Vec4f color;
+	float depth;
 } FSout;
+
+typedef {
+	Light** lights;
+	size_t num_lights;
+} FSUniforms;
 
 typedef struct FragShader {
 	FSin* in;
