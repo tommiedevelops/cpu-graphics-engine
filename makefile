@@ -1,8 +1,8 @@
 CC = gcc
 CFLAGS = -I/opt/homebrew/include -I/opt/homebrew/include/SDL2
-LDFLAGS = -L/opt/homebrew/lib -lSDL2 -lm -Iinclude -I_core/math -I_core/renderer -I_core/asset_manager -I_core/scene_manager -I_core/window -I_app/ -I_core -I_core/third_party -I_core/pipeline
+LDFLAGS = -L/opt/homebrew/lib -lSDL2 -lm -Iinclude -I_core/math -I_core/renderer -I_core/asset_manager -I_core/scene_manager -I_core/window -I_app/ -I_core -I_core/third_party 
 DEBUGFLAGS = -fsanitize=address
-SRC_FILES := _core/math/*.c _core/renderer/*.c _core/window/*.c _core/*.c _core/scene_manager/*.c _core/asset_manager/*.c _app/*.c _core/pipeline/*.c
+SRC_FILES := _core/math/*.c _core/renderer/*.c _core/window/*.c _core/*.c _core/scene_manager/*.c _core/asset_manager/*.c _app/*.c 
 TEST_FILES := $(wildcard tests/_core/*.c)
 
 .PHONY: run

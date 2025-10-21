@@ -9,7 +9,8 @@
 #include "game_time.h"
 #include "framebuffer.h"
 #include "app.h"
-#include "pipeline.h"
+#include "vert_shader.h"
+#include "frag_shader.h"
 
 #define MAX_Z (100000.0f)
 #define CLEAR_COLOR (0x87CEEBFF)
@@ -23,7 +24,7 @@ int main(void) {
 	time_init(&time);
 
 	FrameBuffer* fb = frame_buffer_create(WIDTH,HEIGHT);
-	Pipeline*     p = pipeline_init();
+	Pipeline*     p = pipeline_create(vs_default, fs_unlit);
 	Renderer*     r = renderer_init(p, fb);
 
         struct SDL_Data window_data = initialise_window();

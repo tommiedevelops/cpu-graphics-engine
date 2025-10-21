@@ -1,5 +1,20 @@
 #include "triangle.h"
 #include "vector.h"
+#include "frag_shader.h"
+#include "texture.h"
+ 
+void fs_unlit(const FSin* in, FSout* out, const FSUniforms* u){
+
+	Vec4f color;
+	if(u->tex) {
+		color = texture_sample(u->tex, in->uv.x, in->uv.y);
+	} else {
+		color = u->base_color;
+	}
+
+	out->color = color;
+	out->depth = in->depth;
+}
 
 Vec3f compute_reflection_vector(Vec3f l, Vec3f n){
 	float dot = vec3f_dot(l,n);

@@ -8,23 +8,46 @@
 #include "transformation.h"
 #include "scene_manager.h"
 #include "barycentric.h"
-
-#include "pipeline.h"
+#include "vert_shader.h"
+#include "frag_shader.h"
 #include "framebuffer.h"
 
 typedef struct Renderer { 
 	VSUniforms* vs_u;
 	FSUniforms* fs_u;
+	Pipeline* p;
 	FrameBuffer* fb;
 } Renderer;
 
-Renderer* renderer_init(FrameBuffer* fb) {
+typedef struct Pipeline {
+	VertShaderF vs;
+	FragShaderF fs;
+} Pipeline;
+
+Renderer* renderer_init(Pipeline* p, FrameBuffer* fb) {
 	Renderer* r = malloc(sizeof(Renderer));
+	VSUniforms* vs_u = malloc(sizeof(VSUniforms));
+	FSUniforms* fs_u = malloc(sizeof(FSUniforms));
+	r->p = p;	
+	r->vs_u = vs_u;
+	r->fs_u = fs_u;
 	r->fb = fb;
 	return r;
 }
 
-void renderer_uninit(Renderer* r){ free(r); }
+void renderer_uninit(Renderer* r) {
+	if(!r) return;
+	free(r->vs_u);
+	free(r->fs_u);
+	free(r);
+}
+
+Pipeline* pipeline_create(VertShaderF vert_shader, FragShaderF frag_shader) {
+	Pipeline* p = malloc(sizeof(Pipeline));
+	p->vs = vert_shader;
+	p->fs = frag_shader;
+	return p;
+}
 
 static inline bool inside_triangle(BaryCoords b){
 	return (b.alpha > 0) && (b.beta > 0) && (b.gamma > 0) && (b.alpha <= 1) && (b.beta <= 1) && (b.gamma <= 1);
@@ -95,13 +118,17 @@ static void rasterize_triangle(Renderer* r, Triangle* tri, FragShaderF frag_shad
 static void assemble_triangle_inputs(Mesh* mesh, size_t tri_idx, VSin in[3]) {
 
 	for(int i = 0; i < 3; i++){
+
+		const int* tri_uvs = mesh->triangle_uvs;
+		const int* tri_norms = mesh->triangle_normals;
+
 		size_t pos_idx  = mesh->triangles[tri_idx + i];
-		size_t uv_idx   = mesh->triangle_uvs[tri_idx + i];
-		size_t n_idx    = mesh->triangle_normals[tri_idx + i];
+		size_t uv_idx   = tri_uvs ? mesh->triangle_uvs[tri_idx + i] : 0;
+		size_t n_idx    = tri_norms ? mesh->triangle_normals[tri_idx + i] : 0;
 
 		Vec3f pos = mesh->vertices[pos_idx];
-		Vec2f uv  = mesh->uvs ? mesh->uvs[uv_idx] : VEC2F_0;
-		Vec3f n   = mesh->normals ? mesh->normals[n_idx] : VEC3F_0;
+		Vec2f uv  = (mesh->uvs && tri_uvs) ? mesh->uvs[uv_idx] : VEC2F_0;
+		Vec3f n   = (mesh->normals && tri_norms) ? mesh->normals[n_idx] : VEC3F_0;
 		
 		in[i].pos = pos;
 		in[i].n = n;
@@ -125,7 +152,10 @@ void renderer_draw_triangle(Renderer* r, Mesh* mesh, Material* mat, size_t tri_i
 
 	VSin in[3]; 
 	VSout out[3];
-	Pipeline* p = material_get_pipeline(mat);
+
+	const Pipeline* mat_p = material_get_pipeline(mat);
+	const Pipeline* p = mat_p ? mat_p : r->p; 
+
 	const VertShaderF vert_shader = p->vs;
 	const FragShaderF frag_shader = p->fs;
 	const VSUniforms* vs_u = r->vs_u;
@@ -165,25 +195,28 @@ void renderer_draw_scene(Renderer* r, Scene* scene) {
 	const Mat4 proj     = get_projection_matrix(cam->fov, cam->near, cam->far, aspect);
 	const Mat4 viewport = get_viewport_matrix(cam->near, cam->far, width, height);
 
-	r->vs_u->view     = view;
-	r->vs_u->proj     = proj;
-	r->vs_u->viewport = viewport;
-	r->fs_u->lights = scene_get_lighting(scene)->lights;
+	r->vs_u->view       = view;
+	r->vs_u->proj       = proj;
+	r->vs_u->viewport   = viewport;
+
+	r->fs_u->lights     = scene_get_lighting(scene)->lights;
+
 	r->fs_u->num_lights = scene_get_lighting(scene)->len;
-
-
 
 	const size_t count = scene_get_num_gos(scene);
 
 	for(size_t i = 0; i < count; i++) {
 		GameObject* go = scene_get_game_object(scene, i);
 		if(!go || !go->mesh || !go->material) continue;
-		
+			
 		const Transform* tr = &go->transform;
 		Mat4 model = get_model_matrix(tr->position, tr->rotation, tr->scale);
 
-		//TODO assign fs_U params based on Material
+		r->fs_u->base_color = material_get_base_color(go->material);
+		r->fs_u->tex = material_get_texture(go->material);
+
 		renderer_draw_mesh(r, go->mesh, go->material);
 	}
+
 }
 

@@ -6,7 +6,6 @@
 #include "matrix.h"
 
 typedef struct VSin {
-	// model space
 	Vec3f pos;
 	Vec3f n;
 	Vec2f uv;
@@ -26,6 +25,8 @@ typedef struct {
     Mat4 proj;
     Mat4 viewport;
 } VSUniforms;
+
+typedef void (*VertShaderF)(const VSin* in, VSout* out, const VSUniforms* u);
 
 void vs_default(const VSin* in, VSout* out, const VSUniforms* uniforms);
 

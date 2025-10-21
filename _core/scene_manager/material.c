@@ -19,6 +19,7 @@ Material* material_default(){
 	Material* mat = malloc(sizeof(Material));
 	memset(mat,0x0,sizeof(Material));
 	mat->color = VEC4F_1;
+	mat->pipeline = NULL;
 	return mat;
 }
 
@@ -26,7 +27,16 @@ struct Material* material_create(Vec4f color, struct Texture* tex){
 	struct Material* mat = malloc(sizeof(struct Material));
 	mat->color = color;
 	mat->tex = tex;
+	mat->pipeline = NULL;
 	return mat;
+}
+
+Vec4f material_get_base_color(Material* mat) {
+	return mat->color;
+}
+
+Texture* material_get_texture(Material* mat) {
+	return mat->tex;
 }
 
 Vec4f material_get_albedo(struct Material* mat, Vec2f uv) {
