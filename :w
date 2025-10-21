@@ -32,7 +32,7 @@ static inline bool inside_triangle(BaryCoords b){
 
 static bool rasterize_pixel(int x, int y, const Triangle* tri, FSin* out) {
 
-	VSout* const* v = tri->v;
+	VSout** v = tri->v;
 
 	Vec2f A = (Vec2f){v[0]->pos.x, v[0]->pos.y};
 	Vec2f B = (Vec2f){v[1]->pos.x, v[1]->pos.y};
@@ -158,20 +158,17 @@ void renderer_draw_scene(Renderer* r, Scene* scene) {
 	const int height   = r->fb->height;
 	const float aspect = (float)height/(float)width;
 
-	const Camera* cam = scene_get_camera(scene);
-	const Transform* cam_tr = &cam->transform;
+
+	const Transform* cam_tr = &scene_get_camera(scene)->transform;
 
 	const Mat4 view     = get_view_matrix(cam_tr->position, cam_tr->rotation, cam_tr->scale);
 	const Mat4 proj     = get_projection_matrix(cam->fov, cam->near, cam->far, aspect);
 	const Mat4 viewport = get_viewport_matrix(cam->near, cam->far, width, height);
 
-	r->vs_u->view     = view;
-	r->vs_u->proj     = proj;
-	r->vs_u->viewport = viewport;
-	r->fs_u->lights = scene_get_lighting(scene)->lights;
-	r->fs_u->num_lights = scene_get_lighting(scene)->len;
-
-
+	r->vs_u.view     = view;
+	r->vs_u.proj     = proj;
+	r->vs_u.viewport = viewport;
+	r->fs_u.lighting = scene_get_lighting(scene);
 
 	const size_t count = scene_get_num_gos(scene);
 

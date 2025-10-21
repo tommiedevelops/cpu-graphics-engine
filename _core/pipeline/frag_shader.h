@@ -9,22 +9,17 @@ typedef struct {
 	Vec3f normal; 
 	Vec2f uv;
 	float depth;
-} Frag;
+} FSin;
 
 typedef struct {
 	Vec4f color;
 	float depth;
 } FSout;
 
-typedef {
+typedef struct {
 	Light** lights;
 	size_t num_lights;
 } FSUniforms;
-
-typedef struct FragShader {
-	FSin* in;
-	void (*shade)(const FSin* in, FSout* out, const void* uniforms);
-} FragShader;
 
 typedef struct Material Material;
 typedef struct Triangle Triangle;

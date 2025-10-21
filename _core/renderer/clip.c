@@ -1,6 +1,7 @@
 #include "clip.h"
 #include "lerp.h"
 #include "plane.h"
+#include "vert_shader.h"
 
 static inline void copy_uvs(Vec2f* from, Vec2f* to, int num_verts){
 	for(int i = 0; i < num_verts; i++){
@@ -103,8 +104,8 @@ int clip_tri(const Triangle* tri, Triangle* tris_out){
 
 	int in_n = 3, out_n = 0;
 
-	for(int i = 0; i <= 2; i++) in[i] = tri->v[i].pos;
-	for(int i = 0; i <= 2; i++) in_uv[i] = tri->v[i].uv;
+	for(int i = 0; i <= 2; i++) in[i] = tri->v[i]->pos;
+	for(int i = 0; i <= 2; i++) in_uv[i] = tri->v[i]->uv_over_w;
 
 	Plane4 planes[6];
 	int num_planes = 6;
@@ -123,12 +124,12 @@ int clip_tri(const Triangle* tri, Triangle* tris_out){
 	
 	for(int k = 0; k < num_tris; k++){
 		tris_out[k] = *tri;
-		tris_out[k].v[0].pos = out[0];
-		tris_out[k].v[1].pos = out[k+1];
-		tris_out[k].v[2].pos = out[k+2];	
-		tris_out[k].v[0].uv = out_uv[0];
-		tris_out[k].v[1].uv = out_uv[k+1];
-		tris_out[k].v[2].uv = out_uv[k+2];
+		tris_out[k].v[0]->pos = out[0];
+		tris_out[k].v[1]->pos = out[k+1];
+		tris_out[k].v[2]->pos = out[k+2];	
+		tris_out[k].v[0]->uv_over_w = out_uv[0];
+		tris_out[k].v[1]->uv_over_w = out_uv[k+1];
+		tris_out[k].v[2]->uv_over_w = out_uv[k+2];
 	}
 
 	return num_tris;

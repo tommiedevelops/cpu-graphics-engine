@@ -42,3 +42,6 @@ Vec4f material_get_albedo(struct Material* mat, Vec2f uv) {
 	return texture_sample(mat->tex, uv.x, uv.y);
 }
 
+Pipeline* material_get_pipeline(Material* mat) {
+	return mat->pipeline;
+}

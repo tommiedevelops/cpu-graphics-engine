@@ -4,9 +4,11 @@ typedef struct Vec4f Vec4f;
 typedef struct Vec2f Vec2f;
 typedef struct Material Material;
 typedef struct Texture Texture;
+typedef struct Pipeline Pipeline;
 
 struct Material* material_default(); 
-Material* material_create(Vec4f color, struct Texture* tex);
-Vec4f material_get_albedo(struct Material* mat, Vec2f uv);
+Material* material_create(Vec4f color, Texture* tex);
+Vec4f material_get_albedo(Material* mat, Vec2f uv);
+Pipeline* material_get_pipeline(Material* mat);
 
 #endif

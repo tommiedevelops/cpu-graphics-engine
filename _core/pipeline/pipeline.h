@@ -9,7 +9,7 @@ typedef void (*FragShaderF)(const FSin* in, FSout* out, const FSUniforms* u);
 
 typedef struct Pipeline {
 	VertShaderF vs;
-	FragShadaer fs;
+	FragShaderF fs;
 } Pipeline;
 
 Pipeline* pipeline_init();

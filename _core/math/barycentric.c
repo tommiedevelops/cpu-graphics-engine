@@ -17,20 +17,20 @@ BaryCoords cartesian_to_bary(Vec2f A, Vec2f B, Vec2f C, Vec2f P) {
 	return (BaryCoords){alpha, beta, gamma};
 }
 
-float bary_interpolate_float(BaryCoords b, float v0, float v1, float v2) {
+float bary_mix1(BaryCoords b, float v0, float v1, float v2) {
 	return v0*b.alpha + v1*b.beta + v2*b.gamma;	
 }
 
-Vec2f bary_interpolate_vec2f(BaryCoords b, Vec2f v0, Vec2f v1, Vec2f v2) {
-	float rx = bary_interpolate_float(b, v0.x, v1.x, v2.x); 
-	float ry = bary_interpolate_float(b, v0.y, v1.y, v2.y);
+Vec2f bary_mix2(BaryCoords b, Vec2f v0, Vec2f v1, Vec2f v2) {
+	float rx = bary_mix1(b, v0.x, v1.x, v2.x); 
+	float ry = bary_mix1(b, v0.y, v1.y, v2.y);
 	return (Vec2f){rx,ry};
 }
 
-Vec3f bary_interpolate_vec3f(BaryCoords b, Vec3f v0, Vec3f v1, Vec3f v2) {
-	float rx = bary_interpolate_float(b, v0.x, v1.x, v2.x); 
-	float ry = bary_interpolate_float(b, v0.y, v1.y, v2.y);
-	float rz = bary_interpolate_float(b, v0.z, v1.z, v2.z);
+Vec3f bary_mix3(BaryCoords b, Vec3f v0, Vec3f v1, Vec3f v2) {
+	float rx = bary_mix1(b, v0.x, v1.x, v2.x); 
+	float ry = bary_mix1(b, v0.y, v1.y, v2.y);
+	float rz = bary_mix1(b, v0.z, v1.z, v2.z);
 	return (Vec3f){rx,ry,rz};
 }
 
