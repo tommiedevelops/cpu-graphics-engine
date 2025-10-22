@@ -14,9 +14,9 @@ clean:
 run:
 	ASAN_OPTIONS=detect_leaks=1:leak_check_at_exit=0 ./_core/build/window
 tbuild:
-		$(CC) $(TEST_FILES) $(SRC_FILES) $(LDFLAGS) -I_tests/include $(DEBUGFLAGS) -o ./_tests/build/testing $(CFLAGS) $(LDFLAGS)
+		$(CC) $(TEST_FILES) $(SRC_FILES) $(LDFLAGS) -Itests/include $(DEBUGFLAGS) -o ./tests/build/testing $(CFLAGS) $(LDFLAGS)
 trun:
-		ASAN_OPTIONS=detect_leaks=1:leak_check_at_exit=0 ./_tests/build/testing
+		ASAN_OPTIONS=detect_leaks=1:leak_check_at_exit=0 ./tests/build/testing
 docs:
 	pdflatex docs/docs-latex/main.tex
 	latexmk -pdf -pvc docs/docs-latex/main.tex 

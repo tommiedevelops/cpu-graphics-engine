@@ -154,7 +154,7 @@ void renderer_draw_triangle(Renderer* r, Mesh* mesh, Material* mat, size_t tri_i
 	VSout out[3];
 
 	const Pipeline* mat_p = material_get_pipeline(mat);
-	const Pipeline* p = mat_p ? mat_p : r->p; 
+	const Pipeline* p     = mat_p ? mat_p : r->p; 
 
 	const VertShaderF vert_shader = p->vs;
 	const FragShaderF frag_shader = p->fs;
@@ -198,9 +198,7 @@ void renderer_draw_scene(Renderer* r, Scene* scene) {
 	r->vs_u->view       = view;
 	r->vs_u->proj       = proj;
 	r->vs_u->viewport   = viewport;
-
 	r->fs_u->lights     = scene_get_lighting(scene)->lights;
-
 	r->fs_u->num_lights = scene_get_lighting(scene)->len;
 
 	const size_t count = scene_get_num_gos(scene);
@@ -213,7 +211,7 @@ void renderer_draw_scene(Renderer* r, Scene* scene) {
 		Mat4 model = get_model_matrix(tr->position, tr->rotation, tr->scale);
 
 		r->fs_u->base_color = material_get_base_color(go->material);
-		r->fs_u->tex = material_get_texture(go->material);
+		r->fs_u->tex        = material_get_texture(go->material);
 
 		renderer_draw_mesh(r, go->mesh, go->material);
 	}
