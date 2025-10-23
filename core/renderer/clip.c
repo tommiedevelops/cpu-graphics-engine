@@ -82,15 +82,18 @@ static void swap_ptrs(VSout** ptr_1, VSout** ptr_2){
 	ptr_2 = temp;
 }
 
-static int clip_poly_against_planes(const Plane4* planes, int planes_n, VSout** clip_in, const int num_inputs, VSout** clip_out) {
-			
-	int in_n = num_inputs;
+static inline void copy_vals(VSout** to, VSout** from, int n){
+	for(size_t i = 0; i < n; i++) to[i] = from[i];
+}
 
+static int clip_poly_against_planes(const Plane4* planes, int planes_n, VSout** clip_in, int in_n, VSout** clip_out) {
+			
 	int out_n;
+	
 	for(size_t i = 0; i < planes_n; i++){
 		out_n = clip_poly_against_plane(clip_in, in_n, planes[i], clip_out);
 		in_n = out_n;
-		swap_ptrs(clip_in, clip_out);
+		copy_vals(clip_in, clip_out, out_n);
 	}
 
 	return out_n;
@@ -118,8 +121,8 @@ int clip_tri(const Triangle* tri, Triangle* tris_out){
 
 	int in_n = 3;
 
-	VSout* clip_in[9];
-	VSout* clip_out[9];
+	VSout* clip_in[9] = {0};
+	VSout* clip_out[9] = {0};
 
 	prepare_clip_input(tri, clip_in);
 
