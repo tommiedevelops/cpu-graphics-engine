@@ -3,12 +3,6 @@
 #include "plane.h"
 #include "vert_shader.h"
 
-static inline void copy_vals(Vec4f* from, Vec4f* to, int num_verts){
-	for(int i = 0; i < num_verts; i++){
-		to[i] = from[i];
-	}
-}
-
 static void lerp_vertex(const VSout* u, const VSout* v, VSout* res, float t) {
 	// clamp t
 	t = (t > 1.0f) ? 1.0f : t;
@@ -52,28 +46,33 @@ static void clip_edge_against_plane(VSout* s, VSout* e, Plane4 P, VSout** clip_o
 
 	const bool sIn = plane4_inside(P,s->pos);
 	const bool eIn = plane4_inside(P,e->pos);
-	const bool intersects_plane = (sIn != eIn);
+	const float t = plane4_compute_intersect_t(P,s->pos,e->pos);
 
-	if(intersects_plane) {
-		const float t = plane4_compute_intersect_t(P,s->pos,e->pos);
-		lerp_vertex(s,e,s,t); //write intersection to s
-		clip_out[*out_n++] = s;
-		if(eIn) clip_out[*out_n++] = e;
-		return;
-	} 
+	if(sIn && eIn) clip_out[(*out_n)++] = e;
 
-	if(sIn && eIn) clip_out[*out_n++] = e;
+	if(sIn && !eIn) {
+		lerp_vertex(s,e,s,t);
+		clip_out[(*out_n)++] = s;
+	}
+
+	if(!sIn && eIn) {
+		lerp_vertex(s,e,s,t);
+		clip_out[(*out_n)++] = s;
+		clip_out[(*out_n)++] = e;
+	}
 
 }
 
-void clip_poly_against_plane(VSout** clip_in, int in_n, Plane4 P, VSout** clip_out, int* out_n){
+int clip_poly_against_plane(VSout** clip_in, int in_n, Plane4 P, VSout** clip_out){
 
+	int out_n = 0;
 	for(int v = 0; v < in_n; v++) {
 		VSout* s = clip_in[v];
 		VSout* e = clip_in[(v+1)%in_n];
-		clip_edge_against_plane(s, e, P, clip_out, out_n);
+		clip_edge_against_plane(s, e, P, clip_out, &out_n);
 	}
 
+	return out_n;
 }
 
 static void swap_ptrs(VSout** ptr_1, VSout** ptr_2){
@@ -83,19 +82,17 @@ static void swap_ptrs(VSout** ptr_1, VSout** ptr_2){
 	ptr_2 = temp;
 }
 
-static int clip_poly_against_planes(const Plane4* planes, int planes_n, VSout** clip_in, int in_n, VSout** clip_out) {
+static int clip_poly_against_planes(const Plane4* planes, int planes_n, VSout** clip_in, const int num_inputs, VSout** clip_out) {
+			
+	int in_n = num_inputs;
 
-	VSout** A = clip_in;
-	VSout** B = clip_out;
-	
-	int out_n = 0;
+	int out_n;
 	for(size_t i = 0; i < planes_n; i++){
-		clip_poly_against_plane(A, in_n, planes[i], B, &out_n);
-		swap_ptrs(A,B);
+		out_n = clip_poly_against_plane(clip_in, in_n, planes[i], clip_out);
 		in_n = out_n;
+		swap_ptrs(clip_in, clip_out);
 	}
 
-	clip_out = A; // Because I know there are an even number of planes
 	return out_n;
 }
 

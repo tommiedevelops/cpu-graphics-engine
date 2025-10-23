@@ -1,4 +1,3 @@
-_core/build/
-_tests/build/
-models/
+build/*
+models/*
 *.swp
