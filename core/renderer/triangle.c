@@ -2,8 +2,9 @@
 #include "bounds.h"
 #include "vert_shader.h"
 
-Bounds tri_get_bounds(const Triangle* tri){
-	Bounds bounds = BOUNDS_DEFAULT;
+Bounds3 tri_get_bounds(const Triangle* tri){
+	Bounds3 bounds = BOUNDS_DEFAULT;
+
 	for(int i = 0; i <= 2; i++){
 		if(tri->v[i]->pos.x > bounds.xmax) {bounds.xmax = tri->v[i]->pos.x;}
 		if(tri->v[i]->pos.y > bounds.ymax) {bounds.ymax = tri->v[i]->pos.y;}
@@ -13,6 +14,7 @@ Bounds tri_get_bounds(const Triangle* tri){
 		if(tri->v[i]->pos.z < bounds.zmin) {bounds.zmin = tri->v[i]->pos.z;}
 
 	}
+
 	return bounds;
 }
 
