@@ -166,10 +166,9 @@ void renderer_draw_triangle(Renderer* r, Mesh* mesh, Material* mat, size_t tri_i
 	Triangle tri = {&out[0], &out[1], &out[2]};
 	Triangle clip_result[6] = {0};
 
-	//int num_tris = earlip_tri(&tri, clip_result); 
+	int num_tris = clip_tri(&tri, clip_result);
 	//if(num_tris <= 0) return;
 
-	int num_tris = 1; clip_result[0] = tri;
 	process_clip_and_rasterize(r, clip_result, num_tris, frag_shader);
 }
 

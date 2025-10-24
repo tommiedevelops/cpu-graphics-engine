@@ -153,8 +153,8 @@ void update_scene(Scene* scene, float dt, SDL_Event* event, bool* running){
 
 	Quat q_yaw = quat_angle_axis(yaw, VEC3F_Y);
 
-//	cam->transform.rotation = quat_mul(q_yaw, cam->transform.rotation);
-//	quat_normalize(cam->transform.rotation);
+	cam->transform.rotation = quat_mul(q_yaw, cam->transform.rotation);
+	quat_normalize(cam->transform.rotation);
 
 	// camera translation
 	Vec3f fwd_delta = vec3f_scale(forward, ed.move_input.y);

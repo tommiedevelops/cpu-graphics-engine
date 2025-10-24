@@ -3,18 +3,59 @@
 #include "plane.h"
 #include "vert_shader.h"
 
-static void lerp_vertex(const VSout* u, const VSout* v, VSout* res, float t) {
-	// clamp t
-	t = (t > 1.0f) ? 1.0f : t;
-	t = (t < 0.0f) ? 0.0f : t;
-	res->pos = lerp_vec4f(u->pos, v->pos, t);
-	res->view_pos = lerp_vec3f(u->view_pos, v->view_pos, t);
-	res->normal = lerp_vec3f(u->normal, v->normal, t);
-	res->uv_over_w = lerp_vec2f(u->uv_over_w, v->uv_over_w, t);
-	res->w_inv = lerp_float(u->w_inv, v->w_inv, t);
+static inline void copy_vals(Vec4f* from, Vec4f* to, int num_verts){
+	for(int i = 0; i < num_verts; i++){
+		to[i] = from[i];
+	}
 }
 
-static void prepare_clipping_planes(struct Plane4* planes){
+int clip_against_plane(Vec4f* in, int in_n, Plane4 P, Vec4f* out){
+	// assuming verts represents a convex polygon that is in clockwise order
+	if(in_n == 0) return 0;
+	copy_vals(in,out,in_n);					
+	
+	int n = 0;
+	for(int v = 0; v < in_n; v++){
+
+		Vec4f s = in[v];
+		Vec4f e = in[(v+1)%in_n];
+
+		bool sIn = plane4_inside(P,s);
+		bool eIn = plane4_inside(P,e);
+
+		if(sIn && eIn) {
+			out[n++] = e;	
+		}
+
+		if(sIn && !eIn){
+
+			float t = plane4_compute_intersect_t(P,s,e);
+			Vec4f i = lerp_vec4f(s,e,t);
+
+			if(!vec4f_are_equal(i,s)) {
+				out[n++] = i;
+			}
+
+		}
+
+		if(!sIn && eIn){
+			float t = plane4_compute_intersect_t(P,s,e);
+			Vec4f i  = lerp_vec4f(s,e,t);
+
+			out[n++] = i;
+			
+			if(!vec4f_are_equal(i,e)) {
+				out[n++] = e;
+			}
+
+		}
+
+	}
+	
+	return n;
+}
+
+static inline void get_clipping_planes(struct Plane4* planes){
 	/* all normals facing 'plane4_inside'*/
 	/* plane4_inside => -w<=x<=w, -w<=y<=w, 0<=z<=w*/
 	//top (y = w)
@@ -42,98 +83,36 @@ static void prepare_clipping_planes(struct Plane4* planes){
 	planes[5].p = vec4f_create(0.0f, 0.0f, 1.0f, 1.0f);
 }
 
-static void clip_edge_against_plane(VSout* s, VSout* e, Plane4 P, VSout** clip_out, int* out_n){
-
-	const bool sIn = plane4_inside(P,s->pos);
-	const bool eIn = plane4_inside(P,e->pos);
-	const float t = plane4_compute_intersect_t(P,s->pos,e->pos);
-
-	if(sIn && eIn) clip_out[(*out_n)++] = e;
-
-	if(sIn && !eIn) {
-		lerp_vertex(s,e,s,t);
-		clip_out[(*out_n)++] = s;
-	}
-
-	if(!sIn && eIn) {
-		lerp_vertex(s,e,s,t);
-		clip_out[(*out_n)++] = s;
-		clip_out[(*out_n)++] = e;
-	}
-
-}
-
-int clip_poly_against_plane(VSout** clip_in, int in_n, Plane4 P, VSout** clip_out){
-
-	int out_n = 0;
-	for(int v = 0; v < in_n; v++) {
-		VSout* s = clip_in[v];
-		VSout* e = clip_in[(v+1)%in_n];
-		clip_edge_against_plane(s, e, P, clip_out, &out_n);
-	}
-
-	return out_n;
-}
-
-static void swap_ptrs(VSout** ptr_1, VSout** ptr_2){
-	VSout** temp;	
-	temp = ptr_1;
-	ptr_1 = ptr_2;
-	ptr_2 = temp;
-}
-
-static inline void copy_vals(VSout** to, VSout** from, int n){
-	for(size_t i = 0; i < n; i++) to[i] = from[i];
-}
-
-static int clip_poly_against_planes(const Plane4* planes, int planes_n, VSout** clip_in, int in_n, VSout** clip_out) {
-			
-	int out_n;
-	
-	for(size_t i = 0; i < planes_n; i++){
-		out_n = clip_poly_against_plane(clip_in, in_n, planes[i], clip_out);
-		in_n = out_n;
-		copy_vals(clip_in, clip_out, out_n);
-	}
-
-	return out_n;
-}
-
-static int construct_triangles(const int out_n, Triangle* tris_out, VSout** clip_out) {
-	// triangle construction through 'fanning' out the polygon
-	int num_tris = out_n - 2; 
-	for(int k = 0; k < num_tris; k++) {
-		tris_out[k].v[0] = clip_out[0];
-		tris_out[k].v[1] = clip_out[k];
-		tris_out[k].v[2] = clip_out[k+1];	
-	}
-}
-
-static inline void prepare_clip_input(const Triangle* tri, VSout** in) {
-	for(int i = 0; i < 3; i++) in[i] = tri->v[i];
-}
-
-// assuming verts represents a convex polygon that is in clockwise order
 int clip_tri(const Triangle* tri, Triangle* tris_out){
+	Vec4f in[9] = {0}, out[9] = {0};
 
-	if(!tri || !tris_out) return 0;
-	if(!tri->v || !tris_out->v) return 0;
+	int in_n = 3, out_n = 0;
 
-	int in_n = 3;
+	for(int i = 0; i <= 2; i++) in[i] = tri->v[i]->pos;
 
-	VSout* clip_in[9] = {0};
-	VSout* clip_out[9] = {0};
+	Plane4 planes[6];
+	int num_planes = 6;
+	get_clipping_planes(planes);
 
-	prepare_clip_input(tri, clip_in);
+	for(int i = 0; i < num_planes && in_n > 0; i++){
+		out_n = clip_against_plane(in,in_n, planes[i], out);
+		memcpy(in,out,out_n*sizeof(Vec4f));	
+		in_n = out_n;
+	}
 
-	int planes_n = 6;
-	Plane4 planes[planes_n];
-	prepare_clipping_planes(planes);
+	if(out_n < 2) return 0;
 
-	int out_n = clip_poly_against_planes(planes, planes_n, clip_in, in_n, clip_out);
-	int num_tris = construct_triangles(out_n, tris_out, clip_out);
+	int num_tris = out_n - 2;
+	
+	for(int k = 0; k < num_tris; k++){
+		tris_out[k] = *tri;
+		tris_out[k].v[0]->pos = out[0];
+		tris_out[k].v[1]->pos = out[k+1];
+		tris_out[k].v[2]->pos = out[k+2];	
+	}
 
 	return num_tris;
+
 }
 
 
