@@ -19,8 +19,7 @@ typedef struct Scene {
 
 Scene* scene_init() {
 
-	Camera* cam = camera_create(transform_default());
-
+	// No camera, No game objects and no lighting
 	int go_len = 0; int go_cap = 2;
 	GameObject** gos = malloc(go_cap*sizeof(GameObject*));
 
@@ -28,9 +27,9 @@ Scene* scene_init() {
 
 	Scene* scene = malloc(sizeof(Scene));
 
-	if(!scene || !cam || !gos || !lighting) return NULL;
+	if(!scene || !gos || !lighting) return NULL;
 
-	scene->cam = cam;	
+	scene->cam = NULL;	
 	scene->gos = gos;
 	scene->go_len = go_len;
 	scene->go_cap = go_cap;
@@ -49,6 +48,10 @@ Lighting* scene_get_lighting(Scene* scene){
 
 Camera* scene_get_camera(Scene* scene) {
 	return scene->cam;
+}
+
+void scene_add_camera(Scene* scene, Camera* cam) {
+	scene->cam = cam;
 }
 
 int scene_add_game_object(Scene* scene, GameObject* go)  {
@@ -123,12 +126,14 @@ Transform transform_default(){
 }
 
 // Camera
-Camera* camera_create(Transform tr){
+Camera* camera_create(Transform tr, int width, int height){
 	Camera* cam = malloc(sizeof(Camera));
 	cam->transform = tr;
 	cam->fov = PI*0.33f;
 	cam->near = 0.01f;
 	cam->far = 20.0f;
+	cam->screen_width = width;
+	cam->screen_height = height;
 	return cam;
 }
 

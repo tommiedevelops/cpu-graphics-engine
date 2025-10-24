@@ -39,6 +39,7 @@ int         scene_get_num_gos(Scene* scene);
 Lighting*   scene_get_lighting(Scene* scene);
 Light*      scene_get_light(Scene* scene, int light_idx);
 int         scene_add_light(Scene* scene, Light* light);
+void        scene_add_camera(Scene* scene, Camera* cam);
 Camera*     scene_get_camera(Scene* scene);
 int         scene_add_game_object(Scene* scene, GameObject* go); // returns go id
 GameObject* scene_get_game_object(Scene* scene, int go_idx);
@@ -48,7 +49,7 @@ void        scene_uninit(Scene* scene);
 GameObject* game_object_create(Transform tr, Mesh* mesh, Material* mat);
 
 Transform transform_create(Vec3f pos, Quat rot, Vec3f scale);
-Camera* camera_create(Transform tr);
+Camera* camera_create(Transform tr, int screen_width, int screen_height);
 Transform transform_default();
 
 void camera_set_fov_degrees(Camera* cam, float fov_degrees);

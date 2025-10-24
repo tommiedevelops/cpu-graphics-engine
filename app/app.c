@@ -93,7 +93,7 @@ Camera* prepare_camera(){
 	/* User Defined */
 	Transform tr = transform_default();
 	tr.position = vec3f_create(0.0f, 0.0f, -5.0f);
-	Camera* cam = camera_create(tr);
+	Camera* cam = camera_create(tr, WIDTH, HEIGHT);
 	return cam;
 }
 
@@ -186,12 +186,15 @@ struct AppAssets app_load_assets(){
 Scene* app_create_scene(struct AppAssets assets){
 
 	Camera* cam = prepare_camera();
+
 	if(NULL == cam){
 		LOG_ERROR("cam is null");
 		return NULL;
 	}
 
 	Scene* scene = scene_init();
+
+	scene_add_camera(scene, cam);
 	scene_add_game_object(scene, prepare_game_objects(assets));
 	scene_add_light(scene, light_default());
 
