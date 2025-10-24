@@ -60,7 +60,7 @@ static bool rasterize_pixel(int x, int y, const Triangle* tri, FSin* out) {
 	Vec2f A = (Vec2f){v[0]->pos.x, v[0]->pos.y};
 	Vec2f B = (Vec2f){v[1]->pos.x, v[1]->pos.y};
 	Vec2f C = (Vec2f){v[2]->pos.x, v[2]->pos.y};
-	Vec2f P = (Vec2f){ x + 0.5f, y + 0.5f };
+	Vec2f P = (Vec2f){ x, y };
 
 	BaryCoords b = cartesian_to_bary(A,B,C,P);
 	if(!inside_triangle(b)) return false;
@@ -103,7 +103,7 @@ static void rasterize_triangle(Renderer* r, Triangle* tri, FragShaderF frag_shad
 	int xmax = min_i(fb->width - 1, (int)floorf(b.xmax));
 	int ymax = min_i(fb->height - 1, (int)floorf(b.ymax)); 
 
-	if(xmin >= xmax || ymin >= ymax) return;
+	if(xmin > xmax || ymin > ymax) return;
 
 	for(int y = ymin; y <= ymax; y++){
 	    for(int x = xmin; x <= xmax; x++){
@@ -166,10 +166,10 @@ void renderer_draw_triangle(Renderer* r, Mesh* mesh, Material* mat, size_t tri_i
 	Triangle tri = {&out[0], &out[1], &out[2]};
 	Triangle clip_result[6] = {0};
 
-	//int num_tris = clip_tri(&tri, clip_result); 
-	//if( <= 0) return;
-	int num_tris = 1; clip_result[0] = tri;
+	//int num_tris = earlip_tri(&tri, clip_result); 
+	//if(num_tris <= 0) return;
 
+	int num_tris = 1; clip_result[0] = tri;
 	process_clip_and_rasterize(r, clip_result, num_tris, frag_shader);
 }
 
@@ -189,9 +189,9 @@ static void prepare_per_scene_uniforms(Renderer* r, Scene* scene) {
 	const float aspect = (float)height/(float)width;
 
 	const Camera* cam = scene_get_camera(scene);
-	const Transform* cam_tr = &cam->transform;
+	const Transform* tr = &cam->transform;
 
-	const Mat4 view = get_view_matrix(cam_tr->position, cam_tr->rotation, cam_tr->scale);
+	const Mat4 view = get_view_matrix(tr->position, tr->rotation, tr->scale);
 	const Mat4 proj  = get_projection_matrix(cam->fov, cam->near, cam->far, aspect);
 	const Mat4 viewport = get_viewport_matrix(cam->near, cam->far, width, height);
 
@@ -206,7 +206,7 @@ static void prepare_per_scene_uniforms(Renderer* r, Scene* scene) {
 static void prepare_per_game_object_uniforms(Renderer* r, GameObject* go) {
 
 	const Transform* tr = &go->transform;
-	Mat4 model = 
+	Mat4 model = get_model_matrix(tr->position, tr->rotation, tr->scale);
 	r->vs_u->model      = model;
 	r->fs_u->base_color = material_get_base_color(go->material);
 	r->fs_u->tex        = material_get_texture(go->material);

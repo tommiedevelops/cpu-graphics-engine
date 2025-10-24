@@ -12,7 +12,6 @@ Bounds3 tri_get_bounds(const Triangle* tri){
 		if(tri->v[i]->pos.x < bounds.xmin) {bounds.xmin = tri->v[i]->pos.x;}
 		if(tri->v[i]->pos.y < bounds.ymin) {bounds.ymin = tri->v[i]->pos.y;}
 		if(tri->v[i]->pos.z < bounds.zmin) {bounds.zmin = tri->v[i]->pos.z;}
-
 	}
 
 	return bounds;

@@ -92,7 +92,7 @@ GameObject* prepare_game_objects(struct AppAssets assets){
 Camera* prepare_camera(){
 	/* User Defined */
 	Transform tr = transform_default();
-	tr.position = vec3f_create(0.0f, 0.0f, -5.0f);
+	tr.position = vec3f_create(0.0f, 0.0f, -10.0f);
 	Camera* cam = camera_create(tr, WIDTH, HEIGHT);
 	return cam;
 }
@@ -103,20 +103,23 @@ struct EventData {
 	Vec2f move_input;
 };
 
-struct EventData handle_event(SDL_Event* event, bool* running){
+struct EventData handle_event(SDL_Event* e, bool* running){
 	/* User Can Register More Cases */
 	struct EventData data = {0};
 
-	while (SDL_PollEvent(event)) {
-		switch(event->type) {
+	while (SDL_PollEvent(e)) {
+		switch(e->type) {
 			case SDL_QUIT: running = false; break;
 			case SDL_MOUSEMOTION:
-				       data.mouse_input.x += event->motion.xrel;
-				       data.mouse_input.y += event->motion.yrel;
+				       data.mouse_input.x += e->motion.xrel;
+				       data.mouse_input.y += e->motion.yrel;
 				       break;
 			case SDL_KEYDOWN:
-				       if(event->key.keysym.scancode == SDL_SCANCODE_ESCAPE) *running = false;
+				       if(e->key.keysym.scancode == SDL_SCANCODE_ESCAPE) *running = false;
 				       break;
+			case SDL_MOUSEBUTTONDOWN:
+                    		printf("Mouse Position =  (x=%d, y=%d)\n", e->button.x, e->button.y);
+                    		break;
 		}
 	}	
 
@@ -150,8 +153,8 @@ void update_scene(Scene* scene, float dt, SDL_Event* event, bool* running){
 
 	Quat q_yaw = quat_angle_axis(yaw, VEC3F_Y);
 
-	cam->transform.rotation = quat_mul(q_yaw, cam->transform.rotation);
-	quat_normalize(cam->transform.rotation);
+//	cam->transform.rotation = quat_mul(q_yaw, cam->transform.rotation);
+//	quat_normalize(cam->transform.rotation);
 
 	// camera translation
 	Vec3f fwd_delta = vec3f_scale(forward, ed.move_input.y);

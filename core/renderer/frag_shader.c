@@ -4,15 +4,7 @@
 #include "texture.h"
  
 void fs_unlit(const FSin* in, FSout* out, const FSUniforms* u){
-
-	Vec4f color;
-	if(u->tex) {
-		color = texture_sample(u->tex, in->uv.x, in->uv.y);
-	} else {
-		color = u->base_color;
-	}
-
-	out->color = color;
+	out->color = u->tex ? texture_sample(u->tex, in->uv.x, in->uv.y) : u->base_color;
 	out->depth = in->depth;
 }
 
