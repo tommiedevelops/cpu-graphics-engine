@@ -9,9 +9,9 @@ static inline void copy_vals(Vec4f* from, Vec4f* to, int num_verts){
 	}
 }
 
-int clip_against_plane(Vec4f* in, int in_n, Plane4 P, Vec4f* out){
+void clip_against_plane(Vec4f* in, int in_n, Plane4 P, Vec4f* out, int* out_n){
 	// assuming verts represents a convex polygon that is in clockwise order
-	if(in_n == 0) return 0;
+	if(in_n == 0) return;
 	copy_vals(in,out,in_n);					
 	
 	int n = 0;
@@ -52,7 +52,7 @@ int clip_against_plane(Vec4f* in, int in_n, Plane4 P, Vec4f* out){
 
 	}
 	
-	return n;
+	*out_n = n;
 }
 
 static inline void get_clipping_planes(struct Plane4* planes){
@@ -83,36 +83,51 @@ static inline void get_clipping_planes(struct Plane4* planes){
 	planes[5].p = vec4f_create(0.0f, 0.0f, 1.0f, 1.0f);
 }
 
-int clip_tri(const Triangle* tri, Triangle* tris_out){
-	Vec4f in[9] = {0}, out[9] = {0};
 
-	int in_n = 3, out_n = 0;
-
-	for(int i = 0; i <= 2; i++) in[i] = tri->v[i]->pos;
-
-	Plane4 planes[6];
-	int num_planes = 6;
-	get_clipping_planes(planes);
-
-	for(int i = 0; i < num_planes && in_n > 0; i++){
-		out_n = clip_against_plane(in,in_n, planes[i], out);
-		memcpy(in,out,out_n*sizeof(Vec4f));	
-		in_n = out_n;
-	}
-
-	if(out_n < 2) return 0;
-
-	int num_tris = out_n - 2;
+static void clip_poly(Vec4f* in, int in_n, const Plane4* p, int p_n, Vec4f* out, int* out_n){
 	
+	for(size_t i = 0; i < p_n && in_n > 0; i++){
+		clip_against_plane(in,in_n, p[i], out, out_n);
+		memcpy(in,out,*out_n*sizeof(Vec4f));	
+		in_n = *out_n;
+	}
+}
+
+static void prepare_clip_inputs(Vec4f* in, int* in_n, const Triangle* tri){
+	for(int i = 0; i <= 2; i++) in[i] = tri->v[i]->pos;
+	*in_n = 3;
+}
+
+static int prep_clip_output(Triangle* tris_out, const Vec4f* clip_out, int out_n, const Triangle* tri)  {
+	// clamp to 0 if less than 2
+	int num_tris = (out_n > 2) ? out_n - 2 : 0;
+	
+	// fanning out triangle from 0th index
 	for(int k = 0; k < num_tris; k++){
 		tris_out[k] = *tri;
-		tris_out[k].v[0]->pos = out[0];
-		tris_out[k].v[1]->pos = out[k+1];
-		tris_out[k].v[2]->pos = out[k+2];	
+		tris_out[k].v[0]->pos = clip_out[0];
+		tris_out[k].v[1]->pos = clip_out[k+1];
+		tris_out[k].v[2]->pos = clip_out[k+2];	
 	}
+	return num_tris;
+}
+
+int clip_tri(const Triangle* tri, Triangle* tris_out){
+	Vec4f in[9]  = {0};
+	Vec4f out[9] = {0};
+	int in_n, out_n;
+	
+	prepare_clip_inputs(in, &in_n, tri);
+
+	const int num_planes = 6;
+	Plane4 planes[num_planes];
+	get_clipping_planes(planes);
+
+	clip_poly(in, in_n, planes, num_planes, out, &out_n);
+	
+	int num_tris = prep_clip_output(tris_out, out, out_n, tri);
 
 	return num_tris;
-
 }
 
 

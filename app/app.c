@@ -45,22 +45,14 @@ struct TexData load_textures(){
 struct MeshData load_meshes(){
 	/* User Defined */
 
-	int num_meshes = 3;
+	int num_meshes = 1;
 	Mesh** meshes = malloc(sizeof(Mesh*)*num_meshes);
-
-	Mesh* homer_mesh = malloc(sizeof(Mesh));
-	*homer_mesh = mesh_parse_from_obj("./assets/models/lucy.obj");
-	
-	Mesh* teapot_mesh = malloc(sizeof(Mesh));
-	*teapot_mesh = mesh_parse_from_obj("./assets/models/teapot.obj");	
 
 	Mesh* bunny_mesh = malloc(sizeof(Mesh));
 	*bunny_mesh = mesh_parse_from_obj("./assets/models/bunny.obj");	
 	mesh_recalculate_normals(bunny_mesh);
 
 	meshes[BUNNY] = bunny_mesh;
-	meshes[TEAPOT] = teapot_mesh;
-	meshes[HOMER] = homer_mesh;
 
 	struct MeshData data = {
 		.meshes = meshes,
