@@ -54,32 +54,16 @@ static void clip_edge(Vec4f s, Vec4f e, Plane4 P, Vec4f*out, int* out_n) {
 
 	bool sIn = plane4_inside(P,s);
 	bool eIn = plane4_inside(P,e);
+	float t = plane4_compute_intersect_t(P,s,e);
+	Vec4f i = lerp_vec4f(s,e,t);
 
-	if(sIn && eIn) {
-		out[(*out_n)++] = e;	
-	}
+	if(sIn && eIn) out[(*out_n)++] = e;	
 
-	if(sIn && !eIn){
-
-		float t = plane4_compute_intersect_t(P,s,e);
-		Vec4f i = lerp_vec4f(s,e,t);
-
-		if(!vec4f_are_equal(i,s)) {
-			out[(*out_n)++] = i;
-		}
-
-	}
+	if(sIn && !eIn) out[(*out_n)++] = i;
 
 	if(!sIn && eIn){
-		float t = plane4_compute_intersect_t(P,s,e);
-		Vec4f i  = lerp_vec4f(s,e,t);
-
 		out[(*out_n)++] = i;
-
-		if(!vec4f_are_equal(i,e)) {
-			out[(*out_n)++] = e;
-		}
-
+		out[(*out_n)++] = e;
 	}
 
 }
