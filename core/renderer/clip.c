@@ -3,18 +3,12 @@
 #include "plane.h"
 #include "vert_shader.h"
 
-static inline void copy_vals(Vec4f* from, Vec4f* to, int num_verts){
-	for(int i = 0; i < num_verts; i++){
-		to[i] = from[i];
-	}
+static void clip_against_edge(Vec4f s, Vec4f e, Plane4 P, Vec4f*out, int* out_n) {
 }
 
 void clip_against_plane(Vec4f* in, int in_n, Plane4 P, Vec4f* out, int* out_n){
-	// assuming verts represents a convex polygon that is in clockwise order
-	if(in_n == 0) return;
-	copy_vals(in,out,in_n);					
 	
-	int n = 0;
+	*out_n = 0;
 	for(int v = 0; v < in_n; v++){
 
 		Vec4f s = in[v];
@@ -24,7 +18,7 @@ void clip_against_plane(Vec4f* in, int in_n, Plane4 P, Vec4f* out, int* out_n){
 		bool eIn = plane4_inside(P,e);
 
 		if(sIn && eIn) {
-			out[n++] = e;	
+			out[(*out_n)++] = e;	
 		}
 
 		if(sIn && !eIn){
@@ -33,7 +27,7 @@ void clip_against_plane(Vec4f* in, int in_n, Plane4 P, Vec4f* out, int* out_n){
 			Vec4f i = lerp_vec4f(s,e,t);
 
 			if(!vec4f_are_equal(i,s)) {
-				out[n++] = i;
+				out[(*out_n)++] = i;
 			}
 
 		}
@@ -42,17 +36,16 @@ void clip_against_plane(Vec4f* in, int in_n, Plane4 P, Vec4f* out, int* out_n){
 			float t = plane4_compute_intersect_t(P,s,e);
 			Vec4f i  = lerp_vec4f(s,e,t);
 
-			out[n++] = i;
+			out[(*out_n)++] = i;
 			
 			if(!vec4f_are_equal(i,e)) {
-				out[n++] = e;
+				out[(*out_n)++] = e;
 			}
 
 		}
 
 	}
 	
-	*out_n = n;
 }
 
 static inline void get_clipping_planes(struct Plane4* planes){
@@ -86,6 +79,7 @@ static inline void get_clipping_planes(struct Plane4* planes){
 
 static void clip_poly(Vec4f* in, int in_n, const Plane4* p, int p_n, Vec4f* out, int* out_n){
 	
+	// assuming in represents a convex polygon that is in clockwise order
 	for(size_t i = 0; i < p_n && in_n > 0; i++){
 		clip_against_plane(in,in_n, p[i], out, out_n);
 		memcpy(in,out,*out_n*sizeof(Vec4f));	
