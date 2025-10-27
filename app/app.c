@@ -7,36 +7,31 @@
 #include "vert_shader.h"
 #include "render.h"
 
-// ----- STRUCT DEFINITIONS (DO NOT MODIFY) -----
-struct GameObjectContainer {
-	GameObject** gos;
-	int num_gos;
-};
+typedef struct {
+	Texture* textures;
+	int t_len, t_cap;
 
-// ------ USER DEFINED SECTION ------
+	Mesh* meshes;
+	int m_len, m_cap;
+} Assets;
 
-enum MeshHandles {
-/* User Defined */
-	BUNNY = 0,
-	TEAPOT = 1,
-	HOMER = 2	
-};
+typedef struct {
+	Assets*   assets;
+	Renderer* renderer;
+} App;
 
-enum TexHandles {
-/* User Defined */
-	BRICK = 0
-};
-
+Texture* texture_create(const char* filepath_to_png);
+Mesh*    mesh_create(const char filepath_to_obj);
+void     assets_add_tex(Assets* a, Texture* tex);
+void     assets_add_mesh(Assets* a, Mesh* mesh);
 // Loading & Destroying Assets 
 struct TexData load_textures(){
-	/* User Defined */
-
 	int num_textures = 1;
 	Texture** textures = malloc(sizeof(Texture*)*num_textures);
 
 	Texture* tex = texture_load("./assets/textures/brickwall.png");
 
-	textures[BRICK] = tex;
+	textures[0] = tex;
 
 	struct TexData data = {
 		.textures = textures,
@@ -56,7 +51,7 @@ struct MeshData load_meshes(){
 	*bunny_mesh = mesh_parse_from_obj("./assets/models/bunny.obj");	
 	mesh_recalculate_normals(bunny_mesh);
 
-	meshes[BUNNY] = bunny_mesh;
+	meshes[0] = bunny_mesh;
 
 	struct MeshData data = {
 		.meshes = meshes,
@@ -76,12 +71,12 @@ GameObject* prepare_game_objects(struct AppAssets assets){
 	// Bunny
 	Vec4f lavender = vec4f_create(0.40,0.70,0.38,0.4);
 	Pipeline* p = pipeline_create(vs_default, fs_phong);
-	Material* bunny_material = material_create(lavender, textures[BRICK], p); 	
+	Material* bunny_material = material_create(lavender, textures[0], p); 	
 	Vec3f bunny_pos = vec3f_create(0.0, 0.0f, 0.0f);
 	Vec3f bunny_scale = vec3f_create(3.0f, 3.0f, 3.0f);
 
 	Transform bunny_tr = transform_create(bunny_pos, QUAT_IDENTITY, bunny_scale);
-	GameObject* bunny_go  = game_object_create(bunny_tr, meshes[BUNNY], bunny_material);
+	GameObject* bunny_go  = game_object_create(bunny_tr, meshes[0], bunny_material);
 
 	return bunny_go;
 }
@@ -100,9 +95,6 @@ struct EventData {
 	Vec2f move_input;
 };
 
-static void pause(){
-	printf("program paused. press enter to continue\n");
-}
 struct EventData handle_event(SDL_Event* e, bool* running){
 	/* User Can Register More Cases */
 	struct EventData data = {0};
@@ -116,7 +108,6 @@ struct EventData handle_event(SDL_Event* e, bool* running){
 				       break;
 			case SDL_KEYDOWN:
 				       if(e->key.keysym.scancode == SDL_SCANCODE_ESCAPE) *running = false;
-				       if(e->key.keysym.scancode == SDL_SCANCODE_P) raise(SIGSTOP);
 				       break;
 			case SDL_MOUSEBUTTONDOWN:
                     		printf("Mouse Position =  (x=%d, y=%d)\n", e->button.x, e->button.y);
