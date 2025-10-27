@@ -104,7 +104,6 @@ static void rasterize_triangle(Renderer* r, Triangle* tri, FragShaderF frag_shad
 	int ymax = min_i(fb->height - 1, (int)floorf(b.ymax)); 
 
 	if(xmin > xmax || ymin > ymax) return;
-
 	for(int y = ymin; y <= ymax; y++){
 	    for(int x = xmin; x <= xmax; x++){
                   if( !rasterize_pixel(x,y,tri, &fs_in) ) continue;
@@ -116,10 +115,13 @@ static void rasterize_triangle(Renderer* r, Triangle* tri, FragShaderF frag_shad
 }
 
 static void process_clip_and_rasterize(Renderer* r, Triangle clip_result[6], size_t num_tris, FragShaderF fs){
+	Mat4 viewport = r->vs_u->viewport;
+
 	for(int k = 0; k < num_tris; k++){
-		tri_apply_perspective_divide(&clip_result[k]); // divide (x,y,z,w) by w
-		tri_apply_transformation(r->vs_u->viewport, &clip_result[k]);
-		rasterize_triangle(r, &clip_result[k], fs);
+		Triangle* tri = &clip_result[k];
+		tri_apply_perspective_divide(tri); // divide (x,y,z,w) by w
+		tri_apply_transformation(viewport, tri);
+		rasterize_triangle(r, tri, fs);
 	}
 }
 
@@ -148,6 +150,11 @@ static void assemble_triangle_inputs(Mesh* mesh, size_t tri_idx, VSin in[3]) {
 	}
 }
 
+static void assemble_triangle(Triangle* tri, VSout* out, int tri_idx) {
+	for(size_t i = 0; i <= 2; i++) tri->v[i] = &out[i];
+	tri->id = tri_idx;	
+}
+
 void renderer_draw_triangle(Renderer* r, Mesh* mesh, Material* mat, size_t tri_idx) {
 
 	VSin   in[3] = {0};
@@ -163,11 +170,11 @@ void renderer_draw_triangle(Renderer* r, Mesh* mesh, Material* mat, size_t tri_i
 	assemble_triangle_inputs(mesh, tri_idx, in);
 	apply_vertex_shader(in, out, vs_u, vert_shader);
 
-	Triangle tri = {&out[0], &out[1], &out[2]};
-	Triangle clip_result[6] = {0};
+	Triangle tri = {0};
+	assemble_triangle(&tri, out, tri_idx);
 
+	Triangle clip_result[6] = {0};
 	int num_tris = clip_tri(&tri, clip_result);
-	//if(num_tris <= 0) return;
 
 	process_clip_and_rasterize(r, clip_result, num_tris, frag_shader);
 }

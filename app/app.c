@@ -1,4 +1,5 @@
 #include <SDL2/SDL.h>
+#include <signal.h>
 #include "app.h"
 #include "texture.h"
 #include "mesh.h"
@@ -95,6 +96,9 @@ struct EventData {
 	Vec2f move_input;
 };
 
+static void pause(){
+	printf("program paused. press enter to continue\n");
+}
 struct EventData handle_event(SDL_Event* e, bool* running){
 	/* User Can Register More Cases */
 	struct EventData data = {0};
@@ -108,6 +112,7 @@ struct EventData handle_event(SDL_Event* e, bool* running){
 				       break;
 			case SDL_KEYDOWN:
 				       if(e->key.keysym.scancode == SDL_SCANCODE_ESCAPE) *running = false;
+				       if(e->key.keysym.scancode == SDL_SCANCODE_P) raise(SIGSTOP);
 				       break;
 			case SDL_MOUSEBUTTONDOWN:
                     		printf("Mouse Position =  (x=%d, y=%d)\n", e->button.x, e->button.y);

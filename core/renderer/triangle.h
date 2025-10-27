@@ -9,6 +9,7 @@ typedef struct VSout VSout;
 
 typedef struct Triangle {
 	VSout* v[3];
+	int id;
 } Triangle;
 
 Bounds tri_get_bounds(const Triangle* tri);

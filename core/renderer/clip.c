@@ -46,6 +46,7 @@ static int prep_clip_output(Triangle* tris_out, const Vec4f* clip_out, int out_n
 		tris_out[k].v[0]->pos = clip_out[0];
 		tris_out[k].v[1]->pos = clip_out[k+1];
 		tris_out[k].v[2]->pos = clip_out[k+2];	
+		tris_out[k].id = tri->id;
 	}
 	return num_tris;
 }
