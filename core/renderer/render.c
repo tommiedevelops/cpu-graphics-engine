@@ -70,11 +70,11 @@ static bool rasterize_pixel(int x, int y, const Triangle* tri, FSin* out) {
 	const Vec2f uv = vec2f_scale(uv_over_w, 1.0f/w_inv);
 
 	// Other linearly interpolated values
-	Vec3f normal    = bary_mix3(b,v[0]->normal, v[1]->normal, v[2]->normal);
-	Vec3f frag_pos  = bary_mix3(b, v[0]->view_pos, v[1]->view_pos, v[2]->view_pos);
+	Vec3f normal = vec3f_normalize(bary_mix3(b,v[0]->normal, v[1]->normal, v[2]->normal));
+	Vec3f world_pos  = bary_mix3(b, v[0]->world_pos, v[1]->world_pos, v[2]->world_pos);
 
 	*out = (FSin) {
-		.frag_pos = frag_pos,
+		.world_pos = world_pos,
 		.normal   = normal,
 		.uv       = uv,	
 		.depth    = depth
@@ -200,9 +200,10 @@ static void prepare_per_scene_uniforms(Renderer* r, Scene* scene) {
 	r->vs_u->view       = view;
 	r->vs_u->proj       = proj;
 	r->vs_u->viewport   = viewport;
-	r->fs_u->lights     = scene_get_lighting(scene)->lights;
-	r->fs_u->num_lights = scene_get_lighting(scene)->len;
 
+	r->fs_u->lights           = scene_get_lighting(scene)->lights;
+	r->fs_u->num_lights       = scene_get_lighting(scene)->len;
+	r->fs_u->cam_world_pos    = scene_get_camera(scene)->transform.position;
 }
 
 static void prepare_per_game_object_uniforms(Renderer* r, GameObject* go) {
@@ -217,6 +218,7 @@ static void prepare_per_game_object_uniforms(Renderer* r, GameObject* go) {
 void renderer_draw_scene(Renderer* r, Scene* scene) {
 
 	if(!r || !r->fb || !scene || !scene_get_camera(scene)) return;
+	
 	prepare_per_scene_uniforms(r,scene);
 
 	const size_t count = scene_get_num_gos(scene);

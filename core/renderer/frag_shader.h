@@ -7,7 +7,7 @@ typedef struct Light Light;
 typedef struct Texture Texture;
 
 typedef struct {
-	Vec3f frag_pos; // view space
+	Vec3f world_pos; 
 	Vec3f normal; 
 	Vec2f uv;
 	float depth;
@@ -19,6 +19,7 @@ typedef struct {
 } FSout;
 
 typedef struct {
+	Vec3f cam_world_pos;
 	Vec4f base_color;
 	Texture* tex;
 	Light** lights;
@@ -29,4 +30,5 @@ typedef void (*FragShaderF)(const FSin* in, FSout* out, const FSUniforms* u);
 
 void fs_unlit(const FSin* in, FSout* out, const FSUniforms* u);
 void fs_lit(const FSin* in, FSout* out, const FSUniforms* u);
+void fs_phong(const FSin* in, FSout* out, const FSUniforms* u);
 #endif 

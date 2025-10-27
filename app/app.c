@@ -75,7 +75,7 @@ GameObject* prepare_game_objects(struct AppAssets assets){
 
 	// Bunny
 	Vec4f lavender = vec4f_create(0.40,0.70,0.38,0.4);
-	Pipeline* p = pipeline_create(vs_default, fs_lit);
+	Pipeline* p = pipeline_create(vs_default, fs_phong);
 	Material* bunny_material = material_create(lavender, textures[BRICK], p); 	
 	Vec3f bunny_pos = vec3f_create(0.0, 0.0f, 0.0f);
 	Vec3f bunny_scale = vec3f_create(3.0f, 3.0f, 3.0f);

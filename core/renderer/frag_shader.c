@@ -10,18 +10,15 @@ static Vec3f compute_reflection_vector(Vec3f l, Vec3f n){
 	return vec3f_normalize(r);
 }
 
-static Vec3f compute_eyesight_vector(Vec3f cam_pos, Vec3f origin){
-	return vec3f_normalize(vec3f_add(cam_pos, vec3f_scale(origin, -1.0f)));	
+static Vec3f compute_eyesight_vector(Vec3f cam_pos, Vec3f world_pos){
+	return vec3f_normalize(vec3f_add(cam_pos, vec3f_scale(world_pos, -1.0f)));	
 }
 
-static Vec4f compute_specular(float exponent, Vec4f light_col, Vec3f norm, Vec3f cam_pos, Vec3f light_dir){	
-	// current heuristic: select random vertex as origin for eye vec	
-	Vec3f frag_pos = VEC3F_0;
-	Vec3f e = compute_eyesight_vector(cam_pos, frag_pos);
+static Vec4f compute_specular(float exponent, Vec4f light_col, Vec3f world_pos, Vec3f norm, Vec3f cam_pos, Vec3f light_dir){	
+	Vec3f e = compute_eyesight_vector(cam_pos, world_pos);
 	Vec3f r = compute_reflection_vector(light_dir, norm);
 	float r_dot_e = fmaxf(vec3f_dot(r,e), 0.0f);
-	float specular = pow(r_dot_e,exponent); 
-
+	float specular = powf(r_dot_e,exponent); 
 	Vec4f spec_vec = vec4f_create(light_col.x * specular, light_col.y * specular, light_col.z * specular, 1.0f);
 	return spec_vec;
 }
@@ -32,6 +29,7 @@ static Vec4f compute_diffuse(Vec4f albedo, Vec3f light_dir, Vec4f light_col, Vec
 	diffuse.x = diffuse.x * albedo.x;
 	diffuse.y = diffuse.y * albedo.y;
 	diffuse.z = diffuse.z * albedo.z;
+	diffuse.w = diffuse.w * albedo.w;
 	return diffuse;
 }
 
@@ -44,7 +42,7 @@ void fs_lit(const FSin* in, FSout* out, const FSUniforms* u) {
 	Vec4f albedo = u->tex ? texture_sample(u->tex, in->uv.x, in->uv.y) : u->base_color;
 	// assuming 1 light
 	Light** lights = u->lights;
-	Vec3f light_dir = lights[0]->direction;	
+	Vec3f light_dir = vec3f_normalize(lights[0]->direction);
 	Vec4f light_col = lights[0]->color;
 	Vec3f norm = in->normal;
 
@@ -52,3 +50,22 @@ void fs_lit(const FSin* in, FSout* out, const FSUniforms* u) {
 	out->depth = in->depth;
 }
 
+void fs_phong(const FSin* in, FSout* out, const FSUniforms* u) {
+	Vec4f albedo = u->tex ? texture_sample(u->tex, in->uv.x, in->uv.y) : u->base_color;
+	// assuming 1 light
+	Light** lights = u->lights;
+	Vec3f light_dir = vec3f_normalize(lights[0]->direction);
+
+	Vec4f light_col = lights[0]->color;
+	Vec3f norm = vec3f_normalize(in->normal);
+	Vec3f cam_pos = u->cam_world_pos;
+	Vec3f world_pos = in->world_pos; 
+	float exponent = 16.0f;
+
+	Vec4f ambient = vec4f_scale(albedo, 0.3f);
+	Vec4f specular = compute_specular(exponent, light_col, world_pos, norm, cam_pos, vec3f_scale(light_dir, -1.0f));
+	Vec4f diffuse = compute_diffuse(albedo, light_dir, light_col, norm);
+
+	out->color = vec4f_add(ambient, vec4f_add(specular, diffuse));
+	out->depth = in->depth;
+}
