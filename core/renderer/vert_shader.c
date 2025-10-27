@@ -9,7 +9,8 @@ void vs_default(const VSin* in, VSout* out, const VSUniforms* u) {
 	Vec4f clip_pos = mat4_mul_vec4(mvp, pos);
 	out->pos = clip_pos;
 	out->view_pos = vec4f_to_vec3f(mat4_mul_vec4(mv, pos));
-	out->normal = in->n;
+	Vec4f norm = vec3f_to_vec4f(in->n, 0.0f); // 0f in 4th element represents directional vecs
+	out->normal = vec4f_to_vec3f(mat4_mul_vec4(mv, norm));
 
 	float w_inv = (float)1.0f/clip_pos.w;
 	out->uv_over_w = vec2f_scale(in->uv, w_inv);
