@@ -3,9 +3,12 @@
 #include <string.h>
 #include "texture.h"
 #include "vector.h"
+#include "frag_shader.h"
+#include "vert_shader.h"
+#include "render.h"
+
 
 typedef struct Texture Texture;
-typedef struct Pipeline Pipeline;
 
 typedef struct Material {
 	Vec4f color; // fallback color if no texture
@@ -23,11 +26,11 @@ Material* material_default(){
 	return mat;
 }
 
-struct Material* material_create(Vec4f color, struct Texture* tex){
-	struct Material* mat = malloc(sizeof(struct Material));
+struct Material* material_create(Vec4f color, Texture* tex, Pipeline* p){
+	struct Material* mat = malloc(sizeof(Material));
 	mat->color = color;
 	mat->tex = tex;
-	mat->pipeline = NULL;
+	mat->pipeline = p;
 	return mat;
 }
 

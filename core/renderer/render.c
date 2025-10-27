@@ -11,6 +11,7 @@
 #include "vert_shader.h"
 #include "frag_shader.h"
 #include "framebuffer.h"
+#include "render.h"
 
 typedef struct Renderer { 
 	VSUniforms* vs_u;
@@ -18,11 +19,6 @@ typedef struct Renderer {
 	Pipeline* p;
 	FrameBuffer* fb;
 } Renderer;
-
-typedef struct Pipeline {
-	VertShaderF vs;
-	FragShaderF fs;
-} Pipeline;
 
 Renderer* renderer_init(Pipeline* p, FrameBuffer* fb) {
 	Renderer* r = malloc(sizeof(Renderer));

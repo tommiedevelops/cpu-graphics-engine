@@ -8,7 +8,11 @@ typedef struct Triangle Triangle;
 typedef struct Scene Scene;
 typedef struct FrameBuffer FrameBuffer;
 typedef struct Renderer Renderer;
-typedef struct Pipeline Pipeline;
+
+typedef struct Pipeline {
+	VertShaderF vs;
+	FragShaderF fs;
+} Pipeline;
 
 Pipeline* pipeline_create(VertShaderF vs, FragShaderF fs);
 Renderer* renderer_init(Pipeline* pl, FrameBuffer* fb);

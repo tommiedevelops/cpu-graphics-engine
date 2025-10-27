@@ -28,4 +28,5 @@ typedef struct {
 typedef void (*FragShaderF)(const FSin* in, FSout* out, const FSUniforms* u);	
 
 void fs_unlit(const FSin* in, FSout* out, const FSUniforms* u);
+void fs_lit(const FSin* in, FSout* out, const FSUniforms* u);
 #endif 

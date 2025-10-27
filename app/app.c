@@ -3,6 +3,9 @@
 #include "app.h"
 #include "texture.h"
 #include "mesh.h"
+#include "frag_shader.h"
+#include "vert_shader.h"
+#include "render.h"
 
 // ----- STRUCT DEFINITIONS (DO NOT MODIFY) -----
 struct GameObjectContainer {
@@ -72,7 +75,8 @@ GameObject* prepare_game_objects(struct AppAssets assets){
 
 	// Bunny
 	Vec4f lavender = vec4f_create(0.40,0.70,0.38,0.4);
-	struct Material* bunny_material = material_create(lavender, textures[BRICK]); 	
+	Pipeline* p = pipeline_create(vs_default, fs_lit);
+	Material* bunny_material = material_create(lavender, textures[BRICK], p); 	
 	Vec3f bunny_pos = vec3f_create(0.0, 0.0f, 0.0f);
 	Vec3f bunny_scale = vec3f_create(3.0f, 3.0f, 3.0f);
 
@@ -150,8 +154,8 @@ void update_scene(Scene* scene, float dt, SDL_Event* event, bool* running){
 
 	Quat q_yaw = quat_angle_axis(yaw, VEC3F_Y);
 
-//	cam->transform.rotation = quat_mul(q_yaw, cam->transform.rotation);
-//	quat_normalize(cam->transform.rotation);
+	cam->transform.rotation = quat_mul(q_yaw, cam->transform.rotation);
+	quat_normalize(cam->transform.rotation);
 
 	// camera translation
 	Vec3f fwd_delta = vec3f_scale(forward, ed.move_input.y);
@@ -167,7 +171,7 @@ void update_scene(Scene* scene, float dt, SDL_Event* event, bool* running){
 
 	GameObject* bunny_go = scene_get_game_object(scene,0);
 	Quat* curr_rot = &bunny_go->transform.rotation;
-//	*curr_rot = quat_normalize(quat_mul(*curr_rot, bunny_rot));
+	*curr_rot = quat_normalize(quat_mul(*curr_rot, bunny_rot));
 }
 
 // ------ API USED BY CORE (DO NOT MODIFY) ------
