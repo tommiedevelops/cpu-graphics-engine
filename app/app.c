@@ -9,6 +9,32 @@
 #include "vert_shader.h"
 #include "render.h"
 
+typedef struct {
+	Scene*       scene;
+	Assets*      assets;
+	Renderer*    renderer;
+	FrameBuffer* fb;
+	Window*      window;
+} App;
+
+App* app_create(Scene* s, Assets* a, Renderer* r, FrameBuffer* fb, Window* w) {
+	App* app = malloc(sizeof(App));
+	app->scene    = s;
+	app->assets   = a;
+	app->renderer = r;
+	app->fb       = fb;
+	app->window   = w;
+	return app;
+}
+
+void app_destroy(App* app) {
+	scene_destroy(app->scene);
+	assets_destroy(app->assets);
+	renderer_destroy(app->renderer);
+	framebuffer_destroy(app->fb);
+	window_destroy(w);
+}
+
 // Loading & Destroying Assets 
 struct TexData load_textures(){
 	int num_textures = 1;

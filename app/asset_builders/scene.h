@@ -32,8 +32,8 @@ typedef struct Camera {
 
 typedef struct Scene Scene;
 
-Scene*      scene_init();
-void        scene_uninit(Scene* scene);
+Scene*      scene_create();
+void        scene_destroy(Scene* scene);
 int         scene_get_num_gos(Scene* scene);
 Lighting*   scene_get_lighting(Scene* scene);
 Light*      scene_get_light(Scene* scene, int light_idx);
