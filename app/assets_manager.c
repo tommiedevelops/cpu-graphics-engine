@@ -2,12 +2,17 @@
 #include <stdlib.h>
 #include "texture.h"
 #include "mesh.h"
+#include "material.h"
 
 typedef struct {
 	Texture** textures;
 	uint8_t t_len, t_cap;
+
 	Mesh** meshes;
 	uint8_t m_len, m_cap;
+
+	Material** materials;
+	uint8_t mt_len, mt_cap;
 } Assets;
 
 Assets* assets_init() {
@@ -26,6 +31,7 @@ Assets* assets_init() {
 	a->t_cap = t_cap;
 	a->m_len = m_len;
 	a->m_cap = m_cap;
+
 
 	return a;
 };
