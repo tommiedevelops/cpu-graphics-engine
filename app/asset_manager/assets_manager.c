@@ -1,3 +1,7 @@
+#include <stdint.h>
+#include <stdlib.h>
+#include "texture.h"
+#include "mesh.h"
 
 typedef struct {
 	Texture** textures;
@@ -21,7 +25,7 @@ Assets* assets_init() {
 	a->t_len = t_len;
 	a->t_cap = t_cap;
 	a->m_len = m_len;
-	a->m_cap = m_cal;
+	a->m_cap = m_cap;
 
 	return a;
 };
@@ -30,12 +34,12 @@ uint8_t assets_add_tex(Assets* a, Texture* tex) {
 	bool full = (a->t_cap == a->t_len);
 	
 	if(!full) {
-		assets->textures[assets->t_len] = tex;
-		return assets->t_len++;
+		a->textures[a->t_len] = tex;
+		return a->t_len++;
 	}
 
 	size_t new_cap = a->t_cap + 2;
-	Textures** new = realloc(a->textures, new_cap*sizeof(Texture*));	
+	Texture** new = realloc(a->textures, new_cap*sizeof(Texture*));	
 	for(int i = 0; i < a->t_len; i++) new[i] = a->textures[i];
 
 	free(a->textures);
@@ -50,25 +54,25 @@ uint8_t assets_add_mesh(Assets* a, Mesh* mesh) {
 	bool full = (a->m_cap == a->m_len);
 	
 	if(!full) {
-		assets->textures[assets->m_len] = tex;
-		return assets->m_len++;
+		a->meshes[a->m_len] = mesh;
+		return a->m_len++;
 	}
 
 	size_t new_cap = a->m_cap + 2;
-	Textures** new = realloc(a->meshes, new_cap*sizeof(Texture*));	
+	Mesh** new = realloc(a->meshes, new_cap*sizeof(Texture*));	
 	for(int i = 0; i < a->m_len; i++) new[i] = a->meshes[i];
 
 	free(a->meshes);
 	a->meshes = new;
 	a->m_cap = new_cap;
 
-	a->meshes[a->m_len] = tex;
+	a->meshes[a->m_len] = mesh;
 	return a->m_len++;
 }
 
 void assets_uninit(Assets* a) {
-	for(int i = 0; i < t_len; i++) free(a->textures[i]);
-	for(int i = 0; i < m_len; i++) free(a->meshes[i]);
+	for(int i = 0; i < a->t_len; i++) free(a->textures[i]);
+	for(int i = 0; i < a->m_len; i++) free(a->meshes[i]);
 	free(a->textures);
 	free(a->meshes);
 	free(a);

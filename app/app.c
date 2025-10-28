@@ -13,7 +13,7 @@ struct TexData load_textures(){
 	int num_textures = 1;
 
 	Texture** textures = malloc(sizeof(Texture*));
-	Texture* tex = texture_load("./assets/textures/brickwall.png");
+	Texture* tex = texture_load("./app/assets/textures/brickwall.png");
 	textures[0] = tex;
 
 	struct TexData data = {
@@ -31,7 +31,7 @@ struct MeshData load_meshes(){
 	Mesh** meshes = malloc(sizeof(Mesh*)*num_meshes);
 
 	Mesh* bunny_mesh = malloc(sizeof(Mesh));
-	*bunny_mesh = mesh_parse_from_obj("./assets/models/bunny.obj");	
+	*bunny_mesh = mesh_parse_from_obj("./app/assets/models/bunny.obj");	
 	if(!bunny_mesh->normals) mesh_recalculate_normals(bunny_mesh);
 
 	meshes[0] = bunny_mesh;
