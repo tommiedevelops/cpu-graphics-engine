@@ -6,7 +6,7 @@
 #include "triangle.h"
 #include "vector.h"
 #include "transformation.h"
-#include "scene_manager.h"
+#include "scene.h"
 #include "barycentric.h"
 #include "vert_shader.h"
 #include "frag_shader.h"

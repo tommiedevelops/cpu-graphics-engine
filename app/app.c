@@ -8,6 +8,7 @@
 #include "frag_shader.h"
 #include "vert_shader.h"
 #include "render.h"
+
 // Loading & Destroying Assets 
 struct TexData load_textures(){
 	int num_textures = 1;

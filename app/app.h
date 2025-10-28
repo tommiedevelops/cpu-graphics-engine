@@ -5,7 +5,7 @@
 #include <SDL2/SDL.h>
 
 #include "material.h"
-#include "scene_manager.h"
+#include "scene.h"
 #include "render.h"
 
 typedef struct Assets Assets;

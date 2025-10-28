@@ -4,7 +4,7 @@
 
 #include "render.h"
 #include "window.h"
-#include "scene_manager.h"
+#include "scene.h"
 #include "game_time.h"
 #include "framebuffer.h"
 #include "app.h"
@@ -13,8 +13,8 @@
 
 #define MAX_Z (100000.0f)
 #define CLEAR_COLOR (0x87CEEBFF)
-#define W_WIDTH (1920)
-#define W_HEIGHT (780)
+#define W_WIDTH (512)
+#define W_HEIGHT (392)
 #define W_NAME ("cpu graphics engine")
 
 int main(void) {

@@ -3,7 +3,7 @@
 #include <math.h>
 #include <string.h>
 
-#include "scene_manager.h"
+#include "scene.h"
 #include "app.h"
 #include "matrix.h"
 

@@ -1,5 +1,5 @@
 #include "vector.h"
-#include "scene_manager.h"
+#include "scene.h"
 #include "lighting.h"
 
 Light* light_default() {

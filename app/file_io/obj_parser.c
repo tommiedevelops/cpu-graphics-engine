@@ -5,7 +5,7 @@
 #include <math.h>
 
 #include "bounds.h"
-#include "scene_manager.h"
+#include "scene.h"
 
 FILE* obj_open(char* filename){
 	FILE* fp = fopen(filename, "r");
