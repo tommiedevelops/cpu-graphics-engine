@@ -5,7 +5,6 @@
 #include <math.h>
 
 #include "bounds.h"
-#include "constants.h"
 #include "scene_manager.h"
 
 FILE* obj_open(char* filename){

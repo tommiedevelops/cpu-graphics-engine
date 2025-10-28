@@ -1,5 +1,4 @@
 #include "vector.h"
-#include "constants.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -15,9 +14,7 @@ Texture* texture_load(char* filename){
 	int width, height, channels;
 	uint8_t* img = stbi_load(filename, &width, &height, &channels, 4);
 
-	if(NULL == img){
-		LOG_ERROR("something went wrong loading the .png");
-	}
+	if(NULL == img) return NULL;
 
 	Vec4f* map = malloc(sizeof(Vec4f)*width*height);
 	memset(map, 0x0, sizeof(Vec4f)*width*height);
@@ -64,7 +61,7 @@ Vec4f get_pixel(Vec4f* data, int width, int height, int x, int y){
 static inline float clamp01(float x) {return x < 0 ? 0 : (x > 1 ? 1 : x); }
 
 Vec4f texture_sample(Texture* tex, float u, float v){
-	if(!tex || !tex->map) {LOG_ERROR("null texture"); return VEC4F_0;}
+	if(!tex || !tex->map) return VEC4F_0;
 
 	u = clamp01(u);
 	v = clamp01(v);

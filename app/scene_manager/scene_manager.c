@@ -6,8 +6,8 @@
 #include "scene_manager.h"
 #include "app.h"
 #include "matrix.h"
-#include "constants.h"
 
+#define PI (3.14159265359)
 typedef struct Scene {
 	Lighting* lighting;
 	Camera *cam;

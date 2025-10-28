@@ -64,11 +64,11 @@ GameObject* prepare_game_objects(struct AppAssets assets){
 	return bunny_go;
 }
 
-Camera* prepare_camera(){
+Camera* prepare_camera(int width, int height){
 	/* User Defined */
 	Transform tr = transform_default();
 	tr.position = vec3f_create(0.0f, 0.0f, -10.0f);
-	Camera* cam = camera_create(tr, WIDTH, HEIGHT);
+	Camera* cam = camera_create(tr, width, height);
 	return cam;
 }
 
@@ -161,14 +161,11 @@ struct AppAssets app_load_assets(){
 	return assets;
 }
 
-Scene* app_create_scene(struct AppAssets assets){
+Scene* app_create_scene(struct AppAssets assets, int width, int height){
 
-	Camera* cam = prepare_camera();
+	Camera* cam = prepare_camera(width, height);
 
-	if(NULL == cam){
-		LOG_ERROR("cam is null");
-		return NULL;
-	}
+	if(NULL == cam) return NULL;
 
 	Scene* scene = scene_init();
 
@@ -176,10 +173,7 @@ Scene* app_create_scene(struct AppAssets assets){
 	scene_add_game_object(scene, prepare_game_objects(assets));
 	scene_add_light(scene, light_default());
 
-	if(NULL == scene){
-		LOG_ERROR("scene is null");
-		return NULL;
-	}
+	if(NULL == scene) return NULL;
 
 	return scene;
 }

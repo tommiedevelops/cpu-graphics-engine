@@ -4,7 +4,6 @@
 #include "vector.h"
 #include "bounds.h"
 #include "quaternion.h"
-#include "constants.h"
 #include "material.h"
 #include "mesh.h"
 #include "lighting.h"

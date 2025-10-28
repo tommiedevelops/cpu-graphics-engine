@@ -2,7 +2,6 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-#include "constants.h"
 #include "render.h"
 #include "window.h"
 #include "scene_manager.h"
@@ -14,6 +13,8 @@
 
 #define MAX_Z (100000.0f)
 #define CLEAR_COLOR (0x87CEEBFF)
+#define WIDTH (1920)
+#define HEIGHT (780)
 
 int main(void) {
 
@@ -27,7 +28,7 @@ int main(void) {
 	Pipeline*     p = pipeline_create(vs_default, fs_unlit);
 	Renderer*     r = renderer_init(p, fb);
 
-        struct SDL_Data window_data = initialise_window();
+        struct SDL_Data window_data = initialise_window(WIDTH, HEIGHT);
         SDL_Event event;
 
         bool running = true;
