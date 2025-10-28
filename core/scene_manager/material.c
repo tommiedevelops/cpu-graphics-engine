@@ -7,7 +7,6 @@
 #include "vert_shader.h"
 #include "render.h"
 
-
 typedef struct Texture Texture;
 
 typedef struct Material {

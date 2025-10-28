@@ -38,30 +38,36 @@ void normalize_vertices(Vec3f* vertices, int num_vertices) {
 Mesh mesh_parse_from_obj(char* filename){
 	FILE* fp = obj_open(filename);
 
-	int num_vertices = obj_parse_num_vertices(fp);
-	Vec3f* vertices = obj_parse_vertices(fp, num_vertices);
+	int num_verts = obj_parse_num_vertices(fp);
+	Vec3f* verts = obj_parse_vertices(fp, num_verts);
+	normalize_vertices(verts, num_verts);
 
-	normalize_vertices(vertices, num_vertices);
+	int num_uvs    = obj_parse_num_uvs(fp);
+	Vec2f* uvs     = obj_parse_uvs(fp, num_uvs);
+	int num_norms  = obj_parse_num_normals(fp);
+	Vec3f* norms   = obj_parse_normals(fp, num_norms);
+	int num_tris   = obj_parse_num_triangles(fp);
 
-	int num_triangles = obj_parse_num_triangles(fp);
-	int* triangles = obj_parse_triangles(fp, num_triangles, num_vertices, vertices);
-	int num_uvs = obj_parse_num_uvs(fp);
-	Vec2f* uvs = obj_parse_uvs(fp, num_uvs);
-	int* triangle_uvs = obj_parse_triangle_uvs(fp, num_triangles, num_uvs, uvs);
+	int* tris;
+	int* tri_norms;
+	int* tri_uvs;
 
+	obj_parse_triangles(fp, num_tris, num_verts, num_norms, num_uvs, tris, tri_norms, tri_uvs);
 	obj_close(fp);
 
-	Mesh data = {
-		.num_uvs = num_uvs,
-		.uvs = uvs,
-		.num_vertices = num_vertices,
-		.vertices = vertices,
-		.num_triangles = num_triangles,
-		.triangles = triangles,
-		.triangle_uvs = triangle_uvs
+	return (Mesh) {
+		.num_normals    = num_norms,
+		.normals        = norms,
+		.num_uvs        = num_uvs,
+		.uvs            = uvs,
+		.num_vertices   = num_verts,
+		.vertices       = verts,
+		.num_triangles  = num_tris,
+		.triangles      = tris,
+		.triangle_uvs   = tri_uvs,
+		.triangle_normals = tri_norms
 	};
 
-	return data;
 }
 
 int mesh_recalculate_normals(Mesh* m){
