@@ -1,36 +1,19 @@
 #include <SDL2/SDL.h>
 #include <signal.h>
+#include <stdint.h>
+
 #include "app.h"
 #include "texture.h"
 #include "mesh.h"
 #include "frag_shader.h"
 #include "vert_shader.h"
 #include "render.h"
-
-typedef struct {
-	Texture* textures;
-	int t_len, t_cap;
-
-	Mesh* meshes;
-	int m_len, m_cap;
-} Assets;
-
-typedef struct {
-	Assets*   assets;
-	Renderer* renderer;
-} App;
-
-Texture* texture_create(const char* filepath_to_png);
-Mesh*    mesh_create(const char filepath_to_obj);
-void     assets_add_tex(Assets* a, Texture* tex);
-void     assets_add_mesh(Assets* a, Mesh* mesh);
 // Loading & Destroying Assets 
 struct TexData load_textures(){
 	int num_textures = 1;
-	Texture** textures = malloc(sizeof(Texture*)*num_textures);
 
+	Texture** textures = malloc(sizeof(Texture*));
 	Texture* tex = texture_load("./assets/textures/brickwall.png");
-
 	textures[0] = tex;
 
 	struct TexData data = {
@@ -49,7 +32,7 @@ struct MeshData load_meshes(){
 
 	Mesh* bunny_mesh = malloc(sizeof(Mesh));
 	*bunny_mesh = mesh_parse_from_obj("./assets/models/bunny.obj");	
-	mesh_recalculate_normals(bunny_mesh);
+	if(!bunny_mesh->normals) mesh_recalculate_normals(bunny_mesh);
 
 	meshes[0] = bunny_mesh;
 

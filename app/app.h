@@ -6,6 +6,14 @@
 
 #include "material.h"
 #include "scene_manager.h"
+#include "render.h"
+
+typedef struct Assets Assets;
+
+typedef struct {
+	Assets*   assets;
+	Renderer* renderer;
+} App;
 
 struct TexData {
 	struct Texture** textures;
@@ -24,7 +32,6 @@ struct AppAssets {
 
 struct AppAssets app_load_assets();
 void app_destroy_assets(struct AppAssets assets);
-
 Scene* app_create_scene();
 void app_update_scene(Scene* scene, float delta_time, SDL_Event* event, bool* running);
 void app_destroy_scene(Scene* scene);
