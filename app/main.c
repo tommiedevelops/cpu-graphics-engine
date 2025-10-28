@@ -13,22 +13,22 @@
 
 #define MAX_Z (100000.0f)
 #define CLEAR_COLOR (0x87CEEBFF)
-#define WIDTH (1920)
-#define HEIGHT (780)
+#define W_WIDTH (1920)
+#define W_HEIGHT (780)
 #define W_NAME ("cpu graphics engine")
 
 int main(void) {
 
 	struct AppAssets assets = app_load_assets();
-	Scene* scene = app_create_scene(assets, WIDTH, HEIGHT);
+	Scene* scene = app_create_scene(assets, W_WIDTH, W_HEIGHT);
 
 	struct Time time;
 	time_init(&time);
 
-	FrameBuffer* fb = frame_buffer_create(WIDTH,HEIGHT);
+	FrameBuffer* fb = frame_buffer_create(W_WIDTH,W_HEIGHT);
 	Pipeline*     p = pipeline_create(vs_default, fs_unlit);
 	Renderer*     r = renderer_init(p, fb);
-	Window*       w = window_create(WIDTH,HEIGHT,W_NAME);
+	Window*       w = window_create(W_WIDTH,W_HEIGHT,W_NAME);
 
         SDL_Event event;
 
@@ -38,11 +38,11 @@ int main(void) {
 		update_time(&time);
 		app_update_scene(scene, time.delta_time, &event, &running);
 		renderer_draw_scene(r, scene);
-                update_window(w, fb->framebuffer);
+                window_update(w, fb->framebuffer);
 	}
 
 	app_destroy_scene(scene);
 	app_destroy_assets(assets);
-       	destroy_window(w);
+       	window_destroy(w);
         return 0;
 }

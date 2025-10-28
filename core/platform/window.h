@@ -14,7 +14,7 @@ typedef struct {
 } Window;
 
 Window* window_create(int w_width, int w_height, const char* w_name);
-void destroy_window(Window* w);
-void update_window(Window* w, uint32_t* framebuffer);
+void window_destroy(Window* w);
+void window_update(Window* w, uint32_t* framebuffer);
 
 #endif

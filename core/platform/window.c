@@ -36,7 +36,7 @@ Window* window_create(int width, int height, const char* name){
 	return win;
 }
 
-void destroy_window(Window* w){
+void window_destroy(Window* w){
 	SDL_DestroyTexture(w->texture);
 	SDL_DestroyRenderer(w->renderer);
 	SDL_DestroyWindow(w->window);
@@ -44,7 +44,7 @@ void destroy_window(Window* w){
 	SDL_Quit();
 }
 
-void update_window(Window* w, uint32_t* fb) {
+void window_update(Window* w, uint32_t* fb) {
 	SDL_UpdateTexture(w->texture, NULL, fb, w->width*sizeof(uint32_t));
 	SDL_RenderClear(w->renderer);
 	SDL_RenderCopy(w->renderer, w->texture, NULL, NULL);
