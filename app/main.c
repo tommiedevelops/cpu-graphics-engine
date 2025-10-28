@@ -15,6 +15,7 @@
 #define CLEAR_COLOR (0x87CEEBFF)
 #define WIDTH (1920)
 #define HEIGHT (780)
+#define W_NAME ("cpu graphics engine")
 
 int main(void) {
 
@@ -27,8 +28,8 @@ int main(void) {
 	FrameBuffer* fb = frame_buffer_create(WIDTH,HEIGHT);
 	Pipeline*     p = pipeline_create(vs_default, fs_unlit);
 	Renderer*     r = renderer_init(p, fb);
+	Window*       w = window_create(WIDTH,HEIGHT,W_NAME);
 
-        struct SDL_Data window_data = initialise_window(WIDTH, HEIGHT);
         SDL_Event event;
 
         bool running = true;
@@ -37,11 +38,11 @@ int main(void) {
 		update_time(&time);
 		app_update_scene(scene, time.delta_time, &event, &running);
 		renderer_draw_scene(r, scene);
-                update_window(window_data, fb->framebuffer);
+                update_window(w, fb->framebuffer);
 	}
 
 	app_destroy_scene(scene);
 	app_destroy_assets(assets);
-       	destroy_window(window_data);
+       	destroy_window(w);
         return 0;
 }

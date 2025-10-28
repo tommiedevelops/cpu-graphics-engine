@@ -6,16 +6,15 @@
 #include <stdio.h>
 #include <SDL2/SDL.h>
 
-
-struct SDL_Data {
+typedef struct {
         SDL_Window* window;
         SDL_Renderer* renderer;
         SDL_Texture* texture;
 	int width, height;
-};
+} Window;
 
-struct SDL_Data initialise_window(int width, int height);
-void destroy_window(struct SDL_Data data);
-void update_window(struct SDL_Data data, uint32_t* framebuffer);
+Window* window_create(int w_width, int w_height, const char* w_name);
+void destroy_window(Window* w);
+void update_window(Window* w, uint32_t* framebuffer);
 
 #endif
