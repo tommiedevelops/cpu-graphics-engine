@@ -153,26 +153,20 @@ static void assemble_triangle(Triangle* tri, VSout* out, int tri_idx) {
 
 void renderer_draw_triangle(Renderer* r, Mesh* mesh, Material* mat, size_t tri_idx) {
 
-	VSin   in[3] = {0};
-	VSout out[3] = {0};
+	Triangle clip_result[6];
+	Triangle tri;
+	VSin     in[3];
+	VSout    out[3];
 
 	const Pipeline* mat_p = material_get_pipeline(mat);
 	const Pipeline* p     = mat_p ? mat_p : r->p; 
 
-	const VertShaderF vert_shader = p->vs;
-	const FragShaderF frag_shader = p->fs;
-	const VSUniforms* vs_u        = r->vs_u;
-
 	assemble_triangle_inputs(mesh, tri_idx, in);
-	apply_vertex_shader(in, out, vs_u, vert_shader);
+	apply_vertex_shader(in, out, r->vs_u, p->vs);
 
-	Triangle tri = {0};
 	assemble_triangle(&tri, out, tri_idx);
-
-	Triangle clip_result[6] = {0};
 	int num_tris = clip_tri(&tri, clip_result);
-
-	process_clip_and_rasterize(r, clip_result, num_tris, frag_shader);
+	process_clip_and_rasterize(r, clip_result, num_tris, p->fs);
 }
 
 static void renderer_draw_game_object(Renderer* r, GameObject* go) {
@@ -186,16 +180,16 @@ static void renderer_draw_game_object(Renderer* r, GameObject* go) {
 
 static void prepare_per_scene_uniforms(Renderer* r, Scene* scene) {
 
-	const int width    = r->fb->width;
-	const int height   = r->fb->height;
-	const float aspect = (float)height/(float)width;
+	const int   width    = r->fb->width;
+	const int   height   = r->fb->height;
+	const float aspect   = (float)height/(float)width;
 
-	const Camera* cam = scene_get_camera(scene);
-	const Transform* tr = &cam->transform;
+	const Camera*    cam = scene_get_camera(scene);
+	const Transform* tr  = &cam->transform;
 
-	const Mat4 view = get_view_matrix(tr->position, tr->rotation, tr->scale);
-	const Mat4 proj  = get_projection_matrix(cam->fov, cam->near, cam->far, aspect);
-	const Mat4 viewport = get_viewport_matrix(cam->near, cam->far, width, height);
+	const Mat4  view     = get_view_matrix(tr->position, tr->rotation, tr->scale);
+	const Mat4  proj     = get_projection_matrix(cam->fov, cam->near, cam->far, aspect);
+	const Mat4  viewport = get_viewport_matrix(cam->near, cam->far, width, height);
 
 	r->vs_u->view       = view;
 	r->vs_u->proj       = proj;
@@ -206,10 +200,8 @@ static void prepare_per_scene_uniforms(Renderer* r, Scene* scene) {
 }
 
 static void prepare_per_game_object_uniforms(Renderer* r, GameObject* go) {
-
 	const Transform* tr = &go->transform;
-	Mat4 model = get_model_matrix(tr->position, tr->rotation, tr->scale);
-	r->vs_u->model      = model;
+	r->vs_u->model      = get_model_matrix(tr->position, tr->rotation, tr->scale);
 	r->fs_u->base_color = material_get_base_color(go->material);
 	r->fs_u->tex        = material_get_texture(go->material);
 }

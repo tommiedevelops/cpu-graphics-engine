@@ -35,6 +35,7 @@ int main(void) {
         bool running = true;
         while(running) {
 		frame_buffer_clear(fb, CLEAR_COLOR);
+		print_fps(&time);
 		update_time(&time);
 		app_update_scene(scene, time.delta_time, &event, &running);
 		renderer_draw_scene(r, scene);
