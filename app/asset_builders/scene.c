@@ -8,8 +8,10 @@
 #include "matrix.h"
 
 #define PI (3.14159265359)
+
+
 typedef struct Scene {
-	Lighting* lighting;
+	Light* light;
 	Camera *cam;
 
 	GameObject **gos;
@@ -17,23 +19,21 @@ typedef struct Scene {
 	
 } Scene;
 
-Scene* scene_init() {
+Scene* scene_create(Camera* cam, Light* light) {
 
 	// No camera, No game objects and no lighting
 	int go_len = 0; int go_cap = 2;
 	GameObject** gos = malloc(go_cap*sizeof(GameObject*));
 
-	Lighting* lighting = lighting_init();
-
 	Scene* scene = malloc(sizeof(Scene));
 
-	if(!scene || !gos || !lighting) return NULL;
+	if(!scene || !gos || !light) return NULL;
 
-	scene->cam = NULL;	
-	scene->gos = gos;
+	scene->cam    = cam;
+	scene->light  = light;
+	scene->gos    = gos;
 	scene->go_len = go_len;
 	scene->go_cap = go_cap;
-	scene->lighting = lighting;
 
 	return scene;
 }
@@ -42,8 +42,11 @@ int scene_get_num_gos(Scene* scene) {
 	return scene->go_len;
 }
 
-Lighting* scene_get_lighting(Scene* scene){
-	return scene->lighting;
+Light* light_create(Vec3f direction, Vec4f color) {
+	Light* l = malloc(sizeof(Light));
+	l->direction = direction;
+	l->color = color;
+	return l;
 }
 
 Camera* scene_get_camera(Scene* scene) {
@@ -78,14 +81,7 @@ int scene_add_game_object(Scene* scene, GameObject* go)  {
 	return go_idx;
 }
 
-int scene_add_light(Scene* scene, Light* light) {
-	int idx = lighting_add_light(scene->lighting, light);
-	return idx;
-}
-
-Light* scene_get_light(Scene* scene, int idx) {
-	return lighting_get_light(scene->lighting, idx);
-}
+inline Light* scene_get_light(Scene* scene) { return scene->light; } 
 
 GameObject* scene_get_game_object(Scene* scene, int go_idx) {
 	if(go_idx < 0 || go_idx > scene->go_len) {
@@ -96,15 +92,12 @@ GameObject* scene_get_game_object(Scene* scene, int go_idx) {
 	return scene->gos[go_idx];
 }
 
-void scene_uninit(Scene* scene) {
+void scene_destroy(Scene* scene) {
 
 	for(int i = 0; i < scene->go_len; i++) free(scene->gos[i]);
 	free(scene->gos);
-	
-	lighting_uninit(scene->lighting);
-
+	free(scene->light);
 	free(scene->cam);
-
 	free(scene);
 }
 

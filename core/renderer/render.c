@@ -201,8 +201,7 @@ static void prepare_per_scene_uniforms(Renderer* r, Scene* scene) {
 	r->vs_u->proj       = proj;
 	r->vs_u->viewport   = viewport;
 
-	r->fs_u->lights           = scene_get_lighting(scene)->lights;
-	r->fs_u->num_lights       = scene_get_lighting(scene)->len;
+	r->fs_u->light            = scene_get_light(scene);
 	r->fs_u->cam_world_pos    = scene_get_camera(scene)->transform.position;
 }
 

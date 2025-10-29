@@ -22,8 +22,7 @@ typedef struct {
 	Vec3f cam_world_pos;
 	Vec4f base_color;
 	Texture* tex;
-	Light** lights;
-	size_t num_lights;
+	Light* light;
 } FSUniforms;
 
 typedef void (*FragShaderF)(const FSin* in, FSout* out, const FSUniforms* u);	

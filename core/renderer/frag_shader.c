@@ -1,8 +1,9 @@
 #include "triangle.h"
 #include "vector.h"
 #include "frag_shader.h"
+#include "scene.h"
 #include "texture.h"
-#include "lighting.h"
+
  
 static Vec3f compute_reflection_vector(Vec3f l, Vec3f n){
 	float dot = vec3f_dot(l,n);
@@ -40,10 +41,9 @@ void fs_unlit(const FSin* in, FSout* out, const FSUniforms* u){
 
 void fs_lit(const FSin* in, FSout* out, const FSUniforms* u) {
 	Vec4f albedo = u->tex ? texture_sample(u->tex, in->uv.x, in->uv.y) : u->base_color;
-	// assuming 1 light
-	Light** lights = u->lights;
-	Vec3f light_dir = vec3f_normalize(lights[0]->direction);
-	Vec4f light_col = lights[0]->color;
+	Light* l = u->light;
+	Vec3f light_dir = vec3f_normalize(l->direction);
+	Vec4f light_col = l->color;
 	Vec3f norm = in->normal;
 
 	out->color = compute_diffuse(albedo, light_dir, light_col, norm);
@@ -52,11 +52,11 @@ void fs_lit(const FSin* in, FSout* out, const FSUniforms* u) {
 
 void fs_phong(const FSin* in, FSout* out, const FSUniforms* u) {
 	Vec4f albedo = u->tex ? texture_sample(u->tex, in->uv.x, in->uv.y) : u->base_color;
-	// assuming 1 light
-	Light** lights = u->lights;
-	Vec3f light_dir = vec3f_normalize(lights[0]->direction);
 
-	Vec4f light_col = lights[0]->color;
+	Light* l = u->light;
+	Vec3f light_dir = vec3f_normalize(l->direction);
+
+	Vec4f light_col = l->color;
 	Vec3f norm = vec3f_normalize(in->normal);
 	Vec3f cam_pos = u->cam_world_pos;
 	Vec3f world_pos = in->world_pos; 

@@ -9,11 +9,7 @@
 #include "render.h"
 
 typedef struct Assets Assets;
-
-typedef struct {
-	Assets*   assets;
-	Renderer* renderer;
-} App;
+typedef struct App App;
 
 struct TexData {
 	struct Texture** textures;

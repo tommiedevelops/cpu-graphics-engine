@@ -6,7 +6,7 @@
 #include "quaternion.h"
 #include "material.h"
 #include "mesh.h"
-#include "lighting.h"
+
 
 // --- STRUCT DEFINITIONS --- 
 typedef struct Transform {
@@ -30,20 +30,24 @@ typedef struct Camera {
 	float screen_height;
 } Camera;
 
+typedef struct Light {
+	Vec4f color;
+	Vec3f direction;
+} Light;
+Light* light_create(Vec3f direction, Vec4f color);
+
 typedef struct Scene Scene;
 
 Scene*      scene_create();
 void        scene_destroy(Scene* scene);
 int         scene_get_num_gos(Scene* scene);
-Lighting*   scene_get_lighting(Scene* scene);
-Light*      scene_get_light(Scene* scene, int light_idx);
+Light*      scene_get_light(Scene* scene);
 int         scene_add_light(Scene* scene, Light* light);
 void        scene_add_camera(Scene* scene, Camera* cam);
 Camera*     scene_get_camera(Scene* scene);
 int         scene_add_game_object(Scene* scene, GameObject* go); // returns go id
 GameObject* scene_get_game_object(Scene* scene, int go_idx);
 void        scene_delete_game_object(Scene* scene);
-void        scene_uninit(Scene* scene);
 
 GameObject* game_object_create(Transform tr, Mesh* mesh, Material* mat);
 

@@ -8,8 +8,11 @@
 #include "frag_shader.h"
 #include "vert_shader.h"
 #include "render.h"
+#include "window.h"
+#include "assets_manager.h"
+#include "framebuffer.h"
 
-typedef struct {
+typedef struct App {
 	Scene*       scene;
 	Assets*      assets;
 	Renderer*    renderer;
@@ -29,10 +32,10 @@ App* app_create(Scene* s, Assets* a, Renderer* r, FrameBuffer* fb, Window* w) {
 
 void app_destroy(App* app) {
 	scene_destroy(app->scene);
-	assets_destroy(app->assets);
-	renderer_destroy(app->renderer);
-	framebuffer_destroy(app->fb);
-	window_destroy(w);
+	assets_uninit(app->assets);
+	renderer_uninit(app->renderer);
+	frame_buffer_destroy(app->fb);
+	window_destroy(app->window);
 }
 
 // Loading & Destroying Assets 
@@ -191,14 +194,10 @@ struct AppAssets app_load_assets(){
 Scene* app_create_scene(struct AppAssets assets, int width, int height){
 
 	Camera* cam = prepare_camera(width, height);
+	Light* light = light_create((Vec3f){-1.0f,-1.0f,1.0f}, VEC4F_1);
 
-	if(NULL == cam) return NULL;
-
-	Scene* scene = scene_init();
-
-	scene_add_camera(scene, cam);
+	Scene* scene = scene_create(cam, light);
 	scene_add_game_object(scene, prepare_game_objects(assets));
-	scene_add_light(scene, light_default());
 
 	if(NULL == scene) return NULL;
 
@@ -210,7 +209,7 @@ void app_update_scene(Scene* scene, float dt, SDL_Event* event, bool* running){
 }
 
 void app_destroy_scene(Scene* scene){
-	scene_uninit(scene);
+	scene_destroy(scene);
 }
 
 void destroy_textures(struct TexData textures) {
