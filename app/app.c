@@ -84,7 +84,7 @@ GameObject* prepare_game_objects(struct AppAssets assets){
 	// Bunny
 	Vec4f lavender = vec4f_create(0.40,0.70,0.38,0.4);
 	Pipeline* p = pipeline_create(vs_default, fs_phong);
-	Material* bunny_material = material_create(lavender, textures[0], p); 	
+	Material* bunny_material = material_create(lavender, NULL, p); 	
 	Vec3f bunny_pos = vec3f_create(0.0, 0.0f, 0.0f);
 	Vec3f bunny_scale = vec3f_create(3.0f, 3.0f, 3.0f);
 
@@ -170,7 +170,7 @@ void update_scene(Scene* scene, float dt, SDL_Event* event, bool* running){
 
 	// Spin the bunny
 	float bunny_ang_vel = 2.0f;
-	Vec3f rot_axis = vec3f_create(0.0f, -1.0f, 0.0f);
+	Vec3f rot_axis = vec3f_create(0.0f, 1.0f, 0.0f);
 	Quat bunny_rot = quat_angle_axis(dt*bunny_ang_vel, rot_axis);
 
 	GameObject* bunny_go = scene_get_game_object(scene,0);

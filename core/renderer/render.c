@@ -88,8 +88,8 @@ static inline int min_i(int a, int b) {return a < b ? a : b; }
 
 static void rasterize_triangle(Renderer* r, Triangle* tri, FragShaderF frag_shader) {
 	
-	FSin  fs_in  = (FSin){0}; 
-	FSout fs_out = (FSout){0};
+	FSin  fs_in;
+	FSout fs_out;
 	
 	FrameBuffer* fb = r->fb;
 	Bounds b = tri_get_bounds(tri);
