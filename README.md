@@ -35,17 +35,17 @@ This project is designed as an educational exploration of how modern GPU graphic
 
 flowchart TD
 
-APP["**App**</br>Custom Scripting, Game Loop, Event Handling, Custom Shaders"]
+APP["**App**</br>Custom Scripting, Game Loop"]
 
-SM["**Scene Manager**</br>Manages Scene runtime, GameObjects, Light, Camera structures"]
+SM["**Scene Manager**</br>Manages Scene runtime"]
 
-AM["**Asset Manager**</br>Manages lifecycle of Material, Mesh, Scene, Texture structures"]
+AM["**Asset Manager**</br>Material, Mesh, Scene, Texture structures"]
 
-R["**Renderer**</br>Renders Scene structure to FrameBuffer via Graphics Pipeline"]
+R["**Renderer**</br>Renders Scene to FrameBuffer"]
 
-F["**FrameBuffer**Performs Depth Test and presents pixels to Window"]
+F["**FrameBuffer**</br>Depth Test & presents to Window"]
 
-W["**Window**Presents FrameBuffer to the screen & emits events for user input"]
+W["**Window**</br>Presents FrameBuffer, Emits events"]
 
 APP -.Update Scene.-> SM
 APP -.Load Assets.-> AM
