@@ -8,7 +8,7 @@
 \newcommand{\uvect}[1]{\hat{\bm{#1}}} % unit vectors: \uvect{n}
 
 \author{Thomas Dizon}
-\title{Implementing a Software Rasterizer in C}
+\title{CPU Graphics Engine}
 
 \begin{document}
 
@@ -29,50 +29,86 @@
 \section{Introduction}
 
 \subsection{Motivation}
-* Learn about the Graphics Pipeline
-* Help me develop good, optimized, unique graphics in games / game assets
-* Learn how the GPU works!
+\begin{itemize}
+	\item As someone interested in developing 3D games and graphics, I was frustrated with how much I didn't understand when I used game engines like Unity and Godot. When I wanted to achieve a simple effect like adding grass, water or natural-looking terrain, I was overwhelmed with my own inability. Thus, I committed myself to building a 3D engine from scratch so I could allow these concepts that I didn't understand emerge naturally as byproducts as I worked towards the goal of rendering 3D objects. 
+\item Now that I've more or less finished the project, it is A LOT easier now to imagine how to achieve some graphical effect like a grass or water shader. Since I understand how it works conceptually under the hood, the programming is a lot easier.
+\item It's also a great precursor to understanding more in depth how the GPU works.
+\end{itemize}
 
 \subsubsection{What is a \textit{Software Rasterizer}?}
-* The 'rasterization' step in the graphics render pipline is a specific part which involves converting Primitives into Fragments
-* A primitive, in my case, is a Triangle and a Fragment is an (x,y) value on the screen with an additional z value to track its depth
-* In the real world, rasterization is done purely through specialized hardware on the GPU (which is why it is so fast)
-* To conceptually understand how it works, instead of building a GPU from scratch (hard), I'll use my good old CPU to do the rasterizing (still hard but easier)
-
+\begin{itemize}
+\item The 'rasterization' step in the graphics render pipline is a specific part which involves converting Primitives into Fragments
+\item A primitive, in my case, is a Triangle and a Fragment is an (x,y) value on the screen with an additional z value to track its depth
+\item In the real world, rasterization is done purely through specialized hardware on the GPU (which is why it is so fast)
+\item To conceptually understand how it works, instead of building a GPU from scratch (hard), I'll use my good old CPU to do the rasterizing (still hard but easier)
+\end{itemize}
 \subsubsection{Why \textit{C}?}
-* I first touched C during my Systems Programming course at University. It was extrememly difficult for me at the time but very benefiical for my programming skills. I felt that I haven't extracted all that I can from the language yet.
-* Also, I wanted to get as low level as possible for this project to ensure I had minimal dependencies. To truly understand the Graphics Pipeline, I wanted to build it truly (well, mostly) from scratch
-
-\subsubsection{What's the difference between a Software Rasterizer and a \textit{Real} Rasterizer?}
-* bleeh blah 
+\begin{itemize}
+\item I first touched C during my Systems Programming course at University. It was extrememly difficult for me at the time but very benefiical for my programming skills. I felt that I haven't extracted all that I can from the language yet.
+\item Also, I wanted to get as low level as possible for this project to ensure I had minimal dependencies. To truly understand the Graphics Pipeline, I wanted to build it truly (well, mostly) from scratch
+\end{itemize}
 \subsubsection{What does the project depend on?}
-* Right now, it depends on the C standard library, std\_image.h (reference) for dealing with .png files and SDL2 (reference) for handling all the OS level stuff like inputs and writing to the screen. Though you coud easily replace SDL with any other kind of 2D array.
+\begin{itemize}
+\item Right now, it depends on the C standard library, std\_image.h (reference) for dealing with .png files and SDL2 (reference) for handling all the OS level stuff like inputs and writing to the screen. Though you could easily replace SDL with any other library which creates Windows for you like RayLib.
+\end{itemize}
 
 \section{Background}
 
 \subsection{Math Concepts}
 \subsubsection{Vectors}
-* In this document, we will use typical Vector operations and notation including but not limited to the following
-* A vector is $\textbf{v}$ is a collection of real numbers denoted by 
-* The \textit{dot product} is defined by
-* The \textit{cross product} is defined by
-* A unit vector is denoted by the hat
-* A plane --
+\begin{itemize}
+\item In this document, we will use typical Vector operations and notation including but not limited to the following
+\item A vector is $\textbf{v}$ is a collection of real numbers denoted by 
+\item The \textit{dot product} is defined by
+\item The \textit{cross product} is defined by
+\item A unit vector is denoted by the hat
+\end{itemize}
 
+\subsubsection{Planes}
+\begin{itemize}
+	\item A plane is defined by \textbf{**TODO**}
+\end{itemize}
 \subsubsection{Matrices}
 
+\begin{itemize}
+	\item To understand Graphics Engines, you must become somewhat familiar with the operation of matrices. In particular: Matrix Multiplication, Inverse Matrices, Matrices as Linear Transformations and probably more. I provide a very scarce review below.
+	\item Matrix multiplication is done like so:
+	\item Matrix Inverse is calculated like so:
+	\item For an affine, orthonormal matrix, the inverse can be calculated like this ( + reference)
+\end{itemize}
 \subsubsection{Quaternions}
-* A quaternion is a type of number system blah blah
+\begin{itemize}
+	\item To represents rotations in 3D space, I use Quaternions. While you can use a composition of 3x3 Euler Matrices, they are slower, hard to interpolate and are at risk of Gimbal Lock (+ Reference).
+	\item A Quaternion is a kind of 4D complex number $q = q_0 + q$ where $q_0$ is a scalar and
+$q$ is an R3 vector where each component has unit vectors $i, j, k$.
+	\item The unit vectors $i,j,k$ adhere to the following multiplication rules. \textbf{**TODO**}
+	\item Whenever you are interested in rotating an object in 3D space, you need to specify 2 things: An axis and an angle. These are encoded in the Unit Quaternion in the following way: \textbf{**TODO**}
+	\item In the space of Unit Quaternions, if you operate a Unit Quaternion on a Vector, it results in a rotation of some degrees about some axis.
+\end{itemize}
+\subsubsection{Coordinate Spaces}
+\begin{itemize}
+	\item Cartesian
+	\item Projective
+	\item Barycentric
+	\item Spherical, Cylindrical
+\end{itemize}
 \subsubsection{Transformations}
-
-\subsubsection{Coordinate Systems}
-* 
-
+\begin{itemize}
+	\item Model, View
+	\item Projection
+	\item Viewport
+\end{itemize}
 \subsection{Algorithms}
 \subsubsection{Rasterization}
-* Takes a Primitive (Triangle made of Vertices) after is has been transformed by MVP and VP. It computes Bounding Box and using BaryCentric Coordinates with respect to the Triangle vertex positions decides which pixels to remove based on whether they are inside or outside of the triangle
+\begin{itemize}
+	\item (First Approach) Takes a Primitive (Triangle made of Vertices) after is has been transformed by MVP and VP. It computes Bounding Box and using BaryCentric Coordinates with respect to the Triangle vertex positions decides which pixels to remove based on whether they are inside or outside of the triangle \textbf{**FIGURE**}
+	\item (Optimized Approach) Iterative Edge Functions \textbf{**TODO**}
+\end{itemize}
 \subsubsection{Clipping}
-\subsubsection{Anti-Aliasing}
+\begin{itemize}
+\item This algorithm is used after the Vertex Shader when Vertex positions are in Clip Space. The goal of the algorithm is to determine which Vertices are outside of the Camera's view frustum, and clip them. If a Triangle contains some vertices inside and some outisde, it also has to reconstruct the Triangle using the edge of the frustum.
+\item \textbf{**TODO**} Write some pseudocode, include a diagram
+\end{itemize}
 
 \section{System Architecture}
 
@@ -83,9 +119,28 @@
 
 \subsection{Data Design}
 \subsubsection{Primitives: Triangles and Vertices}
-\subsubsection{Textures and Materials}
+\begin{itemize}
+	\item In this project, a Triangle consists of an array of size 3 of VSout structures which is the output of the Vertex Shader. This is, in essence, the same thing as a Vertex.
+	\item The VSout consists of Vec4f clip space position, Vec2f uv coordinates,Vec3f normals along with some other stuff. \textbf{**FIX!!**}
+\end{itemize}
+\subsubsection{Meshes and Materials}
+\begin{itemize}
+	\item A mesh is a collection of Vertex data in the form of a Vector array and corresponding \textit{Index Arrays} which tells us which Triangles the data belongs to. For example in FIGURE X. 
+	\item A Material is a container for various properties like Albedo, Specular Intensity, etc. which tells the Renderer how to render the geometry. Is also contains a reference to a Pipeline structure which consists of a Vertex and Fragment shader. 
+\end{itemize}
 \subsubsection{Framebuffer and Zbuffer}
-\subsubsection{Scene, GameObject, Camera, LightSource}
+\begin{itemize}
+	\item The FrameBuffer structure contains a 1D uint32\_t array of size $Screen Width * Screen Height$ where the result of pixel $(x,y)$ on the screen is stored in $ScreenWidth * y + x$ in the array. 
+	\item It also stores a 1D float array of the same dimensions which stores the depth value of the closest fragment to the screen at that pixel coordinate
+\end{itemize}
+\subsubsection{Scene, GameObject, Camera, Light}
+\begin{itemize}
+	\item Scene stores a Dynamic Array of GameObjects, a single Camera and a single Light source. The scene is the home of World Coordinates where you can say how different objects in the scene are placed relative to each other. 
+	\item GameObject consists of a Transform which tells us where its Position, Rotation and Scale in World Space, a Mesh which tells us the geometry of the object and a Material which tells us how to render the object. GameObject is the home of Model/Object space coordinates which is used by its Mesh to detail its Geometry.
+	\item Camera contains all the parameters to specify the View frustrum which is used to decide what objects can be rendered to the screen. It also has a Transform. Camera is the home of View space coordinates which is used as part of the Render Pipeline.
+	\item Light is a simple directional light. So it contains a Vec3f for its direction in world space and a Vec4f for its color.
+\end{itemize}
+
 
 \subsection{Software Design}
 \subsubsection{Procedural Programming vs. Object Oriented Programming}

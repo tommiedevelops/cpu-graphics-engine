@@ -88,7 +88,7 @@ The architecture follows a linear data flow. User input data is first processed 
 
 
 ## How it works
-* See HOW_IT_WORKS.pdf which details the maths, algorithms etc.
+* See [HOW_IT_WORKS.pdf](./docs/latex/main.pdf) which details the maths, algorithms etc.
 
 ## Installation instructions
 
