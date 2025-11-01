@@ -22,7 +22,7 @@ int main(void) {
 	struct AppAssets assets = app_load_assets();
 	Scene* scene = app_create_scene(assets, W_WIDTH, W_HEIGHT);
 
-	struct Time time;
+	Time time;
 	time_init(&time);
 
 	FrameBuffer* fb = frame_buffer_create(W_WIDTH,W_HEIGHT);

@@ -26,18 +26,13 @@ To separate user scripting and backend rendering logic, the engine uses an **App
 - **Asset Manager** – API for managing lifecycle of material, mesh, scene, and texture data shared between App and Core.
 - **Scene Manager** - API for handling Scene creation and update rules
 
-### User Flow Summary
-
-```mermaid
-flowchart LR
-A["Create / Load Scene</br> via Scene Manager"] --> B["Create / Load Assets</br>via Asset Manager"]
-B --> C["GameObjects created and</br>added to Scene"]
-C --> D["Update Scene in</br>Render Loop"]
-D --> E["Core renders Scene</br>to screen"]
-```
-
-
-## Data Flow Diagram
+### Flow Summary
+- In the App Layer, the user creates or loads a Scene via the Scene Manager.
+- To add objects to the scene to render, we first need to build the required assets (Textures, Materials, Meshes) which is done via the Asset Manager.
+- Once ready, GameObjects can be constructed and added to the Scene. GameObjects contain a Transform which tells us where it is in the Scene, a Mesh which tells us its geometry and a Material which tells us how to render it.
+- The user also specifies the rules for how the Scene components (Camera, Light, GameObjects) should evolve with time inside the Render Loop, factoring in User Input Events from the Window.
+- Each iteration of the Render Loop, the user can call the draw_scene function via the Render API to execute Core Layer code which renders the scene to the screen.
+### Data Flow Diagram
 
 ```mermaid
 flowchart TD
@@ -83,8 +78,9 @@ end
     style Application fill:transparent,stroke:#4b5563,stroke-width:2px,color:#f8fafc
     style Core fill:transparent,stroke:#4b5563,stroke-width:2px,color:#f8fafc
 ```
-<p align=left>
-The architecture follows a linear data flow. User input data is first processed by the App, which updates the Scene via the Scene Manager API. The Scene Manager organizes scene structures (camera, lights, game objects) and forwards rendering data to the Renderer, which produces the final frame displayed on screen through the FrameBuffer and Window.
+<p align=center>
+<em>
+This diagram shows the flow of data throughout the components of the program. In the Application Layer, the Assets and Scene are prepared. Rules are also specified for how the Scene should update in time. In the Core Layer, Scene Data is handed off to the Renderer which processes it through the Graphics Pipeline before it is written to the FrameBuffer and presented to the Window.
 </p>
 
 ## Shaders Implemented (With Demos)

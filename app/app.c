@@ -38,6 +38,22 @@ void app_destroy(App* app) {
 	window_destroy(app->window);
 }
 
+static Scene* scene;
+static Camera* cam;
+static Light* light;
+
+void app_init(void) {
+	// USER LOGIC 
+}
+
+void app_update(float dt) {
+	// USER LOGIC
+}
+
+void app_shutdown(void) {
+	// USER LOGIC
+}
+
 // Loading & Destroying Assets 
 struct TexData load_textures(){
 	int num_textures = 1;
@@ -61,8 +77,8 @@ struct MeshData load_meshes(){
 	Mesh** meshes = malloc(sizeof(Mesh*)*num_meshes);
 
 	Mesh* bunny_mesh = malloc(sizeof(Mesh));
-	*bunny_mesh = mesh_parse_from_obj("./app/assets/models/bunny.obj");	
-	if(!bunny_mesh->normals) mesh_recalculate_normals(bunny_mesh);
+	*bunny_mesh = mesh_parse_from_obj("./assets/models/homer.obj");	
+	mesh_recalculate_normals(bunny_mesh);
 
 	meshes[0] = bunny_mesh;
 
@@ -84,7 +100,7 @@ GameObject* prepare_game_objects(struct AppAssets assets){
 	// Bunny
 	Vec4f lavender = vec4f_create(0.40,0.70,0.38,0.4);
 	Pipeline* p = pipeline_create(vs_default, fs_phong);
-	Material* bunny_material = material_create(lavender, NULL, p); 	
+	Material* bunny_material = material_create((Vec4f){1.0,1.0,0,1.0}, NULL, p); 	
 	Vec3f bunny_pos = vec3f_create(0.0, 0.0f, 0.0f);
 	Vec3f bunny_scale = vec3f_create(3.0f, 3.0f, 3.0f);
 

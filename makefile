@@ -1,8 +1,9 @@
 CC = gcc
 CFLAGS = -I/opt/homebrew/include -I/opt/homebrew/include/SDL2
-LDFLAGS = -L/opt/homebrew/lib -lSDL2 -lm -Iinclude -Icore/math -Icore/renderer -Iapp/asset_builders -Icore/platform -Iapp/ -Icore -Icore/third_party 
+LDFLAGS = -L/opt/homebrew/lib -lSDL2 -lm -Iinclude -Icore/math -Icore/renderer -Icore/asset_manager -Icore/platform -Iapp/ -Icore/scene_manager -Icore/third_party 
+
 DEBUGFLAGS = -fsanitize=address -g
-SRC_FILES := core/math/*.c core/renderer/*.c core/platform/*.c app/asset_builders/*.c app/*.c 
+SRC_FILES := core/math/*.c core/renderer/*.c core/platform/*.c app/*.c core/scene_manager/*.c core/asset_manager/*.c
 TEST_SRC_FILES := core/math/*.c core/renderer/*.c core/platform/*.c app/scene_manager/*.c app/asset_manager/*.c app/app.c
 TEST_FILES := $(wildcard tests/src/*.c)
 
