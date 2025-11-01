@@ -1,11 +1,11 @@
 <h1 align="left">CPU Graphics Engine</h1>
 <p align="left"><em>A modular, real-time CPU Graphics Engine written in C.</em></p>
 
-This project is designed as an educational exploration of how modern GPU graphics pipelines work — built mostly from scratch to simulate the core stages that power games, VFX, and real-time rendering system
+This project is an educational exploration of how modern GPU graphics pipelines work. It's built mostly from scratch to simulate the core stages that power games, VFX, and real-time rendering system.
 
 <p align="center">
   <img src="thumbnail.gif" alt="CPU Graphics Engine rendering" width="420"/><br>
-  <em>Stanford Bunny rendered with Phong shading on the CPU.</em>
+  <em>Stanford Bunny rendered with Phong shading</em>
 </p>
 
 ## Features
@@ -16,23 +16,14 @@ This project is designed as an educational exploration of how modern GPU graphic
 - **Interactive Rendering:** Control scenes at runtime via **SDL2 event handling** (keyboard, mouse, etc.)
 - **Transparent Graphics Pipeline:** A fully documented, step-by-step pipeline that mirrors modern GPU design — ideal for learning and debugging. *(See [Pipeline Diagram](#) for details.)* 
 
+## Architecture
+- The project follows an App / Core architecture where App supports custom scripting and Core is a static library.
+- App is where the user can use provided API's to create, build, manage and save Scene structures (Which the Renderer can Render) and its associated Assets like Textures, Meshes, Materials etc. and render them to the screen.
+- Core is where the fundamental back-end code lies which handles the full Graphics Pipeline.
+
 ## Data Flow Diagram
 
 ```mermaid
-%%{init: {
-  "theme": "dark",
-  "themeVariables": {
-    "primaryColor": "#1f2937",
-    "primaryTextColor": "#e5e7eb",
-    "primaryBorderColor": "#4b5563",
-    "lineColor": "#93c5fd",
-    "tertiaryColor": "#0b1220",
-    "fontFamily": "Inter, Roboto, Segoe UI, Helvetica, Arial",
-    "fontSize": "14px"
-  },
-  "flowchart": { "curve": "basis", "nodeSpacing": 30, "rankSpacing": 60 }
-} }%%
-
 flowchart TD
 
 APP["**App**</br>Custom Scripting, Game Loop"]
@@ -45,7 +36,7 @@ R["**Renderer**</br>Renders Scene to FrameBuffer"]
 
 F["**FrameBuffer**</br>Depth Test & presents to Window"]
 
-W["**Window**</br>Presents FrameBuffer, Emits events"]
+W["**Window**</br>Handles Hardware & Events"]
 
 APP -.Update Scene.-> SM
 APP -.Load Assets.-> AM
@@ -56,7 +47,6 @@ F --> W
 W -.Input Events.->APP
 
 %% ===== STYLES =====
-classDef group fill:#0f172a,stroke:#4b5563,stroke-width:1px,rx:10,ry:10;
 classDef Application fill:#111827,stroke:#475569,stroke-width:1px,rx:12,ry:12;
 classDef Core fill:#0b1220,stroke:#3f3f46,stroke-width:1px,rx:12,ry:12;
 
