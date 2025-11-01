@@ -11,6 +11,7 @@
 #include "window.h"
 #include "assets_manager.h"
 #include "framebuffer.h"
+#include "game_object.h"
 
 typedef struct App {
 	Scene*       scene;
@@ -91,7 +92,7 @@ struct MeshData load_meshes(){
 }
 
 // --- Preparing Scene ---
-GameObject* prepare_game_objects(struct AppAssets assets){
+GameObj* prepare_game_objects(struct AppAssets assets){
 
 	/* User Defined */
 	Texture** textures = assets.td.textures;
@@ -104,17 +105,17 @@ GameObject* prepare_game_objects(struct AppAssets assets){
 	Vec3f bunny_pos = vec3f_create(0.0, 0.0f, 0.0f);
 	Vec3f bunny_scale = vec3f_create(3.0f, 3.0f, 3.0f);
 
-	Transform bunny_tr = transform_create(bunny_pos, QUAT_IDENTITY, bunny_scale);
-	GameObject* bunny_go  = game_object_create(bunny_tr, meshes[0], bunny_material);
+	Transform* bunny_tr = transform_create(bunny_pos, QUAT_IDENTITY, bunny_scale);
+	GameObj* bunny_go  = game_obj_create(bunny_tr, meshes[0], bunny_material);
 
 	return bunny_go;
 }
 
 Camera* prepare_camera(int width, int height){
 	/* User Defined */
-	Transform tr = transform_default();
-	tr.position = vec3f_create(0.0f, 0.0f, -10.0f);
-	Camera* cam = camera_create(tr, width, height);
+	Transform* tr = transform_create(VEC3F_0, QUAT_IDENTITY, VEC3F_1);
+	tr->position = vec3f_create(0.0f, 0.0f, -10.0f);
+	Camera* cam = camera_create(*tr, width, height);
 	return cam;
 }
 
@@ -189,8 +190,8 @@ void update_scene(Scene* scene, float dt, SDL_Event* event, bool* running){
 	Vec3f rot_axis = vec3f_create(0.0f, 1.0f, 0.0f);
 	Quat bunny_rot = quat_angle_axis(dt*bunny_ang_vel, rot_axis);
 
-	GameObject* bunny_go = scene_get_game_object(scene,0);
-	Quat* curr_rot = &bunny_go->transform.rotation;
+	GameObj* bunny_go = scene_get_game_object(scene,0);
+	Quat* curr_rot = &bunny_go->tr->rotation;
 	*curr_rot = quat_normalize(quat_mul(*curr_rot, bunny_rot));
 }
 

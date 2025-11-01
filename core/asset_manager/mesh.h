@@ -1,6 +1,9 @@
 #ifndef MESH_H
 #define MESH_H
 
+typedef struct Vec3f Vec3f;
+typedef struct Vec2f Vec2f;
+
 typedef struct Mesh {
 	int num_vertices;
 	Vec3f* vertices;

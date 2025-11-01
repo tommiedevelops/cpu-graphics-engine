@@ -12,6 +12,7 @@
 #include "frag_shader.h"
 #include "framebuffer.h"
 #include "render.h"
+#include "game_object.h"
 
 typedef struct Renderer { 
 	VSUniforms* vs_u;
@@ -169,12 +170,12 @@ void renderer_draw_triangle(Renderer* r, Mesh* mesh, Material* mat, size_t tri_i
 	process_clip_and_rasterize(r, clip_result, num_tris, p->fs);
 }
 
-static void renderer_draw_game_object(Renderer* r, GameObject* go) {
+static void renderer_draw_game_object(Renderer* r, GameObj* go) {
 
 	size_t num_triangles = go->mesh->num_triangles;
 	for(size_t t = 0; t < num_triangles; t++) {
 		const size_t tri_idx = 3*t;
-		renderer_draw_triangle(r,go->mesh,go->material,tri_idx);
+		renderer_draw_triangle(r,go->mesh,go->mat,tri_idx);
 	}	
 }
 
@@ -199,11 +200,11 @@ static void prepare_per_scene_uniforms(Renderer* r, Scene* scene) {
 	r->fs_u->cam_world_pos    = scene_get_camera(scene)->transform.position;
 }
 
-static void prepare_per_game_object_uniforms(Renderer* r, GameObject* go) {
-	const Transform* tr = &go->transform;
+static void prepare_per_game_object_uniforms(Renderer* r, GameObj* go) {
+	const Transform* tr = go->tr;
 	r->vs_u->model      = get_model_matrix(tr->position, tr->rotation, tr->scale);
-	r->fs_u->base_color = material_get_base_color(go->material);
-	r->fs_u->tex        = material_get_texture(go->material);
+	r->fs_u->base_color = material_get_base_color(go->mat);
+	r->fs_u->tex        = material_get_texture(go->mat);
 }
 
 void renderer_draw_scene(Renderer* r, Scene* scene) {
@@ -215,8 +216,8 @@ void renderer_draw_scene(Renderer* r, Scene* scene) {
 	const size_t count = scene_get_num_gos(scene);
 
 	for(size_t i = 0; i < count; i++) {
-		GameObject* go = scene_get_game_object(scene, i);
-		if(!go || !go->mesh || !go->material) continue;
+		GameObj* go = scene_get_game_object(scene, i);
+		if(!go || !go->mesh || !go->mat) continue;
 		prepare_per_game_object_uniforms(r,go);
 		renderer_draw_game_object(r, go);
 	}

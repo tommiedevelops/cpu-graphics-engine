@@ -6,6 +6,7 @@
 #include "scene.h"
 #include "app.h"
 #include "matrix.h"
+#include "game_object.h"
 
 #define PI (3.14159265359)
 
@@ -13,16 +14,15 @@ typedef struct Scene {
 	Light* light;
 	Camera *cam;
 
-	GameObject **gos;
+	GameObj **gos;
 	size_t go_len, go_cap;
 	
 } Scene;
 
 Scene* scene_create(Camera* cam, Light* light) {
-
 	// No camera, No game objects and no lighting
 	int go_len = 0; int go_cap = 2;
-	GameObject** gos = malloc(go_cap*sizeof(GameObject*));
+	GameObj** gos = malloc(go_cap*sizeof(GameObj*));
 
 	Scene* scene = malloc(sizeof(Scene));
 
@@ -35,6 +35,10 @@ Scene* scene_create(Camera* cam, Light* light) {
 	scene->go_cap = go_cap;
 
 	return scene;
+}
+
+void core_scene_save(Scene* scene, const char* filepath){
+	//TODO
 }
 
 int scene_get_num_gos(Scene* scene) {
@@ -56,7 +60,7 @@ void scene_add_camera(Scene* scene, Camera* cam) {
 	scene->cam = cam;
 }
 
-int scene_add_game_object(Scene* scene, GameObject* go)  {
+int scene_add_game_object(Scene* scene, GameObj* go)  {
 
 	bool at_capacity = (scene->go_cap == scene->go_len);
 
@@ -66,7 +70,7 @@ int scene_add_game_object(Scene* scene, GameObject* go)  {
 	}
 
 	int new_cap = scene->go_cap + 2;
-	GameObject** new_array = realloc(scene->gos, new_cap*sizeof(GameObject*));	
+	GameObj** new_array = realloc(scene->gos, new_cap*sizeof(GameObj*));	
 
 	for(int i = 0; i < scene->go_len; i++) new_array[i] = scene->gos[i];
 
@@ -82,7 +86,7 @@ int scene_add_game_object(Scene* scene, GameObject* go)  {
 
 inline Light* scene_get_light(Scene* scene) { return scene->light; } 
 
-GameObject* scene_get_game_object(Scene* scene, int go_idx) {
+GameObj* scene_get_game_object(Scene* scene, int go_idx) {
 	if(go_idx < 0 || go_idx > scene->go_len) {
 		printf("invalid game object idx\n");
 		return NULL;
@@ -101,11 +105,11 @@ void scene_destroy(Scene* scene) {
 }
 
 // Transforms 
-Transform transform_create(Vec3f pos, Quat rot, Vec3f scale){
-	Transform tr;
-	tr.position = pos;
-	tr.rotation = rot;
-	tr.scale = scale;
+Transform* transform_create(Vec3f pos, Quat rot, Vec3f scale){
+	Transform* tr = malloc(sizeof(Transform));
+	tr->position = pos;
+	tr->rotation = rot;
+	tr->scale = scale;
 	return tr;
 }
 
@@ -146,14 +150,5 @@ void camera_set_near(Camera* cam, float near){
 
 void camera_set_far(Camera* cam, float far){
 	cam->far = far;
-}
-
-// GameObject
-GameObject* game_object_create(Transform tr, Mesh* mesh, struct Material* mat){
-	GameObject* go = malloc(sizeof(GameObject));
-	go->transform = tr;
-	go->mesh = mesh;
-	go->material = mat;
-	return go;
 }
 
