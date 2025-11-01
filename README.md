@@ -30,10 +30,10 @@ To separate user scripting and backend rendering logic, the engine uses an **App
 
 ```mermaid
 flowchart LR
-A["Create / Load Scene via Scene Manager"] --> B["Create / Load Assets via Asset Manager"]
-B --> C["GameObjects created and added to Scene"]
-C --> D["Update Scene in Render Loop"]
-D --> E["Core renders Scene to screen"]
+A["Create / Load Scene</br> via Scene Manager"] --> B["Create / Load Assets</br>via Asset Manager"]
+B --> C["GameObjects created and</br>added to Scene"]
+C --> D["Update Scene in</br>Render Loop"]
+D --> E["Core renders Scene</br>to screen"]
 ```
 
 
