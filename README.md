@@ -17,9 +17,25 @@ This project is an educational exploration of how modern GPU graphics pipelines 
 - **Transparent Graphics Pipeline:** A fully documented, step-by-step pipeline that mirrors modern GPU design — ideal for learning and debugging. *(See [Pipeline Diagram](#) for details.)* 
 
 ## Architecture
-- The project follows an App / Core architecture where App supports custom scripting and Core is a static library.
-- App is where the user can use provided API's to create, build, manage and save Scene structures (Which the Renderer can Render) and its associated Assets like Textures, Meshes, Materials etc. and render them to the screen.
-- Core is where the fundamental back-end code lies which handles the full Graphics Pipeline.
+### Design Philosophy
+To separate user scripting and backend rendering logic, the engine uses an **App/Core architecture**.
+
+### Components
+- **App Layer** – Provides the API surface for scripting, game loops, and scene logic.  
+- **Core Layer** – Implements low-level graphics pipeline and system operations.  
+- **Asset Manager** – API for managing lifecycle of material, mesh, scene, and texture data shared between App and Core.
+- **Scene Manager** - API for handling Scene creation and update rules
+
+### User Flow Summary
+
+```mermaid
+flowchart LR
+A["Create / Load Scene via Scene Manager"] --> B["Create / Load Assets via Asset Manager"]
+B --> C["GameObjects created and added to Scene"]
+C --> D["Update Scene in Render Loop"]
+D --> E["Core renders Scene to screen"]
+```
+
 
 ## Data Flow Diagram
 
