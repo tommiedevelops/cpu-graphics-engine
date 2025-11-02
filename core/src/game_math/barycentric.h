@@ -1,6 +1,7 @@
 #ifndef BARYCENTRIC_H
 #define BARYCENTRIC_H
 
+#include "vector.h"
 typedef struct BaryCoords {
 	float alpha, beta, gamma;
 } BaryCoords;

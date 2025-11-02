@@ -1,15 +1,12 @@
 #ifndef SCENE_MANAGER_H 
 #define SCENE_MANAGER_H
 
-#include "vector.h"
-#include "bounds.h"
-#include "quaternion.h"
+#include "game_math.h"
 #include "material.h"
 #include "mesh.h"
 
 typedef struct GameObj GameObj;
 
-// --- STRUCT DEFINITIONS --- 
 typedef struct Transform {
 	Vec3f position;
 	Quat rotation;  
