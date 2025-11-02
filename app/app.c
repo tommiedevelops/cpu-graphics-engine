@@ -78,7 +78,7 @@ struct MeshData load_meshes(){
 	Mesh** meshes = malloc(sizeof(Mesh*)*num_meshes);
 
 	Mesh* bunny_mesh = malloc(sizeof(Mesh));
-	*bunny_mesh = mesh_parse_from_obj("./assets/models/homer.obj");	
+	*bunny_mesh = mesh_parse_from_obj("./assets/models/bunny.obj");	
 	mesh_recalculate_normals(bunny_mesh);
 
 	meshes[0] = bunny_mesh;
