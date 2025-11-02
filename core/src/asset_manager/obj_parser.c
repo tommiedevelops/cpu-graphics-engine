@@ -4,8 +4,8 @@
 #include <float.h>
 #include <math.h>
 
-#include "bounds.h"
-#include "scene.h"
+#include "game_math/bounds.h"
+#include "scene_manager/scene.h"
 
 FILE* obj_open(char* filename){
 	FILE* fp = fopen(filename, "r");

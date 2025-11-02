@@ -1,7 +1,7 @@
 #ifndef FRAG_SHADER_H
 #define FRAG_SHADER_H
 
-#include "vector.h"
+#include "game_math/vector.h"
 
 typedef struct Light Light;
 typedef struct Texture Texture;

@@ -1,10 +1,9 @@
 #include <stdio.h>
 
-#include "vector.h"
-#include "bounds.h"
-
-#include "mesh.h"
-#include "obj_parser.h"
+#include "game_math/vector.h"
+#include "game_math/bounds.h"
+#include "asset_manager/mesh.h"
+#include "asset_manager/obj_parser.h"
 
 void shift_to_origin(Bounds3 bounds, Vec3f* vectors, int num_vectors) {
         for(int i = 0; i < num_vectors; i++){

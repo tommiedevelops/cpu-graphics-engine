@@ -1,4 +1,3 @@
-
 #include "window.h"
 
 Window* window_create(int width, int height, const char* name){

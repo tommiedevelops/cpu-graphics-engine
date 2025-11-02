@@ -1,7 +1,7 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
-#include "vector.h"
+typedef struct Vec4f Vec4f;
 typedef struct Texture Texture;
 
 Texture* texture_load(char* filename);

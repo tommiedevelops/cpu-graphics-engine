@@ -1,9 +1,7 @@
-#include "triangle.h"
-#include "vector.h"
-#include "frag_shader.h"
-#include "scene.h"
-#include "texture.h"
-
+#include "game_math/vector.h"
+#include "scene_manager/scene.h"
+#include "asset_manager/texture.h"
+#include "renderer/frag_shader.h"
  
 static Vec3f compute_reflection_vector(Vec3f l, Vec3f n){
 	float dot = vec3f_dot(l,n);

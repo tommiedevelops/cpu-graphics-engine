@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "texture.h"
-#include "vector.h"
-#include "frag_shader.h"
-#include "vert_shader.h"
-#include "render.h"
+
+#include "asset_manager/texture.h"
+#include "game_math/vector.h"
+#include "renderer/frag_shader.h"
+#include "renderer/vert_shader.h"
+#include "renderer/render.h"
 
 
 typedef struct Texture Texture;

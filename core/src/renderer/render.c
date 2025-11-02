@@ -1,18 +1,22 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "material.h"
-#include "clip.h"
-#include "triangle.h"
-#include "vector.h"
-#include "transformation.h"
-#include "scene.h"
-#include "barycentric.h"
-#include "vert_shader.h"
-#include "frag_shader.h"
-#include "framebuffer.h"
-#include "render.h"
-#include "game_object.h"
+#include "game_math/vector.h"
+#include "game_math/transformation.h"
+#include "game_math/barycentric.h"
+#include "game_math/bounds.h"
+
+#include "asset_manager/material.h"
+
+#include "renderer/clip.h"
+#include "renderer/triangle.h"
+#include "renderer/vert_shader.h"
+#include "renderer/frag_shader.h"
+#include "renderer/framebuffer.h"
+#include "renderer/render.h"
+
+#include "scene_manager/game_object.h"
+#include "scene_manager/scene.h"
 
 typedef struct Renderer { 
 	VSUniforms* vs_u;

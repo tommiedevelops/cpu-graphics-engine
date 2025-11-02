@@ -1,8 +1,10 @@
 #include <stdint.h>
 #include <stdlib.h>
-#include "texture.h"
-#include "mesh.h"
-#include "material.h"
+#include <stdbool.h>
+
+#include "asset_manager/texture.h"
+#include "asset_manager/mesh.h"
+#include "asset_manager/material.h"
 
 typedef struct {
 	Texture** textures;

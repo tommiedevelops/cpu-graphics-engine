@@ -1,8 +1,8 @@
 #ifndef TRIANGLE_H
 #define TRIANGLE_H
 
-#include "vector.h"
-#include "matrix.h"
+#include "game_math/vector.h"
+#include "game_math/matrix.h"
 
 typedef struct Bounds Bounds;
 typedef struct VSout VSout;

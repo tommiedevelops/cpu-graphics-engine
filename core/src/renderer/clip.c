@@ -1,7 +1,8 @@
-#include "clip.h"
-#include "lerp.h"
-#include "plane.h"
-#include "vert_shader.h"
+#include <string.h>
+#include "game_math/lerp.h"
+#include "game_math/plane.h"
+#include "renderer/vert_shader.h"
+#include "renderer/triangle.h"
 
 static inline void get_clipping_planes(struct Plane4* planes){
 	/* all normals facing 'plane4_inside'*/

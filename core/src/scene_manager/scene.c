@@ -3,10 +3,9 @@
 #include <math.h>
 #include <string.h>
 
-#include "scene.h"
-#include "app.h"
-#include "matrix.h"
-#include "game_object.h"
+#include "scene_manager/scene.h"
+#include "game_math/matrix.h"
+#include "scene_manager/game_object.h"
 
 #define PI (3.14159265359)
 
@@ -96,7 +95,6 @@ GameObj* scene_get_game_object(Scene* scene, int go_idx) {
 }
 
 void scene_destroy(Scene* scene) {
-
 	for(int i = 0; i < scene->go_len; i++) free(scene->gos[i]);
 	free(scene->gos);
 	free(scene->light);

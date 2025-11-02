@@ -1,14 +1,13 @@
-#include "vector.h"
+#include "game_math/vector.h"
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+#include "third_party/stb_image.h"
 
 typedef struct Texture {
 	int width;
 	int height;
 	Vec4f* map;
 } Texture;
-
 
 Texture* texture_load(char* filename){
 	int width, height, channels;

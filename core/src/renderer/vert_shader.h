@@ -1,9 +1,8 @@
 #ifndef VERT_SHADER_H
 #define VERT_SHADER_H
 
-#include <stdlib.h>
-#include "vector.h"
-#include "matrix.h"
+#include "game_math/vector.h"
+#include "game_math/matrix.h"
 
 typedef struct VSin {
 	Vec3f pos;
