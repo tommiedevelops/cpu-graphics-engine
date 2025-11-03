@@ -1,0 +1,15 @@
+issues with engine:
+* mesh seg fault when no normal
+* mesh_parse_from_obj kinda ugly. should also have option for procedural mesh
+* should be able to parse assets directly from directory
+Assets: obj -> mesh, png -> texture, scene -> Scene
+
+what if camera dimensions don't match framebuffer dimension
+
+protect library against user (null checks at interface)
+
+optional App abstraction but can use main file directly if you want
+
+document API clearly + example usage
+
+ability to save scene

@@ -23,17 +23,15 @@ typedef struct Renderer {
 	VSUniforms* vs_u;
 	FSUniforms* fs_u;
 	Pipeline* p;
-	FrameBuffer* fb;
 } Renderer;
 
-Renderer* renderer_init(Pipeline* p, FrameBuffer* fb) {
+Renderer* renderer_init(Pipeline* default_pl) {
 	Renderer* r = malloc(sizeof(Renderer));
 	VSUniforms* vs_u = malloc(sizeof(VSUniforms));
 	FSUniforms* fs_u = malloc(sizeof(FSUniforms));
-	r->p = p;	
+	r->p = default_pl;	
 	r->vs_u = vs_u;
 	r->fs_u = fs_u;
-	r->fb = fb;
 	return r;
 }
 
@@ -92,12 +90,11 @@ static bool rasterize_pixel(int x, int y, const Triangle* tri, FSin* out) {
 static inline int max_i(int a, int b) {return a > b ? a : b; }
 static inline int min_i(int a, int b) {return a < b ? a : b; }
 
-static void rasterize_triangle(Renderer* r, Triangle* tri, FragShaderF frag_shader) {
+static void rasterize_triangle(Renderer* r, FrameBuffer* fb, Triangle* tri, FragShaderF frag_shader) {
 	
 	FSin  fs_in;
 	FSout fs_out;
 	
-	FrameBuffer* fb = r->fb;
 	Bounds b = tri_get_bounds(tri);
 	
 	int xmin = max_i(0, (int)ceilf(b.xmin));
@@ -116,14 +113,14 @@ static void rasterize_triangle(Renderer* r, Triangle* tri, FragShaderF frag_shad
 	
 }
 
-static void process_clip_and_rasterize(Renderer* r, Triangle clip_result[6], size_t num_tris, FragShaderF fs){
+static void process_clip_and_rasterize(Renderer* r, FrameBuffer* fb, Triangle clip_result[6], size_t num_tris, FragShaderF fs){
 	Mat4 viewport = r->vs_u->viewport;
 
 	for(int k = 0; k < num_tris; k++){
 		Triangle* tri = &clip_result[k];
 		tri_apply_perspective_divide(tri); // divide (x,y,z,w) by w
 		tri_apply_transformation(viewport, tri);
-		rasterize_triangle(r, tri, fs);
+		rasterize_triangle(r, fb, tri, fs);
 	}
 }
 
@@ -157,7 +154,7 @@ static void assemble_triangle(Triangle* tri, VSout* out, int tri_idx) {
 	tri->id = tri_idx;	
 }
 
-void renderer_draw_triangle(Renderer* r, Mesh* mesh, Material* mat, size_t tri_idx) {
+static void renderer_draw_triangle(Renderer* r, FrameBuffer* fb, Mesh* mesh, Material* mat, size_t tri_idx) {
 
 	Triangle clip_result[6];
 	Triangle tri;
@@ -172,26 +169,26 @@ void renderer_draw_triangle(Renderer* r, Mesh* mesh, Material* mat, size_t tri_i
 
 	assemble_triangle(&tri, out, tri_idx);
 	int num_tris = clip_tri(&tri, clip_result);
-	process_clip_and_rasterize(r, clip_result, num_tris, p->fs);
+	process_clip_and_rasterize(r,fb,clip_result, num_tris, p->fs);
 }
 
-static void renderer_draw_game_object(Renderer* r, GameObj* go) {
+static void renderer_draw_game_object(Renderer* r, FrameBuffer* fb, GameObj* go) {
 
 	size_t num_triangles = go->mesh->num_triangles;
 	for(size_t t = 0; t < num_triangles; t++) {
 		const size_t tri_idx = 3*t;
-		renderer_draw_triangle(r,go->mesh,go->mat,tri_idx);
+		renderer_draw_triangle(r,fb,go->mesh,go->mat,tri_idx);
 	}	
 }
 
 static void prepare_per_scene_uniforms(Renderer* r, Scene* scene) {
 
-	const int   width    = r->fb->width;
-	const int   height   = r->fb->height;
-	const float aspect   = (float)height/(float)width;
-
 	const Camera*    cam = scene_get_camera(scene);
 	const Transform* tr  = cam->transform;
+
+	const int   width    = cam->screen_width;
+	const int   height   = cam->screen_height;
+	const float aspect   = (float)height/(float)width;
 
 	const Mat4  view     = get_view_matrix(tr->position, tr->rotation, tr->scale);
 	const Mat4  proj     = get_projection_matrix(cam->fov, cam->near, cam->far, aspect);
@@ -212,9 +209,9 @@ static void prepare_per_game_object_uniforms(Renderer* r, GameObj* go) {
 	r->fs_u->tex        = material_get_texture(go->mat);
 }
 
-void renderer_draw_scene(Renderer* r, Scene* scene) {
+void renderer_draw_scene(Renderer* r, FrameBuffer* fb, Scene* scene) {
 
-	if(!r || !r->fb || !scene || !scene_get_camera(scene)) return;
+	if(!r || !scene || !scene_get_camera(scene)) return;
 	
 	prepare_per_scene_uniforms(r,scene);
 
@@ -224,7 +221,7 @@ void renderer_draw_scene(Renderer* r, Scene* scene) {
 		GameObj* go = scene_get_game_object(scene, i);
 		if(!go || !go->mesh || !go->mat) continue;
 		prepare_per_game_object_uniforms(r,go);
-		renderer_draw_game_object(r, go);
+		renderer_draw_game_object(r, fb, go);
 	}
 
 }

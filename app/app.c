@@ -19,7 +19,7 @@ App* app_create(int w_width, int w_height, const char * w_name) {
 	Scene*        s = scene_create();
 	FrameBuffer* fb = frame_buffer_create(w_width,w_height);
 	Pipeline*     p = pipeline_create(vs_default, fs_unlit);
-	Renderer*     r = renderer_init(p, fb);
+	Renderer*     r = renderer_init(p);
 	Window*       w = window_create(w_width,w_height,w_name);
 
 	app->scene    = s;
