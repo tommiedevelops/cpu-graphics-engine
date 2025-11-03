@@ -120,7 +120,7 @@ Transform transform_default(){
 }
 
 // Camera
-Camera* camera_create(Transform tr, int width, int height){
+Camera* camera_create(Transform* tr, int width, int height){
 	Camera* cam = malloc(sizeof(Camera));
 	cam->transform = tr;
 	cam->fov = PI*0.33f;

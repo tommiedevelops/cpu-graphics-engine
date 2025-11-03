@@ -34,7 +34,7 @@ void normalize_vertices(Vec3f* vertices, int num_vertices) {
 	bounds = get_bounds(vertices, num_vertices);
 }
 
-Mesh mesh_parse_from_obj(char* filename){
+Mesh* mesh_parse_from_obj(char* filename){
 	FILE* fp = obj_open(filename);
 
 	int num_vertices = obj_parse_num_vertices(fp);
@@ -50,17 +50,16 @@ Mesh mesh_parse_from_obj(char* filename){
 
 	obj_close(fp);
 
-	Mesh data = {
-		.num_uvs = num_uvs,
-		.uvs = uvs,
-		.num_vertices = num_vertices,
-		.vertices = vertices,
-		.num_triangles = num_triangles,
-		.triangles = triangles,
-		.triangle_uvs = triangle_uvs
-	};
+	Mesh* m = malloc(sizeof(Mesh));
+	m->num_uvs = num_uvs;
+	m->uvs = uvs;
+	m->num_vertices = num_vertices;
+	m->vertices = vertices;
+	m->num_triangles = num_triangles;
+	m->triangles = triangles;
+	m->triangle_uvs = triangle_uvs;
 
-	return data;
+	return m;
 }
 
 int mesh_recalculate_normals(Mesh* m){

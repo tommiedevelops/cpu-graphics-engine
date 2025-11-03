@@ -1,4 +1,4 @@
-#include "vert_shader.h"
+#include "renderer/vert_shader.h"
 
 void vs_default(const VSin* in, VSout* out, const VSUniforms* u) {						
 	Mat4 mvp = mat4_mul_mat4(u->proj, mat4_mul_mat4(u->view, u->model));

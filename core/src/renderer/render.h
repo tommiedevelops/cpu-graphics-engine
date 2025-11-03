@@ -1,8 +1,8 @@
 #ifndef RENDER_H
 #define RENDER_H
 
-#include "vert_shader.h"
-#include "frag_shader.h"
+#include "renderer/vert_shader.h"
+#include "renderer/frag_shader.h"
 
 typedef struct Triangle Triangle;
 typedef struct Scene Scene;

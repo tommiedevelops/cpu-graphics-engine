@@ -1,10 +1,8 @@
-#ifndef SCENE_MANAGER_H 
-#define SCENE_MANAGER_H
+#ifndef SCENE_H 
+#define SCENE_H
 
 #include "game_math/vector.h"
 #include "game_math/quaternion.h"
-#include "asset_manager/material.h"
-#include "asset_manager/mesh.h"
 
 typedef struct GameObj GameObj;
 
@@ -15,7 +13,7 @@ typedef struct Transform {
 } Transform;
 
 typedef struct Camera { 
-	Transform transform;
+	Transform* transform;
 	float fov;
 	float near;
 	float far;
@@ -44,7 +42,7 @@ GameObj*    scene_get_game_object(Scene* scene, int go_idx);
 void        scene_delete_game_object(Scene* scene);
 
 Transform* transform_create(Vec3f pos, Quat rot, Vec3f scale);
-Camera* camera_create(Transform tr, int screen_width, int screen_height);
+Camera* camera_create(Transform* tr, int screen_width, int screen_height);
 
 void camera_set_fov_degrees(Camera* cam, float fov_degrees);
 void camera_set_near(Camera* cam, float near);

@@ -15,6 +15,7 @@ typedef struct App {
 App* app_create(int w_width, int w_height, const char * w_name) {
 	App* app = malloc(sizeof(App));
 
+	Assets*       a = assets_init();
 	Scene*        s = scene_create();
 	FrameBuffer* fb = frame_buffer_create(w_width,w_height);
 	Pipeline*     p = pipeline_create(vs_default, fs_unlit);

@@ -7,6 +7,7 @@
 #include "game_math/bounds.h"
 
 #include "asset_manager/material.h"
+#include "asset_manager/mesh.h"
 
 #include "renderer/clip.h"
 #include "renderer/triangle.h"
@@ -190,7 +191,7 @@ static void prepare_per_scene_uniforms(Renderer* r, Scene* scene) {
 	const float aspect   = (float)height/(float)width;
 
 	const Camera*    cam = scene_get_camera(scene);
-	const Transform* tr  = &cam->transform;
+	const Transform* tr  = cam->transform;
 
 	const Mat4  view     = get_view_matrix(tr->position, tr->rotation, tr->scale);
 	const Mat4  proj     = get_projection_matrix(cam->fov, cam->near, cam->far, aspect);
@@ -201,7 +202,7 @@ static void prepare_per_scene_uniforms(Renderer* r, Scene* scene) {
 	r->vs_u->viewport   = viewport;
 
 	r->fs_u->light            = scene_get_light(scene);
-	r->fs_u->cam_world_pos    = scene_get_camera(scene)->transform.position;
+	r->fs_u->cam_world_pos    = scene_get_camera(scene)->transform->position;
 }
 
 static void prepare_per_game_object_uniforms(Renderer* r, GameObj* go) {

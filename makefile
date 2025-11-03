@@ -12,7 +12,7 @@ TEST_FILES := $(wildcard tests/src/*.c)
 build:
 	$(CC) $(SRC_FILES) $(DEBUGFLAGS) -o ./build/window $(CFLAGS) $(LDFLAGS)
 clean:
-	rm ./core/build/window ./tests/build/testing
+	rm ./build/window ./build/testing
 run:
 	ASAN_OPTIONS=detect_leaks=1:leak_check_at_exit=0 ./build/window
 tbuild:
