@@ -20,13 +20,13 @@ struct TexData {
 	int num_textures;
 };
 
-struct MeshData {
+struct MeshFreakyData {
 	int num_meshes;
 	Mesh** meshes;
 };
 
 struct AppAssets {
-	struct MeshData md;
+	struct MeshFreakyData md;
 	struct TexData td;
 };
 

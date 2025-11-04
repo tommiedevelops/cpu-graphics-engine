@@ -52,20 +52,21 @@ Mesh mesh_parse_from_obj(char* filename){
 	int* tri_norms;
 	int* tri_uvs;
 
-	obj_parse_triangles(fp, num_tris, num_verts, num_norms, num_uvs, tris, tri_norms, tri_uvs);
+	MeshData data;
+	obj_parse_triangles(fp, num_tris, num_verts, num_norms, num_uvs, &data);
 	obj_close(fp);
 
 	return (Mesh) {
-		.num_normals    = num_norms,
-		.normals        = norms,
-		.num_uvs        = num_uvs,
-		.uvs            = uvs,
-		.num_vertices   = num_verts,
-		.vertices       = verts,
-		.num_triangles  = num_tris,
-		.triangles      = tris,
-		.triangle_uvs   = tri_uvs,
-		.triangle_normals = tri_norms
+		.num_normals      = num_norms,
+		.normals          = norms,
+		.num_uvs          = num_uvs,
+		.uvs              = uvs,
+		.num_vertices     = num_verts,
+		.vertices         = verts,
+		.num_triangles    = num_tris,
+		.triangles        = data.tris,
+		.triangle_uvs     = data.tri_uvs,
+		.triangle_normals = data.tri_norms
 	};
 
 }

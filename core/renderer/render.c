@@ -127,17 +127,18 @@ static inline void apply_vertex_shader(const VSin in[3], VSout out[3], const VSU
 
 static void assemble_triangle_inputs(Mesh* mesh, size_t tri_idx, VSin in[3]) {
 
-	for(int i = 0; i < 3; i++){
+	printf("tri_idx = %ld\n", tri_idx);
 
-		const int* tri_uvs = mesh->triangle_uvs;
+	for(int i = 0; i < 3; i++){
+		const int* tri_uvs   = mesh->triangle_uvs;
 		const int* tri_norms = mesh->triangle_normals;
 
 		size_t pos_idx  = mesh->triangles[tri_idx + i];
 		size_t uv_idx   = tri_uvs ? mesh->triangle_uvs[tri_idx + i] : 0;
 		size_t n_idx    = tri_norms ? mesh->triangle_normals[tri_idx + i] : 0;
 
-		Vec3f pos = mesh->vertices[pos_idx];
-		Vec2f uv  = (mesh->uvs && tri_uvs) ? mesh->uvs[uv_idx] : VEC2F_0;
+		Vec3f pos = (pos_idx > 0) ? mesh->vertices[pos_idx] : VEC3F_0;
+		Vec2f uv  = (mesh->uvs && tri_uvs)       ? mesh->uvs[uv_idx] : VEC2F_0;
 		Vec3f n   = (mesh->normals && tri_norms) ? mesh->normals[n_idx] : VEC3F_0;
 		
 		in[i].pos = pos;

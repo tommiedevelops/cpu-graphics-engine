@@ -163,7 +163,7 @@ Vec3f* obj_parse_normals(FILE* fp, int num_normals){
 	return normals;
 }
 
-static inline void wrap_int(int* n, int max) { n = (n > 0) ? n - 1 : n + max; }
+static inline void wrap_int(int* n, int max) { *n = (*n > 0) ? *n - 1 : *n + max; }
 
 static void parse_token(char * tok, int* v, int n_tris, int* vt, int n_uvs, int* vn, int n_norms){
 	if(sscanf(tok, "%d/%d/%d", v, vt, vn) == 3) {
@@ -186,8 +186,7 @@ static void parse_token(char * tok, int* v, int n_tris, int* vt, int n_uvs, int*
 	}
 }
 
-static void parse_line(char* buf, int* tris, int n_tris, int* uvs, int n_uvs, int* norms, int n_norms, int tri_idx) {
-
+static void parse_line(char* buf, int n_tris, int n_uvs, int n_norms, int tri_idx, MeshData* data) {
 	int v[3], vt[3], vn[3]; 
 
 	char* tok = strtok(buf, " ");
@@ -207,30 +206,25 @@ static void parse_line(char* buf, int* tris, int n_tris, int* uvs, int n_uvs, in
 	}
 
 	for(int i = 0; i < 3; i++){
-		tris[tri_idx + i] = v[i];
-		if(uvs) uvs[tri_idx + i] = vt[i];
-		if(norms) norms[tri_idx + i] = vn[i];
+		data->tris[tri_idx + i] = v[i];
+		if(data->tri_uvs)   data->tri_uvs[tri_idx + i]   = vt[i];
+		if(data->tri_norms) data->tri_norms[tri_idx + i] = vn[i];
 	}
 }
 
-void obj_parse_triangles(FILE* fp, int num_tris, int num_verts, int num_norms, int num_uvs, int* out_tris, int* out_uvs, int* out_norms) {
-
-	int* tris  = malloc(sizeof(int)*3*num_tris);
-	int* uvs   = (num_uvs > 0) ? malloc(sizeof(int)*3*num_uvs) : NULL;
-	int* norms = (num_norms > 0) ? malloc(sizeof(int)*3*num_norms) : NULL;
+void obj_parse_triangles(FILE* fp, int num_tris, int num_verts, int num_norms, int num_uvs, MeshData* data) {
+	data->tris      = malloc(sizeof(int)*3*num_tris);
+	data->tri_uvs   = (num_uvs   > 0) ? malloc(sizeof(int)*3*num_uvs)   : NULL;
+	data->tri_norms = (num_norms > 0) ? malloc(sizeof(int)*3*num_norms) : NULL;
 
 	char buf[256] = {0};
 	
 	int tri_idx = 0;
 	while( (fgets(buf, sizeof(buf), fp) != NULL) )
 	{
-		parse_line(buf,tris,num_tris,uvs,num_uvs,norms,num_norms,tri_idx);
+		parse_line(buf,num_tris,num_uvs,num_norms,tri_idx,data);
 		if(buf[0] == 'f') tri_idx++;
 	}
-
-	out_tris  = tris;
-	out_uvs   = uvs;
-	out_norms = norms;
 
 	rewind(fp);
 

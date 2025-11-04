@@ -24,19 +24,19 @@ struct TexData load_textures(){
 	return data;
 }
 
-struct MeshData load_meshes(){
+struct MeshFreakyData load_meshes(){
 	/* User Defined */
 
 	int num_meshes = 1;
 	Mesh** meshes = malloc(sizeof(Mesh*)*num_meshes);
 
 	Mesh* bunny_mesh = malloc(sizeof(Mesh));
+
 	*bunny_mesh = mesh_parse_from_obj("./assets/models/bunny.obj");	
-	if(!bunny_mesh->normals) mesh_recalculate_normals(bunny_mesh);
 
 	meshes[0] = bunny_mesh;
 
-	struct MeshData data = {
+	struct MeshFreakyData data = {
 		.meshes = meshes,
 		.num_meshes = num_meshes
 	};
@@ -151,7 +151,7 @@ void update_scene(Scene* scene, float dt, SDL_Event* event, bool* running){
 // ------ API USED BY CORE (DO NOT MODIFY) ------
 struct AppAssets app_load_assets(){
 
-	struct MeshData md = load_meshes();
+	struct MeshFreakyData md = load_meshes();
 	struct TexData td = load_textures();
 
 	struct AppAssets assets;
@@ -201,7 +201,7 @@ void destroy_textures(struct TexData textures) {
 	free(textures.textures);
 }
 
-void destroy_meshes(struct MeshData meshes) {
+void destroy_meshes(struct MeshFreakyData meshes) {
 	for(int i = 0; i < meshes.num_meshes; i++){
 		free(meshes.meshes[i]);
 	}

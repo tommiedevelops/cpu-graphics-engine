@@ -1,6 +1,12 @@
 #ifndef MESH_H
 #define MESH_H
 
+typedef struct MeshData {
+	int* tri_norms;
+	int* tri_uvs;
+	int* tris;
+} MeshData;
+
 typedef struct Mesh {
 	int num_vertices;
 	Vec3f* vertices;
