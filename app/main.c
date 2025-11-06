@@ -11,26 +11,49 @@ typedef struct GameData {
 	Assets* assets;
 } GameData;
 
-void on_start(void* game_data) {
+void on_start(App* app, void* game_data) {
 	GameData* gd = (GameData*)game_data;
-	gd->assets = assets_create();
-	game_obj_set_transform(NULL,NULL);
-	gd->scene  = scene_create(NULL, NULL);
+
+	// Assets Init
+	Assets* assets  = assets_create();
+	Mesh* mesh = mesh_parse_from_obj("assets/models/bunny.obj");
+	assets_add_mesh(assets, mesh);
+	mesh_recalculate_normals(mesh);
+
+	// Scene Init
+	Vec4f col = (Vec4f){0.1, 0.2, 0.3, 1.0};
+	Pipeline* p = pipeline_create(vs_default, fs_phong);
+
+	Material* mat = material_create(col, NULL, p);
+	Transform* bunny_tr = transform_default();
+	GameObj* bunny = game_obj_create(bunny_tr, mesh, mat);
+
+	Transform* cam_tr = transform_default();
+	cam_tr->position = (Vec3f){0.0f, 0.0f, -5.0f};
+
+	Camera* cam = camera_create(cam_tr, W_WIDTH, W_HEIGHT);
+	Light* light = light_create(VEC3F_1, VEC4F_1);
+	Scene* scene = scene_create(cam, light);
+
+	scene_add_game_obj(scene, bunny);
+
+	app->scene = scene;
+	app->assets = assets;
 }
 
-void on_event(void* game_data, SDL_Event* e) {
+void on_event(App* app, void* game_data, SDL_Event* e) {
 	GameData* gd = (GameData*)game_data;
 }
 
-void on_update(void* game_data, float dt) {
+void on_render(App* app, void* game_data){
 	GameData* gd = (GameData*)game_data;
 }
 
-void on_render(void* game_data) {
+void on_update(App* app, void* game_data, float dt) {
 	GameData* gd = (GameData*)game_data;
 }
 
-void on_shutdown(void* game_data) {
+void on_shutdown(App* app, void* game_data) {
 	GameData* gd = (GameData*)game_data;
 	//scene_destroy(gd->scene); NEEDA FIX
 	//assets_destroy(gd->assets);
@@ -38,8 +61,8 @@ void on_shutdown(void* game_data) {
 
 int main(void) {
 
-	App app;
-	GameData gd;
+	App         app;
+	GameData     gd;
 
 	AppVTable v_table = {
 		on_start,

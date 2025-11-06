@@ -62,7 +62,7 @@ void app_run(App* app) {
 	time_init(&time);
 
 	SDL_Event e;
-	vt->on_start(vt->user_data);
+	vt->on_start(app, vt->user_data);
 
 	bool running = true;
 	while(running) {
@@ -73,16 +73,17 @@ void app_run(App* app) {
 		
 		while(SDL_PollEvent(&e)) {
 			if(e.type == SDL_QUIT) running = false;
-			vt->on_event(vt->user_data, &e);
+			vt->on_event(app, vt->user_data, &e);
 		}
 
-		vt->on_update(vt->user_data, dt);
-		vt->on_render(vt->user_data);
+		vt->on_update(app, vt->user_data, dt);
+		vt->on_render(app, vt->user_data);
 
+		renderer_draw_scene(app->renderer, app->fb, app->scene);
 		window_update(app->window, app->fb->framebuffer);
 	}
 
-	vt->on_shutdown(vt->user_data);
+	vt->on_shutdown(app, vt->user_data);
 }
 
 

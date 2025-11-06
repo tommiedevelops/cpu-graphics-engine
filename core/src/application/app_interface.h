@@ -4,14 +4,7 @@
 #include <stdint.h>
 
 typedef SDL_Event SDL_Event;
-typedef struct AppVTable {
-	void (*on_start)(void* ud);
-	void (*on_event)(void* ud, SDL_Event* e);
-	void (*on_update)(void* ud, float dt);
-	void (*on_render)(void* ud);
-	void (*on_shutdown)(void* ud);
-	void* user_data;
-} AppVTable;
+typedef struct AppVTable AppVTable;
 
 typedef struct AppCfg {
 	int w_width, w_height;
@@ -28,6 +21,15 @@ typedef struct App {
 	Assets*      assets;
 	Scene*       scene;
 } App;
+
+typedef struct AppVTable {
+	void (*on_start)(App* app,  void* ud);
+	void (*on_event)(App* app,  void* ud, SDL_Event* e);
+	void (*on_update)(App* app, void* ud, float dt);
+	void (*on_render)(App* app, void* ud);
+	void (*on_shutdown)(App* app, void* ud);
+	void* user_data;
+} AppVTable;
 
 void app_init(App* app, AppVTable* v_table, AppCfg* cfg);
 

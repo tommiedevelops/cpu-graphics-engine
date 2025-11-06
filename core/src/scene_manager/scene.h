@@ -16,8 +16,8 @@ Light*      scene_get_light(Scene* scene);
 int         scene_set_light(Scene* scene, Light* light);
 void        scene_set_camera(Scene* scene, Camera* cam);
 Camera*     scene_get_camera(Scene* scene);
-int         scene_add_game_object(Scene* scene, GameObj* go); // returns go id
-GameObj*    scene_get_game_object(Scene* scene, int go_idx);
+int         scene_add_game_obj(Scene* scene, GameObj* go); // returns go id
+GameObj*    scene_get_game_obj(Scene* scene, int go_idx);
 void        scene_delete_game_object(Scene* scene);
 
 #endif

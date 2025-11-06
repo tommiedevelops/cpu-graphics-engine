@@ -97,7 +97,7 @@ static inline bool at_capacity(Scene* scene){
 	return (scene->go_cap == scene->go_len);
 }
 
-int scene_add_game_object(Scene* scene, GameObj* go)  {
+int scene_add_game_obj(Scene* scene, GameObj* go)  {
 
 	if(!scene || !go) {
 		LOG_ERROR(NULL_PARAM_ERROR);
@@ -114,7 +114,7 @@ int scene_add_game_object(Scene* scene, GameObj* go)  {
 
 Light* scene_get_light(Scene* scene) { return scene->light; } 
 
-GameObj* scene_get_game_object(Scene* scene, int go_idx) {
+GameObj* scene_get_game_obj(Scene* scene, int go_idx) {
 	if(go_idx < 0 || go_idx > scene->go_len) {
 		printf("invalid game object idx\n");
 		return NULL;
