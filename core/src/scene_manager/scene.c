@@ -7,13 +7,13 @@
 #include "game_math/matrix.h"
 #include "scene_manager/game_object.h"
 #include "scene_manager/transform.h"
+#include "scene_manager/light.h"
 
 #define PI (3.14159265359)
 
 typedef struct Scene {
 	Light* light;
 	Camera *cam;
-
 	GameObj **gos;
 	size_t go_len, go_cap;
 	
@@ -39,26 +39,25 @@ Scene* scene_create(Camera* cam, Light* light) {
 	return scene;
 }
 
-void core_scene_save(Scene* scene, const char* filepath){
-	//TODO
-}
-
 int scene_get_num_gos(Scene* scene) {
 	return scene->go_len;
-}
-
-Light* light_create(Vec3f direction, Vec4f color) {
-	Light* l = malloc(sizeof(Light));
-	l->direction = direction;
-	l->color = color;
-	return l;
 }
 
 Camera* scene_get_camera(Scene* scene) {
 	return scene->cam;
 }
 
-void scene_add_camera(Scene* scene, Camera* cam) {
+void scene_set_camera(Scene* scene, Camera* cam) {
+	if(!cam) {
+		printf("scene_set_camera: provided cam was null");
+		return;
+	}
+
+	if(!scene) {
+		printf("scene_set_camera: provided scene was null");
+		return;
+	}
+
 	scene->cam = cam;
 }
 

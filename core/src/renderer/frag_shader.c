@@ -1,5 +1,6 @@
 #include "game_math/vector.h"
 #include "scene_manager/scene.h"
+#include "scene_manager/light.h"
 #include "asset_manager/texture.h"
 #include "renderer/frag_shader.h"
  
