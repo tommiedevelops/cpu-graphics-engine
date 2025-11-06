@@ -14,7 +14,7 @@ typedef struct GameData {
 void on_start(void* game_data) {
 	GameData* gd = (GameData*)game_data;
 	gd->assets = assets_create();
-
+	game_obj_set_transform(NULL,NULL);
 	gd->scene  = scene_create(NULL, NULL);
 }
 
