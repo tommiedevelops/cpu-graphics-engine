@@ -1,17 +1,8 @@
 #include <stdlib.h>
 #include "scene_manager/transform.h"
+#include "scene_manager/camera.h"
 
 #define PI (3.14159265359)
-
-typedef struct Camera { 
-	Transform* transform;
-	float fov;
-	float near;
-	float far;
-	float screen_width;
-	float screen_height;
-} Camera;
-
 void camera_set_screen_width(Camera* cam, float screen_width) {
 	if(!cam) return;
 	cam->screen_width = screen_width;

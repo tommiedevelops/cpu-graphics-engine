@@ -16,6 +16,15 @@ Transform* transform_default(){
 	return tr;
 }
 
+void transform_apply_rotation(Transform* tr, Quat rot) {
+	tr->rotation = quat_mul(tr->rotation, rot);
+	quat_normalize(tr->rotation);
+}
+
+void transform_apply_translation(Transform* tr, Vec3f delta) {
+	tr->position = vec3f_add(tr->position, delta);
+}
+
 void transform_destroy(Transform* tr) {
 	free(tr);
 }

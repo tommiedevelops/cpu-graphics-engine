@@ -36,6 +36,7 @@ typedef struct Vec4f {
 	float x,y,z,w;
 } Vec4f;
 
+void print_vec2f(Vec2f v);
 void print_vec3f(Vec3f v);
 void print_vec4f(Vec4f v);
 

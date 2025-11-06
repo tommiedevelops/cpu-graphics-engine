@@ -1,8 +1,16 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-typedef struct Camera Camera;
 typedef struct Transform Transform;
+
+typedef struct Camera { 
+	Transform* transform;
+	float fov;
+	float near;
+	float far;
+	float screen_width;
+	float screen_height;
+} Camera;
 
 Camera*    camera_create(Transform* tr, int screen_width, int screen_height);
 void       camera_set_fov_degrees(Camera* cam, float fov_degrees);

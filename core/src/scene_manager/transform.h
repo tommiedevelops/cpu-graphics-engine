@@ -13,6 +13,8 @@ typedef struct Transform {
 Transform* transform_create(Vec3f pos, Quat rot, Vec3f scale);
 Transform* transform_default();
 
+void transform_apply_rotation(Transform* tr, Quat rot);
+void transform_apply_translation(Transform* tr, Vec3f delta);
 void transform_destroy(Transform* tr);
 
 #endif

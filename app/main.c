@@ -7,12 +7,15 @@
 #define W_NAME ("cpu graphics engine")
 
 typedef struct GameData {
-	Scene*  scene;
-	Assets* assets;
+	Vec2f mouse_input;
+	Vec2f move_input;
 } GameData;
 
 void on_start(App* app, void* game_data) {
 	GameData* gd = (GameData*)game_data;
+
+	gd->mouse_input = VEC2F_0;
+	gd->move_input = VEC2F_0;
 
 	// Assets Init
 	Assets* assets  = assets_create();
@@ -43,6 +46,18 @@ void on_start(App* app, void* game_data) {
 
 void on_event(App* app, void* game_data, SDL_Event* e) {
 	GameData* gd = (GameData*)game_data;
+
+	switch(e->type) {
+		case SDL_MOUSEMOTION:
+			gd->mouse_input.x += e->motion.xrel;
+			gd->mouse_input.y += e->motion.yrel;
+			break;
+		case SDL_KEYDOWN:
+			break;
+		case SDL_MOUSEBUTTONDOWN:
+			printf("Mouse Position =  (x=%d, y=%d)\n", e->button.x, e->button.y);
+			break;
+	}
 }
 
 void on_render(App* app, void* game_data){
@@ -51,6 +66,25 @@ void on_render(App* app, void* game_data){
 
 void on_update(App* app, void* game_data, float dt) {
 	GameData* gd = (GameData*)game_data;
+
+	const Uint8* kb = SDL_GetKeyboardState(NULL);
+	if(kb[SDL_SCANCODE_W]) gd->move_input.y += 1.0f;
+	if(kb[SDL_SCANCODE_A]) gd->move_input.x -= 1.0f;
+	if(kb[SDL_SCANCODE_S]) gd->move_input.y -= 1.0f;
+	if(kb[SDL_SCANCODE_D]) gd->move_input.x += 1.0f; 
+
+	Scene* scene = app->scene;
+	Camera* cam = scene_get_camera(scene);
+
+	Quat rot = quat_angle_axis(gd->mouse_input.x * dt, VEC3F_Y);
+	transform_apply_rotation(cam->transform, rot);
+
+	Vec3f movement = (Vec3f){gd->move_input.y * dt, 0.0f, gd->move_input.x * dt};
+	transform_apply_translation(cam->transform, movement);
+
+	// reset input info
+	gd->move_input = VEC2F_0;
+	gd->mouse_input = VEC2F_0;
 }
 
 void on_shutdown(App* app, void* game_data) {
