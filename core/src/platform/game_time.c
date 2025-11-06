@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "game_time.h"
 
-void time_init(struct Time* t){
+void time_init(Time* t){
 	if(t == NULL){
 		perror("src/game_time.c/time_init: struct Time* is NULL");
 		exit(EXIT_FAILURE);
@@ -11,7 +11,7 @@ void time_init(struct Time* t){
 	t->last_time = clock();
 }
 
-void update_time(struct Time* t){
+void update_time(Time* t){
 	if(t == NULL){
 		perror("src/game_time.c/update_time: struct Time* is NULL");
 		exit(EXIT_FAILURE);
@@ -23,7 +23,7 @@ void update_time(struct Time* t){
 	t->total_time += t->delta_time;
 }
 
-void print_time(struct Time* t){
+void print_time(Time* t){
 	if(t == NULL){
 		perror("src/game_time.c/update_time: struct Time* is NULL");
 		exit(EXIT_FAILURE);
@@ -31,7 +31,7 @@ void print_time(struct Time* t){
 	printf("delta_time = {%f}; total_time = {%f}; last_time = {%ld}\n", t->delta_time, t->total_time, t->last_time);
 }
 
-void print_fps(struct Time* t){
+void print_fps(Time* t){
 
 	if(t == NULL){
 		perror("src/game_time.c/update_time: struct Time* is NULL");

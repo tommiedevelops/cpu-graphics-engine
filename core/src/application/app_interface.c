@@ -20,10 +20,31 @@ void app_uninit(App* app) {
 }
 
 void app_run(App* app) {
-	// main loop
-	for(;;) {
-		frame_buffer_clear(app->fb);
+	
+	AppVTable* vt = app->v_table;
+
+	Time time;
+	time_init(&time);
+
+	SDL_Event e;
+	vt->on_start();
+
+	bool running = true;
+	while(running) {
+
+		update_time(&time);
+		float dt = time.delta_time;
+		
+		while(SDL_PollEvent(&e)) {
+			if(e.type == SDL_QUIT) running = false;
+			vt->on_event(&e);
+		}
+
+		vt->on_update(dt);
+		vt->on_render();
 	}
+
+	vt->on_shutdown();
 }
 
 

@@ -8,8 +8,8 @@ typedef struct Time {
 	clock_t last_time; // unit: cpu clock cycles
 } Time;
 float get_delta_time();
-void time_init(struct Time* t);
-void update_time(struct Time* t);
-void print_time(struct Time* t);
-void print_fps(struct Time* t);
+void  time_init(Time* t);
+void  update_time(Time* t);
+void  print_time(Time* t);
+void  print_fps(Time* t);
 #endif
