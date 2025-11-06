@@ -19,6 +19,7 @@
 #include "scene_manager/game_object.h"
 #include "scene_manager/camera.h"
 #include "scene_manager/scene.h"
+#include "scene_manager/transform.h"
 
 typedef struct Renderer { 
 	VSUniforms* vs_u;

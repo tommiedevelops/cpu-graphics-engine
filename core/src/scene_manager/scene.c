@@ -6,6 +6,7 @@
 #include "scene_manager/scene.h"
 #include "game_math/matrix.h"
 #include "scene_manager/game_object.h"
+#include "scene_manager/transform.h"
 
 #define PI (3.14159265359)
 
@@ -103,22 +104,4 @@ void scene_destroy(Scene* scene) {
 	free(scene->cam);
 	free(scene);
 }
-
-// Transforms 
-Transform* transform_create(Vec3f pos, Quat rot, Vec3f scale){
-	Transform* tr = malloc(sizeof(Transform));
-	tr->position = pos;
-	tr->rotation = rot;
-	tr->scale = scale;
-	return tr;
-}
-
-Transform transform_default(){
-	Transform tr;
-	tr.position = VEC3F_0;
-	tr.rotation = QUAT_IDENTITY;
-	tr.scale = VEC3F_1;
-	return tr;
-}
-
 

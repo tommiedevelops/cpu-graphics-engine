@@ -7,12 +7,6 @@
 typedef struct GameObj GameObj;
 typedef struct Camera Camera;
 
-typedef struct Transform {
-	Vec3f position;
-	Quat rotation;  
-	Vec3f scale;
-} Transform;
-
 typedef struct Light {
 	Vec4f color;
 	Vec3f direction;
@@ -33,5 +27,4 @@ int         scene_add_game_object(Scene* scene, GameObj* go); // returns go id
 GameObj*    scene_get_game_object(Scene* scene, int go_idx);
 void        scene_delete_game_object(Scene* scene);
 
-Transform* transform_create(Vec3f pos, Quat rot, Vec3f scale);
 #endif
