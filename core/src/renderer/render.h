@@ -15,8 +15,8 @@ typedef struct Pipeline {
 } Pipeline;
 
 Pipeline* pipeline_create(VertShaderF vs, FragShaderF fs);
-Renderer* renderer_init(Pipeline* default_pl);
-void renderer_uninit(Renderer* r);
+Renderer* renderer_create(Pipeline* default_pl);
+void renderer_destroy(Renderer* r);
 void render_wireframe(FrameBuffer* fb, Triangle* triangles, int num_triangles);
 void renderer_draw_scene(Renderer* r, FrameBuffer* fb ,Scene* scene);
 

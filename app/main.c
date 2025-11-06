@@ -10,8 +10,8 @@ int main(void) {
 
 	Window*       win = window_create(W_WIDTH, W_HEIGHT, W_NAME);
 	Pipeline*     p   = pipeline_create(vs_default, fs_phong);
-	FrameBuffer* fb   = frame_buffer_create(W_WIDTH, W_HEIGHT);
-	Renderer*     r   = renderer_init(p);
+	FrameBuffer* fb   = frame_buffer_create(W_WIDTH, W_HEIGHT, CLEAR_COLOR);
+	Renderer*     r   = renderer_create(p);
 
 	// Inititalising scene
 	Transform* cam_tr = transform_create((Vec3f){0.0f,0.0f,-5.0f}, QUAT_IDENTITY, VEC3F_1);
@@ -35,7 +35,7 @@ int main(void) {
 	int num_frames = 300;
 	int i = 0;
 	while(i < num_frames) {
-		frame_buffer_clear(fb, CLEAR_COLOR);
+		frame_buffer_clear(fb);
 		renderer_draw_scene(r,fb,scene);
 		window_update(win, fb->framebuffer);
 		printf("frame = %d\n", i);

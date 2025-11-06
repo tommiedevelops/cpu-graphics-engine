@@ -25,7 +25,7 @@ typedef struct Renderer {
 	Pipeline* p;
 } Renderer;
 
-Renderer* renderer_init(Pipeline* default_pl) {
+Renderer* renderer_create(Pipeline* default_pl) {
 	Renderer* r = malloc(sizeof(Renderer));
 	VSUniforms* vs_u = malloc(sizeof(VSUniforms));
 	FSUniforms* fs_u = malloc(sizeof(FSUniforms));
@@ -35,7 +35,7 @@ Renderer* renderer_init(Pipeline* default_pl) {
 	return r;
 }
 
-void renderer_uninit(Renderer* r) {
+void renderer_destroy(Renderer* r) {
 	if(!r) return;
 	free(r->vs_u);
 	free(r->fs_u);

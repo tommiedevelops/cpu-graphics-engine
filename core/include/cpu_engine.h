@@ -6,5 +6,6 @@
 #include "platform.h"
 #include "asset_manager.h"
 #include "renderer.h"
+#include "application.h"
 
 #endif
