@@ -64,18 +64,22 @@ void app_run(App* app) {
 	SDL_Event e;
 	vt->on_start(app, vt->user_data);
 
-	bool running = true;
-	while(running) {
+	app->is_running = true;
+	while(app->is_running) {
 		frame_buffer_clear(app->fb);
 
 		update_time(&time);
 		float dt = time.delta_time;
 		
 		while(SDL_PollEvent(&e)) {
-			if(e.type == SDL_QUIT) running = false;
+			if(e.type == SDL_QUIT) {
+				app->is_running = false;
+			}
+
 			vt->on_event(app, vt->user_data, &e);
 		}
 
+		if(!app->is_running) break;
 		vt->on_update(app, vt->user_data, dt);
 		vt->on_render(app, vt->user_data);
 
@@ -83,7 +87,12 @@ void app_run(App* app) {
 		window_update(app->window, app->fb->framebuffer);
 	}
 
-	vt->on_shutdown(app, vt->user_data);
 }
 
+void app_shutdown(App* app) {
+	app->is_running = false;
+	AppVTable* vt = app->v_table;
+	vt->on_shutdown(app, vt->user_data);
+	app_uninit(app);
+}
 

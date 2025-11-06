@@ -19,13 +19,13 @@ void on_start(App* app, void* game_data) {
 
 	// Assets Init
 	Assets* assets  = assets_create();
-	Mesh* mesh = mesh_parse_from_obj("assets/models/bunny.obj");
+	Mesh* mesh = mesh_parse_from_obj("assets/models/homer.obj");
 	assets_add_mesh(assets, mesh);
 	mesh_recalculate_normals(mesh);
 
 	// Scene Init
 	Vec4f col = (Vec4f){0.1, 0.2, 0.3, 1.0};
-	Pipeline* p = pipeline_create(vs_default, fs_phong);
+	Pipeline* p = pipeline_create(vs_default, fs_lit);
 
 	Material* mat = material_create(col, NULL, p);
 	Transform* bunny_tr = transform_default();
@@ -53,6 +53,7 @@ void on_event(App* app, void* game_data, SDL_Event* e) {
 			gd->mouse_input.y += e->motion.yrel;
 			break;
 		case SDL_KEYDOWN:
+			if(e->key.keysym.scancode == SDL_SCANCODE_ESCAPE) app_shutdown(app);
 			break;
 		case SDL_MOUSEBUTTONDOWN:
 			printf("Mouse Position =  (x=%d, y=%d)\n", e->button.x, e->button.y);
@@ -64,27 +65,52 @@ void on_render(App* app, void* game_data){
 	GameData* gd = (GameData*)game_data;
 }
 
-void on_update(App* app, void* game_data, float dt) {
-	GameData* gd = (GameData*)game_data;
+static inline bool approx(float x, float y, float eps) {
+	return abs(x-y) < eps;
+}
+
+static void handle_movement(Transform* cam_tr, GameData* gd, float dt) {
 
 	const Uint8* kb = SDL_GetKeyboardState(NULL);
-	if(kb[SDL_SCANCODE_W]) gd->move_input.y += 1.0f;
-	if(kb[SDL_SCANCODE_A]) gd->move_input.x -= 1.0f;
-	if(kb[SDL_SCANCODE_S]) gd->move_input.y -= 1.0f;
-	if(kb[SDL_SCANCODE_D]) gd->move_input.x += 1.0f; 
+	if(kb[SDL_SCANCODE_W]) gd->move_input.x += 1.0f;
+	if(kb[SDL_SCANCODE_A]) gd->move_input.y -= 1.0f;
+	if(kb[SDL_SCANCODE_S]) gd->move_input.x -= 1.0f;
+	if(kb[SDL_SCANCODE_D]) gd->move_input.y += 1.0f; 
+
+	float horiz_sens = 0.5f;
+
+	Quat rot = quat_angle_axis(gd->mouse_input.x * horiz_sens * dt, VEC3F_Y);
+	transform_apply_rotation(cam_tr, rot);
+
+	Vec3f forward  = quat_get_forward(cam_tr->rotation);
+	Vec3f right    = quat_get_right(cam_tr->rotation);
+
+	Vec3f fwd_back   = vec3f_scale(forward, gd->move_input.x);
+	Vec3f left_right = vec3f_scale(right, gd->move_input.y);
+
+	Vec3f move_dir = vec3f_add(fwd_back, left_right);
+
+	if(!approx(vec3f_magnitude(move_dir), 0.0f, 0.001)) 
+		move_dir = vec3f_normalize(move_dir);
+
+	float speed = 2.0f;
+
+	Vec3f movement = vec3f_scale(move_dir, speed * dt);
+
+	transform_apply_translation(cam_tr, movement);
+
+	// Reset movement input
+	gd->move_input = VEC2F_0;
+	gd->mouse_input = VEC2F_0;
+}
+
+void on_update(App* app, void* game_data, float dt) {
+	GameData* gd = (GameData*)game_data;
 
 	Scene* scene = app->scene;
 	Camera* cam = scene_get_camera(scene);
 
-	Quat rot = quat_angle_axis(gd->mouse_input.x * dt, VEC3F_Y);
-	transform_apply_rotation(cam->transform, rot);
-
-	Vec3f movement = (Vec3f){gd->move_input.y * dt, 0.0f, gd->move_input.x * dt};
-	transform_apply_translation(cam->transform, movement);
-
-	// reset input info
-	gd->move_input = VEC2F_0;
-	gd->mouse_input = VEC2F_0;
+	handle_movement(cam->transform, gd, dt);
 }
 
 void on_shutdown(App* app, void* game_data) {

@@ -20,6 +20,7 @@ typedef struct App {
 	Window*      window;
 	Assets*      assets;
 	Scene*       scene;
+	bool is_running;
 } App;
 
 typedef struct AppVTable {
@@ -36,5 +37,7 @@ void app_init(App* app, AppVTable* v_table, AppCfg* cfg);
 void app_uninit(App* app);
 
 void app_run(App* app);
+
+void app_shutdown(App* app);
 
 #endif
