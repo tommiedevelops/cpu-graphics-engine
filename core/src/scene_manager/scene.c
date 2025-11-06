@@ -25,7 +25,9 @@ Scene* scene_create(Camera* cam, Light* light) {
 
 	Scene* scene = malloc(sizeof(Scene));
 
-	if(!scene || !gos || !light) return NULL;
+	if(!cam || !light) {
+		printf("no scene created, parameters were NULL\n");
+	}
 
 	scene->cam    = cam;
 	scene->light  = light;
@@ -119,34 +121,4 @@ Transform transform_default(){
 	return tr;
 }
 
-// Camera
-Camera* camera_create(Transform* tr, int width, int height){
-	Camera* cam = malloc(sizeof(Camera));
-	cam->transform = tr;
-	cam->fov = PI*0.33f;
-	cam->near = 0.01f;
-	cam->far = 20.0f;
-	cam->screen_width = width;
-	cam->screen_height = height;
-	return cam;
-}
-
-void camera_set_fov_degrees(Camera* cam, float fov_degrees){
-
-	if(fov_degrees < 0.0f) fov_degrees = 0.0f;
-	if(fov_degrees > 180.0f) fov_degrees = 180.0f;
-
-	float fov_radians = PI*fov_degrees/180.0f;	
-	cam->fov = fov_radians;
-}
-
-
-void camera_set_near(Camera* cam, float near){
-	if(near < 0.0f) near = 0.0f;
-	cam->near = near;
-}
-
-void camera_set_far(Camera* cam, float far){
-	cam->far = far;
-}
 

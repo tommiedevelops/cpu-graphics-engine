@@ -17,7 +17,7 @@ typedef struct {
 	uint8_t mt_len, mt_cap;
 } Assets;
 
-Assets* assets_init() {
+Assets* assets_create() {
 
 	Assets*  a = malloc(sizeof(Assets));
 
@@ -78,7 +78,7 @@ uint8_t assets_add_mesh(Assets* a, Mesh* mesh) {
 	return a->m_len++;
 }
 
-void assets_uninit(Assets* a) {
+void assets_destroy(Assets* a) {
 	for(int i = 0; i < a->t_len; i++) free(a->textures[i]);
 	for(int i = 0; i < a->m_len; i++) free(a->meshes[i]);
 	free(a->textures);

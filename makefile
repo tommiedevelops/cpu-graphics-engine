@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -I/opt/homebrew/include -I/opt/homebrew/include/SDL2
 LDFLAGS = -L/opt/homebrew/lib -lSDL2 -lm -Iinclude -Icore/include -Icore/src -Iapp
-
+-WFLAGS = -std=c11 -Wall -Wextra -Werror -Wpedantic
 DEBUGFLAGS = -fsanitize=address -g
 SRC_FILES := core/src/game_math/*.c core/src/renderer/*.c core/src/platform/*.c app/*.c core/src/scene_manager/*.c core/src/asset_manager/*.c core/src/application/*.c
 TEST_SRC_FILES := core/src/game_math/*.c core/src/renderer/*.c core/src/platform/*.c app/app.c core/src/scene_manager.c core/src/asset_manager.c
@@ -10,7 +10,7 @@ TEST_FILES := $(wildcard tests/src/*.c)
 .PHONY: run build
 
 build:
-	$(CC) $(SRC_FILES) $(DEBUGFLAGS) -o ./build/window $(CFLAGS) $(LDFLAGS)
+	$(CC) $(SRC_FILES) $(DEBUGFLAGS) $(WFLAGS) -o ./build/window $(CFLAGS) $(LDFLAGS)
 clean:
 	rm ./build/window ./build/testing
 run:

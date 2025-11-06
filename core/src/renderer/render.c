@@ -17,6 +17,7 @@
 #include "renderer/render.h"
 
 #include "scene_manager/game_object.h"
+#include "scene_manager/camera.h"
 #include "scene_manager/scene.h"
 
 typedef struct Renderer { 
@@ -183,23 +184,26 @@ static void renderer_draw_game_object(Renderer* r, FrameBuffer* fb, GameObj* go)
 
 static void prepare_per_scene_uniforms(Renderer* r, Scene* scene) {
 
-	const Camera*    cam = scene_get_camera(scene);
-	const Transform* tr  = cam->transform;
+	const Camera* cam = scene_get_camera(scene);
+	const Transform* tr  = camera_get_transform(cam);
+	float near = camera_get_near(cam); 
+	float far  = camera_get_far(cam);
+	float fov  = camera_get_fov(cam);
 
-	const int   width    = cam->screen_width;
-	const int   height   = cam->screen_height;
+	const int   width    = camera_get_screen_width(cam);
+	const int   height   = camera_get_screen_height(cam);
 	const float aspect   = (float)height/(float)width;
 
 	const Mat4  view     = get_view_matrix(tr->position, tr->rotation, tr->scale);
-	const Mat4  proj     = get_projection_matrix(cam->fov, cam->near, cam->far, aspect);
-	const Mat4  viewport = get_viewport_matrix(cam->near, cam->far, width, height);
+	const Mat4  proj     = get_projection_matrix(fov, near, far, aspect);
+	const Mat4  viewport = get_viewport_matrix(near, far, width, height);
 
 	r->vs_u->view       = view;
 	r->vs_u->proj       = proj;
 	r->vs_u->viewport   = viewport;
 
 	r->fs_u->light            = scene_get_light(scene);
-	r->fs_u->cam_world_pos    = scene_get_camera(scene)->transform->position;
+	r->fs_u->cam_world_pos    = tr->position;
 }
 
 static void prepare_per_game_object_uniforms(Renderer* r, GameObj* go) {

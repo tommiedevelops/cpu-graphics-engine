@@ -5,12 +5,12 @@
 
 typedef SDL_Event SDL_Event;
 typedef struct AppVTable {
-	void (*on_start)(void);
-	void (*on_event)(SDL_Event* e);
-	void (*on_update)(float dt);
-	void (*on_render)();
-	void (*on_shutdown)();
-	void* userdata;
+	void (*on_start)(void* ud);
+	void (*on_event)(void* ud, SDL_Event* e);
+	void (*on_update)(void* ud, float dt);
+	void (*on_render)(void* ud);
+	void (*on_shutdown)(void* ud);
+	void* user_data;
 } AppVTable;
 
 typedef struct AppCfg {

@@ -5,21 +5,13 @@
 #include "game_math/quaternion.h"
 
 typedef struct GameObj GameObj;
+typedef struct Camera Camera;
 
 typedef struct Transform {
 	Vec3f position;
 	Quat rotation;  
 	Vec3f scale;
 } Transform;
-
-typedef struct Camera { 
-	Transform* transform;
-	float fov;
-	float near;
-	float far;
-	float screen_width;
-	float screen_height;
-} Camera;
 
 typedef struct Light {
 	Vec4f color;
@@ -30,7 +22,7 @@ Light* light_create(Vec3f direction, Vec4f color);
 
 typedef struct Scene Scene;
 
-Scene*	    scene_create();
+Scene*	    scene_create(Camera* cam, Light* light);
 void        scene_destroy(Scene* scene);
 int         scene_get_num_gos(Scene* scene);
 Light*      scene_get_light(Scene* scene);
@@ -42,10 +34,4 @@ GameObj*    scene_get_game_object(Scene* scene, int go_idx);
 void        scene_delete_game_object(Scene* scene);
 
 Transform* transform_create(Vec3f pos, Quat rot, Vec3f scale);
-Camera* camera_create(Transform* tr, int screen_width, int screen_height);
-
-void camera_set_fov_degrees(Camera* cam, float fov_degrees);
-void camera_set_near(Camera* cam, float near);
-void camera_set_far(Camera* cam, float far);
-
 #endif

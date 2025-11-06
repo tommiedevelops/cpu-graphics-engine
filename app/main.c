@@ -6,41 +6,58 @@
 #define W_HEIGHT (392)
 #define W_NAME ("cpu graphics engine")
 
+typedef struct GameData {
+	Scene*  scene;
+	Assets* assets;
+} GameData;
+
+void on_start(void* game_data) {
+	GameData* gd = (GameData*)game_data;
+	gd->assets = assets_create();
+
+	gd->scene  = scene_create(NULL, NULL);
+}
+
+void on_event(void* game_data, SDL_Event* e) {
+	GameData* gd = (GameData*)game_data;
+}
+
+void on_update(void* game_data, float dt) {
+	GameData* gd = (GameData*)game_data;
+}
+
+void on_render(void* game_data) {
+	GameData* gd = (GameData*)game_data;
+}
+
+void on_shutdown(void* game_data) {
+	GameData* gd = (GameData*)game_data;
+	//scene_destroy(gd->scene); NEEDA FIX
+	//assets_destroy(gd->assets);
+}
+
 int main(void) {
 
-	Window*       win = window_create(W_WIDTH, W_HEIGHT, W_NAME);
-	Pipeline*     p   = pipeline_create(vs_default, fs_phong);
-	FrameBuffer* fb   = frame_buffer_create(W_WIDTH, W_HEIGHT, CLEAR_COLOR);
-	Renderer*     r   = renderer_create(p);
+	App app;
+	GameData gd;
 
-	// Inititalising scene
-	Transform* cam_tr = transform_create((Vec3f){0.0f,0.0f,-5.0f}, QUAT_IDENTITY, VEC3F_1);
-	Camera*       cam = camera_create(cam_tr, W_WIDTH, W_HEIGHT);
-	Light*      light = light_create(VEC3F_1, VEC4F_1);
-	Scene*      scene = scene_create(cam, light);
+	AppVTable v_table = {
+		on_start,
+		on_event,
+		on_update,
+		on_render,
+		on_shutdown,
+		(void*)&gd
+	};
 
-	/* Building and adding GameObjects */
-	
-	// Preparing mesh, material and initial transform
-	Mesh*      mesh  = mesh_parse_from_obj("assets/models/bunny.obj");
-	mesh_recalculate_normals(mesh);
-	Vec4f      green = (Vec4f){0.1f, 1.0f,0.1f, 1.0f}; // Maybe define RGBA struct
-	Material*  mat   = material_create(green, NULL, NULL);
-	Transform* tr    = transform_create(VEC3F_0, QUAT_IDENTITY, VEC3F_1);
+	AppCfg cfg = {
+		.w_width       = W_WIDTH,
+		.w_height      = W_HEIGHT,
+		.w_name        = W_NAME,
+		.w_clear_color = CLEAR_COLOR
+	};
 
-	GameObj* bunny = game_obj_create(tr, mesh, mat);
-	scene_add_game_object(scene, bunny);
+	app_init(&app, &v_table, &cfg);
 
-	// Render Loop
-	int num_frames = 300;
-	int i = 0;
-	while(i < num_frames) {
-		frame_buffer_clear(fb);
-		renderer_draw_scene(r,fb,scene);
-		window_update(win, fb->framebuffer);
-		printf("frame = %d\n", i);
-		i++;
-	}
-	
-        return 0;
+	app_run(&app);
 }
