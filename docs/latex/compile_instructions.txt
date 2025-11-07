@@ -4,4 +4,8 @@ Instructions for compiling LaTeX:
 latexmk -pdf -pvc -interaction=nonstopmode -file-line-error main.tex 
 zathura main.pdf
 
+may need: 
+sudo apt install texlive-pictures
+for tikz
+
 above is for windows.
