@@ -11,37 +11,45 @@ typedef struct GameData {
 	Vec2f move_input;
 } GameData;
 
-void on_start(App* app, void* game_data) {
-	GameData* gd = (GameData*)game_data;
-
-	gd->mouse_input = VEC2F_0;
-	gd->move_input = VEC2F_0;
-
-	// Assets Init
+void on_init(App* app, void* game_data) {
+	/* for preparing Assets */
 	Assets* assets  = assets_create();
+
 	Mesh* mesh = mesh_parse_from_obj("assets/models/homer.obj");
-	assets_add_mesh(assets, mesh);
+	assets_add_mesh(assets, mesh, "bunny");
+
 	mesh_recalculate_normals(mesh);
 
-	// Scene Init
 	Vec4f col = (Vec4f){0.1, 0.2, 0.3, 1.0};
 	Pipeline* p = pipeline_create(vs_default, fs_lit);
+	Material*  mat = material_create(col, NULL, p);
+	assets_add_material(assets, mat, "bunny");
 
-	Material* mat = material_create(col, NULL, p);
-	Transform* bunny_tr = transform_default();
-	GameObj* bunny = game_obj_create(bunny_tr, mesh, mat);
+	app->assets = assets;
+}
+
+void on_start(App* app, void* game_data) {
+	/* for preparing Scene */
+	GameData* gd = (GameData*)game_data;
+	
+	gd->move_input = VEC2F_0;
+	gd->mouse_input = VEC2F_0;
 
 	Transform* cam_tr = transform_default();
 	cam_tr->position = (Vec3f){0.0f, 0.0f, -5.0f};
 
-	Camera* cam = camera_create(cam_tr, W_WIDTH, W_HEIGHT);
+	Camera* cam  = camera_create(cam_tr, W_WIDTH, W_HEIGHT);
 	Light* light = light_create(VEC3F_1, VEC4F_1);
 	Scene* scene = scene_create(cam, light);
 
-	scene_add_game_obj(scene, bunny);
+	Transform* bunny_tr   = transform_default();
+	Mesh*      bunny_mesh = assets_get_mesh(app->assets, "bunny");
+	Material*  bunny_mat  = assets_get_material(app->assets, "bunny");
 
+	GameObj*   bunny    = game_obj_create(bunny_tr, bunny_mesh, bunny_mat);
+
+	scene_add_game_obj(scene, bunny);
 	app->scene = scene;
-	app->assets = assets;
 }
 
 void on_event(App* app, void* game_data, SDL_Event* e) {
@@ -59,10 +67,6 @@ void on_event(App* app, void* game_data, SDL_Event* e) {
 			printf("Mouse Position =  (x=%d, y=%d)\n", e->button.x, e->button.y);
 			break;
 	}
-}
-
-void on_render(App* app, void* game_data){
-	GameData* gd = (GameData*)game_data;
 }
 
 static inline bool approx(float x, float y, float eps) {
@@ -125,10 +129,10 @@ int main(void) {
 	GameData     gd;
 
 	AppVTable v_table = {
+		on_init,
 		on_start,
 		on_event,
 		on_update,
-		on_render,
 		on_shutdown,
 		(void*)&gd
 	};

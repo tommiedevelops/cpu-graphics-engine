@@ -18,8 +18,11 @@ typedef struct Mesh {
 	int* triangle_normals;
 
 	int num_triangles;
+	const char* handle;
 } Mesh;
 
 int mesh_recalculate_normals(Mesh* m);
 Mesh* mesh_parse_from_obj(char* obj_filename);
+
+void mesh_destroy(Mesh* mesh);
 #endif

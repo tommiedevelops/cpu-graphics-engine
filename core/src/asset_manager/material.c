@@ -7,17 +7,9 @@
 #include "renderer/frag_shader.h"
 #include "renderer/vert_shader.h"
 #include "renderer/render.h"
-
+#include "material.h"
 
 typedef struct Texture Texture;
-
-typedef struct Material {
-	Vec4f color; // fallback color if no texture
-	Texture *tex; // for base
-	Vec4f diffuse;
-	Vec4f specular;
-	Pipeline* pipeline;
-} Material;
 
 Material* material_default(){
 	Material* mat = malloc(sizeof(Material));
@@ -27,12 +19,18 @@ Material* material_default(){
 	return mat;
 }
 
-struct Material* material_create(Vec4f color, Texture* tex, Pipeline* p){
-	struct Material* mat = malloc(sizeof(Material));
+Material* material_create(Vec4f color, Texture* tex, Pipeline* p){
+	Material* mat = malloc(sizeof(Material));
 	mat->color = color;
-	mat->tex = tex;
+	mat->texture = tex;
 	mat->pipeline = p;
 	return mat;
+}
+
+void material_destroy(Material* mat) {
+	pipeline_destroy(mat->pipeline);
+	texture_destroy(mat->texture);
+	free(mat);
 }
 
 Vec4f material_get_base_color(Material* mat) {
@@ -40,7 +38,7 @@ Vec4f material_get_base_color(Material* mat) {
 }
 
 Texture* material_get_texture(Material* mat) {
-	return mat->tex;
+	return mat->texture;
 }
 
 Vec4f material_get_albedo(struct Material* mat, Vec2f uv) {
@@ -49,11 +47,11 @@ Vec4f material_get_albedo(struct Material* mat, Vec2f uv) {
 		return VEC4F_0;
 	}
 	
-	if(NULL == mat->tex){
+	if(NULL == mat->texture){
 		return mat->color;
 	}
 
-	return texture_sample(mat->tex, uv.x, uv.y);
+	return texture_sample(mat->texture, uv.x, uv.y);
 }
 
 Pipeline* material_get_pipeline(Material* mat) {

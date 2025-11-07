@@ -41,8 +41,9 @@ Texture* texture_load(char* filename){
 	return tex;
 }
 
-void texture_free(Texture tex){
-	if(tex.map != NULL) free(tex.map);
+void texture_destroy(Texture* tex){
+	free(tex->map);
+	free(tex);
 }
 
 Vec4f get_pixel(Vec4f* data, int width, int height, int x, int y){

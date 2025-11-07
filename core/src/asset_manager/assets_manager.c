@@ -1,15 +1,13 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 
 #include "asset_manager/texture.h"
 #include "asset_manager/mesh.h"
 #include "asset_manager/material.h"
 
 typedef struct {
-	Texture** textures;
-	uint8_t t_len, t_cap;
-
 	Mesh** meshes;
 	uint8_t m_len, m_cap;
 
@@ -21,47 +19,49 @@ Assets* assets_create() {
 
 	Assets*  a = malloc(sizeof(Assets));
 
-	uint8_t t_len = 0, t_cap = 2;
-	Texture** t = malloc(t_cap*sizeof(Texture*));
+	uint8_t mt_len = 0, mt_cap = 2;
+	Material** mats = malloc(mt_cap*sizeof(Material*));
 
 	uint8_t m_len = 0, m_cap = 2;
 	Mesh** m = malloc(m_cap*sizeof(Mesh*));
 
-	a->textures = t;
+	a->materials =  mats;
 	a->meshes = m;
-	a->t_len = t_len;
-	a->t_cap = t_cap;
+	a->mt_len = mt_len;
+	a->mt_cap = mt_cap;
 	a->m_len = m_len;
 	a->m_cap = m_cap;
-
 
 	return a;
 };
 
-uint8_t assets_add_tex(Assets* a, Texture* tex) {
-	bool full = (a->t_cap == a->t_len);
+uint8_t assets_add_material(Assets* a, Material* mat, const char * handle) {
+	bool full = (a->mt_cap == a->mt_len);
 	
 	if(!full) {
-		a->textures[a->t_len] = tex;
-		return a->t_len++;
+		mat->handle = handle;
+		a->materials[a->mt_len] = mat;
+		return a->mt_len++;
 	}
 
-	size_t new_cap = a->t_cap + 2;
-	Texture** new = realloc(a->textures, new_cap*sizeof(Texture*));	
-	for(int i = 0; i < a->t_len; i++) new[i] = a->textures[i];
+	size_t new_cap = a->mt_cap + 2;
+	Material** new = realloc(a->materials, new_cap*sizeof(Material*));	
+	for(int i = 0; i < a->mt_len; i++) new[i] = a->materials[i];
 
-	free(a->textures);
-	a->textures = new;
-	a->t_cap = new_cap;
+	free(a->materials);
+	a->materials = new;
+	a->mt_cap = new_cap;
 
-	a->textures[a->t_len] = tex;
-	return a->t_len++;
+	mat->handle = handle;
+	a->materials[a->mt_len] = mat;
+	return a->mt_len++;
 }
 
-uint8_t assets_add_mesh(Assets* a, Mesh* mesh) {
+uint8_t assets_add_mesh(Assets* a, Mesh* mesh, const char * handle) {
 	bool full = (a->m_cap == a->m_len);
 	
 	if(!full) {
+		mesh->handle = handle;
 		a->meshes[a->m_len] = mesh;
 		return a->m_len++;
 	}
@@ -74,14 +74,40 @@ uint8_t assets_add_mesh(Assets* a, Mesh* mesh) {
 	a->meshes = new;
 	a->m_cap = new_cap;
 
+	mesh->handle = handle;
 	a->meshes[a->m_len] = mesh;
 	return a->m_len++;
 }
 
+Mesh* assets_get_mesh(Assets* a, const char* handle) {
+	int n = a->m_len;
+
+	for(int i = 0; i < n; i++) {
+		Mesh* mesh = a->meshes[i];
+		if(!strcmp(handle,mesh->handle)) return mesh;	
+	}
+
+	return NULL;
+}
+
+Material* assets_get_material(Assets* a, const char* handle) {
+	int n = a->mt_len;
+
+	for(int i = 0; i < n; i++) {
+		Material* mat = a->materials[i];
+		if(!strcmp(handle,mat->handle)) return mat;	
+	}
+
+	return NULL;
+}
+
+
 void assets_destroy(Assets* a) {
-	for(int i = 0; i < a->t_len; i++) free(a->textures[i]);
-	for(int i = 0; i < a->m_len; i++) free(a->meshes[i]);
-	free(a->textures);
+	for(int i = 0; i < a->mt_len; i++)
+	       	material_destroy(a->materials[i]);
+	for(int i = 0; i < a->m_len; i++)
+		mesh_destroy(a->meshes[i]);
+	free(a->materials);
 	free(a->meshes);
 	free(a);
 }

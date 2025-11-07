@@ -51,6 +51,10 @@ Pipeline* pipeline_create(VertShaderF vert_shader, FragShaderF frag_shader) {
 	return p;
 }
 
+void  pipeline_destroy(Pipeline* p) {
+	free(p);
+}
+
 static inline bool inside_triangle(BaryCoords b){
 	return (b.alpha > 0) && (b.beta > 0) && (b.gamma > 0) && (b.alpha <= 1) && (b.beta <= 1) && (b.gamma <= 1);
 }

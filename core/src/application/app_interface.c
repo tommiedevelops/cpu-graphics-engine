@@ -9,10 +9,10 @@ static void validate_vtable(AppVTable* v_table) {
 
 	int error = 0;
 
+	if(!v_table->on_init) error = 1;
 	if(!v_table->on_start) error = 1;
 	if(!v_table->on_event) error = 1;
 	if(!v_table->on_update) error = 1;
-	if(!v_table->on_render) error = 1;
 	if(!v_table->on_shutdown) error = 1;
 
 	if(error) {
@@ -62,6 +62,7 @@ void app_run(App* app) {
 	time_init(&time);
 
 	SDL_Event e;
+	vt->on_init(app, vt->user_data);
 	vt->on_start(app, vt->user_data);
 
 	app->is_running = true;
@@ -81,7 +82,6 @@ void app_run(App* app) {
 
 		if(!app->is_running) break;
 		vt->on_update(app, vt->user_data, dt);
-		vt->on_render(app, vt->user_data);
 
 		renderer_draw_scene(app->renderer, app->fb, app->scene);
 		window_update(app->window, app->fb->framebuffer);

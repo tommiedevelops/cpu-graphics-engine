@@ -106,3 +106,12 @@ int mesh_recalculate_normals(Mesh* m){
 	m->normals = normals;
 }
 
+void mesh_destroy(Mesh* mesh) {	
+	free(mesh->vertices);
+	free(mesh->triangles);
+	free(mesh->uvs);
+	free(mesh->triangle_uvs);
+	free(mesh->normals);
+	free(mesh->triangle_normals);
+	free(mesh);
+}
