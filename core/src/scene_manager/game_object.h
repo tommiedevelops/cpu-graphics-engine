@@ -10,6 +10,7 @@ typedef struct GameObj {
 	Mesh*      mesh;
 	Material*  mat;
 	int id;
+	const char * handle;
 } GameObj;
 
 GameObj*  game_obj_create(Transform* tr, Mesh* mesh, Material* mat);
@@ -20,6 +21,6 @@ void      game_obj_set_id(GameObj* go, int id);
 Mesh*     game_obj_get_mesh(GameObj* go);
 Material* game_obj_get_material(GameObj* go);
 int       game_obj_get_id(GameObj* go);
+void      game_obj_set_handle(GameObj* go, const char* handle);
 void      game_obj_destroy(GameObj* go);
-
 #endif

@@ -74,9 +74,9 @@ void scene_set_camera(Scene* scene, Camera* cam) {
 	scene->cam = cam;
 }
 
-static int add_go_to_scene(Scene* scene, GameObj* go){
+static int add_go_to_scene(Scene* scene, GameObj* go, const char * handle){
 	scene->gos[scene->go_len] = go;
-	game_obj_set_id(go, scene->go_len);
+	game_obj_set_handle(go, handle);
 	return scene->go_len++;
 }
 
@@ -97,7 +97,7 @@ static inline bool at_capacity(Scene* scene){
 	return (scene->go_cap == scene->go_len);
 }
 
-int scene_add_game_obj(Scene* scene, GameObj* go)  {
+int scene_add_game_obj(Scene* scene, GameObj* go, const char* handle)  {
 
 	if(!scene || !go) {
 		LOG_ERROR(NULL_PARAM_ERROR);
@@ -105,22 +105,24 @@ int scene_add_game_obj(Scene* scene, GameObj* go)  {
 	}
 
 	if( !at_capacity(scene) ) 
-		return add_go_to_scene(scene, go);
+		return add_go_to_scene(scene, go, handle);
 
 	realloc_go_array(scene);
 
-	return add_go_to_scene(scene, go);
+	return add_go_to_scene(scene, go, handle);
 }
 
 Light* scene_get_light(Scene* scene) { return scene->light; } 
 
-GameObj* scene_get_game_obj(Scene* scene, int go_idx) {
-	if(go_idx < 0 || go_idx > scene->go_len) {
-		printf("invalid game object idx\n");
-		return NULL;
+GameObj* scene_get_game_obj(Scene* scene, const char* handle) {
+	int n = scene->go_len;
+
+	for(int i = 0; i < n; i++) {
+		GameObj* go = scene->gos[i];
+		if(!strcmp(handle,go->handle)) return go;	
 	}
 
-	return scene->gos[go_idx];
+	return NULL;
 }
 
 void scene_destroy(Scene* scene) {
@@ -130,3 +132,10 @@ void scene_destroy(Scene* scene) {
 	free(scene);
 }
 
+int scene_get_num_game_obj(Scene* scene) {
+	return scene->go_len;
+}
+
+GameObj** scene_get_game_obj_arr(Scene* scene) {
+	return scene->gos;
+}

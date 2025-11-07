@@ -42,13 +42,15 @@ void on_start(App* app, void* game_data) {
 	Light* light = light_create(VEC3F_1, VEC4F_1);
 	Scene* scene = scene_create(cam, light);
 
+	const char * bunny_handle = "bunny";
+
 	Transform* bunny_tr   = transform_default();
-	Mesh*      bunny_mesh = assets_get_mesh(app->assets, "bunny");
-	Material*  bunny_mat  = assets_get_material(app->assets, "bunny");
+	Mesh*      bunny_mesh = assets_get_mesh(app->assets, bunny_handle);
+	Material*  bunny_mat  = assets_get_material(app->assets, bunny_handle);
 
-	GameObj*   bunny    = game_obj_create(bunny_tr, bunny_mesh, bunny_mat);
+	GameObj* bunny = game_obj_create(bunny_tr, bunny_mesh, bunny_mat);
 
-	scene_add_game_obj(scene, bunny);
+	scene_add_game_obj(scene, bunny, bunny_handle);
 	app->scene = scene;
 }
 
@@ -108,6 +110,15 @@ static void handle_movement(Transform* cam_tr, GameData* gd, float dt) {
 	gd->mouse_input = VEC2F_0;
 }
 
+static void rotate_bunny(GameObj* go, float dt) {
+	float ang_vel = 2.0f;
+	Transform* tr = go->tr;
+	float angle = dt * ang_vel;
+	Vec3f axis = VEC3F_1;
+	Quat rot = quat_angle_axis(angle, axis);
+	transform_apply_rotation(tr,rot);
+}
+
 void on_update(App* app, void* game_data, float dt) {
 	GameData* gd = (GameData*)game_data;
 
@@ -115,6 +126,10 @@ void on_update(App* app, void* game_data, float dt) {
 	Camera* cam = scene_get_camera(scene);
 
 	handle_movement(cam->transform, gd, dt);
+
+	GameObj* bunny_go = scene_get_game_obj(scene, "bunny");
+
+	rotate_bunny(bunny_go, dt);
 }
 
 void on_shutdown(App* app, void* game_data) {

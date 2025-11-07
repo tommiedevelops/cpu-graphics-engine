@@ -84,3 +84,6 @@ void game_obj_destroy(GameObj* go) {
 }
 
 
+void game_obj_set_handle(GameObj* go, const char* handle) {
+	go->handle = handle;
+}

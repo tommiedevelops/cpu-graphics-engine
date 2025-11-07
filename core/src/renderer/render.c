@@ -225,9 +225,10 @@ void renderer_draw_scene(Renderer* r, FrameBuffer* fb, Scene* scene) {
 	prepare_per_scene_uniforms(r,scene);
 
 	const size_t count = scene_get_num_gos(scene);
+	GameObj** gos = scene_get_game_obj_arr(scene);
 
 	for(size_t i = 0; i < count; i++) {
-		GameObj* go = scene_get_game_obj(scene, i);
+		GameObj* go = gos[i];
 		if(!go || !go->mesh || !go->mat) continue;
 		prepare_per_game_object_uniforms(r,go);
 		renderer_draw_game_object(r, fb, go);
