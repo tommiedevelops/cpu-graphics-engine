@@ -103,12 +103,24 @@ Material* assets_get_material(Assets* a, const char* handle) {
 
 
 void assets_destroy(Assets* a) {
-	for(int i = 0; i < a->mt_len; i++)
-	       	material_destroy(a->materials[i]);
-	for(int i = 0; i < a->m_len; i++)
-		mesh_destroy(a->meshes[i]);
-	free(a->materials);
-	free(a->meshes);
+	if(NULL == a) return;
+	
+	if(a->materials) {
+		for(int i = 0; i < a->mt_len; i++) {
+	       		material_destroy(a->materials[i]);
+		}
+
+		free(a->materials);
+	}
+
+	if(a->meshes) {
+		for(int i = 0; i < a->m_len; i++) {
+			mesh_destroy(a->meshes[i]);
+		}
+		
+		free(a->meshes);
+	}
+
 	free(a);
 }
 

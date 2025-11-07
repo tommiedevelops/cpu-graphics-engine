@@ -42,7 +42,8 @@ Texture* texture_load(char* filename){
 }
 
 void texture_destroy(Texture* tex){
-	free(tex->map);
+	if(!tex) return;
+	if(tex->map) free(tex->map);
 	free(tex);
 }
 

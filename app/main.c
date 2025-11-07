@@ -134,8 +134,9 @@ void on_update(App* app, void* game_data, float dt) {
 
 void on_shutdown(App* app, void* game_data) {
 	GameData* gd = (GameData*)game_data;
-	//scene_destroy(gd->scene); NEEDA FIX
-	//assets_destroy(gd->assets);
+	// free any resources you requested
+	scene_destroy(app->scene);
+	assets_destroy(app->assets);
 }
 
 int main(void) {
