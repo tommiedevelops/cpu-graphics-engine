@@ -16,78 +16,19 @@ This project is an educational exploration of how modern GPU graphics pipelines 
 - **Interactive Rendering:** Control scenes at runtime via **SDL2 event handling** (keyboard, mouse, etc.)
 - **Transparent Graphics Pipeline:** A fully documented, step-by-step pipeline that mirrors modern GPU design — ideal for learning and debugging. *(See [Pipeline Diagram](#) for details.)* 
 
-## Architecture
-### Design Philosophy
-To separate user scripting and backend rendering logic, the engine uses an **App/Core architecture**.
+## System Design
+I use an **App/Core** architecture to separate application-specific user scripting from the static core library. 
 
-### Components
-- **App Layer** – Provides the API surface for scripting, game loops, and scene logic.  
-- **Core Layer** – Implements low-level graphics pipeline and system operations.  
-- **Asset Manager** – API for managing lifecycle of material, mesh, scene, and texture data shared between App and Core.
-- **Scene Manager** - API for handling Scene creation and update rules
+### Core Components
+- **Application**: API for user to inject custom scripting in the core render loop through V-table call-backs.
+- **Game Math**: A math library with little to no dependencies used throughout the engine.
+- **Platform**: Abstracts system calls and calls to SDL2 to supply time data, a window and input events.
+- **Asset Manager**: API for user to load Meshes, Materials and Scenes into memory
+- **Scene Manager**: API for user to create, modify, save and destroy Scene structures which contain GameObjects, Camera and Light structures.
+- **Renderer**: Software Implementation of the Graphics Pipeline which supports custom Vertex and Fragment Shaders as C fptrs.
 
-### Flow Summary
-- In the App Layer, the user creates or loads a Scene via the Scene Manager.
-- To add objects to the scene to render, we first need to build the required assets (Textures, Materials, Meshes) which is done via the Asset Manager.
-- Once ready, GameObjects can be constructed and added to the Scene. GameObjects contain a Transform which tells us where it is in the Scene, a Mesh which tells us its geometry and a Material which tells us how to render it.
-- The user also specifies the rules for how the Scene components (Camera, Light, GameObjects) should evolve with time inside the Render Loop, factoring in User Input Events from the Window.
-- Each iteration of the Render Loop, the user can call the draw_scene function via the Render API to execute Core Layer code which renders the scene to the screen.
 ### Data Flow Diagram
-
-```mermaid
-flowchart TD
-
-APP["**App**</br>Custom Scripting, Game Loop"]
-
-SM["**Scene Manager**</br>Manages Scene runtime"]
-
-AM["**Asset Manager**</br>Material, Mesh, Scene, Texture structures"]
-
-R["**Renderer**</br>Renders Scene to FrameBuffer"]
-
-F["**FrameBuffer**</br>Depth Test & presents to Window"]
-
-W["**Window**</br>Handles Hardware & Events"]
-
-APP -.Update Scene.-> SM
-APP -.Load Assets.-> AM
-AM -.Scene, Mesh & Material Data.-> SM
-SM -.Scene Data.-> R
-R -.Pixel Data.-> F
-F --> W
-W -.Input Events.->APP
-
-%% ===== STYLES =====
-classDef Application fill:#111827,stroke:#475569,stroke-width:1px,rx:12,ry:12;
-classDef Core fill:#0b1220,stroke:#3f3f46,stroke-width:1px,rx:12,ry:12;
-
-class APP,AM,SM Application;
-class R,F,W Core;	
-
-subgraph Application
-	SM
-	AM
-	APP
-end 
-
-subgraph Core
-	R
-	W
-	F
-end 
-    style Application fill:transparent,stroke:#4b5563,stroke-width:2px,color:#f8fafc
-    style Core fill:transparent,stroke:#4b5563,stroke-width:2px,color:#f8fafc
-```
-<p align=center>
-<em>
-This diagram shows the flow of data throughout the components of the program. In the Application Layer, the Assets and Scene are prepared. Rules are also specified for how the Scene should update in time. In the Core Layer, Scene Data is handed off to the Renderer which processes it through the Graphics Pipeline before it is written to the FrameBuffer and presented to the Window.
-</p>
-
-## Shaders Implemented (With Demos)
-**TODO**
-- Fragment: Garaud, Phong, Blinn-Phong, Flat, Smooth, Toon,
-- Vertex: Ripple (sin), Twist, Breating / Pulsing, Fish Eye, Quantize positions 
-
+<img src=data-flow.svg width="800">
 
 ## How it works
 * See [HOW_IT_WORKS.pdf](./docs/latex/main.pdf) which details the maths, algorithms etc.
