@@ -1,18 +1,29 @@
 \documentclass{article}
 
-\usepackage{graphicx}
+% PREAMBLE %
+\usepackage{graphicx} % for importing images
+\usepackage{xcolor} %for coloring text
 \usepackage{amsmath,amssymb,bm}
 \usepackage{tikz}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
+
+%tikz libaries
 \usetikzlibrary{calc,angles,quotes}
+\usetikzlibrary{intersections} %for intersections between \paths
+
+% CUSTOM COMMANDS %
+
 % Bold vectors for Latin and Greek:
 \newcommand{\vect}[1]{\bm{#1}}    % \vect{x}, \vect{\alpha}, \vect{\nabla}
 \newcommand{\uvect}[1]{\hat{\bm{#1}}} % unit vectors: \uvect{n}
 
+
+% METADATA %
 \author{Thomas Dizon}
 \title{CPU Graphics Engine}
 
+% CONTENT %
 \begin{document}
 
 \maketitle
@@ -44,6 +55,7 @@
 \item A primitive, in my case, is a Triangle and a Fragment is an (x,y) value on the screen with an additional z value to track its depth
 \item In the real world, rasterization is done purely through specialized hardware on the GPU (which is why it is so fast)
 \item To conceptually understand how it works, instead of building a GPU from scratch (hard), I'll use my good old CPU to do the rasterizing (still hard but easier)
+	\item Just to clarify between similar terms. A "Software Rasterizer" refers to writing a CPU implementation of the Rasterization step in a "Software Renderer". A "Software Renderer" is a CPU implementaion of the Graphics Pipeline. A "Graphics Engine" is a CPU implementation of the graphics pipeline as well as Scene Management, Asset Management, Input handling, Updating the Scene etc. It falls short of being a fully fledged game engine but the scope is larger than a Software Renderer
 \end{itemize}
 
 \subsection{Why \textit{C}?}
@@ -57,10 +69,13 @@
 \item Right now, it depends on the C standard library, std\_image.h (reference) for dealing with .png files and SDL2 (reference) for handling all the OS level stuff like inputs and writing to the screen. Though you could easily replace SDL with any other library which creates Windows for you like RayLib.
 \end{itemize}
 
-\section{The Graphics Pipeline}
+\section{The Graphics Engine}
 \subsection{Diagram}
 \subsection{Overview}
 \begin{itemize}
+\item{Preparing Assets for the Scene}
+\item{Preparing the Scene}
+\item{Updating the Scene}
 \item{Primitive Assembly}
 \item{Vertex Shader}
 \item{Clipping \& Viewport}
@@ -72,11 +87,11 @@
 \section{3D Geometry in Memory}
 
 \subsection{How do you represent a 3D object on a computer?}
-\subsubsection{Vertices and Triangles}
+\subsection{Vertices and Triangles}
 \begin{itemize}
 \item Using a Mesh
 \end{itemize}
-\subsubsection{3D Mesh}
+\subsection{3D Mesh}
 \subsection{3D File types}
 
 \section{Coordinate Spaces}
@@ -86,26 +101,145 @@
 \subsection{Cameras \& View Space}
 
 \section{Transforming Vertices}
-\subsection{Why do we need 4 dimensions?}
 \subsection{Matrices as Transformations}
-\subsection{Quaternions as Rotations}
-\subsection{The Model Matrix}
-\subsection{The View Matrix}
-\subsection{The Projection Matrix}
-\subsection{The Viewport Matrix}
+
+\subsection{Deriving the Model Matrix}
+\subsubsection{Transforms}
+\subsubsection{Scale Matrix}
+\subsubsection{Rotation Matrix}
+\subsubsection{Translation Matrix}
+\subsubsection{Combining them together}
+
+\subsection{Deriving the View Matrix}
+\subsubsection{The Matrix Inverse}
+\subsubsection{Inverse of the Model Matrix}
+
+\subsection{Deriving the Projection Matrix}
+\subsubsection{What is \textit{Perspective}?}
+\begin{itemize}
+	\item In this project, my goal is to create graphics that are visually realistic or at least somewhat consistent with our experiences in the real world. Thus, my definition of Perspective will be made with that in mind.
+	\item Put simply, Perspective is the phenomenon of objects appearing smaller to a viewer as it moves further away from the viewer.
+	\item The viewer perceives the world through projecting a 3D world onto a 2D 'viewing plane'
+	\item It comes from that fact that we, as humans, perceive a 3D world through light striking a 2D surface, our retina after passing through a 'pinhole' which is our iris.
+	\item Our eye accepts light from all objects in the surrounding area in a 'radial' fashion. As a result, distant objects appear smaller, while nearby objects appear larger.
+	\item Mathematically, the apparent size of an object is inversely proportional to its distance from the observer.
+\end{itemize}
+
+\subsubsection{The View Frustum}
+\begin{itemize}
+	\item Since we are trying to create realistic graphics on a computer screen, we need to take that screen into account.
+	\item We imagine that the computer screen is not a screen but instead a 'Window' into the virtual world we are creating. We can now place this Window into the Scene, in world space. The Width and Height of the window is proportional to the actual width and height of the Window running the program (Viewport)
+	\item The distance between the viewer and the screen in World Space is given by the Field Of View paremeter which is an angular measurement.  
+	\item So now the image is: We, the viewer, are the Camera in the Scene and the Computer Screen is some distance directly in front of us, almost as we are in real life.
+	\item Now, in world space, we can extend the Computer Screen out into infinite and call it the 'near plane'	
+	\item So that we don't blow up our computers by trying to render infinitely into the distance, we also define a 'Far Plane' based on the maximum distance from the Viewer we wish to see.
+	\item Now, we can't see above, below, right or left of the window so we can trace a line from the Camera to each edge of the viewport and create The Top, Left, Right and Bottom planes from that.
+	\item The objects inside of this volume are the objects visible to our Viewer.
+\end{itemize}
+
+\subsubsection{Perspective Projection}
+
+After applying the Model and View Matrix to each Vertex in the Scene, each Vertex should now be in View space (Coordinates expressed relative to the Camera being at the origin). We want to project each Vertex onto the Viewing Plane which is the same thing as the Near Plane. For now, we ignore the $z$ and $w$ values.
+
+For each Vertex, imagine constructing a line from the Vertex to the Origin. This line's intersection on the Viewing plane will be the Vertex's projection.
+
+\begin{figure}[h!]
+
+	\definecolor{topplane}{HTML}{2E8B57}   % Sea Green (clear, calm)
+	\definecolor{bottomplane}{HTML}{A0522D} % Sienna (warm earthy brown)
+	\definecolor{nearplane}{HTML}{1E90FF}   % Dodger Blue (bright but not neon)
+	\definecolor{farplane}{HTML}{DC143C}    % Crimson Red (vivid but deep)
+
+	\centering
+	\begin{tikzpicture}
+		% parameters
+		\def\t{0.4} % tan(fov/2)
+		\def\n{2.0}       % near
+		\def\f{4.0}       % far
+		\def\Zmax{4.5}      % drawing extent
+		\def\Ymax{2}
+
+		% axes
+		\draw[->] (-0.5,0) -- (\Zmax+0.5,0) node[right] {$z$};
+		\draw[->] (0,-\Ymax) -- (0,\Ymax)       node[above] {$y$};
+
+		% top/bottom (black)
+		\draw[] plot[domain=0:\Zmax] (\x,  { \t*\x});
+		\draw[] plot[domain=0:\Zmax] (\x, {- \t*\x});
+
+
+		%top (colored)
+		\draw[topplane] plot[domain=\n:\f] (\x,  { \t*\x});
+
+		%bottom (colored)
+		\draw[bottomplane] plot[domain=\n:\f] (\x,  { -\t*\x});
+
+		% near/far from z = n, z = f  (verticals)
+		% use the y-extent implied by the frustum at those z
+		\draw[thick,nearplane, name path=near] plot[domain={- \t*\n}:{ \t*\n}] ({\n}, \x);
+		\draw[thick,farplane, name path=far ] plot[domain={- \t*\f}:{ \t*\f}] ({\f}, \x);
+		
+		%extend near and far planes to inifinite with colored dotted lines
+		\draw[dashed,nearplane, name path=near] plot[domain={-\Ymax}:{ \Ymax}] ({\n}, \x);
+		\draw[dashed, farplane, name path=far ] plot[domain={- \Ymax}:{ \Ymax}] ({\f}, \x);
+
+		% near / far labels
+		\draw (\n, 0) node[below right] {$n$};
+		\draw (\f, 0) node[below right] {$f$};
+
+		% sample vertex
+		\def\vx{3}
+		\def\vy{0.5}
+		\draw[fill=black] (\vx,\vy) circle (1pt) node[below right] {$v$};
+
+		%label the origin as C, the Camera
+		\draw circle (0,0) node[below left] {$C$};
+		
+		% line from origin to vertex
+		\draw[dashed, name path=vline] (0,0) -- (\vx,\vy);
+
+		%label intersection between near plane and vline
+		\path[name intersections={of=vline and near, by=I}];
+		\fill (I) circle (1pt) node[above right] {$v'$};
+		
+	\end{tikzpicture}
+
+	\caption{2D slice of the view frustum along the $yz$ plane depicting the \textcolor{topplane}{top}, \textcolor{bottomplane}{bottom}, \textcolor{nearplane}{near} and \textcolor{farplane}{far planes}. The vertex $v$ is projected to the point $v'$ on the near plane by calculating the intersection between a line drawn from the origin to $v$ and the near plane. The Camera / Viewer, labelled {$C$} is at the origin, thus this Coordinate Space is View Space.}
+	\label{fig:frustum}
+\end{figure}
+Now we are going to start constructing this Matrix.
+
+\[
+\mathbf{Pv} =
+\begin{pmatrix}
+m_{11} & m_{12} & m_{13} & m_{14} \\
+m_{21} & m_{22} & m_{23} & m_{24} \\
+m_{31} & m_{32} & m_{33} & m_{34} \\
+m_{41} & m_{42} & m_{43} & m_{44}
+\end{pmatrix}%
+\begin{pmatrix}
+x \\ y \\ z \\ w
+\end{pmatrix}
+
+\]
+
+
+\subsection{Deriving The Viewport Matrix}
 \subsection{The Vertex Shader}
 \subsection{Clipping \& The Sutherland Hodgman Algorithm}
 
 \section{Drawing to the screen}
 \subsection{What is \textit{Rasterization}?}
 \subsection{Interpolation}
-\subsection{Barycentric Coordinates}
 \subsection{Rasterizing Triangles}
 \subsection{What is a \textit{Fragment?}}
 \subsection{The Fragment Shader}
+\subsection{Depth Testing}
+\subsection{The Framebuffer and Z-Buffer}
 
 \section{Shading}
 
+\subsection{Shaders}
 \subsection{Materials}
 \begin{itemize}
 	\item A Material
@@ -120,6 +254,9 @@
 \subsection{Shadows}
 \subsection{Ambient Occlusion}
 
+\section{Appendix}
+\subsection{Quaternions}
+\subsection{Barycentric Coordinates}
 \section{Deprecated}
 \subsection{Math Concepts}
 \subsubsection{Vectors}
@@ -183,32 +320,6 @@ For the first part, consider the setup in Figure \ref{fig:frustum}. In this 2D s
 
 To do this, we draw a line from the point to the origin. Consider the point at which this origin ray intersects the near plane. Let's call this point $x$. 
 
-
-\begin{figure}[h!]
-
-	\centering
-	\begin{tikzpicture}[]
-
-		%axis%
-		\draw[->] (-0.5,0) -- (3.5,0) node[right] {$x$};
-		\draw[->] (0,-1.5) -- (0,1.5) node[above] {$y$};
-
-		% top plane %
-		\draw (0,0) -- (3,1.3);
-
-		% bottom plane %
-		\draw (0,0) -- (3,-1.3);
-
-		% near plane
-		\draw[thick, blue] (1,0.43) -- (1, -0.43);
-
-		% far plane %
-		\draw[thick, red] (2.5, 1.08) -- (2.5, -1.08);
-
-	\end{tikzpicture}
-	\caption{2D slice depicting the top, bottom, near and far planes}
-	\label{fig:frustum}
-\end{figure}
 
 \subsubsection{Deriving the Viewport Matrix}
 \subsection{Algorithms}

@@ -1,65 +1,78 @@
-\contentsline {section}{\numberline {1}Introduction}{4}{}%
-\contentsline {subsection}{\numberline {1.1}Motivation}{4}{}%
-\contentsline {subsection}{\numberline {1.2}What is a \textit {Graphics Engine}?}{4}{}%
-\contentsline {subsection}{\numberline {1.3}Why \textit {C}?}{4}{}%
-\contentsline {subsection}{\numberline {1.4}What does the project depend on?}{5}{}%
-\contentsline {section}{\numberline {2}The Graphics Pipeline}{5}{}%
-\contentsline {subsection}{\numberline {2.1}Diagram}{5}{}%
-\contentsline {subsection}{\numberline {2.2}Overview}{5}{}%
-\contentsline {section}{\numberline {3}3D Geometry in Memory}{5}{}%
-\contentsline {subsection}{\numberline {3.1}How do you represent a 3D object on a computer?}{5}{}%
-\contentsline {subsubsection}{\numberline {3.1.1}Vertices and Triangles}{5}{}%
-\contentsline {subsubsection}{\numberline {3.1.2}3D Mesh}{6}{}%
-\contentsline {subsection}{\numberline {3.2}3D File types}{6}{}%
-\contentsline {section}{\numberline {4}Coordinate Spaces}{6}{}%
-\contentsline {subsection}{\numberline {4.1}What is a \textit {Coordinate Space}?}{6}{}%
-\contentsline {subsection}{\numberline {4.2}GameObjects \& Object Space}{6}{}%
-\contentsline {subsection}{\numberline {4.3}Scenes \& World Space}{6}{}%
-\contentsline {subsection}{\numberline {4.4}Cameras \& View Space}{6}{}%
-\contentsline {section}{\numberline {5}Transforming Vertices}{6}{}%
-\contentsline {subsection}{\numberline {5.1}Why do we need 4 dimensions?}{6}{}%
-\contentsline {subsection}{\numberline {5.2}Matrices as Transformations}{6}{}%
-\contentsline {subsection}{\numberline {5.3}Quaternions as Rotations}{6}{}%
-\contentsline {subsection}{\numberline {5.4}The Model Matrix}{6}{}%
-\contentsline {subsection}{\numberline {5.5}The View Matrix}{6}{}%
-\contentsline {subsection}{\numberline {5.6}The Projection Matrix}{6}{}%
-\contentsline {subsection}{\numberline {5.7}The Viewport Matrix}{6}{}%
-\contentsline {subsection}{\numberline {5.8}The Vertex Shader}{6}{}%
-\contentsline {subsection}{\numberline {5.9}Clipping \& The Sutherland Hodgman Algorithm}{6}{}%
-\contentsline {section}{\numberline {6}Drawing to the screen}{6}{}%
-\contentsline {subsection}{\numberline {6.1}What is \textit {Rasterization}?}{6}{}%
-\contentsline {subsection}{\numberline {6.2}Interpolation}{6}{}%
-\contentsline {subsection}{\numberline {6.3}Barycentric Coordinates}{6}{}%
-\contentsline {subsection}{\numberline {6.4}Rasterizing Triangles}{6}{}%
-\contentsline {subsection}{\numberline {6.5}What is a \textit {Fragment?}}{6}{}%
-\contentsline {subsection}{\numberline {6.6}The Fragment Shader}{6}{}%
-\contentsline {section}{\numberline {7}Shading}{6}{}%
-\contentsline {subsection}{\numberline {7.1}Materials}{6}{}%
-\contentsline {subsection}{\numberline {7.2}Textures}{7}{}%
-\contentsline {subsection}{\numberline {7.3}Unlit Shader}{7}{}%
-\contentsline {subsection}{\numberline {7.4}Lit Shader}{7}{}%
-\contentsline {subsection}{\numberline {7.5}Phong Shader}{7}{}%
-\contentsline {subsection}{\numberline {7.6}Toon Shader}{7}{}%
-\contentsline {subsection}{\numberline {7.7}Shadows}{7}{}%
-\contentsline {subsection}{\numberline {7.8}Ambient Occlusion}{7}{}%
-\contentsline {section}{\numberline {8}Deprecated}{7}{}%
-\contentsline {subsection}{\numberline {8.1}Math Concepts}{7}{}%
-\contentsline {subsubsection}{\numberline {8.1.1}Vectors}{7}{}%
-\contentsline {subsubsection}{\numberline {8.1.2}Planes}{7}{}%
-\contentsline {subsubsection}{\numberline {8.1.3}Matrices}{7}{}%
-\contentsline {subsubsection}{\numberline {8.1.4}Quaternions}{8}{}%
-\contentsline {subsubsection}{\numberline {8.1.5}Coordinate Spaces}{8}{}%
-\contentsline {subsubsection}{\numberline {8.1.6}Transformations}{8}{}%
-\contentsline {subsubsection}{\numberline {8.1.7}Deriving the Model Matrix}{8}{}%
-\contentsline {subsubsection}{\numberline {8.1.8}Deriving the View Matrix}{8}{}%
-\contentsline {subsubsection}{\numberline {8.1.9}Deriving the Projection Matrix}{8}{}%
-\contentsline {subsubsection}{\numberline {8.1.10}Deriving the Viewport Matrix}{9}{}%
-\contentsline {subsection}{\numberline {8.2}Algorithms}{9}{}%
-\contentsline {subsubsection}{\numberline {8.2.1}Rasterization}{9}{}%
-\contentsline {subsubsection}{\numberline {8.2.2}Improved Rasterization}{9}{}%
-\contentsline {subsubsection}{\numberline {8.2.3}Clipping}{9}{}%
-\contentsline {section}{\numberline {9}Conclusion \& Future Work}{10}{}%
-\contentsline {subsection}{\numberline {9.1}What I learnt}{10}{}%
-\contentsline {subsection}{\numberline {9.2}Limitations}{10}{}%
-\contentsline {subsection}{\numberline {9.3}A future implementation in C++}{10}{}%
-\contentsline {section}{\numberline {10}References}{10}{}%
+\contentsline {section}{\numberline {1}Introduction}{5}{}%
+\contentsline {subsection}{\numberline {1.1}Motivation}{5}{}%
+\contentsline {subsection}{\numberline {1.2}What is a \textit {Graphics Engine}?}{5}{}%
+\contentsline {subsection}{\numberline {1.3}Why \textit {C}?}{5}{}%
+\contentsline {subsection}{\numberline {1.4}What does the project depend on?}{6}{}%
+\contentsline {section}{\numberline {2}The Graphics Engine}{6}{}%
+\contentsline {subsection}{\numberline {2.1}Diagram}{6}{}%
+\contentsline {subsection}{\numberline {2.2}Overview}{6}{}%
+\contentsline {section}{\numberline {3}3D Geometry in Memory}{6}{}%
+\contentsline {subsection}{\numberline {3.1}How do you represent a 3D object on a computer?}{6}{}%
+\contentsline {subsection}{\numberline {3.2}Vertices and Triangles}{6}{}%
+\contentsline {subsection}{\numberline {3.3}3D Mesh}{7}{}%
+\contentsline {subsection}{\numberline {3.4}3D File types}{7}{}%
+\contentsline {section}{\numberline {4}Coordinate Spaces}{7}{}%
+\contentsline {subsection}{\numberline {4.1}What is a \textit {Coordinate Space}?}{7}{}%
+\contentsline {subsection}{\numberline {4.2}GameObjects \& Object Space}{7}{}%
+\contentsline {subsection}{\numberline {4.3}Scenes \& World Space}{7}{}%
+\contentsline {subsection}{\numberline {4.4}Cameras \& View Space}{7}{}%
+\contentsline {section}{\numberline {5}Transforming Vertices}{7}{}%
+\contentsline {subsection}{\numberline {5.1}Matrices as Transformations}{7}{}%
+\contentsline {subsection}{\numberline {5.2}Deriving the Model Matrix}{7}{}%
+\contentsline {subsubsection}{\numberline {5.2.1}Transforms}{7}{}%
+\contentsline {subsubsection}{\numberline {5.2.2}Scale Matrix}{7}{}%
+\contentsline {subsubsection}{\numberline {5.2.3}Rotation Matrix}{7}{}%
+\contentsline {subsubsection}{\numberline {5.2.4}Translation Matrix}{7}{}%
+\contentsline {subsubsection}{\numberline {5.2.5}Combining them together}{7}{}%
+\contentsline {subsection}{\numberline {5.3}Deriving the View Matrix}{7}{}%
+\contentsline {subsubsection}{\numberline {5.3.1}The Matrix Inverse}{7}{}%
+\contentsline {subsubsection}{\numberline {5.3.2}Inverse of the Model Matrix}{7}{}%
+\contentsline {subsection}{\numberline {5.4}Deriving the Projection Matrix}{7}{}%
+\contentsline {subsubsection}{\numberline {5.4.1}What is \textit {Perspective}?}{7}{}%
+\contentsline {subsubsection}{\numberline {5.4.2}The View Frustum}{8}{}%
+\contentsline {subsubsection}{\numberline {5.4.3}Perspective Projection}{8}{}%
+\contentsline {subsection}{\numberline {5.5}Deriving The Viewport Matrix}{10}{}%
+\contentsline {subsection}{\numberline {5.6}The Vertex Shader}{10}{}%
+\contentsline {subsection}{\numberline {5.7}Clipping \& The Sutherland Hodgman Algorithm}{10}{}%
+\contentsline {section}{\numberline {6}Drawing to the screen}{10}{}%
+\contentsline {subsection}{\numberline {6.1}What is \textit {Rasterization}?}{10}{}%
+\contentsline {subsection}{\numberline {6.2}Interpolation}{10}{}%
+\contentsline {subsection}{\numberline {6.3}Rasterizing Triangles}{10}{}%
+\contentsline {subsection}{\numberline {6.4}What is a \textit {Fragment?}}{10}{}%
+\contentsline {subsection}{\numberline {6.5}The Fragment Shader}{10}{}%
+\contentsline {subsection}{\numberline {6.6}Depth Testing}{10}{}%
+\contentsline {subsection}{\numberline {6.7}The Framebuffer and Z-Buffer}{10}{}%
+\contentsline {section}{\numberline {7}Shading}{10}{}%
+\contentsline {subsection}{\numberline {7.1}Shaders}{10}{}%
+\contentsline {subsection}{\numberline {7.2}Materials}{10}{}%
+\contentsline {subsection}{\numberline {7.3}Textures}{11}{}%
+\contentsline {subsection}{\numberline {7.4}Unlit Shader}{11}{}%
+\contentsline {subsection}{\numberline {7.5}Lit Shader}{11}{}%
+\contentsline {subsection}{\numberline {7.6}Phong Shader}{11}{}%
+\contentsline {subsection}{\numberline {7.7}Toon Shader}{11}{}%
+\contentsline {subsection}{\numberline {7.8}Shadows}{11}{}%
+\contentsline {subsection}{\numberline {7.9}Ambient Occlusion}{11}{}%
+\contentsline {section}{\numberline {8}Appendix}{11}{}%
+\contentsline {subsection}{\numberline {8.1}Quaternions}{11}{}%
+\contentsline {subsection}{\numberline {8.2}Barycentric Coordinates}{11}{}%
+\contentsline {section}{\numberline {9}Deprecated}{11}{}%
+\contentsline {subsection}{\numberline {9.1}Math Concepts}{11}{}%
+\contentsline {subsubsection}{\numberline {9.1.1}Vectors}{11}{}%
+\contentsline {subsubsection}{\numberline {9.1.2}Planes}{11}{}%
+\contentsline {subsubsection}{\numberline {9.1.3}Matrices}{11}{}%
+\contentsline {subsubsection}{\numberline {9.1.4}Quaternions}{12}{}%
+\contentsline {subsubsection}{\numberline {9.1.5}Coordinate Spaces}{12}{}%
+\contentsline {subsubsection}{\numberline {9.1.6}Transformations}{12}{}%
+\contentsline {subsubsection}{\numberline {9.1.7}Deriving the Model Matrix}{12}{}%
+\contentsline {subsubsection}{\numberline {9.1.8}Deriving the View Matrix}{12}{}%
+\contentsline {subsubsection}{\numberline {9.1.9}Deriving the Projection Matrix}{12}{}%
+\contentsline {subsubsection}{\numberline {9.1.10}Deriving the Viewport Matrix}{13}{}%
+\contentsline {subsection}{\numberline {9.2}Algorithms}{13}{}%
+\contentsline {subsubsection}{\numberline {9.2.1}Rasterization}{13}{}%
+\contentsline {subsubsection}{\numberline {9.2.2}Improved Rasterization}{13}{}%
+\contentsline {subsubsection}{\numberline {9.2.3}Clipping}{13}{}%
+\contentsline {section}{\numberline {10}Conclusion \& Future Work}{14}{}%
+\contentsline {subsection}{\numberline {10.1}What I learnt}{14}{}%
+\contentsline {subsection}{\numberline {10.2}Limitations}{14}{}%
+\contentsline {subsection}{\numberline {10.3}A future implementation in C++}{14}{}%
+\contentsline {section}{\numberline {11}References}{14}{}%

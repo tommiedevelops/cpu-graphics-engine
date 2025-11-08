@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2025.7.7)  7 NOV 2025 19:09
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2025.7.7)  8 NOV 2025 13:25
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -47,6 +47,23 @@ File: pdftex.def 2020/10/05 v1.2a Graphics/color driver for pdftex
 ))
 \Gin@req@height=\dimen139
 \Gin@req@width=\dimen140
+)
+(/usr/share/texlive/texmf-dist/tex/latex/xcolor/xcolor.sty
+Package: xcolor 2021/10/31 v2.13 LaTeX color extensions (UK)
+
+(/usr/share/texlive/texmf-dist/tex/latex/graphics-cfg/color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package xcolor Info: Driver file: pdftex.def on input line 227.
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1352.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1356.
+Package xcolor Info: Model `RGB' extended on input line 1368.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1370.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1371.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1372.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1373.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1374.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1375.
 )
 (/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsmath.sty
 Package: amsmath 2021/10/15 v2.17l AMS math features
@@ -198,23 +215,7 @@ File: pgfsyssoftpath.code.tex 2021/05/15 v3.1.9a (3.1.9a)
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/systemlayer/pgfsysprotocol.code.
 tex
 File: pgfsysprotocol.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-)) (/usr/share/texlive/texmf-dist/tex/latex/xcolor/xcolor.sty
-Package: xcolor 2021/10/31 v2.13 LaTeX color extensions (UK)
-
-(/usr/share/texlive/texmf-dist/tex/latex/graphics-cfg/color.cfg
-File: color.cfg 2016/01/02 v1.6 sample color configuration
-)
-Package xcolor Info: Driver file: pdftex.def on input line 227.
-Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1352.
-Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1356.
-Package xcolor Info: Model `RGB' extended on input line 1368.
-Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1370.
-Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1371.
-Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1372.
-Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1373.
-Package xcolor Info: Model `Gray' substituted by `gray' on input line 1374.
-Package xcolor Info: Model `wave' substituted by `hsb' on input line 1375.
-)
+))
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcore.code.tex
 Package: pgfcore 2021/05/15 v3.1.9a (3.1.9a)
 
@@ -535,40 +536,46 @@ File: tikzlibraryangles.code.tex 2021/05/15 v3.1.9a (3.1.9a)
 zlibraryquotes.code.tex
 File: tikzlibraryquotes.code.tex 2021/05/15 v3.1.9a (3.1.9a)
 )
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tik
+zlibraryintersections.code.tex
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/libraries/pgflibraryintersection
+s.code.tex
+\pgf@intersect@solutions=\count299
+))
 (/usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2022-01-12 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count299
+\l__color_backend_stack_int=\count300
 \l__pdf_internal_box=\box64
 )
 (./main.aux)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
  (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count300
+\scratchcounter=\count301
 \scratchdimen=\dimen270
 \scratchbox=\box65
-\nofMPsegments=\count301
-\nofMParguments=\count302
+\nofMPsegments=\count302
+\nofMParguments=\count303
 \everyMPshowfont=\toks38
-\MPscratchCnt=\count303
+\MPscratchCnt=\count304
 \MPscratchDim=\dimen271
-\MPnumerator=\count304
-\makeMPintoPDFobject=\count305
+\MPnumerator=\count305
+\makeMPintoPDFobject=\count306
 \everyMPtoPDFconversion=\toks39
 ) (/usr/share/texlive/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
@@ -582,12 +589,12 @@ e
 Package pgfplots notification 'compat/show suggested version=true': document ha
 s been generated with the most recent feature set (\pgfplotsset{compat=1.18}).
 
-LaTeX Font Info:    Trying to load font information for U+msa on input line 18.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 29.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 18.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 29.
 
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
@@ -596,7 +603,7 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 <scene.png, id=4, 750.55406pt x 374.14781pt>
 File: scene.png Graphic file (type png)
 <use scene.png>
-Package pdftex.def Info: scene.png  used on input line 22.
+Package pdftex.def Info: scene.png  used on input line 33.
 (pdftex.def)             Requested size: 207.0021pt x 103.18497pt.
  [1
 
@@ -606,42 +613,265 @@ Package pdftex.def Info: scene.png  used on input line 22.
 \openout4 = `main.toc'.
 
  [3] [4]
-[5]
-Overfull \vbox (19.69391pt too high) has occurred while \output is active []
+[5] [6] [7]
+./main.tex:196: Missing number, treated as zero.
+<to be read again> 
+                   {
+l.196 		\draw circle (0,0)
+                           node[below left] {$C$};
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+./main.tex:196: Illegal unit of measure (pt inserted).
+<to be read again> 
+                   {
+l.196 		\draw circle (0,0)
+                           node[below left] {$C$};
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
+
+Missing character: There is no 0 in font nullfont!
+./main.tex:196: Missing number, treated as zero.
+<to be read again> 
+                   \global 
+l.196 		\draw circle (0,0)
+                           node[below left] {$C$};
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+./main.tex:196: Illegal unit of measure (pt inserted).
+<to be read again> 
+                   \global 
+l.196 		\draw circle (0,0)
+                           node[below left] {$C$};
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
+
+./main.tex:196: Missing number, treated as zero.
+<to be read again> 
+                   {
+l.196 		\draw circle (0,0)
+                           node[below left] {$C$};
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+./main.tex:196: Illegal unit of measure (pt inserted).
+<to be read again> 
+                   {
+l.196 		\draw circle (0,0)
+                           node[below left] {$C$};
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
+
+Missing character: There is no 0 in font nullfont!
+./main.tex:196: Missing number, treated as zero.
+<to be read again> 
+                   \global 
+l.196 		\draw circle (0,0)
+                           node[below left] {$C$};
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+./main.tex:196: Illegal unit of measure (pt inserted).
+<to be read again> 
+                   \global 
+l.196 		\draw circle (0,0)
+                           node[below left] {$C$};
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
+
+./main.tex:196: Missing number, treated as zero.
+<to be read again> 
+                   {
+l.196 		\draw circle (0,0)
+                           node[below left] {$C$};
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+./main.tex:196: Illegal unit of measure (pt inserted).
+<to be read again> 
+                   {
+l.196 		\draw circle (0,0)
+                           node[below left] {$C$};
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
+
+Missing character: There is no 0 in font nullfont!
+./main.tex:196: Missing number, treated as zero.
+<to be read again> 
+                   \global 
+l.196 		\draw circle (0,0)
+                           node[below left] {$C$};
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+./main.tex:196: Illegal unit of measure (pt inserted).
+<to be read again> 
+                   \global 
+l.196 		\draw circle (0,0)
+                           node[below left] {$C$};
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
+
+./main.tex:196: Missing number, treated as zero.
+<to be read again> 
+                   {
+l.196 		\draw circle (0,0)
+                           node[below left] {$C$};
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+./main.tex:196: Illegal unit of measure (pt inserted).
+<to be read again> 
+                   {
+l.196 		\draw circle (0,0)
+                           node[below left] {$C$};
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
+
+Missing character: There is no 0 in font nullfont!
+./main.tex:196: Missing number, treated as zero.
+<to be read again> 
+                   \global 
+l.196 		\draw circle (0,0)
+                           node[below left] {$C$};
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+./main.tex:196: Illegal unit of measure (pt inserted).
+<to be read again> 
+                   \global 
+l.196 		\draw circle (0,0)
+                           node[below left] {$C$};
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
 
 
-[6] [7]
-Overfull \hbox (23.63342pt too wide) in paragraph at lines 151--152
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+./main.tex:223: Missing $ inserted.
+<inserted text> 
+                $
+l.223 
+      
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+./main.tex:223: Display math should end with $$.
+<to be read again> 
+                   \tex_par:D 
+l.223 
+      
+The `$' that I just saw supposedly matches a previous `$$'.
+So I shall assume that you typed `$$' both times.
+
+[8]
+
+./main.tex:224: LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.224 \]
+        
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+./main.tex:224: Missing $ inserted.
+<inserted text> 
+                $
+l.224 \]
+        
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+./main.tex:224: Display math should end with $$.
+<to be read again> 
+                   \endgroup 
+l.224 \]
+        
+The `$' that I just saw supposedly matches a previous `$$'.
+So I shall assume that you typed `$$' both times.
+
+[9] [10] [11]
+Overfull \hbox (23.63342pt too wide) in paragraph at lines 288--289
 []\OT1/cmr/m/n/10 The unit vec-tors $\OML/cmm/m/it/10 i; j; k$ \OT1/cmr/m/n/10 
 ad-here to the fol-low-ing mul-ti-pli-ca-tion rules. \OT1/cmr/bx/n/10 **TODO** 
 
  []
 
-[8] [9] [10] (./main.aux) ) 
+[12] [13] [14] (./main.aux) ) 
 Here is how much of TeX's memory you used:
- 23265 strings out of 480247
- 606821 string characters out of 5896152
- 1024318 words of memory out of 5000000
- 40826 multiletter control sequences out of 15000+600000
- 483073 words of font info for 78 fonts, out of 8000000 for 9000
+ 23691 strings out of 480247
+ 616989 string characters out of 5896152
+ 1025267 words of memory out of 5000000
+ 41245 multiletter control sequences out of 15000+600000
+ 483432 words of font info for 79 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 84i,8n,89p,725b,719s stack positions out of 5000i,500n,10000p,200000b,80000s
- </home/dizontj/.texlive2021/texmf-var/fonts/pk/ljfo
-ur/jknappen/ec/tcrm1000.600pk></usr/share/texlive/texmf-dist/fonts/type1/public
-/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfo
-nts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm
-/cmbxti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmm
-i10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb
-></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/
-share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/t
-exlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/t
-exmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-d
-ist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dist/fo
-nts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on main.pdf (10 pages, 170108 bytes).
+ 84i,8n,80p,725b,848s stack positions out of 5000i,500n,10000p,200000b,80000s
+ </home/dizontj/.texlive2021/texmf-var/fonts/pk/lj
+four/jknappen/ec/tcrm1000.600pk></usr/share/texlive/texmf-dist/fonts/type1/publ
+ic/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/ams
+fonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmbxti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/c
+mex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.
+pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></u
+sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/shar
+e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texli
+ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf
+-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/
+fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-dist/fonts/t
+ype1/public/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/p
+ublic/amsfonts/symbols/msbm10.pfb>
+Output written on main.pdf (14 pages, 196898 bytes).
 PDF statistics:
- 103 PDF objects out of 1000 (max. 8388607)
- 65 compressed objects within 1 object stream
+ 126 PDF objects out of 1000 (max. 8388607)
+ 80 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  18 words of extra memory for PDF output out of 10000 (max. 10000000)
 
