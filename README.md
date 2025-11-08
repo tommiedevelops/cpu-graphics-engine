@@ -3,16 +3,10 @@
 
 This project is an educational exploration of how modern GPU graphics pipelines work. It's built mostly from scratch to simulate the core stages that power games, VFX, and real-time rendering system.
 
-<div style="display: flex; justify-content: center;">
-  <div style="text-align: center; margin-right: 20px;">
-    <img src="bunny.gif" width="100%">
-    <p><em>Stanford Bunny rendered with Phong shading</em></p>
-  </div>
-  <div style="text-align: center;">
-    <img src="teapot.gif" width="100%">
-    <p><em>Utah Teapot rendered with Gouraud shading</em></p>
-  </div>
-</div>
+<img src="bunny.gif" align="center" width="60%">
+<p><em>Stanford Bunny rendered with Phong shading</em></p>
+<img src="teapot.gif" align = "center" width="60%">
+<p><em>Utah Teapot rendered with Phong shading and a brick texture applied</em></p>
 
 ## Features
 - **Mesh Loading:** Import `.obj` files for 3D geometry stored as meshes.
