@@ -9,20 +9,23 @@
 typedef struct GameData {
 	Vec2f mouse_input;
 	Vec2f move_input;
+	float time;
 } GameData;
 
 void on_init(App* app, void* game_data) {
 	/* for preparing Assets */
 	Assets* assets  = assets_create();
 
-	Mesh* mesh = mesh_parse_from_obj("assets/models/homer.obj");
+	Mesh* mesh = mesh_parse_from_obj("assets/models/teapot.obj");
 	assets_add_mesh(assets, mesh, "bunny");
 
-	mesh_recalculate_normals(mesh);
+	Texture* tex = texture_load("assets/textures/brickwall.png");
 
-	Vec4f col = (Vec4f){0.1, 0.2, 0.3, 1.0};
-	Pipeline* p = pipeline_create(vs_default, fs_lit);
-	Material*  mat = material_create(col, NULL, p);
+	mesh_recalculate_normals(mesh);
+	
+	Vec4f col = (Vec4f){26.0f/255, 208.0f/255.0f, 200.0f/255.0f, 1.0};
+	Pipeline* p = pipeline_create(vs_default, fs_phong);
+	Material*  mat = material_create(col, tex, p);
 	assets_add_material(assets, mat, "bunny");
 
 	app->assets = assets;
@@ -32,6 +35,7 @@ void on_start(App* app, void* game_data) {
 	/* for preparing Scene */
 	GameData* gd = (GameData*)game_data;
 	
+	gd->time = 0.0f;
 	gd->move_input = VEC2F_0;
 	gd->mouse_input = VEC2F_0;
 
@@ -39,7 +43,9 @@ void on_start(App* app, void* game_data) {
 	cam_tr->position = (Vec3f){0.0f, 0.0f, -5.0f};
 
 	Camera* cam  = camera_create(cam_tr, W_WIDTH, W_HEIGHT);
-	Light* light = light_create(VEC3F_1, VEC4F_1);
+	Vec3f light_dir = (Vec3f){-0.5f, -1.0f, 0.0f};
+	Vec4f light_col = (Vec4f){235.0f/255.0f, 80.0f/255.0f, 211/255.0f, 1.0f};
+	Light* light = light_create(light_dir, VEC4F_1);
 	Scene* scene = scene_create(cam, light);
 
 	const char * bunny_handle = "bunny";
@@ -114,13 +120,24 @@ static void rotate_bunny(GameObj* go, float dt) {
 	float ang_vel = 2.0f;
 	Transform* tr = go->tr;
 	float angle = dt * ang_vel;
-	Vec3f axis = VEC3F_1;
+	Vec3f axis = (Vec3f){0.0f, 1.0f, 0.0f};
 	Quat rot = quat_angle_axis(angle, axis);
 	transform_apply_rotation(tr,rot);
 }
 
+static void move_bunny(GameObj* go, float dt) {
+	float f = 2.0f;
+	float A = 0.5f;
+	Transform* tr = go->tr;
+
+	tr->position.y = 0.5f + A*sin(f*dt);
+
+}
+
 void on_update(App* app, void* game_data, float dt) {
 	GameData* gd = (GameData*)game_data;
+
+	gd->time += dt;
 
 	Scene* scene = app->scene;
 	Camera* cam = scene_get_camera(scene);
@@ -129,7 +146,8 @@ void on_update(App* app, void* game_data, float dt) {
 
 	GameObj* bunny_go = scene_get_game_obj(scene, "bunny");
 
-	rotate_bunny(bunny_go, dt);
+	move_bunny(bunny_go, gd->time);
+	rotate_bunny(bunny_go,dt);
 }
 
 void on_shutdown(App* app, void* game_data) {

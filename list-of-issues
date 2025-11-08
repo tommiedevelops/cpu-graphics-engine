@@ -13,3 +13,5 @@ optional App abstraction but can use main file directly if you want
 document API clearly + example usage
 
 ability to save scene
+
+if texture is null, print something to the console
