@@ -1,5 +1,5 @@
 # Fdb version 3
-["pdflatex"] 1762568713 "main.tex" "main.pdf" "main" 1762568713
+["pdflatex"] 1762615101 "main.tex" "main.pdf" "main" 1762615101
   "/etc/texmf/web2c/texmf.cnf" 1751853987 475 c0e671620eb5563b2130f56340a5fde8 ""
   "/home/dizontj/.texlive2021/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1000.600pk" 1751889038 11524 78e5a8166c29e497a2c4707fb973de75 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/tcrm1000.tfm" 1136768653 1536 e07581a4bb3136ece9eeb4c3ffab8233 ""
@@ -42,9 +42,11 @@
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmti10.tfm" 1136768653 1480 aa8e34af0eb6a2941b776984cf1dfdc4 ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb" 1248133631 34811 78b52f49e893bcba91bd7581cdc144c0 ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb" 1248133631 32080 340ef9bf63678554ee606688e7b5339d ""
+  "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx7.pfb" 1248133631 32007 e8fa0078355f39467039935974716569 ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbxti10.pfb" 1248133631 36554 b67dc2cfa451409e100b3fcf5f506509 ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb" 1248133631 30251 6afa5cb1d0204815a708a080681d4674 ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb" 1248133631 36299 5f9df58c2139e7edcf37c8fca4bd384d ""
+  "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb" 1248133631 36281 c355509802a035cadc5f15869451dcee ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb" 1248133631 35752 024fb6c41858982481f6968b5fc26508 ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb" 1248133631 32722 d7379af29a190c3f453aba36302ff5a9 ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb" 1248133631 32362 179c33bbf43f19adbb3825bb4e36e57a ""
@@ -191,9 +193,10 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1644012257 39432 7155514e09a3d69036fac785183a21c2 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1762485622 77930 dad7a7a153c57be8d26b82384a2548e8 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1751853993 1405647 b742463abc5f5999eb004cb95018f67a ""
-  "main.aux" 1762568710 9560 c566b9fc1920d43025f830bde5d8ee30 "pdflatex"
-  "main.tex" 1762568709 16213 5c11c89dabaa76e71f78200bef461d7a ""
-  "main.toc" 1762568710 5601 99ba6245c7f3ff05e6de17cc99ca6027 "pdflatex"
+  "charmander.png" 1762610534 9527 965da5ba6de10873617f0521a54507e0 ""
+  "main.aux" 1762613949 9565 7c96265fa4dc94a4a286b5725cb06349 "pdflatex"
+  "main.tex" 1762615101 20454 f58d83009b7502e5c6ce1d4f45d2c47d ""
+  "main.toc" 1762613949 5601 e63684a281314778fea67a85ffc15698 "pdflatex"
   "scene.png" 1759984308 18384 1e3e3dfc6d4057238b6acaf5eb5a2595 ""
   (generated)
   "main.aux"
