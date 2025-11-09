@@ -140,7 +140,6 @@ x \\ y \\ z \\ 1
 
 \]
 
-
 \subsubsection{What is \textit{Perspective}?}
 \begin{itemize}
 	\item In this project, my goal is to create graphics that are visually realistic or at least somewhat consistent with our experiences in the real world. Thus, my definition of Perspective will be made with that in mind.
@@ -200,7 +199,18 @@ This scaling will capture the effect of perspective as can be seen in Figure \re
 
 Now, we just need to make sure that points inside the view frustum are mapped to normalized device coordinates. That is, points that intersect the top plane are mapped to y = 1, bottom y = -1, left x = -1, right x = 1.
 
-If a 
+To do that, let's now imagine that we are the camera and are looking at the view port.
+\begin{figure}[h!]
+\begin{tikzpicture}
+	\defXmax{5}
+	\defYmax{8}
+
+	% axes
+	\draw[->] (-\Xmax,0) -- (\Xmax,0) node[right] {$x$};
+	\draw[->] (0,-\Ymax) -- (0,\Ymax) node[above] {$y$};
+
+\end{tikzpicture}
+\end{figure}
 
 So we can now determine the first 2 rows of the matrix. To scale the $x$ and $y$ components by $n/v_z$, we need to set $m11$ and $m22$ to be $n$ and everythign else in rows 1 and 2 to be 0.
 
@@ -222,7 +232,6 @@ x \\ y \\ z \\ 1
 
 \]
 
-
 From the maths, we can immediately see that the apprent size of the image on the near / viewing plane is inversely proportional to its distance from the viewer, and directly proportional to the distance from the plane to the viewer.
 \begin{figure}[h!]
 
@@ -232,6 +241,7 @@ From the maths, we can immediately see that the apprent size of the image on the
 	\definecolor{farplane}{HTML}{DC143C}    % Crimson Red (vivid but deep)
 
 	\centering
+	\textbf{View Space}\\[0.5em]%
 	\begin{tikzpicture}
 		% parameters
 		\def\t{0.4} % tan(fov/2)
