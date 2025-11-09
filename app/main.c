@@ -16,7 +16,7 @@ void on_init(App* app, void* game_data) {
 	/* for preparing Assets */
 	Assets* assets  = assets_create();
 
-	Mesh* mesh = mesh_parse_from_obj("assets/models/teapot.obj");
+	Mesh* mesh = mesh_parse_from_obj("assets/models/bunny.obj");
 	assets_add_mesh(assets, mesh, "bunny");
 
 	Texture* tex = texture_load("assets/textures/brickwall.png");
@@ -25,7 +25,7 @@ void on_init(App* app, void* game_data) {
 	
 	Vec4f col = (Vec4f){26.0f/255, 208.0f/255.0f, 200.0f/255.0f, 1.0};
 	Pipeline* p = pipeline_create(vs_default, fs_phong);
-	Material*  mat = material_create(col, tex, p);
+	Material*  mat = material_create(col, NULL, p);
 	assets_add_material(assets, mat, "bunny");
 
 	app->assets = assets;
