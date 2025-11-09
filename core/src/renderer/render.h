@@ -14,6 +14,12 @@ typedef struct Pipeline {
 	FragShaderF fs;
 } Pipeline;
 
+typedef struct Renderer { 
+	VSUniforms* vs_u;
+	FSUniforms* fs_u;
+	Pipeline* p;
+} Renderer;
+
 Pipeline* pipeline_create(VertShaderF vs, FragShaderF fs);
 void  pipeline_destroy(Pipeline* p);
 Renderer* renderer_create(Pipeline* default_pl);
