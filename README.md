@@ -3,10 +3,8 @@
 
 3D Graphics done on the CPU, not GPU. <em>"Why?"</em>, you may be asking. Put simply: GPU complicated, CPU less complicated. Plus I have a full graphics pipeline that I can play around with now! If you're curious about how it works, check out [HOW_IT_WORKS.pdf](./docs/latex/main.pdf).
 
-<img src="bunny.gif" align="center" width="60%">
-<p><em>Stanford Bunny rendered with Phong shading</em></p>
-<img src="teapot.gif" align = "center" width="60%">
-<p><em>Utah Teapot rendered with Phong shading and a brick texture applied</em></p>
+<img src="thumbnail.gif" align="center" width="60%">
+<p><em>Stanford Bunny rendered with Phong shading and Utah Teapot rendered with Garaud shading & a brick texture applied</em></p>
 
 ## Features
 - **Mesh Loading:** Import `.obj` files for 3D geometry stored as meshes.

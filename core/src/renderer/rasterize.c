@@ -5,10 +5,6 @@
 #include "triangle.h"
 #include "framebuffer.h"
 
-static inline bool inside_triangle(BaryCoords b){
-	return (b.alpha > 0) && (b.beta > 0) && (b.gamma > 0) && (b.alpha <= 1) && (b.beta <= 1) && (b.gamma <= 1);
-}
-
 typedef struct Vec2i {
 	int x, y;
 } Vec2i;
@@ -49,6 +45,9 @@ static inline int edge_func(Vec2i P, Vec2i A, Vec2i B) {
 	return (B.x - A.x)*(P.y - A.y) - (B.y - A.y)*(P.x - A.x);
 }
 
+static inline bool inside_triangle(int e01, int e12, int e20) {
+	return (e01 >= 0) && (e12 >= 0) && (e20 >= 0);
+}
 void rasterize_triangle(Renderer* r, FrameBuffer* fb, Triangle* tri, FragShaderF frag_shader) {
 	
 	FSin  fs_in;
@@ -61,7 +60,7 @@ void rasterize_triangle(Renderer* r, FrameBuffer* fb, Triangle* tri, FragShaderF
 	int xmax = min_i(fb->width - 1, (int)floorf(b.xmax));
 	int ymax = min_i(fb->height - 1, (int)floorf(b.ymax)); 
 
-	if(xmin >= xmax || ymin >= ymax) return;
+	if(xmin > xmax || ymin > ymax) return;
 
 	// Assuming CCW winding from 0 to 2
 	
@@ -83,24 +82,26 @@ void rasterize_triangle(Renderer* r, FrameBuffer* fb, Triangle* tri, FragShaderF
 	int e20_row = edge_func(P,V2,V0);
 
 	// area of triangle
-	int area = 0.5*edge_func(V2, V0, V1);
+	int area = edge_func(V0, V1, V2);
+	if(area == 0) return;
 
-	for(; P.y <= ymax; P.y++){
+	for(P.y = ymin; P.y <= ymax; P.y++){
 		int e01 = e01_row;		
 		int e12 = e12_row;
 		int e20 = e20_row;
 			
-		for(; P.x <= xmax; P.x++){
+		for(P.x = xmin; P.x <= xmax; P.x++){
 			
-			if(e01 >= 0 && e12 >= 0 && e20 >= 0)
-			rasterize_pixel(P,e01,e12,e20,area,&fs_in,tri->v);
+			if(inside_triangle(e01,e12,e20)) {
+				rasterize_pixel(P,e01,e12,e20,area,&fs_in,tri->v);
 
-			frag_shader(&fs_in, &fs_out, r->fs_u);
-			frame_buffer_draw_pixel(fb,P.x,P.y,vec4f_to_rgba32(fs_out.color),fs_out.depth);
+				frag_shader(&fs_in, &fs_out, r->fs_u);
+				frame_buffer_draw_pixel(fb,P.x,P.y,vec4f_to_rgba32(fs_out.color),fs_out.depth);
+			}
 
-			e01 += A01.y;
-			e12 += A12.y;
-			e20 += A20.y;
+			e01 -= A01.y;
+			e12 -= A12.y;
+			e20 -= A20.y;
 		}
 
 		e01_row += A01.x;

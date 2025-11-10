@@ -61,6 +61,8 @@ int obj_parse_num_uvs(FILE* fp){
 
 Vec3f* obj_parse_vertices(FILE* fp, int num_vertices){
 
+	if(num_vertices == 0) return NULL;
+
 	// NULL CHECK
 	if(fp==NULL){
 		perror("src/obj_parser.c:parse_vertices: parameter(s) were NULL");
@@ -88,6 +90,8 @@ Vec3f* obj_parse_vertices(FILE* fp, int num_vertices){
 }
 
 Vec2f* obj_parse_uvs(FILE* fp, int num_uvs){
+
+	if(num_uvs == 0) return NULL;
 
 	// NULL CHECK
 	if(fp==NULL){
@@ -132,6 +136,8 @@ int obj_parse_num_triangles(FILE* fp) {
 }
 
 int* obj_parse_triangle_uvs(FILE* fp, int num_triangles, int num_uvs, Vec2f* uvs){
+
+	if(num_triangles == 0 || num_uvs == 0 || uvs == NULL) return NULL;
 
 	// NULL check
 	if( (uvs  == NULL) || (fp == NULL) ){
@@ -185,6 +191,8 @@ int* obj_parse_triangle_uvs(FILE* fp, int num_triangles, int num_uvs, Vec2f* uvs
 
 
 int* obj_parse_triangles(FILE* fp, int num_triangles, int num_vertices, Vec3f* vertices){
+
+	if(num_triangles == 0 || num_vertices == 0) return NULL;
 
 	// NULL check
 	if( (vertices == NULL) || (fp == NULL) ){

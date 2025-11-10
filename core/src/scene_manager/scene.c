@@ -75,9 +75,9 @@ void scene_set_camera(Scene* scene, Camera* cam) {
 }
 
 static int add_go_to_scene(Scene* scene, GameObj* go, const char * handle){
-	scene->gos[scene->go_len] = go;
+	scene->gos[scene->go_len++] = go;
 	game_obj_set_handle(go, handle);
-	return scene->go_len++;
+	return scene->go_len;
 }
 
 static void realloc_go_array(Scene* scene){

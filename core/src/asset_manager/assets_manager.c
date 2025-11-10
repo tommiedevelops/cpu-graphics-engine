@@ -40,8 +40,8 @@ uint8_t assets_add_material(Assets* a, Material* mat, const char * handle) {
 	
 	if(!full) {
 		mat->handle = handle;
-		a->materials[a->mt_len] = mat;
-		return a->mt_len++;
+		a->materials[a->mt_len++] = mat;
+		return a->mt_len;
 	}
 
 	size_t new_cap = a->mt_cap + 2;
@@ -53,8 +53,8 @@ uint8_t assets_add_material(Assets* a, Material* mat, const char * handle) {
 	a->mt_cap = new_cap;
 
 	mat->handle = handle;
-	a->materials[a->mt_len] = mat;
-	return a->mt_len++;
+	a->materials[a->mt_len++] = mat;
+	return a->mt_len;
 }
 
 uint8_t assets_add_mesh(Assets* a, Mesh* mesh, const char * handle) {
@@ -62,8 +62,8 @@ uint8_t assets_add_mesh(Assets* a, Mesh* mesh, const char * handle) {
 	
 	if(!full) {
 		mesh->handle = handle;
-		a->meshes[a->m_len] = mesh;
-		return a->m_len++;
+		a->meshes[a->m_len++] = mesh;
+		return a->m_len;
 	}
 
 	size_t new_cap = a->m_cap + 2;
@@ -75,8 +75,8 @@ uint8_t assets_add_mesh(Assets* a, Mesh* mesh, const char * handle) {
 	a->m_cap = new_cap;
 
 	mesh->handle = handle;
-	a->meshes[a->m_len] = mesh;
-	return a->m_len++;
+	a->meshes[a->m_len++] = mesh;
+	return a->m_len;
 }
 
 Mesh* assets_get_mesh(Assets* a, const char* handle) {
