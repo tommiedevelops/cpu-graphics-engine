@@ -18,7 +18,6 @@
 \newcommand{\vect}[1]{\bm{#1}}    % \vect{x}, \vect{\alpha}, \vect{\nabla}
 \newcommand{\uvect}[1]{\hat{\bm{#1}}} % unit vectors: \uvect{n}
 
-
 % METADATA %
 \author{Thomas Dizon}
 \title{CPU Graphics Engine}
@@ -162,6 +161,73 @@ x \\ y \\ z \\ 1
 	\item The objects inside of this volume are the objects visible to our Viewer.
 	\item All vertices inside the view frustum will be mapped to points inside our Canonical View Volume
 \end{itemize}
+
+\begin{figure}[h!]
+\centering
+\begin{tikzpicture}
+	%(Z,Y,X)
+	\def\nearZ{1};
+	\def\nearXmax{2};
+	\def\nearYmax{1};
+
+	\def\farZ{5}
+	\def\farXmax{4};
+	\def\farYmax{2}
+
+	\coordinate (nearBotLeft)  at (\nearZ, -\nearYmax, -\nearXmax);
+	\coordinate (nearTopLeft)  at (\nearZ,  \nearYmax, -\nearXmax);
+	\coordinate (nearTopRight) at (\nearZ,  \nearYmax,  \nearXmax);
+	\coordinate (nearBotRight) at (\nearZ, -\nearYmax,  \nearXmax);
+	\coordinate (farBotLeft)   at (\farZ, -\farYmax, -\farXmax);
+	\coordinate (farTopLeft)   at (\farZ,  \farYmax, -\farXmax);
+	\coordinate (farTopRight)  at (\farZ,  \farYmax,  \farXmax);
+	\coordinate (farBotRight)  at (\farZ, -\farYmax,  \farXmax);
+
+	%view frustum
+
+	% near plane
+	\filldraw[fill=red!20, draw=blue!50!black, opacity=0.7]
+		(nearBotLeft) -- (nearTopLeft) -- (nearTopRight) -- (nearBotRight) -- cycle;
+		
+	% left plane
+	\filldraw[fill=green!20, draw=blue!50!black, opacity=0.7]
+		(nearBotLeft) -- (nearTopLeft) -- (farTopLeft) -- (farBotLeft) -- cycle;
+	
+	% bottom plane
+	\filldraw[fill=blue!20, draw=blue!50!black, opacity=0.7]
+		(nearBotLeft) -- (nearBotRight) -- (farBotRight) -- (farBotLeft) -- cycle;
+
+	% bottom plane
+	\filldraw[fill=blue!20, draw=blue!50!black, opacity=0.7]
+		(nearBotLeft) -- (nearBotRight) -- (farBotRight) -- (farBotLeft) -- cycle;
+		
+	% far plane
+	\filldraw[fill=blue!20, draw=blue!50!black, opacity=0.7]
+		(farBotLeft) -- (farTopLeft) -- (farTopRight) -- (farBotRight) -- cycle;
+		
+	% top plane
+	\filldraw[fill=blue!20, draw=blue!50!black, opacity=0.7]
+		(nearTopLeft) -- (nearTopRight) -- (farTopRight) -- (farTopLeft) -- cycle;
+	
+	% right plane
+	\filldraw[fill=green!20, draw=blue!50!black, opacity=0.7]
+		(nearBotRight) -- (nearTopRight) -- (farTopRight) -- (farBotRight) -- cycle;
+	
+	%axes
+	\def\Zmax{8};
+	\def\Zmin{-1};
+	\def\Ymax{3};
+	\def\Ymin{-1};
+	\def\Xmax{3};
+	\def\Xmin{-3};
+	
+	\draw[->, thick] (\Zmin,0,0) -- (\Zmax,0,0) node[right] {$z$};
+	\draw[->, thick] (0,\Ymin,0) -- (0,\Ymax,0) node[above right] {$y$};
+	\draw[->, thick] (0,0,-\Xmin) -- (0,0,-\Xmax) node[above] {$x$};
+
+
+\end{tikzpicture}
+\end{figure}
 
 \subsubsection{Perspective Projection}
 
