@@ -13,6 +13,10 @@ typedef struct Vec2i {
 	int x, y;
 } Vec2i;
 
+Vec2i vec2i_sub(Vec2i a, Vec2i b){
+	return (Vec2i){a.x - b.x, a.y - b.y};
+}
+
 void rasterize_pixel(Vec2i P, int w0, int w1, int w2, int area, FSin* out, VSout** v) {
 
 	BaryCoords b = (BaryCoords){(float)w0/area, (float)w1/area, (float)w2/area};
@@ -52,60 +56,56 @@ void rasterize_triangle(Renderer* r, FrameBuffer* fb, Triangle* tri, FragShaderF
 	
 	Bounds b = tri_get_bounds(tri);
 
-	// Assuming CCW winding from 0 to 2
-	
-	VSout** v = tri->v;
-
-	Vec2i V0 = (Vec2i){(int)floorf(v[0]->pos.x), (int)floorf(v[0]->pos.y)};
-	Vec2i V1 = (Vec2i){(int)floorf(v[1]->pos.x), (int)floorf(v[1]->pos.y)};
-	Vec2i V2 = (Vec2i){(int)floorf(v[2]->pos.x), (int)floorf(v[2]->pos.y)};
-
 	int xmin = max_i(0, (int)ceilf(b.xmin));
 	int ymin = max_i(0, (int)ceilf(b.ymin));
 	int xmax = min_i(fb->width - 1, (int)floorf(b.xmax));
 	int ymax = min_i(fb->height - 1, (int)floorf(b.ymax)); 
 
-	// ignore redundat triangles
 	if(xmin >= xmax || ymin >= ymax) return;
+
+	// Assuming CCW winding from 0 to 2
+	
+	VSout** v = tri->v;
+	Vec2i V0 = (Vec2i){(int)floorf(v[0]->pos.x), (int)floorf(v[0]->pos.y)};
+	Vec2i V1 = (Vec2i){(int)floorf(v[1]->pos.x), (int)floorf(v[1]->pos.y)};
+	Vec2i V2 = (Vec2i){(int)floorf(v[2]->pos.x), (int)floorf(v[2]->pos.y)};
+
+	// delta vectors
+	Vec2i A01 = vec2i_sub(V1,V0);
+	Vec2i A12 = vec2i_sub(V2,V1);
+	Vec2i A20 = vec2i_sub(V0,V2);
+
 	Vec2i P = (Vec2i){xmin, ymin};
 
-	int area = edge_func(V2, V0, V1); // area of tri
-	if(area == 0) return;
+	// initial edge function for (xmin, ymin)
+	int e01_row = edge_func(P,V0,V1);
+	int e12_row = edge_func(P,V1,V2);
+	int e20_row = edge_func(P,V2,V0);
 
-	// Values at the start of each row
-	int w0_row = edge_func(P, V0, V1); 
-	int w1_row = edge_func(P, V1, V2);
-	int w2_row = edge_func(P, V2, V0);
+	// area of triangle
+	int area = 0.5*edge_func(V2, V0, V1);
 
-	// increments
-	int A01 = (V1.y - V0.y), B01 = (V1.x - V0.x);
-	int A12 = (V2.y - V1.y), B12 = (V2.x - V1.x);
-	int A20 = (V0.y - V2.y), B20 = (V0.x - V2.x);
-
-	for(; P.y<= ymax; P.y++){
-
-		int w0 = w0_row;
-		int w1 = w1_row;
-		int w2 = w2_row;
-
+	for(; P.y <= ymax; P.y++){
+		int e01 = e01_row;		
+		int e12 = e12_row;
+		int e20 = e20_row;
+			
 		for(; P.x <= xmax; P.x++){
 			
-			if(w0 >= 0 && w1 >= 0 && w2 >= 0)
-				rasterize_pixel(P,w0,w1,w2,area,&fs_in,tri->v);
+			if(e01 >= 0 && e12 >= 0 && e20 >= 0)
+			rasterize_pixel(P,e01,e12,e20,area,&fs_in,tri->v);
 
 			frag_shader(&fs_in, &fs_out, r->fs_u);
 			frame_buffer_draw_pixel(fb,P.x,P.y,vec4f_to_rgba32(fs_out.color),fs_out.depth);
-			
-			// Step to the right
-			w0 += A01;
-			w1 += A12;
-			w2 += A20;
+
+			e01 += A01.y;
+			e12 += A12.y;
+			e20 += A20.y;
 		}
 
-		// Step up one row
-		w0_row += B01;
-		w1_row += B12;
-		w2_row += B20;
+		e01_row += A01.x;
+		e12_row += A12.x;
+		e20_row += A20.x;
 	}
 
 }
