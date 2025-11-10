@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2025.7.7)  9 NOV 2025 11:31
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2025.7.7)  10 NOV 2025 11:38
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -663,145 +663,54 @@ The `$' that I just saw supposedly matches a previous `$$'.
 So I shall assume that you typed `$$' both times.
 
 [7] [8]
-./main.tex:205: Undefined control sequence.
-<recently read> \defXmax 
-                         
-l.205 	\defXmax
-               {5}
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-Missing character: There is no 5 in font nullfont!
-./main.tex:206: Undefined control sequence.
-l.206 	\defYmax
-               {8}
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-Missing character: There is no 8 in font nullfont!
-./main.tex:209: Undefined control sequence.
-<argument> -\Xmax 
-                  ,0
-l.209 	\draw[->] (-\Xmax,0)
-                            -- (\Xmax,0) node[right] {$x$};
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-./main.tex:209: Missing number, treated as zero.
-<to be read again> 
-                   p
-l.209 	\draw[->] (-\Xmax,0)
-                            -- (\Xmax,0) node[right] {$x$};
-A number should have been here; I inserted `0'.
-(If you can't figure out why I needed to see a number,
-look up `weird error' in the index to The TeXbook.)
-
-./main.tex:209: Missing number, treated as zero.
-<to be read again> 
-                   p
-l.209 	\draw[->] (-\Xmax,0)
-                            -- (\Xmax,0) node[right] {$x$};
-A number should have been here; I inserted `0'.
-(If you can't figure out why I needed to see a number,
-look up `weird error' in the index to The TeXbook.)
-
-./main.tex:209: Undefined control sequence.
-<argument> \Xmax 
-                 ,0
-l.209 	\draw[->] (-\Xmax,0) -- (\Xmax,0)
-                                         node[right] {$x$};
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-./main.tex:210: Undefined control sequence.
-<argument> 0,-\Ymax 
-                    
-l.210 	\draw[->] (0,-\Ymax)
-                            -- (0,\Ymax) node[above] {$y$};
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-./main.tex:210: Missing number, treated as zero.
-<to be read again> 
-                   p
-l.210 	\draw[->] (0,-\Ymax)
-                            -- (0,\Ymax) node[above] {$y$};
-A number should have been here; I inserted `0'.
-(If you can't figure out why I needed to see a number,
-look up `weird error' in the index to The TeXbook.)
-
-./main.tex:210: Missing number, treated as zero.
-<to be read again> 
-                   p
-l.210 	\draw[->] (0,-\Ymax)
-                            -- (0,\Ymax) node[above] {$y$};
-A number should have been here; I inserted `0'.
-(If you can't figure out why I needed to see a number,
-look up `weird error' in the index to The TeXbook.)
-
-./main.tex:210: Undefined control sequence.
-<argument> 0,\Ymax 
-                   
-l.210 	\draw[->] (0,-\Ymax) -- (0,\Ymax)
-                                         node[above] {$y$};
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
+Missing character: There is no ; in font nullfont!
+Missing character: There is no ; in font nullfont!
+<charmander_front_alpha.png, id=48, 120.45pt x 120.45pt>
+File: charmander_front_alpha.png Graphic file (type png)
+<use charmander_front_alpha.png>
+Package pdftex.def Info: charmander_front_alpha.png  used on input line 235.
+(pdftex.def)             Requested size: 51.21353pt x 51.21504pt.
+File: charmander_front_alpha.png Graphic file (type png)
+<use charmander_front_alpha.png>
+Package pdftex.def Info: charmander_front_alpha.png  used on input line 236.
+(pdftex.def)             Requested size: 28.45277pt x 28.45274pt.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-./main.tex:232: Missing $ inserted.
+./main.tex:258: Missing $ inserted.
 <inserted text> 
                 $
-l.232 
+l.258 
       
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-./main.tex:232: Display math should end with $$.
+./main.tex:258: Display math should end with $$.
 <to be read again> 
                    \tex_par:D 
-l.232 
+l.258 
       
 The `$' that I just saw supposedly matches a previous `$$'.
 So I shall assume that you typed `$$' both times.
 
 [9]
 
-./main.tex:233: LaTeX Error: Bad math environment delimiter.
+./main.tex:259: LaTeX Error: Bad math environment delimiter.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.233 \]
+l.259 \]
         
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
 
-./main.tex:233: Missing $ inserted.
+./main.tex:259: Missing $ inserted.
 <inserted text> 
                 $
-l.233 \]
+l.259 \]
         
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -809,27 +718,27 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./main.tex:233: Display math should end with $$.
+./main.tex:259: Display math should end with $$.
 <to be read again> 
                    \endgroup 
-l.233 \]
+l.259 \]
         
 The `$' that I just saw supposedly matches a previous `$$'.
 So I shall assume that you typed `$$' both times.
 
-./main.tex:291: Missing number, treated as zero.
+./main.tex:316: Missing number, treated as zero.
 <to be read again> 
                    {
-l.291 		\draw circle (0,0)
+l.316 		\draw circle (0,0)
                            node[below left] {$C$};
 A number should have been here; I inserted `0'.
 (If you can't figure out why I needed to see a number,
 look up `weird error' in the index to The TeXbook.)
 
-./main.tex:291: Illegal unit of measure (pt inserted).
+./main.tex:316: Illegal unit of measure (pt inserted).
 <to be read again> 
                    {
-l.291 		\draw circle (0,0)
+l.316 		\draw circle (0,0)
                            node[below left] {$C$};
 Dimensions can be in units of em, ex, in, pt, pc,
 cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
@@ -839,19 +748,19 @@ delete the erroneous units; e.g., type `2' to delete
 two letters. (See Chapter 27 of The TeXbook.)
 
 Missing character: There is no 0 in font nullfont!
-./main.tex:291: Missing number, treated as zero.
+./main.tex:316: Missing number, treated as zero.
 <to be read again> 
                    \global 
-l.291 		\draw circle (0,0)
+l.316 		\draw circle (0,0)
                            node[below left] {$C$};
 A number should have been here; I inserted `0'.
 (If you can't figure out why I needed to see a number,
 look up `weird error' in the index to The TeXbook.)
 
-./main.tex:291: Illegal unit of measure (pt inserted).
+./main.tex:316: Illegal unit of measure (pt inserted).
 <to be read again> 
                    \global 
-l.291 		\draw circle (0,0)
+l.316 		\draw circle (0,0)
                            node[below left] {$C$};
 Dimensions can be in units of em, ex, in, pt, pc,
 cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
@@ -860,19 +769,19 @@ To recover gracefully from this error, it's best to
 delete the erroneous units; e.g., type `2' to delete
 two letters. (See Chapter 27 of The TeXbook.)
 
-./main.tex:291: Missing number, treated as zero.
+./main.tex:316: Missing number, treated as zero.
 <to be read again> 
                    {
-l.291 		\draw circle (0,0)
+l.316 		\draw circle (0,0)
                            node[below left] {$C$};
 A number should have been here; I inserted `0'.
 (If you can't figure out why I needed to see a number,
 look up `weird error' in the index to The TeXbook.)
 
-./main.tex:291: Illegal unit of measure (pt inserted).
+./main.tex:316: Illegal unit of measure (pt inserted).
 <to be read again> 
                    {
-l.291 		\draw circle (0,0)
+l.316 		\draw circle (0,0)
                            node[below left] {$C$};
 Dimensions can be in units of em, ex, in, pt, pc,
 cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
@@ -882,19 +791,19 @@ delete the erroneous units; e.g., type `2' to delete
 two letters. (See Chapter 27 of The TeXbook.)
 
 Missing character: There is no 0 in font nullfont!
-./main.tex:291: Missing number, treated as zero.
+./main.tex:316: Missing number, treated as zero.
 <to be read again> 
                    \global 
-l.291 		\draw circle (0,0)
+l.316 		\draw circle (0,0)
                            node[below left] {$C$};
 A number should have been here; I inserted `0'.
 (If you can't figure out why I needed to see a number,
 look up `weird error' in the index to The TeXbook.)
 
-./main.tex:291: Illegal unit of measure (pt inserted).
+./main.tex:316: Illegal unit of measure (pt inserted).
 <to be read again> 
                    \global 
-l.291 		\draw circle (0,0)
+l.316 		\draw circle (0,0)
                            node[below left] {$C$};
 Dimensions can be in units of em, ex, in, pt, pc,
 cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
@@ -903,19 +812,19 @@ To recover gracefully from this error, it's best to
 delete the erroneous units; e.g., type `2' to delete
 two letters. (See Chapter 27 of The TeXbook.)
 
-./main.tex:291: Missing number, treated as zero.
+./main.tex:316: Missing number, treated as zero.
 <to be read again> 
                    {
-l.291 		\draw circle (0,0)
+l.316 		\draw circle (0,0)
                            node[below left] {$C$};
 A number should have been here; I inserted `0'.
 (If you can't figure out why I needed to see a number,
 look up `weird error' in the index to The TeXbook.)
 
-./main.tex:291: Illegal unit of measure (pt inserted).
+./main.tex:316: Illegal unit of measure (pt inserted).
 <to be read again> 
                    {
-l.291 		\draw circle (0,0)
+l.316 		\draw circle (0,0)
                            node[below left] {$C$};
 Dimensions can be in units of em, ex, in, pt, pc,
 cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
@@ -925,19 +834,19 @@ delete the erroneous units; e.g., type `2' to delete
 two letters. (See Chapter 27 of The TeXbook.)
 
 Missing character: There is no 0 in font nullfont!
-./main.tex:291: Missing number, treated as zero.
+./main.tex:316: Missing number, treated as zero.
 <to be read again> 
                    \global 
-l.291 		\draw circle (0,0)
+l.316 		\draw circle (0,0)
                            node[below left] {$C$};
 A number should have been here; I inserted `0'.
 (If you can't figure out why I needed to see a number,
 look up `weird error' in the index to The TeXbook.)
 
-./main.tex:291: Illegal unit of measure (pt inserted).
+./main.tex:316: Illegal unit of measure (pt inserted).
 <to be read again> 
                    \global 
-l.291 		\draw circle (0,0)
+l.316 		\draw circle (0,0)
                            node[below left] {$C$};
 Dimensions can be in units of em, ex, in, pt, pc,
 cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
@@ -946,19 +855,19 @@ To recover gracefully from this error, it's best to
 delete the erroneous units; e.g., type `2' to delete
 two letters. (See Chapter 27 of The TeXbook.)
 
-./main.tex:291: Missing number, treated as zero.
+./main.tex:316: Missing number, treated as zero.
 <to be read again> 
                    {
-l.291 		\draw circle (0,0)
+l.316 		\draw circle (0,0)
                            node[below left] {$C$};
 A number should have been here; I inserted `0'.
 (If you can't figure out why I needed to see a number,
 look up `weird error' in the index to The TeXbook.)
 
-./main.tex:291: Illegal unit of measure (pt inserted).
+./main.tex:316: Illegal unit of measure (pt inserted).
 <to be read again> 
                    {
-l.291 		\draw circle (0,0)
+l.316 		\draw circle (0,0)
                            node[below left] {$C$};
 Dimensions can be in units of em, ex, in, pt, pc,
 cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
@@ -968,19 +877,19 @@ delete the erroneous units; e.g., type `2' to delete
 two letters. (See Chapter 27 of The TeXbook.)
 
 Missing character: There is no 0 in font nullfont!
-./main.tex:291: Missing number, treated as zero.
+./main.tex:316: Missing number, treated as zero.
 <to be read again> 
                    \global 
-l.291 		\draw circle (0,0)
+l.316 		\draw circle (0,0)
                            node[below left] {$C$};
 A number should have been here; I inserted `0'.
 (If you can't figure out why I needed to see a number,
 look up `weird error' in the index to The TeXbook.)
 
-./main.tex:291: Illegal unit of measure (pt inserted).
+./main.tex:316: Illegal unit of measure (pt inserted).
 <to be read again> 
                    \global 
-l.291 		\draw circle (0,0)
+l.316 		\draw circle (0,0)
                            node[below left] {$C$};
 Dimensions can be in units of em, ex, in, pt, pc,
 cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
@@ -990,14 +899,14 @@ delete the erroneous units; e.g., type `2' to delete
 two letters. (See Chapter 27 of The TeXbook.)
 
 
-./main.tex:300: Package tikz Error: A node must have a (possibly empty) label t
+./main.tex:325: Package tikz Error: A node must have a (possibly empty) label t
 ext.
 
 See the tikz package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.300 		\fill (I) circle (1pt) node[above right];
+l.325 		\fill (I) circle (1pt) node[above right];
                                                  
 This error message was generated by an \errmessage
 command, so I can't give any explicit help.
@@ -1005,60 +914,270 @@ Pretend that you're Hercule Poirot: Examine all clues,
 and deduce the truth by order and method.
 
 
-./main.tex:301: Package tikz Error: A node must have a (possibly empty) label t
+./main.tex:326: Package tikz Error: A node must have a (possibly empty) label t
 ext.
 
 See the tikz package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.301 		\fill (IU) circle (1pt) node[below right];
+l.326 		\fill (IU) circle (1pt) node[below right];
                                                   
 (That was another \errmessage.)
 
-<charmander.png, id=52, 256.96pt x 256.96pt>
-File: charmander.png Graphic file (type png)
-<use charmander.png>
-Package pdftex.def Info: charmander.png  used on input line 304.
-(pdftex.def)             Requested size: 28.44997pt x 28.45274pt.
-File: charmander.png Graphic file (type png)
-<use charmander.png>
-Package pdftex.def Info: charmander.png  used on input line 305.
-(pdftex.def)             Requested size: 28.44997pt x 28.45274pt.
-[10 <./charmander.png>]
-./main.tex:342: Missing $ inserted.
+<charmander_left_alpha.png, id=53, 120.45pt x 120.45pt>
+File: charmander_left_alpha.png Graphic file (type png)
+<use charmander_left_alpha.png>
+Package pdftex.def Info: charmander_left_alpha.png  used on input line 329.
+(pdftex.def)             Requested size: 34.14296pt x 34.14322pt.
+File: charmander_left_alpha.png Graphic file (type png)
+<use charmander_left_alpha.png>
+Package pdftex.def Info: charmander_left_alpha.png  used on input line 330.
+(pdftex.def)             Requested size: 34.14296pt x 34.14322pt.
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+./main.tex:400: Missing number, treated as zero.
+<to be read again> 
+                   {
+l.400 		\draw circle (0,0)
+                           node[below left] {$C$};
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+./main.tex:400: Illegal unit of measure (pt inserted).
+<to be read again> 
+                   {
+l.400 		\draw circle (0,0)
+                           node[below left] {$C$};
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
+
+Missing character: There is no 0 in font nullfont!
+./main.tex:400: Missing number, treated as zero.
+<to be read again> 
+                   \global 
+l.400 		\draw circle (0,0)
+                           node[below left] {$C$};
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+./main.tex:400: Illegal unit of measure (pt inserted).
+<to be read again> 
+                   \global 
+l.400 		\draw circle (0,0)
+                           node[below left] {$C$};
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
+
+./main.tex:400: Missing number, treated as zero.
+<to be read again> 
+                   {
+l.400 		\draw circle (0,0)
+                           node[below left] {$C$};
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+./main.tex:400: Illegal unit of measure (pt inserted).
+<to be read again> 
+                   {
+l.400 		\draw circle (0,0)
+                           node[below left] {$C$};
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
+
+Missing character: There is no 0 in font nullfont!
+./main.tex:400: Missing number, treated as zero.
+<to be read again> 
+                   \global 
+l.400 		\draw circle (0,0)
+                           node[below left] {$C$};
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+./main.tex:400: Illegal unit of measure (pt inserted).
+<to be read again> 
+                   \global 
+l.400 		\draw circle (0,0)
+                           node[below left] {$C$};
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
+
+./main.tex:400: Missing number, treated as zero.
+<to be read again> 
+                   {
+l.400 		\draw circle (0,0)
+                           node[below left] {$C$};
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+./main.tex:400: Illegal unit of measure (pt inserted).
+<to be read again> 
+                   {
+l.400 		\draw circle (0,0)
+                           node[below left] {$C$};
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
+
+Missing character: There is no 0 in font nullfont!
+./main.tex:400: Missing number, treated as zero.
+<to be read again> 
+                   \global 
+l.400 		\draw circle (0,0)
+                           node[below left] {$C$};
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+./main.tex:400: Illegal unit of measure (pt inserted).
+<to be read again> 
+                   \global 
+l.400 		\draw circle (0,0)
+                           node[below left] {$C$};
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
+
+./main.tex:400: Missing number, treated as zero.
+<to be read again> 
+                   {
+l.400 		\draw circle (0,0)
+                           node[below left] {$C$};
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+./main.tex:400: Illegal unit of measure (pt inserted).
+<to be read again> 
+                   {
+l.400 		\draw circle (0,0)
+                           node[below left] {$C$};
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
+
+Missing character: There is no 0 in font nullfont!
+./main.tex:400: Missing number, treated as zero.
+<to be read again> 
+                   \global 
+l.400 		\draw circle (0,0)
+                           node[below left] {$C$};
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+./main.tex:400: Illegal unit of measure (pt inserted).
+<to be read again> 
+                   \global 
+l.400 		\draw circle (0,0)
+                           node[below left] {$C$};
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
+
+
+./main.tex:409: Package tikz Error: A node must have a (possibly empty) label t
+ext.
+
+See the tikz package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.409 		\fill (I) circle (1pt) node[above right];
+                                                 
+(That was another \errmessage.)
+
+
+./main.tex:410: Package tikz Error: A node must have a (possibly empty) label t
+ext.
+
+See the tikz package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.410 		\fill (IU) circle (1pt) node[below right];
+                                                  
+(That was another \errmessage.)
+
+<charmander_top_alpha.png, id=54, 120.45pt x 120.45pt>
+File: charmander_top_alpha.png Graphic file (type png)
+<use charmander_top_alpha.png>
+Package pdftex.def Info: charmander_top_alpha.png  used on input line 413.
+(pdftex.def)             Requested size: 42.67825pt x 42.67912pt.
+File: charmander_top_alpha.png Graphic file (type png)
+<use charmander_top_alpha.png>
+Package pdftex.def Info: charmander_top_alpha.png  used on input line 414.
+(pdftex.def)             Requested size: 42.67825pt x 42.67912pt.
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+./main.tex:444: Missing $ inserted.
 <inserted text> 
                 $
-l.342 
+l.444 
       
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-./main.tex:342: Display math should end with $$.
+./main.tex:444: Display math should end with $$.
 <to be read again> 
                    \tex_par:D 
-l.342 
+l.444 
       
 The `$' that I just saw supposedly matches a previous `$$'.
 So I shall assume that you typed `$$' both times.
 
 
-./main.tex:343: LaTeX Error: Bad math environment delimiter.
+./main.tex:445: LaTeX Error: Bad math environment delimiter.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.343 \]
+l.445 \]
         
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
 
-./main.tex:343: Missing $ inserted.
+./main.tex:445: Missing $ inserted.
 <inserted text> 
                 $
-l.343 \]
+l.445 \]
         
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -1066,56 +1185,54 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./main.tex:343: Display math should end with $$.
+./main.tex:445: Display math should end with $$.
 <to be read again> 
                    \endgroup 
-l.343 \]
+l.445 \]
         
 The `$' that I just saw supposedly matches a previous `$$'.
 So I shall assume that you typed `$$' both times.
 
-[11] [12]
-Overfull \hbox (23.63342pt too wide) in paragraph at lines 407--408
+[10 <./charmander_front_alpha.png>]
+Overfull \vbox (253.14781pt too high) has occurred while \output is active []
+
+
+[11 <./charmander_left_alpha.png> <./charmander_top_alpha.png>] [12]
+Overfull \hbox (23.63342pt too wide) in paragraph at lines 509--510
 []\OT1/cmr/m/n/10 The unit vec-tors $\OML/cmm/m/it/10 i; j; k$ \OT1/cmr/m/n/10 
 ad-here to the fol-low-ing mul-ti-pli-ca-tion rules. \OT1/cmr/bx/n/10 **TODO** 
 
  []
 
-
-LaTeX Warning: Reference `fig:frustum' on page 13 undefined on input line 438.
-
-[13] [14] [15] (./main.aux)
-
-LaTeX Warning: There were undefined references.
-
- ) 
+[13] [14] [15] (./main.aux) ) 
 Here is how much of TeX's memory you used:
- 23761 strings out of 480247
- 618194 string characters out of 5896152
- 1027267 words of memory out of 5000000
- 41314 multiletter control sequences out of 15000+600000
+ 23840 strings out of 480247
+ 620163 string characters out of 5896152
+ 1037267 words of memory out of 5000000
+ 41391 multiletter control sequences out of 15000+600000
  483432 words of font info for 79 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  84i,9n,80p,725b,856s stack positions out of 5000i,500n,10000p,200000b,80000s
- </home/dizontj/.texlive2021/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1000.6
-00pk></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><
-/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/s
-hare/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx7.pfb></usr/share/te
-xlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbxti10.pfb></usr/share/texliv
-e/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texm
-f-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist
-/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/
-type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/p
-ublic/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/a
-msfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts
-/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy
-10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb>
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/
-share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on main.pdf (15 pages, 229437 bytes).
+ </home/dizontj/.texlive2021/texmf-var/fonts/pk/lj
+four/jknappen/ec/tcrm1000.600pk></usr/share/texlive/texmf-dist/fonts/type1/publ
+ic/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/ams
+fonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmbx7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx
+ti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.p
+fb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></u
+sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/shar
+e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texli
+ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texm
+f-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/
+fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/ty
+pe1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/pu
+blic/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/am
+sfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts
+/symbols/msbm10.pfb>
+Output written on main.pdf (15 pages, 238073 bytes).
 PDF statistics:
- 141 PDF objects out of 1000 (max. 8388607)
+ 145 PDF objects out of 1000 (max. 8388607)
  88 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 23 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 33 words of extra memory for PDF output out of 10000 (max. 10000000)
 

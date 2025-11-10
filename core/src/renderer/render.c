@@ -93,7 +93,6 @@ static void assemble_triangle(Triangle* tri, VSout* out, int tri_idx) {
 
 static void renderer_draw_triangle(Renderer* r, FrameBuffer* fb, Mesh* mesh, Material* mat, size_t tri_idx) {
 
-	Triangle clip_result[6];
 	Triangle tri;
 	VSin     in[3];
 	VSout    out[3];
@@ -105,7 +104,10 @@ static void renderer_draw_triangle(Renderer* r, FrameBuffer* fb, Mesh* mesh, Mat
 	apply_vertex_shader(in, out, r->vs_u, p->vs);
 
 	assemble_triangle(&tri, out, tri_idx);
+
+	Triangle clip_result[6];
 	int num_tris = clip_tri(&tri, clip_result);
+
 	process_clip_and_rasterize(r,fb,clip_result, num_tris, p->fs);
 }
 

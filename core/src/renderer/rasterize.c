@@ -67,10 +67,9 @@ void rasterize_triangle(Renderer* r, FrameBuffer* fb, Triangle* tri, FragShaderF
 
 	// ignore redundat triangles
 	if(xmin >= xmax || ymin >= ymax) return;
-
 	Vec2i P = (Vec2i){xmin, ymin};
 
-	int area = edge_func(V0, V1, V2); // area of tri
+	int area = edge_func(V2, V0, V1); // area of tri
 	if(area == 0) return;
 
 	// Values at the start of each row
@@ -78,18 +77,18 @@ void rasterize_triangle(Renderer* r, FrameBuffer* fb, Triangle* tri, FragShaderF
 	int w1_row = edge_func(P, V1, V2);
 	int w2_row = edge_func(P, V2, V0);
 
-	// incremenets
-	int A01 = (V0.y - V1.y), B01 = (V1.x - V0.x);
-	int A12 = (V1.y - V2.y), B12 = (V2.x - V1.x);
-	int A20 = (V2.y - V0.y), B20 = (V0.x - V2.x);
+	// increments
+	int A01 = (V1.y - V0.y), B01 = (V1.x - V0.x);
+	int A12 = (V2.y - V1.y), B12 = (V2.x - V1.x);
+	int A20 = (V0.y - V2.y), B20 = (V0.x - V2.x);
 
-	for(P.y; P.y<= ymax; P.y++){
+	for(; P.y<= ymax; P.y++){
 
 		int w0 = w0_row;
 		int w1 = w1_row;
 		int w2 = w2_row;
 
-		for(P.x; P.x <= xmax; P.x++){
+		for(; P.x <= xmax; P.x++){
 			
 			if(w0 >= 0 && w1 >= 0 && w2 >= 0)
 				rasterize_pixel(P,w0,w1,w2,area,&fs_in,tri->v);

@@ -201,15 +201,41 @@ Now, we just need to make sure that points inside the view frustum are mapped to
 
 To do that, let's now imagine that we are the camera and are looking at the view port.
 \begin{figure}[h!]
+\centering
 \begin{tikzpicture}
-	\defXmax{5}
-	\defYmax{8}
+	\def\Xmax{3};
+	\def\Ymax{3};
+
+	% Viewport Box
+	\def\botLeftX{-2.5}
+	\def\botLeftY{-1.5}
+	\def\topRightX{2.5}
+	\def\topRightY{1.5}
+
+	\filldraw[fill=red!20, draw=black]
+    		(\botLeftX,\botLeftY) rectangle (\topRightX,\topRightY);
 
 	% axes
 	\draw[->] (-\Xmax,0) -- (\Xmax,0) node[right] {$x$};
 	\draw[->] (0,-\Ymax) -- (0,\Ymax) node[above] {$y$};
 
-\end{tikzpicture}
+	\def\smallGap{0.05}
+
+	% r label
+	\draw[decorate, decoration={brace, amplitude=6pt}, blue]
+        	(\smallGap,\topRightY + \smallGap) -- (\topRightX - \smallGap,\topRightY + \smallGap)
+        	node[midway, above=7pt, blue] {$r$};
+
+	% t label
+	\draw[decorate, decoration={brace, amplitude=6pt, raise=2pt}, red]
+        	(\topRightX, \topRightY - \smallGap) -- (\topRightX,0+\smallGap)
+        	node[midway, right=7pt, red] {$t$};
+
+	%charmander graphic
+	\node at (-0.6,0.35) {\includegraphics[height=1.8cm]{charmander_front_alpha.png}};
+	\node at (0.4,0.36) {\includegraphics[height=1cm]{charmander_front_alpha.png}};
+
+	\end{tikzpicture}
 \end{figure}
 
 So we can now determine the first 2 rows of the matrix. To scale the $x$ and $y$ components by $n/v_z$, we need to set $m11$ and $m22$ to be $n$ and everythign else in rows 1 and 2 to be 0.
@@ -246,7 +272,7 @@ From the maths, we can immediately see that the apprent size of the image on the
 		% parameters
 		\def\t{0.4} % tan(fov/2)
 		\def\n{2.0}       % near
-		\def\f{5.5}       % far
+		\def\f{6.5}       % far
 		\def\Zmax{7}      % drawing extent
 		\def\Ymax{3}
 
@@ -257,7 +283,6 @@ From the maths, we can immediately see that the apprent size of the image on the
 		% top/bottom (black)
 		\draw[] plot[domain=0:\Zmax] (\x,  { \t*\x});
 		\draw[] plot[domain=0:\Zmax] (\x, {- \t*\x});
-
 
 		%top (colored)
 		\draw[topplane] plot[domain=\n:\f] (\x,  { \t*\x});
@@ -279,12 +304,12 @@ From the maths, we can immediately see that the apprent size of the image on the
 		\draw (\f, 0) node[below right] {$f$};
 
 		% sample vertex
-		\def\vx{2.95}
-		\def\vy{0.85}
+		\def\vx{3.1}
+		\def\vy{0.9}
 		\draw[fill=black] (\vx,\vy) circle (1pt) node[above right] {$v_1$};
 
-		\def\ux{4.95}
-		\def\uy{0.85}
+		\def\ux{5.6}
+		\def\uy{0.9}
 		\draw[fill=black] (\ux,\uy) circle (1pt) node[above right] {$v_2$};
 
 		%label the origin as C, the Camera
@@ -301,8 +326,8 @@ From the maths, we can immediately see that the apprent size of the image on the
 		\fill (IU) circle (1pt) node[below right];
 		
 		%charmander graphic
-		\node at (3,0.4) {\includegraphics[height=1cm]{charmander.png}};
-		\node at (5,0.4) {\includegraphics[height=1cm]{charmander.png}};
+		\node at (3.3,0.45) {\includegraphics[height=1.2cm]{charmander_left_alpha.png}};
+		\node at (5.8,0.45) {\includegraphics[height=1.2cm]{charmander_left_alpha.png}};
 		
 		%projection labels
 		\node (A) at (1,1) {$v_2'$};
@@ -317,6 +342,83 @@ From the maths, we can immediately see that the apprent size of the image on the
 	\label{fig:2d-frustum}
 
 \end{figure}
+
+\begin{figure}[h!]
+
+	\definecolor{topplane}{HTML}{2E8B57}   % Sea Green (clear, calm)
+	\definecolor{bottomplane}{HTML}{A0522D} % Sienna (warm earthy brown)
+	\definecolor{nearplane}{HTML}{1E90FF}   % Dodger Blue (bright but not neon)
+	\definecolor{farplane}{HTML}{DC143C}    % Crimson Red (vivid but deep)
+
+	\centering
+	\textbf{View Space}\\[0.5em]%
+	\begin{tikzpicture}
+		% parameters
+		\def\t{0.4} % tan(fov/2)
+		\def\n{2.0}       % near
+		\def\f{5.5}       % far
+		\def\Zmax{7}      % drawing extent
+		\def\Ymax{3}
+
+		% axes
+		\draw[->] (-0.5,0) -- (\Zmax+0.5,0) node[right] {$z$};
+		\draw[->] (0,-\Ymax) -- (0,\Ymax)       node[above] {$x$};
+
+		% top/bottom (black)
+		\draw[] plot[domain=0:\Zmax] (\x,  { \t*\x});
+		\draw[] plot[domain=0:\Zmax] (\x, {- \t*\x});
+
+		%top (colored)
+		\draw[topplane] plot[domain=\n:\f] (\x,  { \t*\x});
+
+		%bottom (colored)
+		\draw[bottomplane] plot[domain=\n:\f] (\x,  { -\t*\x});
+
+		% near/far from z = n, z = f  (verticals)
+		% use the y-extent implied by the frustum at those z
+		\draw[thick,nearplane, name path=near] plot[domain={- \t*\n}:{ \t*\n}] ({\n}, \x);
+		\draw[thick,farplane, name path=far ] plot[domain={- \t*\f}:{ \t*\f}] ({\f}, \x);
+		
+		%extend near and far planes to inifinite with colored dotted lines
+		\draw[dashed,nearplane, name path=near] plot[domain={-\Ymax}:{ \Ymax}] ({\n}, \x);
+		\draw[dashed, farplane, name path=far ] plot[domain={- \Ymax}:{ \Ymax}] ({\f}, \x);
+
+		% near / far labels
+		\draw (\n, 0) node[below right] {$n$};
+		\draw (\f, 0) node[below right] {$f$};
+
+		% sample vertex
+		\def\vx{3}
+		\def\vy{0.9}
+		\draw[fill=black] (\vx,\vy) circle (1pt) node[above right] {$v_1$};
+
+		\def\ux{4.3}
+		\def\uy{-0.9}
+		\draw[fill=black] (\ux,\uy) circle (1pt) node[below right] {$v_2$};
+
+		%label the origin as C, the Camera
+		\draw circle (0,0) node[below left] {$C$};
+		
+		% line from origin to vertex
+		\draw[dashed, name path=vline] (0,0) -- (\vx,\vy);
+		\draw[dashed, name path=uline] (0,0) -- (\ux,\uy);
+
+		%label intersection between near plane and vline
+		\path[name intersections={of=vline and near, by=I}];
+		\path[name intersections={of=uline and near, by=IU}];
+		\fill (I) circle (1pt) node[above right];
+		\fill (IU) circle (1pt) node[below right];
+		
+		%charmander graphic
+		\node at (3.2,0.4) {\includegraphics[height=1.5cm]{charmander_top_alpha.png}};
+		\node at (4.5,-0.4) {\includegraphics[height=1.5cm]{charmander_top_alpha.png}};
+
+	\end{tikzpicture}
+
+	\label{fig:2d-frustum-xz}
+
+\end{figure}
+
 
 This transformation on the $x$ and $y$ coordinates is actually enough to capture the effect of perspective. However, since we essential squish everything in the View Volume onto a 2D plane, unless we do something about it, we lose out on Depth information.
 
@@ -435,7 +537,7 @@ We break the problem  up into 2 parts:
 	\item Calculating the transformation for $z$
 \end{enumerate}
 
-For the first part, consider the setup in Figure \ref{fig:frustum}. In this 2D slice, the viewing volume is given by the near and far planes and the top and bottom planes. What we wish to do is to take some point $v$, and project it onto the near plane. 
+For the first part, consider the setup in Figure ?. In this 2D slice, the viewing volume is given by the near and far planes and the top and bottom planes. What we wish to do is to take some point $v$, and project it onto the near plane. 
 
 To do this, we draw a line from the point to the origin. Consider the point at which this origin ray intersects the near plane. Let's call this point $x$. 
 
