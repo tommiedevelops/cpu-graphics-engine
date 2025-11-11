@@ -69,7 +69,7 @@ void on_start(App* app, void* game_data) {
 	Material* teapot_mat = assets_get_material(app->assets,teapot_handle);
 	GameObj* teapot = game_obj_create(teapot_tr,teapot_mesh,teapot_mat);
 
-	scene_add_game_obj(scene, teapot, teapot_handle);
+	//scene_add_game_obj(scene, teapot, teapot_handle);
 	scene_add_game_obj(scene, bunny, bunny_handle);
 
 	app->scene = scene;
@@ -165,8 +165,8 @@ void on_update(App* app, void* game_data, float dt) {
 	move_bunny(bunny_go, gd->time);
 	rotate_bunny(bunny_go,dt);
 
-	move_bunny(teapot_go, gd->time);
-	rotate_bunny(teapot_go, dt);
+/* 	move_bunny(teapot_go, gd->time); */
+/* 	rotate_bunny(teapot_go, dt); */
 }
 
 void on_shutdown(App* app, void* game_data) {
