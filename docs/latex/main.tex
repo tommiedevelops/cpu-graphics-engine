@@ -114,6 +114,7 @@
 \subsubsection{Inverse of the Model Matrix}
 
 \subsection{Deriving the Projection Matrix}
+In a sentence, the goal of the Projection Matrix is to map the View Space 'View Frustum' to the Clip Space 'Canonical View Volume' which our rasterizer can understand.
 
 The goal of this section is to come up with some matrix $\textbf{P}$ that transforms vertices from View Space into Clip Space. We wish to do it in such a way that Perspective is captured, and that vertices inside the View Frustum are mapped to Normalized Device Coordinates.
 
@@ -150,6 +151,16 @@ x \\ y \\ z \\ 1
 \end{itemize}
 
 \subsubsection{The View Frustum}
+In this section, we motivate the definition of a \textit{View Frustum} and define what it is.
+
+Once we have created a virtual world described in World Space, we want to imagine what a Viewer would see if they were placed in this world. 
+
+Pause for a moment. Take your right hand and point straight ahead with your index finger. Slowly move your arm as high as you can until the tip of your index finger is just invisible. Now do the same with your left arm. The angle between your arms is your Vertical Field of View (FOV) or $\theta_y$. You can easily repeat the exercise going left and right.
+
+This angle essential defines the edges of your vision. So it will be an important quantity for us in trying to recreate a realistic viewer.
+
+What's more, trying to reproduce a viewer exploring a virtual world is akin to
+
 \begin{itemize}
 	\item Since we are trying to create realistic graphics on a computer screen, we need to take that screen into account.
 	\item We imagine that the computer screen is not a screen but instead a 'Window' into the virtual world we are creating. We can now place this Window into the Scene, in world space. The Width and Height of the window is proportional to the actual width and height of the Window running the program (Viewport)
@@ -164,6 +175,7 @@ x \\ y \\ z \\ 1
 
 \begin{figure}[h!]
 \centering
+	\textbf{View Space}\\[0.5em]%
 \begin{tikzpicture}[tdplot_main_coords]
 	
 	%axes
@@ -270,42 +282,52 @@ x \\ y \\ z \\ 1
 \end{figure}
 
 \subsubsection{Perspective Projection}
-
-After applying the Model and View Matrix to each Vertex in the Scene, each Vertex should now be in View space (Coordinates expressed relative to the Camera being at the origin). We want to project each Vertex onto the Viewing Plane which is the same thing as the Near Plane. For now, we ignore the $z$ and $w$ values.
-
-For each Vertex, imagine constructing a line from the Vertex to the Origin. This line's intersection on the Viewing plane will be the Vertex's projection. 
-
-The parametric vector representing a line passing through points $A$ and $B$ is given by 
-
+\begin{itemize}
+	\item After applying the Model and View Matrix to each Vertex in the Scene, each vertex is now in View Space coordinates (a.k.a the Camera is at the origin).
+	\item To project a vertex $\textbf{v}$ onto the near plane, we draw a line from the origin to that point and mark where it intersects the near plane.
+	\item The parametric vector representing a line passing through points $A$ and $B$ is given by 
 \[
 	\textbf{r}(t) = \textbf{A} + t(\textbf{B} - \textbf{A}), t \in \mathbb{R}
 \]
 
-In our case, $A = (0,0,0)$ and $B$ = $v$. Thus,
+		In our case, $\textbf{A} = (0,0,0)$ and $\textbf{B}$ = $\textbf{v}$. Thus,
 
 \[
 	\textbf{r}(t) = \textbf{v}t
 \]
 
-To calculate where it intersects the near plane, we solve the equation for $t$ after setting $r_z =n$, where $n$ how far the near plane is along the $z$ axis.
-
+We know that the $z$-component of the intersection point is going to be $n$.
 \[
-	r_z = n \Rightarrow v_zt_{int.} = n \Rightarrow t_{int.} = \frac{n}{v_z}
+	\textbf{r}(t_i}) = (v_xt_i, v_yt_i, v_zt_i) \\
+		         = (v_xt_i, v_yt_i, n)
 \]
 
-Then,
+Equating the $z$-components: 
+		\[
+			t_i = n/v_z
+		\]
+Thus,
 \[
-	\textbf{r}(t_{int.}) = \textbf{v}(\frac{n}{v_z})
-			     = (\frac{nv_x}{v_z}, \frac{nv_y}{v_z}, n)
+	\textbf{r}(t_{i}) = \left(\frac{nv_x}{v_z}, \frac{nv_y}{v_z}, n\right)
 \]
 
-In other words, the projected $x$ and $y$ values of the vertex $\textbf{v}$ on the near plane will be ${nv_x}/{v_z}$ and ${nv_y}/{v_z}$ respectively. 
+\item In other words, the projected $x$ and $y$ values of the vertex $\textbf{v}$ on the near plane will be ${nv_x}/{v_z}$ and ${nv_y}/{v_z}$ respectively. 
 
-This scaling will capture the effect of perspective as can be seen in Figure \ref{fig:2d-frustum}. Despite the two Cobblemon having the same height in View / World Space, their projected heights onto the viewing / near plane (measured from y = 0 to the projection point) is such that the further cobblemon is smaller than the closer cobblemon.
+\item Now, all we need to do is to make sure that points that coincide with the left and right boundaries of the view frustum are mapped to $x=-1$ and $x=1$ respectively, and similar that the top and bottom planes map to $y = 1$ and $y=1$.
 
 Now, we just need to make sure that points inside the view frustum are mapped to normalized device coordinates. That is, points that intersect the top plane are mapped to y = 1, bottom y = -1, left x = -1, right x = 1.
 
-To do that, let's now imagine that we are the camera and are looking at the view port.
+To do this, let the distance from the z axis to the top of the viewport be r and the distance from the z axis to right side of the viewport be r.
+
+To match the dimensions of our window, we define the aspect ratioo $a$ to be $a = r/t$
+
+We can calculate r by considering FIGURE X. $tan(\frac{\theta_u}{2}) = \frac{r}{n}$ so then $r = ntan(\frac{\theta_y}{2})$. 
+
+Then since $a = r/t$, $t = r/a$ which means $t = \frac{ntan(\frac{\theta_y}{2}}{a}$
+
+Now, if we scale the y component of all vertices on the near plane by $1/t$, this means that vertices in the range $[-r,r]$ will map to $[-1,1]$ and if we scale all the x components by $1/r$ all of the Vertices' x components will be in the range $[-1,1]$ which is exa tly what we need.
+\end{itemize}
+
 \begin{figure}[h!]
 \centering
 \begin{tikzpicture}
@@ -646,7 +668,6 @@ We break the problem  up into 2 parts:
 For the first part, consider the setup in Figure ?. In this 2D slice, the viewing volume is given by the near and far planes and the top and bottom planes. What we wish to do is to take some point $v$, and project it onto the near plane. 
 
 To do this, we draw a line from the point to the origin. Consider the point at which this origin ray intersects the near plane. Let's call this point $x$. 
-
 
 \subsubsection{Deriving the Viewport Matrix}
 \subsection{Algorithms}

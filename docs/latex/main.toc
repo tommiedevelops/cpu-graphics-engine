@@ -30,49 +30,49 @@
 \contentsline {subsection}{\numberline {5.4}Deriving the Projection Matrix}{7}{}%
 \contentsline {subsubsection}{\numberline {5.4.1}What is \textit {Perspective}?}{8}{}%
 \contentsline {subsubsection}{\numberline {5.4.2}The View Frustum}{8}{}%
-\contentsline {subsubsection}{\numberline {5.4.3}Perspective Projection}{9}{}%
-\contentsline {subsection}{\numberline {5.5}Deriving The Viewport Matrix}{12}{}%
-\contentsline {subsection}{\numberline {5.6}The Vertex Shader}{12}{}%
-\contentsline {subsection}{\numberline {5.7}Clipping \& The Sutherland Hodgman Algorithm}{12}{}%
-\contentsline {section}{\numberline {6}Drawing to the screen}{12}{}%
-\contentsline {subsection}{\numberline {6.1}What is \textit {Rasterization}?}{12}{}%
-\contentsline {subsection}{\numberline {6.2}Interpolation}{12}{}%
-\contentsline {subsection}{\numberline {6.3}Rasterizing Triangles}{12}{}%
-\contentsline {subsection}{\numberline {6.4}What is a \textit {Fragment?}}{12}{}%
-\contentsline {subsection}{\numberline {6.5}The Fragment Shader}{12}{}%
-\contentsline {subsection}{\numberline {6.6}Depth Testing}{12}{}%
-\contentsline {subsection}{\numberline {6.7}The Framebuffer and Z-Buffer}{12}{}%
-\contentsline {section}{\numberline {7}Shading}{12}{}%
-\contentsline {subsection}{\numberline {7.1}Shaders}{12}{}%
-\contentsline {subsection}{\numberline {7.2}Materials}{12}{}%
-\contentsline {subsection}{\numberline {7.3}Textures}{13}{}%
-\contentsline {subsection}{\numberline {7.4}Unlit Shader}{13}{}%
-\contentsline {subsection}{\numberline {7.5}Lit Shader}{13}{}%
-\contentsline {subsection}{\numberline {7.6}Phong Shader}{13}{}%
-\contentsline {subsection}{\numberline {7.7}Toon Shader}{13}{}%
-\contentsline {subsection}{\numberline {7.8}Shadows}{13}{}%
-\contentsline {subsection}{\numberline {7.9}Ambient Occlusion}{13}{}%
-\contentsline {section}{\numberline {8}Appendix}{13}{}%
-\contentsline {subsection}{\numberline {8.1}Quaternions}{13}{}%
-\contentsline {subsection}{\numberline {8.2}Barycentric Coordinates}{13}{}%
-\contentsline {section}{\numberline {9}Deprecated}{13}{}%
-\contentsline {subsection}{\numberline {9.1}Math Concepts}{13}{}%
-\contentsline {subsubsection}{\numberline {9.1.1}Vectors}{13}{}%
-\contentsline {subsubsection}{\numberline {9.1.2}Planes}{13}{}%
-\contentsline {subsubsection}{\numberline {9.1.3}Matrices}{13}{}%
-\contentsline {subsubsection}{\numberline {9.1.4}Quaternions}{14}{}%
-\contentsline {subsubsection}{\numberline {9.1.5}Coordinate Spaces}{14}{}%
-\contentsline {subsubsection}{\numberline {9.1.6}Transformations}{14}{}%
-\contentsline {subsubsection}{\numberline {9.1.7}Deriving the Model Matrix}{14}{}%
-\contentsline {subsubsection}{\numberline {9.1.8}Deriving the View Matrix}{14}{}%
-\contentsline {subsubsection}{\numberline {9.1.9}Deriving the Projection Matrix}{14}{}%
-\contentsline {subsubsection}{\numberline {9.1.10}Deriving the Viewport Matrix}{15}{}%
-\contentsline {subsection}{\numberline {9.2}Algorithms}{15}{}%
-\contentsline {subsubsection}{\numberline {9.2.1}Rasterization}{15}{}%
-\contentsline {subsubsection}{\numberline {9.2.2}Improved Rasterization}{15}{}%
-\contentsline {subsubsection}{\numberline {9.2.3}Clipping}{15}{}%
-\contentsline {section}{\numberline {10}Conclusion \& Future Work}{16}{}%
-\contentsline {subsection}{\numberline {10.1}What I learnt}{16}{}%
-\contentsline {subsection}{\numberline {10.2}Limitations}{16}{}%
-\contentsline {subsection}{\numberline {10.3}A future implementation in C++}{16}{}%
-\contentsline {section}{\numberline {11}References}{16}{}%
+\contentsline {subsubsection}{\numberline {5.4.3}Perspective Projection}{10}{}%
+\contentsline {subsection}{\numberline {5.5}Deriving The Viewport Matrix}{13}{}%
+\contentsline {subsection}{\numberline {5.6}The Vertex Shader}{13}{}%
+\contentsline {subsection}{\numberline {5.7}Clipping \& The Sutherland Hodgman Algorithm}{13}{}%
+\contentsline {section}{\numberline {6}Drawing to the screen}{13}{}%
+\contentsline {subsection}{\numberline {6.1}What is \textit {Rasterization}?}{13}{}%
+\contentsline {subsection}{\numberline {6.2}Interpolation}{13}{}%
+\contentsline {subsection}{\numberline {6.3}Rasterizing Triangles}{13}{}%
+\contentsline {subsection}{\numberline {6.4}What is a \textit {Fragment?}}{13}{}%
+\contentsline {subsection}{\numberline {6.5}The Fragment Shader}{13}{}%
+\contentsline {subsection}{\numberline {6.6}Depth Testing}{13}{}%
+\contentsline {subsection}{\numberline {6.7}The Framebuffer and Z-Buffer}{13}{}%
+\contentsline {section}{\numberline {7}Shading}{13}{}%
+\contentsline {subsection}{\numberline {7.1}Shaders}{13}{}%
+\contentsline {subsection}{\numberline {7.2}Materials}{13}{}%
+\contentsline {subsection}{\numberline {7.3}Textures}{14}{}%
+\contentsline {subsection}{\numberline {7.4}Unlit Shader}{14}{}%
+\contentsline {subsection}{\numberline {7.5}Lit Shader}{14}{}%
+\contentsline {subsection}{\numberline {7.6}Phong Shader}{14}{}%
+\contentsline {subsection}{\numberline {7.7}Toon Shader}{14}{}%
+\contentsline {subsection}{\numberline {7.8}Shadows}{14}{}%
+\contentsline {subsection}{\numberline {7.9}Ambient Occlusion}{14}{}%
+\contentsline {section}{\numberline {8}Appendix}{14}{}%
+\contentsline {subsection}{\numberline {8.1}Quaternions}{14}{}%
+\contentsline {subsection}{\numberline {8.2}Barycentric Coordinates}{14}{}%
+\contentsline {section}{\numberline {9}Deprecated}{14}{}%
+\contentsline {subsection}{\numberline {9.1}Math Concepts}{14}{}%
+\contentsline {subsubsection}{\numberline {9.1.1}Vectors}{14}{}%
+\contentsline {subsubsection}{\numberline {9.1.2}Planes}{14}{}%
+\contentsline {subsubsection}{\numberline {9.1.3}Matrices}{14}{}%
+\contentsline {subsubsection}{\numberline {9.1.4}Quaternions}{15}{}%
+\contentsline {subsubsection}{\numberline {9.1.5}Coordinate Spaces}{15}{}%
+\contentsline {subsubsection}{\numberline {9.1.6}Transformations}{15}{}%
+\contentsline {subsubsection}{\numberline {9.1.7}Deriving the Model Matrix}{15}{}%
+\contentsline {subsubsection}{\numberline {9.1.8}Deriving the View Matrix}{15}{}%
+\contentsline {subsubsection}{\numberline {9.1.9}Deriving the Projection Matrix}{15}{}%
+\contentsline {subsubsection}{\numberline {9.1.10}Deriving the Viewport Matrix}{16}{}%
+\contentsline {subsection}{\numberline {9.2}Algorithms}{16}{}%
+\contentsline {subsubsection}{\numberline {9.2.1}Rasterization}{16}{}%
+\contentsline {subsubsection}{\numberline {9.2.2}Improved Rasterization}{16}{}%
+\contentsline {subsubsection}{\numberline {9.2.3}Clipping}{16}{}%
+\contentsline {section}{\numberline {10}Conclusion \& Future Work}{17}{}%
+\contentsline {subsection}{\numberline {10.1}What I learnt}{17}{}%
+\contentsline {subsection}{\numberline {10.2}Limitations}{17}{}%
+\contentsline {subsection}{\numberline {10.3}A future implementation in C++}{17}{}%
+\contentsline {section}{\numberline {11}References}{17}{}%
