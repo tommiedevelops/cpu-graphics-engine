@@ -1,0 +1,35 @@
+\begin{tikzpicture}
+	\def\Xmax{3};
+	\def\Ymax{3};
+
+	% Viewport Box
+	\def\botLeftX{-2.5}
+	\def\botLeftY{-1.5}
+	\def\topRightX{2.5}
+	\def\topRightY{1.5}
+
+	\filldraw[fill=red!20, draw=black]
+    		(\botLeftX,\botLeftY) rectangle (\topRightX,\topRightY);
+
+	% axes
+	\draw[->] (-\Xmax,0) -- (\Xmax,0) node[right] {$x$};
+	\draw[->] (0,-\Ymax) -- (0,\Ymax) node[above] {$y$};
+
+	\def\smallGap{0.05}
+
+	% r label
+	\draw[decorate, decoration={brace, amplitude=6pt}, blue]
+        	(\smallGap,\topRightY + \smallGap) -- (\topRightX - \smallGap,\topRightY + \smallGap)
+        	node[midway, above=7pt, blue] {$r$};
+
+	% t label
+	\draw[decorate, decoration={brace, amplitude=6pt, raise=2pt}, red]
+        	(\topRightX, \topRightY - \smallGap) -- (\topRightX,0+\smallGap)
+        	node[midway, right=7pt, red] {$t$};
+
+	%charmander graphic
+	\node at (-0.6,0.35) {\includegraphics[height=1.8cm]{charmander_front_alpha.png}};
+	\node at (0.4,0.36) {\includegraphics[height=1cm]{charmander_front_alpha.png}};
+
+	\end{tikzpicture}
+

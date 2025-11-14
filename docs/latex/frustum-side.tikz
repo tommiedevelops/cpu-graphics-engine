@@ -1,0 +1,76 @@
+\begin{tikzpicture}
+
+\definecolor{topplane}{HTML}{2E8B57}   % Sea Green (clear, calm)
+\definecolor{bottomplane}{HTML}{A0522D} % Sienna (warm earthy brown)
+\definecolor{nearplane}{HTML}{1E90FF}   % Dodger Blue (bright but not neon)
+\definecolor{farplane}{HTML}{DC143C}    % Crimson Red (vivid but deep)
+
+	% parameters
+\def\t{0.4} % tan(fov/2)
+	\def\n{2.0}       % near
+	\def\f{6.5}       % far
+	\def\Zmax{7}      % drawing extent
+	\def\Ymax{3}
+
+	% axes
+	\draw[->] (-0.5,0) -- (\Zmax+0.5,0) node[right] {$z$};
+\draw[->] (0,-\Ymax) -- (0,\Ymax)       node[above] {$y$};
+
+% top/bottom (black)
+	\draw[] plot[domain=0:\Zmax] (\x,  { \t*\x});
+	\draw[] plot[domain=0:\Zmax] (\x, {- \t*\x});
+
+%top (colored)
+	\draw[topplane] plot[domain=\n:\f] (\x,  { \t*\x});
+
+%bottom (colored)
+	\draw[bottomplane] plot[domain=\n:\f] (\x,  { -\t*\x});
+
+% near/far from z = n, z = f  (verticals)
+	% use the y-extent implied by the frustum at those z
+	\draw[thick,nearplane, name path=near] plot[domain={- \t*\n}:{ \t*\n}] ({\n}, \x);
+	\draw[thick,farplane, name path=far ] plot[domain={- \t*\f}:{ \t*\f}] ({\f}, \x);
+
+	%extend near and far planes to inifinite with colored dotted lines
+	\draw[dashed,nearplane, name path=near] plot[domain={-\Ymax}:{ \Ymax}] ({\n}, \x);
+	\draw[dashed, farplane, name path=far ] plot[domain={- \Ymax}:{ \Ymax}] ({\f}, \x);
+
+	% near / far labels
+	\draw (\n, 0) node[below right] {$n$};
+\draw (\f, 0) node[below right] {$f$};
+
+% sample vertex
+\def\vx{3.1}
+\def\vy{0.9}
+\draw[fill=black] (\vx,\vy) circle (1pt) node[above right] {$v_1$};
+
+\def\ux{5.6}
+\def\uy{0.9}
+\draw[fill=black] (\ux,\uy) circle (1pt) node[above right] {$v_2$};
+
+%label the origin as C, the Camera
+\draw circle (0,0) node[below left] {$C$};
+
+% line from origin to vertex
+\draw[dashed, name path=vline] (0,0) -- (\vx,\vy);
+\draw[dashed, name path=uline] (0,0) -- (\ux,\uy);
+
+%label intersection between near plane and vline
+\path[name intersections={of=vline and near, by=I}];
+\path[name intersections={of=uline and near, by=IU}];
+\fill (I) circle (1pt) node[above right];
+\fill (IU) circle (1pt) node[below right];
+
+%charmander graphic
+\node at (3.3,0.45) {\includegraphics[height=1.2cm]{charmander_left_alpha.png}};
+\node at (5.8,0.45) {\includegraphics[height=1.2cm]{charmander_left_alpha.png}};
+
+%projection labels
+\node (A) at (1,1) {$v_2'$};
+\node (B) at (1,2) {$v_1'$};
+
+% arrows from labels to points
+\draw[->, bend right] (A) to (IU);
+\draw[->, bend right] (B) to (I);
+\end{tikzpicture}
+

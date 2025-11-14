@@ -1,0 +1,104 @@
+\begin{tikzpicture}[tdplot_main_coords]
+	
+	%axes
+	\def\Zmax{8};
+	\def\Zmin{-1};
+	\def\Ymax{3};
+	\def\Ymin{-1};
+	\def\Xmax{3};
+	\def\Xmin{-3};
+
+	%(Z,Y,X)
+	\def\nearZ{1.6};
+	\def\nearXmax{1.1};
+	\def\nearYmax{0.5};
+
+	\def\farZ{5}
+	\def\farXmax{\nearXmax*3};
+	\def\farYmax{\nearYmax*3}
+
+	\coordinate (nearBotLeft)  at (\nearZ, -\nearYmax, -\nearXmax);
+	\coordinate (nearTopLeft)  at (\nearZ,  \nearYmax, -\nearXmax);
+	\coordinate (nearTopMid)  at (\nearZ, \nearYmax,  0);
+	\coordinate (nearBotMid)  at (\nearZ, -\nearYmax, 0);
+	\coordinate (nearTopRight) at (\nearZ,  \nearYmax,  \nearXmax);
+	\coordinate (nearBotRight) at (\nearZ, -\nearYmax,  \nearXmax);
+	\coordinate (farBotLeft)   at (\farZ, -\farYmax, -\farXmax);
+	\coordinate (farTopLeft)   at (\farZ,  \farYmax, -\farXmax);
+	\coordinate (farTopMid)  at (\farZ, \farYmax,  0);
+	\coordinate (farBotMid)  at (\farZ, -\farYmax, 0);
+	\coordinate (farTopRight)  at (\farZ,  \farYmax,  \farXmax);
+	
+	\coordinate (farBotRight)  at (\farZ, -\farYmax,  \farXmax);
+
+	\definecolor{farplane}{HTML}{1E90FF}   % Dodger Blue (bright but not neon)
+	\definecolor{nearplane}{HTML}{DC143C}    % Crimson Red (vivid but deep)
+
+	%view frustum
+
+	% fovy bottom line
+	\draw[dashed] (0,0,0) -- (farBotMid);
+
+	% near plane border
+	\draw[black]
+		(nearBotLeft) -- (nearTopLeft) -- (nearTopRight) -- (nearBotRight) -- cycle;
+
+	% near plane (left side)
+	\fill[fill=nearplane,opacity=0.7]
+		(nearBotLeft) -- (nearTopLeft) -- (nearTopMid) -- (nearBotMid) -- cycle;
+		
+	% left plane
+	\filldraw[fill=gray!30, draw=black, opacity=0.7]
+		(nearBotLeft) -- (nearTopLeft) -- (farTopLeft) -- (farBotLeft) -- cycle;
+	
+	% bottom plane
+	\filldraw[fill=gray!30, draw=black, opacity=0.7]
+		(nearBotLeft) -- (nearBotRight) -- (farBotRight) -- (farBotLeft) -- cycle;
+
+	% bottom plane
+	\filldraw[fill=gray!30, draw=black, opacity=0.7]
+		(nearBotLeft) -- (nearBotRight) -- (farBotRight) -- (farBotLeft) -- cycle;
+	
+	% far plane border
+	\draw[black]
+		(farBotLeft) -- (farTopLeft) -- (farTopRight) -- (farBotRight) -- cycle;
+
+	% far plane (%left half)
+	\fill[fill=farplane, opacity=0.7]
+		(farBotLeft) -- (farTopLeft) -- (farTopMid) -- (farBotMid) -- cycle;
+	%z axis
+	\draw[->, thick] (\Zmin,0,0) -- (\Zmax,0,0) node[right] {$z$};
+
+	% near plane (right side)
+	\fill[fill=nearplane,opacity=0.7]
+		(nearBotMid) -- (nearTopMid) -- (nearTopRight) -- (nearBotRight) -- cycle;
+
+	% far plane (right half)
+	\fill[fill=farplane, opacity=0.7]
+		(farTopMid) -- (farTopRight) -- (farBotRight) -- (farBotMid) -- cycle;
+
+	% right plane
+	\filldraw[fill=gray!30, draw=black, opacity=0.7]
+		(nearBotRight) -- (nearTopRight) -- (farTopRight) -- (farBotRight) -- cycle;
+	
+	% top plane
+	\filldraw[fill=gray!30, draw=black, opacity=0.7]
+		(nearTopLeft) -- (nearTopRight) -- (farTopRight) -- (farTopLeft) -- cycle;
+
+	%fovy top line
+	\draw[dashed] (0,0,0) -- (\farZ, \farYmax, 0);
+
+	\draw[->, thick] (0,\Ymin,0) -- (0,\Ymax,0) node[above right] {$y$};
+	\draw[->, thick] (0,0,-\Xmin) -- (0,0,-\Xmax) node[above] {$x$};
+
+	% camera label
+	\filldraw (0,0,0) circle[radius=1.5pt] node[above left] {$C$};
+
+	\coordinate (origin) at (0,0,0);
+
+	%fovy label
+	\pic["\textcolor{red}{$\theta_y$}", draw=red, <->, angle eccentricity=1.3, angle radius=0.7cm]
+		{angle=nearBotMid--origin--nearTopMid};
+
+\end{tikzpicture}
+

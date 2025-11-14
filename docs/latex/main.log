@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2025.7.7)  13 NOV 2025 12:37
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2025.7.7)  14 NOV 2025 11:36
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -65,6 +65,29 @@ Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1373.
 Package xcolor Info: Model `Gray' substituted by `gray' on input line 1374.
 Package xcolor Info: Model `wave' substituted by `hsb' on input line 1375.
 )
+(/usr/share/texlive/texmf-dist/tex/latex/caption/subcaption.sty
+Package: subcaption 2020/10/07 v1.3j Sub-captions (AR)
+
+(/usr/share/texlive/texmf-dist/tex/latex/caption/caption.sty
+Package: caption 2020/10/26 v3.5g Customizing captions (AR)
+
+(/usr/share/texlive/texmf-dist/tex/latex/caption/caption3.sty
+Package: caption3 2020/10/21 v2.2e caption3 kernel (AR)
+\captionmargin=\dimen141
+\captionmargin@=\dimen142
+\captionwidth=\dimen143
+\caption@tempdima=\dimen144
+\caption@indent=\dimen145
+\caption@parindent=\dimen146
+\caption@hangindent=\dimen147
+Package caption Info: Standard document class detected.
+)
+\c@caption@flags=\count193
+\c@continuedfloat=\count194
+)
+\c@subfigure=\count195
+\c@subtable=\count196
+)
 (/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsmath.sty
 Package: amsmath 2021/10/15 v2.17l AMS math features
 \@mathmargin=\skip49
@@ -76,46 +99,46 @@ Package: amstext 2021/08/26 v2.01 AMS text
 (/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsgen.sty
 File: amsgen.sty 1999/11/30 v2.0 generic functions
 \@emptytoks=\toks17
-\ex@=\dimen141
+\ex@=\dimen148
 ))
 (/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsbsy.sty
 Package: amsbsy 1999/11/29 v1.2d Bold Symbols
-\pmbraise@=\dimen142
+\pmbraise@=\dimen149
 )
 (/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsopn.sty
 Package: amsopn 2021/08/26 v2.02 operator names
 )
-\inf@bad=\count193
+\inf@bad=\count197
 LaTeX Info: Redefining \frac on input line 234.
-\uproot@=\count194
-\leftroot@=\count195
+\uproot@=\count198
+\leftroot@=\count199
 LaTeX Info: Redefining \overline on input line 399.
-\classnum@=\count196
-\DOTSCASE@=\count197
+\classnum@=\count266
+\DOTSCASE@=\count267
 LaTeX Info: Redefining \ldots on input line 496.
 LaTeX Info: Redefining \dots on input line 499.
 LaTeX Info: Redefining \cdots on input line 620.
 \Mathstrutbox@=\box50
 \strutbox@=\box51
-\big@size=\dimen143
+\big@size=\dimen150
 LaTeX Font Info:    Redeclaring font encoding OML on input line 743.
 LaTeX Font Info:    Redeclaring font encoding OMS on input line 744.
-\macc@depth=\count198
-\c@MaxMatrixCols=\count199
+\macc@depth=\count268
+\c@MaxMatrixCols=\count269
 \dotsspace@=\muskip16
-\c@parentequation=\count266
-\dspbrk@lvl=\count267
+\c@parentequation=\count270
+\dspbrk@lvl=\count271
 \tag@help=\toks18
-\row@=\count268
-\column@=\count269
-\maxfields@=\count270
+\row@=\count272
+\column@=\count273
+\maxfields@=\count274
 \andhelp@=\toks19
-\eqnshift@=\dimen144
-\alignsep@=\dimen145
-\tagshift@=\dimen146
-\tagwidth@=\dimen147
-\totwidth@=\dimen148
-\lineht@=\dimen149
+\eqnshift@=\dimen151
+\alignsep@=\dimen152
+\tagshift@=\dimen153
+\tagwidth@=\dimen154
+\totwidth@=\dimen155
+\lineht@=\dimen156
 \@envbody=\toks20
 \multlinegap=\skip50
 \multlinetaggap=\skip51
@@ -149,8 +172,8 @@ LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 149.
 (/usr/share/texlive/texmf-dist/tex/latex/pgf/utilities/pgfrcs.sty
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/utilities/pgfutil-common.tex
 \pgfutil@everybye=\toks22
-\pgfutil@tempdima=\dimen150
-\pgfutil@tempdimb=\dimen151
+\pgfutil@tempdima=\dimen157
+\pgfutil@tempdimb=\dimen158
 
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/utilities/pgfutil-common-lists.t
 ex)) (/usr/share/texlive/texmf-dist/tex/generic/pgf/utilities/pgfutil-latex.def
@@ -174,26 +197,26 @@ Package: pgfsys 2021/05/15 v3.1.9a (3.1.9a)
 ex
 \pgfkeys@tmptoks=\toks25
 ))
-\pgf@x=\dimen152
-\pgf@y=\dimen153
-\pgf@xa=\dimen154
-\pgf@ya=\dimen155
-\pgf@xb=\dimen156
-\pgf@yb=\dimen157
-\pgf@xc=\dimen158
-\pgf@yc=\dimen159
-\pgf@xd=\dimen160
-\pgf@yd=\dimen161
+\pgf@x=\dimen159
+\pgf@y=\dimen160
+\pgf@xa=\dimen161
+\pgf@ya=\dimen162
+\pgf@xb=\dimen163
+\pgf@yb=\dimen164
+\pgf@xc=\dimen165
+\pgf@yc=\dimen166
+\pgf@xd=\dimen167
+\pgf@yd=\dimen168
 \w@pgf@writea=\write3
 \r@pgf@reada=\read2
-\c@pgf@counta=\count271
-\c@pgf@countb=\count272
-\c@pgf@countc=\count273
-\c@pgf@countd=\count274
+\c@pgf@counta=\count275
+\c@pgf@countb=\count276
+\c@pgf@countc=\count277
+\c@pgf@countd=\count278
 \t@pgf@toka=\toks26
 \t@pgf@tokb=\toks27
 \t@pgf@tokc=\toks28
-\pgf@sys@id@count=\count275
+\pgf@sys@id@count=\count279
  (/usr/share/texlive/texmf-dist/tex/generic/pgf/systemlayer/pgf.cfg
 File: pgf.cfg 2021/05/15 v3.1.9a (3.1.9a)
 )
@@ -209,8 +232,8 @@ File: pgfsys-common-pdf.def 2021/05/15 v3.1.9a (3.1.9a)
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/systemlayer/pgfsyssoftpath.code.
 tex
 File: pgfsyssoftpath.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-\pgfsyssoftpath@smallbuffer@items=\count276
-\pgfsyssoftpath@bigbuffer@items=\count277
+\pgfsyssoftpath@smallbuffer@items=\count280
+\pgfsyssoftpath@bigbuffer@items=\count281
 )
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/systemlayer/pgfsysprotocol.code.
 tex
@@ -223,8 +246,8 @@ Package: pgfcore 2021/05/15 v3.1.9a (3.1.9a)
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathcalc.code.tex
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathutil.code.tex)
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathparser.code.tex
-\pgfmath@dimen=\dimen162
-\pgfmath@count=\count278
+\pgfmath@dimen=\dimen169
+\pgfmath@count=\count282
 \pgfmath@box=\box53
 \pgfmath@toks=\toks29
 \pgfmath@stack@operand=\toks30
@@ -248,38 +271,38 @@ tex)
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.integerari
 thmetics.code.tex)))
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathfloat.code.tex
-\c@pgfmathroundto@lastzeros=\count279
+\c@pgfmathroundto@lastzeros=\count283
 ))
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfint.code.tex)
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepoints.code.te
 x
 File: pgfcorepoints.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-\pgf@picminx=\dimen163
-\pgf@picmaxx=\dimen164
-\pgf@picminy=\dimen165
-\pgf@picmaxy=\dimen166
-\pgf@pathminx=\dimen167
-\pgf@pathmaxx=\dimen168
-\pgf@pathminy=\dimen169
-\pgf@pathmaxy=\dimen170
-\pgf@xx=\dimen171
-\pgf@xy=\dimen172
-\pgf@yx=\dimen173
-\pgf@yy=\dimen174
-\pgf@zx=\dimen175
-\pgf@zy=\dimen176
+\pgf@picminx=\dimen170
+\pgf@picmaxx=\dimen171
+\pgf@picminy=\dimen172
+\pgf@picmaxy=\dimen173
+\pgf@pathminx=\dimen174
+\pgf@pathmaxx=\dimen175
+\pgf@pathminy=\dimen176
+\pgf@pathmaxy=\dimen177
+\pgf@xx=\dimen178
+\pgf@xy=\dimen179
+\pgf@yx=\dimen180
+\pgf@yy=\dimen181
+\pgf@zx=\dimen182
+\pgf@zy=\dimen183
 )
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathconstruct.
 code.tex
 File: pgfcorepathconstruct.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-\pgf@path@lastx=\dimen177
-\pgf@path@lasty=\dimen178
+\pgf@path@lastx=\dimen184
+\pgf@path@lasty=\dimen185
 )
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathusage.code
 .tex
 File: pgfcorepathusage.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-\pgf@shorten@end@additional=\dimen179
-\pgf@shorten@start@additional=\dimen180
+\pgf@shorten@end@additional=\dimen186
+\pgf@shorten@start@additional=\dimen187
 )
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcorescopes.code.te
 x
@@ -287,19 +310,19 @@ File: pgfcorescopes.code.tex 2021/05/15 v3.1.9a (3.1.9a)
 \pgfpic=\box54
 \pgf@hbox=\box55
 \pgf@layerbox@main=\box56
-\pgf@picture@serial@count=\count280
+\pgf@picture@serial@count=\count284
 )
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcoregraphicstate.c
 ode.tex
 File: pgfcoregraphicstate.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-\pgflinewidth=\dimen181
+\pgflinewidth=\dimen188
 )
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretransformation
 s.code.tex
 File: pgfcoretransformations.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-\pgf@pt@x=\dimen182
-\pgf@pt@y=\dimen183
-\pgf@pt@temp=\dimen184
+\pgf@pt@x=\dimen189
+\pgf@pt@y=\dimen190
+\pgf@pt@temp=\dimen191
 )
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcorequick.code.tex
 File: pgfcorequick.code.tex 2021/05/15 v3.1.9a (3.1.9a)
@@ -315,13 +338,13 @@ File: pgfcorepathprocessing.code.tex 2021/05/15 v3.1.9a (3.1.9a)
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcorearrows.code.te
 x
 File: pgfcorearrows.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-\pgfarrowsep=\dimen185
+\pgfarrowsep=\dimen192
 )
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreshade.code.tex
 File: pgfcoreshade.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-\pgf@max=\dimen186
-\pgf@sys@shading@range@num=\count281
-\pgf@shadingcount=\count282
+\pgf@max=\dimen193
+\pgf@sys@shading@range@num=\count285
+\pgf@shadingcount=\count286
 )
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreimage.code.tex
 File: pgfcoreimage.code.tex 2021/05/15 v3.1.9a (3.1.9a)
@@ -355,8 +378,8 @@ File: pgfmoduleplot.code.tex 2021/05/15 v3.1.9a (3.1.9a)
 (/usr/share/texlive/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version-0-65
 .sty
 Package: pgfcomp-version-0-65 2021/05/15 v3.1.9a (3.1.9a)
-\pgf@nodesepstart=\dimen187
-\pgf@nodesepend=\dimen188
+\pgf@nodesepstart=\dimen194
+\pgf@nodesepend=\dimen195
 )
 (/usr/share/texlive/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version-1-18
 .sty
@@ -370,8 +393,8 @@ Package: pgfcomp-version-1-18 2021/05/15 v3.1.9a (3.1.9a)
 Package: pgffor 2021/05/15 v3.1.9a (3.1.9a)
 
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex)
-\pgffor@iter=\dimen189
-\pgffor@skip=\dimen190
+\pgffor@iter=\dimen196
+\pgffor@skip=\dimen197
 \pgffor@stack=\toks32
 \pgffor@toks=\toks33
 ))
@@ -381,33 +404,33 @@ Package: tikz 2021/05/15 v3.1.9a (3.1.9a)
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/libraries/pgflibraryplothandlers
 .code.tex
 File: pgflibraryplothandlers.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-\pgf@plot@mark@count=\count283
-\pgfplotmarksize=\dimen191
+\pgf@plot@mark@count=\count287
+\pgfplotmarksize=\dimen198
 )
-\tikz@lastx=\dimen192
-\tikz@lasty=\dimen193
-\tikz@lastxsaved=\dimen194
-\tikz@lastysaved=\dimen195
-\tikz@lastmovetox=\dimen196
-\tikz@lastmovetoy=\dimen197
-\tikzleveldistance=\dimen198
-\tikzsiblingdistance=\dimen199
+\tikz@lastx=\dimen199
+\tikz@lasty=\dimen256
+\tikz@lastxsaved=\dimen257
+\tikz@lastysaved=\dimen258
+\tikz@lastmovetox=\dimen259
+\tikz@lastmovetoy=\dimen260
+\tikzleveldistance=\dimen261
+\tikzsiblingdistance=\dimen262
 \tikz@figbox=\box59
 \tikz@figbox@bg=\box60
 \tikz@tempbox=\box61
 \tikz@tempbox@bg=\box62
-\tikztreelevel=\count284
-\tikznumberofchildren=\count285
-\tikznumberofcurrentchild=\count286
-\tikz@fig@count=\count287
+\tikztreelevel=\count288
+\tikznumberofchildren=\count289
+\tikznumberofcurrentchild=\count290
+\tikz@fig@count=\count291
 
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/modules/pgfmodulematrix.code.tex
 File: pgfmodulematrix.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-\pgfmatrixcurrentrow=\count288
-\pgfmatrixcurrentcolumn=\count289
-\pgf@matrix@numberofcolumns=\count290
+\pgfmatrixcurrentrow=\count292
+\pgfmatrixcurrentcolumn=\count293
+\pgf@matrix@numberofcolumns=\count294
 )
-\tikz@expandcount=\count291
+\tikz@expandcount=\count295
 
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tik
 zlibrarytopaths.code.tex
@@ -422,9 +445,9 @@ Package: pgfplots 2021/05/15 v1.18.1 Data Visualization (1.18.1)
 \t@pgfplots@toka=\toks34
 \t@pgfplots@tokb=\toks35
 \t@pgfplots@tokc=\toks36
-\pgfplots@tmpa=\dimen256
-\c@pgfplots@coordindex=\count292
-\c@pgfplots@scanlineindex=\count293
+\pgfplots@tmpa=\dimen263
+\c@pgfplots@coordindex=\count296
+\c@pgfplots@scanlineindex=\count297
 
 (/usr/share/texlive/texmf-dist/tex/generic/pgfplots/sys/pgfplotssysgeneric.code
 .tex))
@@ -441,13 +464,13 @@ tructure.code.tex)
 tructureext.code.tex)
 (/usr/share/texlive/texmf-dist/tex/generic/pgfplots/liststructure/pgfplotsarray
 .code.tex
-\c@pgfplotsarray@tmp=\count294
+\c@pgfplotsarray@tmp=\count298
 )
 (/usr/share/texlive/texmf-dist/tex/generic/pgfplots/liststructure/pgfplotsmatri
 x.code.tex)
 (/usr/share/texlive/texmf-dist/tex/generic/pgfplots/numtable/pgfplotstableshare
 d.code.tex
-\c@pgfplotstable@counta=\count295
+\c@pgfplotstable@counta=\count299
 \t@pgfplotstable@a=\toks37
 )
 (/usr/share/texlive/texmf-dist/tex/generic/pgfplots/liststructure/pgfplotsdeque
@@ -460,7 +483,7 @@ de.tex))
 .tex)
 (/usr/share/texlive/texmf-dist/tex/generic/pgfplots/libs/pgflibrarypgfplots.sur
 fshading.code.tex
-\c@pgfplotslibrarysurf@no=\count296
+\c@pgfplotslibrarysurf@no=\count300
 
 (/usr/share/texlive/texmf-dist/tex/generic/pgfplots/sys/pgflibrarypgfplots.surf
 shading.pgfsys-pdftex.def)))
@@ -487,14 +510,14 @@ e.tex)
 zlibrarydecorations.code.tex
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/modules/pgfmoduledecorations.cod
 e.tex
-\pgfdecoratedcompleteddistance=\dimen257
-\pgfdecoratedremainingdistance=\dimen258
-\pgfdecoratedinputsegmentcompleteddistance=\dimen259
-\pgfdecoratedinputsegmentremainingdistance=\dimen260
-\pgf@decorate@distancetomove=\dimen261
-\pgf@decorate@repeatstate=\count297
-\pgfdecorationsegmentamplitude=\dimen262
-\pgfdecorationsegmentlength=\dimen263
+\pgfdecoratedcompleteddistance=\dimen264
+\pgfdecoratedremainingdistance=\dimen265
+\pgfdecoratedinputsegmentcompleteddistance=\dimen266
+\pgfdecoratedinputsegmentremainingdistance=\dimen267
+\pgf@decorate@distancetomove=\dimen268
+\pgf@decorate@repeatstate=\count301
+\pgfdecorationsegmentamplitude=\dimen269
+\pgfdecorationsegmentlength=\dimen270
 )
 \tikz@lib@dec@box=\box63
 )
@@ -508,13 +531,13 @@ zlibrarydecorations.pathreplacing.code.tex
 decorations.pathreplacing.code.tex))
 (/usr/share/texlive/texmf-dist/tex/generic/pgfplots/libs/tikzlibrarypgfplots.co
 ntourlua.code.tex)
-\pgfplots@numplots=\count298
-\pgfplots@xmin@reg=\dimen264
-\pgfplots@xmax@reg=\dimen265
-\pgfplots@ymin@reg=\dimen266
-\pgfplots@ymax@reg=\dimen267
-\pgfplots@zmin@reg=\dimen268
-\pgfplots@zmax@reg=\dimen269
+\pgfplots@numplots=\count302
+\pgfplots@xmin@reg=\dimen271
+\pgfplots@xmax@reg=\dimen272
+\pgfplots@ymin@reg=\dimen273
+\pgfplots@ymax@reg=\dimen274
+\pgfplots@zmin@reg=\dimen275
+\pgfplots@zmax@reg=\dimen276
 )
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tik
 zlibraryplotmarks.code.tex
@@ -540,42 +563,42 @@ File: tikzlibraryquotes.code.tex 2021/05/15 v3.1.9a (3.1.9a)
 zlibraryintersections.code.tex
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/libraries/pgflibraryintersection
 s.code.tex
-\pgf@intersect@solutions=\count299
+\pgf@intersect@solutions=\count303
 ))
 (/usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2022-01-12 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count300
+\l__color_backend_stack_int=\count304
 \l__pdf_internal_box=\box64
 )
 (./main.aux)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 26.
-LaTeX Font Info:    ... okay on input line 26.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 26.
-LaTeX Font Info:    ... okay on input line 26.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 26.
-LaTeX Font Info:    ... okay on input line 26.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 26.
-LaTeX Font Info:    ... okay on input line 26.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 26.
-LaTeX Font Info:    ... okay on input line 26.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 26.
-LaTeX Font Info:    ... okay on input line 26.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 26.
-LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
  (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count301
-\scratchdimen=\dimen270
+\scratchcounter=\count305
+\scratchdimen=\dimen277
 \scratchbox=\box65
-\nofMPsegments=\count302
-\nofMParguments=\count303
+\nofMPsegments=\count306
+\nofMParguments=\count307
 \everyMPshowfont=\toks38
-\MPscratchCnt=\count304
-\MPscratchDim=\dimen271
-\MPnumerator=\count305
-\makeMPintoPDFobject=\count306
+\MPscratchCnt=\count308
+\MPscratchDim=\dimen278
+\MPnumerator=\count309
+\makeMPintoPDFobject=\count310
 \everyMPtoPDFconversion=\toks39
 ) (/usr/share/texlive/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
@@ -586,15 +609,18 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: End \AtBeginDocument code.
+
 Package pgfplots notification 'compat/show suggested version=true': document ha
 s been generated with the most recent feature set (\pgfplotsset{compat=1.18}).
 
-LaTeX Font Info:    Trying to load font information for U+msa on input line 28.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 29.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 28.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 29.
 
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
@@ -603,7 +629,7 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 <scene.png, id=4, 750.55406pt x 374.14781pt>
 File: scene.png Graphic file (type png)
 <use scene.png>
-Package pdftex.def Info: scene.png  used on input line 32.
+Package pdftex.def Info: scene.png  used on input line 33.
 (pdftex.def)             Requested size: 207.0021pt x 103.18497pt.
  [1
 
@@ -613,67 +639,17 @@ Package pdftex.def Info: scene.png  used on input line 32.
 \openout4 = `main.toc'.
 
  [3] [4]
-[5] [6]
-./main.tex:140: Missing $ inserted.
-<inserted text> 
-                $
-l.140 
-      
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
+[5] [6] [7] [8] (./viewfrustum.tikz
 
-./main.tex:140: Display math should end with $$.
-<to be read again> 
-                   \tex_par:D 
-l.140 
-      
-The `$' that I just saw supposedly matches a previous `$$'.
-So I shall assume that you typed `$$' both times.
-
-[7]
-
-./main.tex:141: LaTeX Error: Bad math environment delimiter.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.141 \]
-        
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
-./main.tex:141: Missing $ inserted.
-<inserted text> 
-                $
-l.141 \]
-        
-I've inserted something that you may have forgotten.
-(See the <inserted text> above.)
-With luck, this will get me unwedged. But if you
-really didn't forget anything, try typing `2' now; then
-my insertion and my current dilemma will both disappear.
-
-./main.tex:141: Display math should end with $$.
-<to be read again> 
-                   \endgroup 
-l.141 \]
-        
-The `$' that I just saw supposedly matches a previous `$$'.
-So I shall assume that you typed `$$' both times.
-
-[8]
-
-./main.tex:179: Package pgfkeys Error: I do not know the key '/tikz/tdplot_main
-_coords' and I am going to ignore it. Perhaps you misspelled it.
+./viewfrustum.tikz:1: Package pgfkeys Error: I do not know the key '/tikz/tdplo
+t_main_coords' and I am going to ignore it. Perhaps you misspelled it.
 
 See the pgfkeys package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.179 \begin{tikzpicture}[tdplot_main_coords]
-                                             
+l.1 \begin{tikzpicture}[tdplot_main_coords]
+                                           
 This error message was generated by an \errmessage
 command, so I can't give any explicit help.
 Pretend that you're Hercule Poirot: Examine all clues,
@@ -689,9 +665,9 @@ Missing character: There is no ; in font nullfont!
 Missing character: There is no ; in font nullfont!
 Missing character: There is no ; in font nullfont!
 Missing character: There is no ; in font nullfont!
-[9]
-./main.tex:301: Extra }, or forgotten $.
-l.301 	\textbf{r}(t_i}
+) [9]
+./main.tex:214: Extra }, or forgotten $.
+l.214 	\textbf{r}(t_i}
                       ) = (v_xt_i, v_yt_i, v_zt_i) \\
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -699,398 +675,299 @@ you forgot something else, as in `\hbox{$x}'. In such cases
 the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
-[10]
+(./frustum-side.tikz
+./frustum-side.tikz:52: Missing number, treated as zero.
+<to be read again> 
+                   {
+l.52 \draw circle (0,0)
+                        node[below left] {$C$};
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+./frustum-side.tikz:52: Illegal unit of measure (pt inserted).
+<to be read again> 
+                   {
+l.52 \draw circle (0,0)
+                        node[below left] {$C$};
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
+
+Missing character: There is no 0 in font nullfont!
+./frustum-side.tikz:52: Missing number, treated as zero.
+<to be read again> 
+                   \global 
+l.52 \draw circle (0,0)
+                        node[below left] {$C$};
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+./frustum-side.tikz:52: Illegal unit of measure (pt inserted).
+<to be read again> 
+                   \global 
+l.52 \draw circle (0,0)
+                        node[below left] {$C$};
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
+
+./frustum-side.tikz:52: Missing number, treated as zero.
+<to be read again> 
+                   {
+l.52 \draw circle (0,0)
+                        node[below left] {$C$};
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+./frustum-side.tikz:52: Illegal unit of measure (pt inserted).
+<to be read again> 
+                   {
+l.52 \draw circle (0,0)
+                        node[below left] {$C$};
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
+
+Missing character: There is no 0 in font nullfont!
+./frustum-side.tikz:52: Missing number, treated as zero.
+<to be read again> 
+                   \global 
+l.52 \draw circle (0,0)
+                        node[below left] {$C$};
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+./frustum-side.tikz:52: Illegal unit of measure (pt inserted).
+<to be read again> 
+                   \global 
+l.52 \draw circle (0,0)
+                        node[below left] {$C$};
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
+
+./frustum-side.tikz:52: Missing number, treated as zero.
+<to be read again> 
+                   {
+l.52 \draw circle (0,0)
+                        node[below left] {$C$};
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+./frustum-side.tikz:52: Illegal unit of measure (pt inserted).
+<to be read again> 
+                   {
+l.52 \draw circle (0,0)
+                        node[below left] {$C$};
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
+
+Missing character: There is no 0 in font nullfont!
+./frustum-side.tikz:52: Missing number, treated as zero.
+<to be read again> 
+                   \global 
+l.52 \draw circle (0,0)
+                        node[below left] {$C$};
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+./frustum-side.tikz:52: Illegal unit of measure (pt inserted).
+<to be read again> 
+                   \global 
+l.52 \draw circle (0,0)
+                        node[below left] {$C$};
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
+
+./frustum-side.tikz:52: Missing number, treated as zero.
+<to be read again> 
+                   {
+l.52 \draw circle (0,0)
+                        node[below left] {$C$};
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+./frustum-side.tikz:52: Illegal unit of measure (pt inserted).
+<to be read again> 
+                   {
+l.52 \draw circle (0,0)
+                        node[below left] {$C$};
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
+
+Missing character: There is no 0 in font nullfont!
+./frustum-side.tikz:52: Missing number, treated as zero.
+<to be read again> 
+                   \global 
+l.52 \draw circle (0,0)
+                        node[below left] {$C$};
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+./frustum-side.tikz:52: Illegal unit of measure (pt inserted).
+<to be read again> 
+                   \global 
+l.52 \draw circle (0,0)
+                        node[below left] {$C$};
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
+
+
+./frustum-side.tikz:61: Package tikz Error: A node must have a (possibly empty)
+ label text.
+
+See the tikz package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.61 \fill (I) circle (1pt) node[above right];
+                                              
+(That was another \errmessage.)
+
+
+./frustum-side.tikz:62: Package tikz Error: A node must have a (possibly empty)
+ label text.
+
+See the tikz package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.62 \fill (IU) circle (1pt) node[below right];
+                                               
+(That was another \errmessage.)
+
+<charmander_left_alpha.png, id=49, 120.45pt x 120.45pt>
+File: charmander_left_alpha.png Graphic file (type png)
+<use charmander_left_alpha.png>
+Package pdftex.def Info: charmander_left_alpha.png  used on input line 65.
+(pdftex.def)             Requested size: 34.14296pt x 34.14322pt.
+File: charmander_left_alpha.png Graphic file (type png)
+<use charmander_left_alpha.png>
+Package pdftex.def Info: charmander_left_alpha.png  used on input line 66.
+(pdftex.def)             Requested size: 34.14296pt x 34.14322pt.
+) (./frustum-top.tikz
+
+./frustum-top.tikz:62: Package tikz Error: A node must have a (possibly empty) 
+label text.
+
+See the tikz package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.62 \fill (I) circle (1pt) node[above right];
+                                              
+(That was another \errmessage.)
+
+
+./frustum-top.tikz:63: Package tikz Error: A node must have a (possibly empty) 
+label text.
+
+See the tikz package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.63 \fill (IU) circle (1pt) node[below right];
+                                               
+(That was another \errmessage.)
+
+<charmander_top_alpha.png, id=50, 120.45pt x 120.45pt>
+File: charmander_top_alpha.png Graphic file (type png)
+<use charmander_top_alpha.png>
+Package pdftex.def Info: charmander_top_alpha.png  used on input line 66.
+(pdftex.def)             Requested size: 42.67825pt x 42.67912pt.
+File: charmander_top_alpha.png Graphic file (type png)
+<use charmander_top_alpha.png>
+Package pdftex.def Info: charmander_top_alpha.png  used on input line 67.
+(pdftex.def)             Requested size: 42.67825pt x 42.67912pt.
+) [10 <./charmander_left_alpha.png> <./charmander_top_alpha.png>]
+(./frustum-front.tikz
 Missing character: There is no ; in font nullfont!
 Missing character: There is no ; in font nullfont!
-<charmander_front_alpha.png, id=56, 120.45pt x 120.45pt>
+<charmander_front_alpha.png, id=59, 120.45pt x 120.45pt>
 File: charmander_front_alpha.png Graphic file (type png)
 <use charmander_front_alpha.png>
-Package pdftex.def Info: charmander_front_alpha.png  used on input line 363.
+Package pdftex.def Info: charmander_front_alpha.png  used on input line 31.
 (pdftex.def)             Requested size: 51.21353pt x 51.21504pt.
 File: charmander_front_alpha.png Graphic file (type png)
 <use charmander_front_alpha.png>
-Package pdftex.def Info: charmander_front_alpha.png  used on input line 364.
+Package pdftex.def Info: charmander_front_alpha.png  used on input line 32.
 (pdftex.def)             Requested size: 28.45277pt x 28.45274pt.
-./main.tex:386: Missing $ inserted.
-<inserted text> 
-                $
-l.386 
-      
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-./main.tex:386: Display math should end with $$.
-<to be read again> 
-                   \tex_par:D 
-l.386 
-      
-The `$' that I just saw supposedly matches a previous `$$'.
-So I shall assume that you typed `$$' both times.
-
-
-./main.tex:387: LaTeX Error: Bad math environment delimiter.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.387 \]
-        
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
-./main.tex:387: Missing $ inserted.
-<inserted text> 
-                $
-l.387 \]
-        
-I've inserted something that you may have forgotten.
-(See the <inserted text> above.)
-With luck, this will get me unwedged. But if you
-really didn't forget anything, try typing `2' now; then
-my insertion and my current dilemma will both disappear.
-
-./main.tex:387: Display math should end with $$.
-<to be read again> 
-                   \endgroup 
-l.387 \]
-        
-The `$' that I just saw supposedly matches a previous `$$'.
-So I shall assume that you typed `$$' both times.
-
-./main.tex:444: Missing number, treated as zero.
-<to be read again> 
-                   {
-l.444 		\draw circle (0,0)
-                           node[below left] {$C$};
-A number should have been here; I inserted `0'.
-(If you can't figure out why I needed to see a number,
-look up `weird error' in the index to The TeXbook.)
-
-./main.tex:444: Illegal unit of measure (pt inserted).
-<to be read again> 
-                   {
-l.444 		\draw circle (0,0)
-                           node[below left] {$C$};
-Dimensions can be in units of em, ex, in, pt, pc,
-cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
-I'll assume that you meant to say pt, for printer's points.
-To recover gracefully from this error, it's best to
-delete the erroneous units; e.g., type `2' to delete
-two letters. (See Chapter 27 of The TeXbook.)
-
-Missing character: There is no 0 in font nullfont!
-./main.tex:444: Missing number, treated as zero.
-<to be read again> 
-                   \global 
-l.444 		\draw circle (0,0)
-                           node[below left] {$C$};
-A number should have been here; I inserted `0'.
-(If you can't figure out why I needed to see a number,
-look up `weird error' in the index to The TeXbook.)
-
-./main.tex:444: Illegal unit of measure (pt inserted).
-<to be read again> 
-                   \global 
-l.444 		\draw circle (0,0)
-                           node[below left] {$C$};
-Dimensions can be in units of em, ex, in, pt, pc,
-cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
-I'll assume that you meant to say pt, for printer's points.
-To recover gracefully from this error, it's best to
-delete the erroneous units; e.g., type `2' to delete
-two letters. (See Chapter 27 of The TeXbook.)
-
-./main.tex:444: Missing number, treated as zero.
-<to be read again> 
-                   {
-l.444 		\draw circle (0,0)
-                           node[below left] {$C$};
-A number should have been here; I inserted `0'.
-(If you can't figure out why I needed to see a number,
-look up `weird error' in the index to The TeXbook.)
-
-./main.tex:444: Illegal unit of measure (pt inserted).
-<to be read again> 
-                   {
-l.444 		\draw circle (0,0)
-                           node[below left] {$C$};
-Dimensions can be in units of em, ex, in, pt, pc,
-cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
-I'll assume that you meant to say pt, for printer's points.
-To recover gracefully from this error, it's best to
-delete the erroneous units; e.g., type `2' to delete
-two letters. (See Chapter 27 of The TeXbook.)
-
-Missing character: There is no 0 in font nullfont!
-./main.tex:444: Missing number, treated as zero.
-<to be read again> 
-                   \global 
-l.444 		\draw circle (0,0)
-                           node[below left] {$C$};
-A number should have been here; I inserted `0'.
-(If you can't figure out why I needed to see a number,
-look up `weird error' in the index to The TeXbook.)
-
-./main.tex:444: Illegal unit of measure (pt inserted).
-<to be read again> 
-                   \global 
-l.444 		\draw circle (0,0)
-                           node[below left] {$C$};
-Dimensions can be in units of em, ex, in, pt, pc,
-cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
-I'll assume that you meant to say pt, for printer's points.
-To recover gracefully from this error, it's best to
-delete the erroneous units; e.g., type `2' to delete
-two letters. (See Chapter 27 of The TeXbook.)
-
-./main.tex:444: Missing number, treated as zero.
-<to be read again> 
-                   {
-l.444 		\draw circle (0,0)
-                           node[below left] {$C$};
-A number should have been here; I inserted `0'.
-(If you can't figure out why I needed to see a number,
-look up `weird error' in the index to The TeXbook.)
-
-./main.tex:444: Illegal unit of measure (pt inserted).
-<to be read again> 
-                   {
-l.444 		\draw circle (0,0)
-                           node[below left] {$C$};
-Dimensions can be in units of em, ex, in, pt, pc,
-cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
-I'll assume that you meant to say pt, for printer's points.
-To recover gracefully from this error, it's best to
-delete the erroneous units; e.g., type `2' to delete
-two letters. (See Chapter 27 of The TeXbook.)
-
-Missing character: There is no 0 in font nullfont!
-./main.tex:444: Missing number, treated as zero.
-<to be read again> 
-                   \global 
-l.444 		\draw circle (0,0)
-                           node[below left] {$C$};
-A number should have been here; I inserted `0'.
-(If you can't figure out why I needed to see a number,
-look up `weird error' in the index to The TeXbook.)
-
-./main.tex:444: Illegal unit of measure (pt inserted).
-<to be read again> 
-                   \global 
-l.444 		\draw circle (0,0)
-                           node[below left] {$C$};
-Dimensions can be in units of em, ex, in, pt, pc,
-cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
-I'll assume that you meant to say pt, for printer's points.
-To recover gracefully from this error, it's best to
-delete the erroneous units; e.g., type `2' to delete
-two letters. (See Chapter 27 of The TeXbook.)
-
-./main.tex:444: Missing number, treated as zero.
-<to be read again> 
-                   {
-l.444 		\draw circle (0,0)
-                           node[below left] {$C$};
-A number should have been here; I inserted `0'.
-(If you can't figure out why I needed to see a number,
-look up `weird error' in the index to The TeXbook.)
-
-./main.tex:444: Illegal unit of measure (pt inserted).
-<to be read again> 
-                   {
-l.444 		\draw circle (0,0)
-                           node[below left] {$C$};
-Dimensions can be in units of em, ex, in, pt, pc,
-cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
-I'll assume that you meant to say pt, for printer's points.
-To recover gracefully from this error, it's best to
-delete the erroneous units; e.g., type `2' to delete
-two letters. (See Chapter 27 of The TeXbook.)
-
-Missing character: There is no 0 in font nullfont!
-./main.tex:444: Missing number, treated as zero.
-<to be read again> 
-                   \global 
-l.444 		\draw circle (0,0)
-                           node[below left] {$C$};
-A number should have been here; I inserted `0'.
-(If you can't figure out why I needed to see a number,
-look up `weird error' in the index to The TeXbook.)
-
-./main.tex:444: Illegal unit of measure (pt inserted).
-<to be read again> 
-                   \global 
-l.444 		\draw circle (0,0)
-                           node[below left] {$C$};
-Dimensions can be in units of em, ex, in, pt, pc,
-cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
-I'll assume that you meant to say pt, for printer's points.
-To recover gracefully from this error, it's best to
-delete the erroneous units; e.g., type `2' to delete
-two letters. (See Chapter 27 of The TeXbook.)
-
-
-./main.tex:453: Package tikz Error: A node must have a (possibly empty) label t
-ext.
-
-See the tikz package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.453 		\fill (I) circle (1pt) node[above right];
-                                                 
-(That was another \errmessage.)
-
-
-./main.tex:454: Package tikz Error: A node must have a (possibly empty) label t
-ext.
-
-See the tikz package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.454 		\fill (IU) circle (1pt) node[below right];
-                                                  
-(That was another \errmessage.)
-
-<charmander_left_alpha.png, id=57, 120.45pt x 120.45pt>
-File: charmander_left_alpha.png Graphic file (type png)
-<use charmander_left_alpha.png>
-Package pdftex.def Info: charmander_left_alpha.png  used on input line 457.
-(pdftex.def)             Requested size: 34.14296pt x 34.14322pt.
-File: charmander_left_alpha.png Graphic file (type png)
-<use charmander_left_alpha.png>
-Package pdftex.def Info: charmander_left_alpha.png  used on input line 458.
-(pdftex.def)             Requested size: 34.14296pt x 34.14322pt.
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-
-./main.tex:537: Package tikz Error: A node must have a (possibly empty) label t
-ext.
-
-See the tikz package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.537 		\fill (I) circle (1pt) node[above right];
-                                                 
-(That was another \errmessage.)
-
-
-./main.tex:538: Package tikz Error: A node must have a (possibly empty) label t
-ext.
-
-See the tikz package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.538 		\fill (IU) circle (1pt) node[below right];
-                                                  
-(That was another \errmessage.)
-
-<charmander_top_alpha.png, id=58, 120.45pt x 120.45pt>
-File: charmander_top_alpha.png Graphic file (type png)
-<use charmander_top_alpha.png>
-Package pdftex.def Info: charmander_top_alpha.png  used on input line 541.
-(pdftex.def)             Requested size: 42.67825pt x 42.67912pt.
-File: charmander_top_alpha.png Graphic file (type png)
-<use charmander_top_alpha.png>
-Package pdftex.def Info: charmander_top_alpha.png  used on input line 542.
-(pdftex.def)             Requested size: 42.67825pt x 42.67912pt.
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-[11 <./charmander_front_alpha.png>]
-./main.tex:572: Missing $ inserted.
-<inserted text> 
-                $
-l.572 
-      
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-./main.tex:572: Display math should end with $$.
-<to be read again> 
-                   \tex_par:D 
-l.572 
-      
-The `$' that I just saw supposedly matches a previous `$$'.
-So I shall assume that you typed `$$' both times.
-
-[12 <./charmander_left_alpha.png> <./charmander_top_alpha.png>]
-
-./main.tex:573: LaTeX Error: Bad math environment delimiter.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.573 \]
-        
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
-./main.tex:573: Missing $ inserted.
-<inserted text> 
-                $
-l.573 \]
-        
-I've inserted something that you may have forgotten.
-(See the <inserted text> above.)
-With luck, this will get me unwedged. But if you
-really didn't forget anything, try typing `2' now; then
-my insertion and my current dilemma will both disappear.
-
-./main.tex:573: Display math should end with $$.
-<to be read again> 
-                   \endgroup 
-l.573 \]
-        
-The `$' that I just saw supposedly matches a previous `$$'.
-So I shall assume that you typed `$$' both times.
-
-[13] [14]
-Overfull \hbox (23.63342pt too wide) in paragraph at lines 637--638
+) [11 <./charmander_front_alpha.png>] [12] [13] [14]
+Overfull \hbox (23.63342pt too wide) in paragraph at lines 424--425
 []\OT1/cmr/m/n/10 The unit vec-tors $\OML/cmm/m/it/10 i; j; k$ \OT1/cmr/m/n/10 
 ad-here to the fol-low-ing mul-ti-pli-ca-tion rules. \OT1/cmr/bx/n/10 **TODO** 
 
  []
 
-[15] [16] [17] (./main.aux) ) 
+[15] [16] [17] (./main.aux)
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
 Here is how much of TeX's memory you used:
- 24003 strings out of 480247
- 623646 string characters out of 5896152
- 1033267 words of memory out of 5000000
- 41554 multiletter control sequences out of 15000+600000
+ 25368 strings out of 480247
+ 650430 string characters out of 5896152
+ 1053890 words of memory out of 5000000
+ 42897 multiletter control sequences out of 15000+600000
  483432 words of font info for 79 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 84i,10n,80p,725b,1134s stack positions out of 5000i,500n,10000p,200000b,80000s
- </home/dizontj/.texlive2021/texmf-var/fonts/pk/lj
-four/jknappen/ec/tcrm1000.600pk></usr/share/texlive/texmf-dist/fonts/type1/publ
-ic/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/ams
-fonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
-cm/cmbx7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx
-ti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.p
-fb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></u
-sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/shar
-e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texli
-ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texm
-f-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/
-fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/t
-ype1/public/amsfonts/cm/cmr5.pfb></usr/share/texlive/texmf-dist/fonts/type1/pub
-lic/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsf
-onts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/c
-m/cmsy7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti1
-0.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10
-.pfb>
-Output written on main.pdf (17 pages, 260200 bytes).
+ 84i,12n,80p,725b,1181s stack positions out of 5000i,500n,10000p,200000b,80000s
+ </home/dizontj/.texlive2021/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1000.6
+00pk></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><
+/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/s
+hare/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbxti10.pfb></usr/share
+/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texli
+ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/tex
+mf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/share/texlive/texmf-dist
+/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/
+type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/p
+ublic/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/a
+msfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts
+/cm/cmr5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7
+.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><
+/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/sh
+are/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/te
+xlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on main.pdf (17 pages, 251825 bytes).
 PDF statistics:
- 161 PDF objects out of 1000 (max. 8388607)
- 98 compressed objects within 1 object stream
+ 156 PDF objects out of 1000 (max. 8388607)
+ 95 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  33 words of extra memory for PDF output out of 10000 (max. 10000000)
 

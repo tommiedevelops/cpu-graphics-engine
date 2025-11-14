@@ -3,6 +3,7 @@
 % PREAMBLE %
 \usepackage{graphicx} % for importing images
 \usepackage{xcolor} %for coloring text
+\usepackage{subcaption} %for subfigures
 \usepackage{amsmath,amssymb,bm}
 \usepackage{tikz}
 \usepackage{pgfplots}
@@ -113,177 +114,89 @@
 \subsubsection{The Matrix Inverse}
 \subsubsection{Inverse of the Model Matrix}
 
-\subsection{Deriving the Projection Matrix}
-In a sentence, the goal of the Projection Matrix is to map the View Space 'View Frustum' to the Clip Space 'Canonical View Volume' which our rasterizer can understand.
+\subsection{The Vertex Shader}
+\subsection{Perspective Projection}
+\begin{itemize}
+\item In a sentence, the goal of the Perspective Projection is to map the View Space 'View Frustum' to 'Canonical View Volume' in such a way that perspective is simulated.
 
-The goal of this section is to come up with some matrix $\textbf{P}$ that transforms vertices from View Space into Clip Space. We wish to do it in such a way that Perspective is captured, and that vertices inside the View Frustum are mapped to Normalized Device Coordinates.
+\item The Canonical View Volume is all points (x,y,z) such that $x \in [-1,1]$, $y \in [-1,1]$ and $z \in [0,1]$ which matches the \textit{Vulkan} convention and a format understood by our rasterizer.
 
-Normalized Device Coordinates (NDC) is given by all points (x,y,z) such that $x \in [-1,1]$, $y \in [-1,1]$ and $z \in [0,1]$ which matches the \textit{Vulkan} convention.
+\item Perspective Projection is broken up into two steps:
+\begin{enumerate}
+\item Projection Matrix
+\item Perspective Divide
+\end{enumerate}
 
-Mathematically, we want to find $P$ such that
-
+\item The \textit{Projection Matrix} transforms a vertex from View Space into Clip Space and the \textit{Perspective Divide}, which is ultimately responsible for simulating perspective, is given by the following operation: 
 \[
-\mathbf{Pv_{view}} =
-\begin{pmatrix}
-m_{11} & m_{12} & m_{13} & m_{14} \\
-m_{21} & m_{22} & m_{23} & m_{24} \\
-m_{31} & m_{32} & m_{33} & m_{34} \\
-m_{41} & m_{42} & m_{43} & m_{44}
-\end{pmatrix}%
-\begin{pmatrix}
-x \\ y \\ z \\ 1
-\end{pmatrix}
-=
-\begin{pmatrix}
-	x_{ndc} \\ y_{ndc} \\ z_{ndc} \\ z_{view}
-\end{pmatrix}
-
+	\begin{pmatrix}
+		x\\
+		y\\
+		z\\
+		w
+	\end{pmatrix}
+	\rightarrow
+	\begin{pmatrix}
+		x/w\\
+		y/w\\
+		z/w\\
+		1
+	\end{pmatrix}
 \]
 
+\item If you are confused, please keep reading! I go into more detail here.
+\end{itemize}
 \subsubsection{What is \textit{Perspective}?}
 \begin{itemize}
 	\item In this project, my goal is to create graphics that are visually realistic or at least somewhat consistent with our experiences in the real world. Thus, my definition of Perspective will be made with that in mind.
-	\item Put simply, Perspective is the phenomenon of objects appearing smaller to a viewer as it moves further away from the viewer.
-	\item The viewer perceives the world through projecting a 3D world onto a 2D 'viewing plane'
-	\item It comes from that fact that we, as humans, perceive a 3D world through light striking a 2D surface, our retina after passing through a 'pinhole' which is our iris.
-	\item Our eye accepts light from all objects in the surrounding area in a 'radial' fashion. As a result, distant objects appear smaller, while nearby objects appear larger.
-	\item Mathematically, the apparent size of an object is inversely proportional to its distance from the observer.
+	\item We start by assuming the viewer is 'point like'. We, as humans, perceive the world through our eyes which are 'point-like', in contrast to something like a Photosensor which perceives the world through a rectangular array of sensors.
+	\item Put simply, Perspective is the phenomenon of objects appearing smaller to a point-like viewer as it moves further away from the viewer.
+	\item In other words, the apparent size of an object to a viewer is inversely proportional from the object's distance to the viewer. This is a direct consequence of basic trigonometry.
 \end{itemize}
 
 \subsubsection{The View Frustum}
-In this section, we motivate the definition of a \textit{View Frustum} and define what it is.
-
-Once we have created a virtual world described in World Space, we want to imagine what a Viewer would see if they were placed in this world. 
-
-Pause for a moment. Take your right hand and point straight ahead with your index finger. Slowly move your arm as high as you can until the tip of your index finger is just invisible. Now do the same with your left arm. The angle between your arms is your Vertical Field of View (FOV) or $\theta_y$. You can easily repeat the exercise going left and right.
-
-This angle essential defines the edges of your vision. So it will be an important quantity for us in trying to recreate a realistic viewer.
-
-What's more, trying to reproduce a viewer exploring a virtual world is akin to
-
 \begin{itemize}
-	\item Since we are trying to create realistic graphics on a computer screen, we need to take that screen into account.
-	\item We imagine that the computer screen is not a screen but instead a 'Window' into the virtual world we are creating. We can now place this Window into the Scene, in world space. The Width and Height of the window is proportional to the actual width and height of the Window running the program (Viewport)
-	\item The distance between the viewer and the screen in World Space is given by the Field Of View paremeter which is an angular measurement.  
-	\item So now the image is: We, the viewer, are the Camera in the Scene and the Computer Screen is some distance directly in front of us, almost as we are in real life.
-	\item Now, in world space, we can extend the Computer Screen out into infinite and call it the 'near plane'	
-	\item So that we don't blow up our computers by trying to render infinitely into the distance, we also define a 'Far Plane' based on the maximum distance from the Viewer we wish to see.
-	\item Now, we can't see above, below, right or left of the window so we can trace a line from the Camera to each edge of the viewport and create The Top, Left, Right and Bottom planes from that.
-	\item The objects inside of this volume are the objects visible to our Viewer.
-	\item All vertices inside the view frustum will be mapped to points inside our Canonical View Volume
+	\item In this section, we motivate the definition of a \textit{View Frustum} and define what it is.
+
+	\item To begin, I want you to close one eye and hold your index finger in front of it, close enough for it to appear blurry. Then, gradually move your index finger further away until it comes into focus. We define the distance between your eyeball and finger to be $n$, the \textit{near plane} distance.
+	
+	\item In our renderer, we choose not to render objects between the viewer and the near plane. 
+
+	\item Pause for a moment. Take your right hand and point straight ahead with your index finger. Slowly move your arm as high as you can until the tip of your index finger is just invisible. Now do the same with your left arm. The angle between your arms is your Vertical Field of View (FOV) or $\theta_y$. You can easily repeat the exercise going left and right.
+
+	\item This angle essential defines the edges of your vision. So it will be an important quantity for us in trying to recreate a realistic viewer.
+	\item Since we are trying to create realistic graphics on a computer screen, we need to take that screen into account. So the last quantity that will be important to us is the \textit{aspect ratio} which is the ratio between the width and height of the widow you're using to render this world.
+
+	\item We also don't want to render infinitely into the distance because of the limited memory on our computers, so we also define $f$ the distance of the \textit{far plane} from the Camera along the z axis.
+
+	\item So what objects are we going to render?
+	\item We start with the near plane. We use the FOV $\theta_y$ to carve out a rectangular area that extends infintiely in the x direction. Then we use $a$ to figure out the distance in the x dimension the near plane should be limtied to.
+	\item Then, we follow the line until we reach $z = f$ and connect all the points to construc the view frustum.
 \end{itemize}
 
 \begin{figure}[h!]
 \centering
 	\textbf{View Space}\\[0.5em]%
-\begin{tikzpicture}[tdplot_main_coords]
-	
-	%axes
-	\def\Zmax{8};
-	\def\Zmin{-1};
-	\def\Ymax{3};
-	\def\Ymin{-1};
-	\def\Xmax{3};
-	\def\Xmin{-3};
-
-	%(Z,Y,X)
-	\def\nearZ{1.6};
-	\def\nearXmax{1.1};
-	\def\nearYmax{0.5};
-
-	\def\farZ{5}
-	\def\farXmax{\nearXmax*3};
-	\def\farYmax{\nearYmax*3}
-
-	\coordinate (nearBotLeft)  at (\nearZ, -\nearYmax, -\nearXmax);
-	\coordinate (nearTopLeft)  at (\nearZ,  \nearYmax, -\nearXmax);
-	\coordinate (nearTopMid)  at (\nearZ, \nearYmax,  0);
-	\coordinate (nearBotMid)  at (\nearZ, -\nearYmax, 0);
-	\coordinate (nearTopRight) at (\nearZ,  \nearYmax,  \nearXmax);
-	\coordinate (nearBotRight) at (\nearZ, -\nearYmax,  \nearXmax);
-	\coordinate (farBotLeft)   at (\farZ, -\farYmax, -\farXmax);
-	\coordinate (farTopLeft)   at (\farZ,  \farYmax, -\farXmax);
-	\coordinate (farTopMid)  at (\farZ, \farYmax,  0);
-	\coordinate (farBotMid)  at (\farZ, -\farYmax, 0);
-	\coordinate (farTopRight)  at (\farZ,  \farYmax,  \farXmax);
-	
-	\coordinate (farBotRight)  at (\farZ, -\farYmax,  \farXmax);
-
-	\definecolor{farplane}{HTML}{1E90FF}   % Dodger Blue (bright but not neon)
-	\definecolor{nearplane}{HTML}{DC143C}    % Crimson Red (vivid but deep)
-
-	%view frustum
-
-	% fovy bottom line
-	\draw[dashed] (0,0,0) -- (farBotMid);
-
-	% near plane border
-	\draw[black]
-		(nearBotLeft) -- (nearTopLeft) -- (nearTopRight) -- (nearBotRight) -- cycle;
-
-	% near plane (left side)
-	\fill[fill=nearplane,opacity=0.7]
-		(nearBotLeft) -- (nearTopLeft) -- (nearTopMid) -- (nearBotMid) -- cycle;
-		
-	% left plane
-	\filldraw[fill=gray!30, draw=black, opacity=0.7]
-		(nearBotLeft) -- (nearTopLeft) -- (farTopLeft) -- (farBotLeft) -- cycle;
-	
-	% bottom plane
-	\filldraw[fill=gray!30, draw=black, opacity=0.7]
-		(nearBotLeft) -- (nearBotRight) -- (farBotRight) -- (farBotLeft) -- cycle;
-
-	% bottom plane
-	\filldraw[fill=gray!30, draw=black, opacity=0.7]
-		(nearBotLeft) -- (nearBotRight) -- (farBotRight) -- (farBotLeft) -- cycle;
-	
-	% far plane border
-	\draw[black]
-		(farBotLeft) -- (farTopLeft) -- (farTopRight) -- (farBotRight) -- cycle;
-
-	% far plane (%left half)
-	\fill[fill=farplane, opacity=0.7]
-		(farBotLeft) -- (farTopLeft) -- (farTopMid) -- (farBotMid) -- cycle;
-	%z axis
-	\draw[->, thick] (\Zmin,0,0) -- (\Zmax,0,0) node[right] {$z$};
-
-	% near plane (right side)
-	\fill[fill=nearplane,opacity=0.7]
-		(nearBotMid) -- (nearTopMid) -- (nearTopRight) -- (nearBotRight) -- cycle;
-
-	% far plane (right half)
-	\fill[fill=farplane, opacity=0.7]
-		(farTopMid) -- (farTopRight) -- (farBotRight) -- (farBotMid) -- cycle;
-
-	% right plane
-	\filldraw[fill=gray!30, draw=black, opacity=0.7]
-		(nearBotRight) -- (nearTopRight) -- (farTopRight) -- (farBotRight) -- cycle;
-	
-	% top plane
-	\filldraw[fill=gray!30, draw=black, opacity=0.7]
-		(nearTopLeft) -- (nearTopRight) -- (farTopRight) -- (farTopLeft) -- cycle;
-
-	%fovy top line
-	\draw[dashed] (0,0,0) -- (\farZ, \farYmax, 0);
-
-	\draw[->, thick] (0,\Ymin,0) -- (0,\Ymax,0) node[above right] {$y$};
-	\draw[->, thick] (0,0,-\Xmin) -- (0,0,-\Xmax) node[above] {$x$};
-
-	% camera label
-	\filldraw (0,0,0) circle[radius=1.5pt] node[above left] {$C$};
-
-	\coordinate (origin) at (0,0,0);
-
-	%fovy label
-	\pic["\textcolor{red}{$\theta_y$}", draw=red, <->, angle eccentricity=1.3, angle radius=0.7cm]
-		{angle=nearBotMid--origin--nearTopMid};
-
-\end{tikzpicture}
+	\resizebox{0.6\textwidth}{!}{%
+		\input{viewfrustum.tikz}
+	}
 \end{figure}
 
-\subsubsection{Perspective Projection}
+\subsubsection{Deriving the Projection Matrix}
 \begin{itemize}
-	\item After applying the Model and View Matrix to each Vertex in the Scene, each vertex is now in View Space coordinates (a.k.a the Camera is at the origin).
+	\item In this section we derive the Projection Matrix which maps the View Frustum to homogeneous Clip Space.
+	\item We break it up into four steps
+	\begin{enumerate}
+		\item Scale $x$ and $y$ components such that perspective is captured.
+		\item Scale $x$ and $y$ components again to $[-1,1]$ range
+		\item Map $z$ to $[0,1]$ range such that relative depth is preserved
+		\item Store original view space depth in $w$ variable
+	\end{enumerate}
+
+\end{itemize}
+\textbf{1. Scale $x$ and $y$ such that perspective is captured}
+\begin{itemize}
+	\item To capture perspective, we project each vertex $v$ on the near plane via a line that passes through the origin and $v$.
 	\item To project a vertex $\textbf{v}$ onto the near plane, we draw a line from the origin to that point and mark where it intersects the near plane.
 	\item The parametric vector representing a line passing through points $A$ and $B$ is given by 
 \[
@@ -313,251 +226,52 @@ Thus,
 
 \item In other words, the projected $x$ and $y$ values of the vertex $\textbf{v}$ on the near plane will be ${nv_x}/{v_z}$ and ${nv_y}/{v_z}$ respectively. 
 
-\item Now, all we need to do is to make sure that points that coincide with the left and right boundaries of the view frustum are mapped to $x=-1$ and $x=1$ respectively, and similar that the top and bottom planes map to $y = 1$ and $y=1$.
-
-Now, we just need to make sure that points inside the view frustum are mapped to normalized device coordinates. That is, points that intersect the top plane are mapped to y = 1, bottom y = -1, left x = -1, right x = 1.
-
-To do this, let the distance from the z axis to the top of the viewport be r and the distance from the z axis to right side of the viewport be r.
-
-To match the dimensions of our window, we define the aspect ratioo $a$ to be $a = r/t$
-
-We can calculate r by considering FIGURE X. $tan(\frac{\theta_u}{2}) = \frac{r}{n}$ so then $r = ntan(\frac{\theta_y}{2})$. 
-
-Then since $a = r/t$, $t = r/a$ which means $t = \frac{ntan(\frac{\theta_y}{2}}{a}$
-
-Now, if we scale the y component of all vertices on the near plane by $1/t$, this means that vertices in the range $[-r,r]$ will map to $[-1,1]$ and if we scale all the x components by $1/r$ all of the Vertices' x components will be in the range $[-1,1]$ which is exa tly what we need.
-\end{itemize}
-
 \begin{figure}[h!]
-\centering
-\begin{tikzpicture}
-	\def\Xmax{3};
-	\def\Ymax{3};
-
-	% Viewport Box
-	\def\botLeftX{-2.5}
-	\def\botLeftY{-1.5}
-	\def\topRightX{2.5}
-	\def\topRightY{1.5}
-
-	\filldraw[fill=red!20, draw=black]
-    		(\botLeftX,\botLeftY) rectangle (\topRightX,\topRightY);
-
-	% axes
-	\draw[->] (-\Xmax,0) -- (\Xmax,0) node[right] {$x$};
-	\draw[->] (0,-\Ymax) -- (0,\Ymax) node[above] {$y$};
-
-	\def\smallGap{0.05}
-
-	% r label
-	\draw[decorate, decoration={brace, amplitude=6pt}, blue]
-        	(\smallGap,\topRightY + \smallGap) -- (\topRightX - \smallGap,\topRightY + \smallGap)
-        	node[midway, above=7pt, blue] {$r$};
-
-	% t label
-	\draw[decorate, decoration={brace, amplitude=6pt, raise=2pt}, red]
-        	(\topRightX, \topRightY - \smallGap) -- (\topRightX,0+\smallGap)
-        	node[midway, right=7pt, red] {$t$};
-
-	%charmander graphic
-	\node at (-0.6,0.35) {\includegraphics[height=1.8cm]{charmander_front_alpha.png}};
-	\node at (0.4,0.36) {\includegraphics[height=1cm]{charmander_front_alpha.png}};
-
-	\end{tikzpicture}
-\end{figure}
-
-So we can now determine the first 2 rows of the matrix. To scale the $x$ and $y$ components by $n/v_z$, we need to set $m11$ and $m22$ to be $n$ and everythign else in rows 1 and 2 to be 0.
-
-\[
-\mathbf{Pv_{view}} =
-\begin{pmatrix}
-$n/z$ & 0 & 0 & 0 \\
-0 & $n/z$ & 0 & 0 \\
-m_{31} & m_{32} & m_{33} & m_{34} \\
-m_{41} & m_{42} & m_{43} & m_{44}
-\end{pmatrix}%
-\begin{pmatrix}
-x \\ y \\ z \\ 1
-\end{pmatrix}
-=
-\begin{pmatrix}
-	x_{ndc} \\ y_{ndc} \\ z_{ndc} \\ z_{view}
-\end{pmatrix}
-
-\]
-
-From the maths, we can immediately see that the apprent size of the image on the near / viewing plane is inversely proportional to its distance from the viewer, and directly proportional to the distance from the plane to the viewer.
-\begin{figure}[h!]
-
-	\definecolor{topplane}{HTML}{2E8B57}   % Sea Green (clear, calm)
-	\definecolor{bottomplane}{HTML}{A0522D} % Sienna (warm earthy brown)
-	\definecolor{nearplane}{HTML}{1E90FF}   % Dodger Blue (bright but not neon)
-	\definecolor{farplane}{HTML}{DC143C}    % Crimson Red (vivid but deep)
-
-	\centering
+	\centering%
 	\textbf{View Space}\\[0.5em]%
-	\begin{tikzpicture}
-		% parameters
-		\def\t{0.4} % tan(fov/2)
-		\def\n{2.0}       % near
-		\def\f{6.5}       % far
-		\def\Zmax{7}      % drawing extent
-		\def\Ymax{3}
-
-		% axes
-		\draw[->] (-0.5,0) -- (\Zmax+0.5,0) node[right] {$z$};
-		\draw[->] (0,-\Ymax) -- (0,\Ymax)       node[above] {$y$};
-
-		% top/bottom (black)
-		\draw[] plot[domain=0:\Zmax] (\x,  { \t*\x});
-		\draw[] plot[domain=0:\Zmax] (\x, {- \t*\x});
-
-		%top (colored)
-		\draw[topplane] plot[domain=\n:\f] (\x,  { \t*\x});
-
-		%bottom (colored)
-		\draw[bottomplane] plot[domain=\n:\f] (\x,  { -\t*\x});
-
-		% near/far from z = n, z = f  (verticals)
-		% use the y-extent implied by the frustum at those z
-		\draw[thick,nearplane, name path=near] plot[domain={- \t*\n}:{ \t*\n}] ({\n}, \x);
-		\draw[thick,farplane, name path=far ] plot[domain={- \t*\f}:{ \t*\f}] ({\f}, \x);
-		
-		%extend near and far planes to inifinite with colored dotted lines
-		\draw[dashed,nearplane, name path=near] plot[domain={-\Ymax}:{ \Ymax}] ({\n}, \x);
-		\draw[dashed, farplane, name path=far ] plot[domain={- \Ymax}:{ \Ymax}] ({\f}, \x);
-
-		% near / far labels
-		\draw (\n, 0) node[below right] {$n$};
-		\draw (\f, 0) node[below right] {$f$};
-
-		% sample vertex
-		\def\vx{3.1}
-		\def\vy{0.9}
-		\draw[fill=black] (\vx,\vy) circle (1pt) node[above right] {$v_1$};
-
-		\def\ux{5.6}
-		\def\uy{0.9}
-		\draw[fill=black] (\ux,\uy) circle (1pt) node[above right] {$v_2$};
-
-		%label the origin as C, the Camera
-		\draw circle (0,0) node[below left] {$C$};
-		
-		% line from origin to vertex
-		\draw[dashed, name path=vline] (0,0) -- (\vx,\vy);
-		\draw[dashed, name path=uline] (0,0) -- (\ux,\uy);
-
-		%label intersection between near plane and vline
-		\path[name intersections={of=vline and near, by=I}];
-		\path[name intersections={of=uline and near, by=IU}];
-		\fill (I) circle (1pt) node[above right];
-		\fill (IU) circle (1pt) node[below right];
-		
-		%charmander graphic
-		\node at (3.3,0.45) {\includegraphics[height=1.2cm]{charmander_left_alpha.png}};
-		\node at (5.8,0.45) {\includegraphics[height=1.2cm]{charmander_left_alpha.png}};
-		
-		%projection labels
-		\node (A) at (1,1) {$v_2'$};
-		\node (B) at (1,2) {$v_1'$};
-
-		% arrows from labels to points
-		\draw[->, bend right] (A) to (IU);
-		\draw[->, bend right] (B) to (I);
-	\end{tikzpicture}
-
-	\caption{2D slice of the view frustum along the $yz$ plane depicting the \textcolor{topplane}{top}, \textcolor{bottomplane}{bottom}, \textcolor{nearplane}{near} and \textcolor{farplane}{far planes}. The vertex $v$ is projected to the point $v'$ on the near plane by calculating the intersection between a line drawn from the origin to $v$ and the near plane. The Camera / Viewer, labelled {$C$} is at the origin, thus this Coordinate Space is View Space.}
-	\label{fig:2d-frustum}
-
-\end{figure}
-
-\begin{figure}[h!]
-
-	\definecolor{topplane}{HTML}{2E8B57}   % Sea Green (clear, calm)
-	\definecolor{bottomplane}{HTML}{A0522D} % Sienna (warm earthy brown)
-	\definecolor{nearplane}{HTML}{1E90FF}   % Dodger Blue (bright but not neon)
-	\definecolor{farplane}{HTML}{DC143C}    % Crimson Red (vivid but deep)
-
-	\centering
-	\textbf{View Space}\\[0.5em]%
-	\begin{tikzpicture}
-		% parameters
-		\def\t{0.4} % tan(fov/2)
-		\def\n{2.0}       % near
-		\def\f{5.5}       % far
-		\def\Zmax{7}      % drawing extent
-		\def\Ymax{3}
-
-		% axes
-		\draw[->] (-0.5,0) -- (\Zmax+0.5,0) node[right] {$z$};
-		\draw[->] (0,-\Ymax) -- (0,\Ymax)       node[above] {$x$};
-
-		% top/bottom (black)
-		\draw[] plot[domain=0:\Zmax] (\x,  { \t*\x});
-		\draw[] plot[domain=0:\Zmax] (\x, {- \t*\x});
-
-		%top (colored)
-		\draw[topplane] plot[domain=\n:\f] (\x,  { \t*\x});
-
-		%bottom (colored)
-		\draw[bottomplane] plot[domain=\n:\f] (\x,  { -\t*\x});
-
-		% near/far from z = n, z = f  (verticals)
-		% use the y-extent implied by the frustum at those z
-		\draw[thick,nearplane, name path=near] plot[domain={- \t*\n}:{ \t*\n}] ({\n}, \x);
-		\draw[thick,farplane, name path=far ] plot[domain={- \t*\f}:{ \t*\f}] ({\f}, \x);
-		
-		%extend near and far planes to inifinite with colored dotted lines
-		\draw[dashed,nearplane, name path=near] plot[domain={-\Ymax}:{ \Ymax}] ({\n}, \x);
-		\draw[dashed, farplane, name path=far ] plot[domain={- \Ymax}:{ \Ymax}] ({\f}, \x);
-
-		% near / far labels
-		\draw (\n, 0) node[below right] {$n$};
-		\draw (\f, 0) node[below right] {$f$};
-
-		% sample vertex
-		\def\vx{3}
-		\def\vy{0.9}
-		\draw[fill=black] (\vx,\vy) circle (1pt) node[above right] {$v_1$};
-
-		\def\ux{4.3}
-		\def\uy{-0.9}
-		\draw[fill=black] (\ux,\uy) circle (1pt) node[below right] {$v_2$};
-
-		%label the origin as C, the Camera
-		%\draw circle (0,0) node[below left] {$C$};
-		
-		% line from origin to vertex
-		\draw[dashed, name path=vline] (0,0) -- (\vx,\vy);
-		\draw[dashed, name path=uline] (0,0) -- (\ux,\uy);
-
-		%label intersection between near plane and vline
-		\path[name intersections={of=vline and near, by=I}];
-		\path[name intersections={of=uline and near, by=IU}];
-		\fill (I) circle (1pt) node[above right];
-		\fill (IU) circle (1pt) node[below right];
-		
-		%charmander graphic
-		\node at (3.2,0.4) {\includegraphics[height=1.5cm]{charmander_top_alpha.png}};
-		\node at (4.5,-0.4) {\includegraphics[height=1.5cm]{charmander_top_alpha.png}};
-
-	\end{tikzpicture}
-
+	\begin{subfigure}{0.45\textwidth}
+	\resizebox{\textwidth}{!}{%
+		\input{frustum-side.tikz}
+	}
+	\label{fig:2d-frustum-yz}
+	\end{subfigure}%
+\hfill
+	\begin{subfigure}{0.45\textwidth}
+	\resizebox{\textwidth}{!}{%
+		\input{frustum-top.tikz}
+	}
 	\label{fig:2d-frustum-xz}
+	\end{subfigure}
 
+\caption{Side by side graps of the x-z slice and y-z slice of the view frustum showing the how the projected image is calculated on the near plane}
 \end{figure}
 
+\end{itemize}
+\textbf{2. Scale $x$ and $y$ to $[-1,1]$ range}
+\begin{itemize}
+	\item Now, we just need to make sure that points inside the view frustum are mapped to normalized device coordinates. That is, points that intersect the top plane are mapped to y = 1, bottom y = -1, left x = -1, right x = 1.
 
-This transformation on the $x$ and $y$ coordinates is actually enough to capture the effect of perspective. However, since we essential squish everything in the View Volume onto a 2D plane, unless we do something about it, we lose out on Depth information.
+	\item To do this, let the distance from the z axis to the top of the viewport be r and the distance from the z axis to right side of the viewport be r.
 
-Depth is important to us for two reasons:
-\begin{enumerate}
-	\item Relative ordering of objects in the Scene for depth test
-	\item View Space depth for Shader calculations / Alpha blending
-\end{enumerate}
+	\item To match the dimensions of our window, we define the aspect ratioo $a$ to be $a = r/t$
 
-To solve 1, we come up with some transformation of the z value to map it to our Canonical View Volume which, in my case, is 0 - 1. We require that vertices on the near plane are mapped to 0 and vertices on the far plane are mapped to 1.
+	\item We can calculate r by considering FIGURE X. $tan(\frac{\theta_u}{2}) = \frac{r}{n}$ so then $r = ntan(\frac{\theta_y}{2})$. 
 
+	\item Then since $a = r/t$, $t = r/a$ which means $t = \frac{ntan(\frac{\theta_y}{2}}{a}$
+
+	\item Now, if we scale the y component of all vertices on the near plane by $1/t$, this means that vertices in the range $[-r,r]$ will map to $[-1,1]$ and if we scale all the x components by $1/r$ all of the Vertices' x components will be in the range $[-1,1]$ which is exa tly what we need.
+\begin{figure}[h!]
+	\centering
+	\textbf{View Space}\\[0.5em]%
+	\resizebox{0.5\textwidth}{!}{%
+		\input{frustum-front.tikz}
+	}
+	\caption{The view frustum from the perspective of the Camera}
+	\label{fig:frustum-front}
+\end{figure}
+
+	
+\item We now have what we need to figure out the firs two rows of the projection matrix. We need to scale the $x$ component by \textbf{TODO} and the $y$ component by \textbf{TODO} which can be done with the following matrix:
 \[
 \mathbf{Pv} =
 \begin{pmatrix}
@@ -567,14 +281,87 @@ m_{31} & m_{32} & m_{33} & m_{34} \\
 m_{41} & m_{42} & m_{43} & m_{44}
 \end{pmatrix}%
 \begin{pmatrix}
-x \\ y \\ z \\ w
+x \\ y \\ z \\ 1
 \end{pmatrix}
-
+=
+\begin{pmatrix}
+x\\y\\z\\1
+\end{pmatrix}
 \]
 
+\end{itemize}
+\textbf{3. Scale $z$ to $[0,1]$ range}
+\begin{itemize}
+	\item In order to determine the matrix elements that will transform the input $v_z$ into the desired $[0,1]$ range, we work backwards by considering what elements would be needed to map a point on the near plane to $z = 0$ and a point on the far plane to $z = 1$
+	\item  We would need
+\[
+\begin{pmatrix}
+m_{11} & m_{12} & m_{13} & m_{14} \\
+m_{21} & m_{22} & m_{23} & m_{24} \\
+m_{31} & m_{32} & m_{33} & m_{34} \\
+m_{41} & m_{42} & m_{43} & m_{44}
+\end{pmatrix}%
+\begin{pmatrix}
+x \\ y \\ n \\ 1
+\end{pmatrix}
+=
+\begin{pmatrix}
+x\\y\\0\\1
+\end{pmatrix}
+\]
 
+\[
+\begin{pmatrix}
+m_{11} & m_{12} & m_{13} & m_{14} \\
+m_{21} & m_{22} & m_{23} & m_{24} \\
+m_{31} & m_{32} & m_{33} & m_{34} \\
+m_{41} & m_{42} & m_{43} & m_{44}
+\end{pmatrix}%
+\begin{pmatrix}
+x \\ y \\ f \\ 1
+\end{pmatrix}
+=
+\begin{pmatrix}
+x\\y\\1\\1
+\end{pmatrix}
+\]
+
+\item We would need $m_{33}$ and $m_{34}$ to be \textbf{TODO} and \textbf{TODO} respectively
+
+\item How we do this mapping doesn't actually matter that much, as long as relative ordering is preserved. 
+\end{itemize}
+\textbf{4. Store $w$ value}
+\begin{itemize}
+	\item Simply set $m_{43}$ to be 1
+	\item Talk about homogeneous coordinates
+\end{itemize}
+\textbf{The Final Matrix}
+\begin{itemize}
+	\item Combining all the steps together, the final matrix is given by:
+
+\[
+	\textbf{P} = 	
+\begin{pmatrix}
+m_{11} & m_{12} & m_{13} & m_{14} \\
+m_{21} & m_{22} & m_{23} & m_{24} \\
+m_{31} & m_{32} & m_{33} & m_{34} \\
+m_{41} & m_{42} & m_{43} & m_{44}
+\end{pmatrix}%
+\begin{pmatrix}
+x \\ y \\ z \\ 1
+\end{pmatrix}
+=
+\begin{pmatrix}
+x\\y\\z\\w
+\end{pmatrix}
+\]
+\end{itemize}
+
+\subsubsection{Perspective Divide}
+\begin{itemize}
+	\item Once we have applied the perspective 
+\end{itemize}
 \subsection{Deriving The Viewport Matrix}
-\subsection{The Vertex Shader}
 \subsection{Clipping \& The Sutherland Hodgman Algorithm}
 
 \section{Drawing to the screen}
