@@ -14,5 +14,6 @@ FrameBuffer* frame_buffer_create(int width, int height, uint32_t clear_color);
 void frame_buffer_destroy(FrameBuffer* fb);
 void frame_buffer_clear(FrameBuffer* fb);
 void frame_buffer_draw_pixel(FrameBuffer* fb, int x, int y, uint32_t color, float depth);
+float frame_buffer_get_depth(FrameBuffer* Fb, int x, int y);
 
 #endif

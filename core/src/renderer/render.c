@@ -163,7 +163,7 @@ void renderer_draw_scene(Renderer* r, FrameBuffer* fb, Scene* scene) {
 	for(size_t i = 0; i < count; i++) {
 		GameObj* go = gos[i];
 		if(!go || !go->mesh || !go->mat) continue;
-		prepare_per_game_object_uniforms(r,go);
+		prepare_per_game_object_uniforms(r, go);
 		renderer_draw_game_object(r, fb, go);
 	}
 

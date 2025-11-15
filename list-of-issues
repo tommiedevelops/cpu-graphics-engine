@@ -15,3 +15,5 @@ document API clearly + example usage
 ability to save scene
 
 if texture is null, print something to the console
+
+implement a depth pre-pass so the frag shader isnt run on frags that arent gonna be visible

@@ -43,4 +43,6 @@ void frame_buffer_draw_pixel(FrameBuffer* fb, int x, int y, uint32_t color, floa
 
 }
 
-
+float frame_buffer_get_depth(FrameBuffer* fb, int x, int y) {
+	return fb->zbuffer[x + y*fb->width];
+}

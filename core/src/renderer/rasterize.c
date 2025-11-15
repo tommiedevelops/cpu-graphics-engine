@@ -63,7 +63,6 @@ void rasterize_triangle(Renderer* r, FrameBuffer* fb, Triangle* tri, FragShaderF
 	if(xmin > xmax || ymin > ymax) return;
 
 	// Assuming CCW winding from 0 to 2
-	
 	VSout** v = tri->v;
 	Vec2i V0 = (Vec2i){(int)floorf(v[0]->pos.x), (int)floorf(v[0]->pos.y)};
 	Vec2i V1 = (Vec2i){(int)floorf(v[1]->pos.x), (int)floorf(v[1]->pos.y)};
@@ -94,7 +93,6 @@ void rasterize_triangle(Renderer* r, FrameBuffer* fb, Triangle* tri, FragShaderF
 			
 			if(inside_triangle(e01,e12,e20)) {
 				rasterize_pixel(P,e01,e12,e20,area,&fs_in,tri->v);
-
 				frag_shader(&fs_in, &fs_out, r->fs_u);
 				frame_buffer_draw_pixel(fb,P.x,P.y,vec4f_to_rgba32(fs_out.color),fs_out.depth);
 			}

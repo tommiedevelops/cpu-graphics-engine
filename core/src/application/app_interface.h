@@ -21,6 +21,7 @@ typedef struct App {
 	Assets*      assets;
 	Scene*       scene;
 	bool is_running;
+	bool print_fps;
 } App;
 
 typedef struct AppVTable {

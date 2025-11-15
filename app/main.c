@@ -42,6 +42,7 @@ void on_start(App* app, void* game_data) {
 	/* for preparing Scene */
 	GameData* gd = (GameData*)game_data;
 	
+	app->print_fps = true;
 	gd->time = 0.0f;
 	gd->move_input = VEC2F_0;
 	gd->mouse_input = VEC2F_0;

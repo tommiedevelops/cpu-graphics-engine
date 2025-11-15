@@ -45,6 +45,8 @@ void app_init(App* app, AppVTable* v_table, AppCfg* cfg) {
 
 	app->scene  = NULL;
 	app->assets = NULL;
+	app->print_fps = false;
+	app->is_running = false;
 }
 
 void app_uninit(App* app) {
@@ -69,6 +71,7 @@ void app_run(App* app) {
 	while(app->is_running) {
 		frame_buffer_clear(app->fb);
 
+		if(app->print_fps) print_fps(&time);
 		update_time(&time);
 		float dt = time.delta_time;
 		
