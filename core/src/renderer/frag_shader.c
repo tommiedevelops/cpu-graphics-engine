@@ -68,3 +68,29 @@ void fs_phong(const FSin* in, FSout* out, const FSUniforms* u) {
 	out->color = vec4f_add(ambient, vec4f_add(specular, diffuse));
 	out->depth = in->depth;
 }
+
+void fs_toon(const FSin* in, FSout* out, const FSUniforms* u) {
+
+	Vec4f albedo = u->tex ? texture_sample(u->tex, in->uv.x, in->uv.y) : u->base_color;
+	Light* l = u->light;
+	Vec3f light_dir = vec3f_normalize(l->direction);
+	Vec4f light_col = l->color;
+	Vec3f norm = in->normal;
+
+	float n_dot_l = fmaxf(vec3f_dot(norm, light_dir), 0.0f);
+
+	// quantize light into distinct bins
+	if (n_dot_l>.66) n_dot_l = 1;
+    	else if (n_dot_l>.33) n_dot_l = .66;
+    	else n_dot_l = .33;
+
+	Vec4f diffuse = vec4f_scale(light_col, n_dot_l);
+	diffuse.x = diffuse.x * albedo.x;
+	diffuse.y = diffuse.y * albedo.y;
+	diffuse.z = diffuse.z * albedo.z;
+	diffuse.w = diffuse.w * albedo.w;
+
+	out->color = diffuse;
+	out->depth = in->depth;
+	
+}

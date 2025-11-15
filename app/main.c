@@ -28,7 +28,7 @@ void on_init(App* app, void* game_data) {
 	mesh_recalculate_normals(mesh);
 	
 	Vec4f col = (Vec4f){26.0f/255, 208.0f/255.0f, 200.0f/255.0f, 1.0};
-	Pipeline* p = pipeline_create(vs_default, fs_phong);
+	Pipeline* p = pipeline_create(vs_default, fs_toon);
 	Material*  mat = material_create(col, NULL, p);
 	assets_add_material(assets, mat, "bunny");
 
