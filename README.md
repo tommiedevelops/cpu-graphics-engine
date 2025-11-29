@@ -1,14 +1,12 @@
 <h1 align="left">TD Graphics Engine</h1>
 <p align="left"><em>A modular, real-time CPU Graphics Engine written in C.</em></p>
 
-3D Graphics done on the CPU, not GPU. <em>"Why?"</em>, you may be asking. There are 3 main reasons:
+3D Graphics done on the CPU, not GPU. <em>"Why?"</em>, you may be asking. There are 2 main reasons:
 
 1. Learn Graphics, then (GPU) Programming
-- Graphics Programming involves learning Graphics and GPU Programming, both pretty complicated. Building or tinkering with a CPU Graphics Engine allows you to focus on the Graphics part first.
+- Graphics Programming involves learning Graphics and GPU Programming, both pretty complicated. Building or tinkering with a CPU Graphics Engine allows you to focus on the Graphics part first. It is particularly useful for learning how Vertex and Fragment Shaders work.
 2. Shader Experiments
 - Shaders are notoriously hard to debug on the GPU (but much easier on the CPU). You can also do experiments with other parts of the pipeline which are not usually accessible on real GPUs.
-3. Pet Project
-- Whenever I want to learn a new concept in graphics or programming, all I need to do is implement it in this engine!
 
 If you want to learn how it works, I've captured my conceptual understanding in [HOW_IT_WORKS.pdf](./docs/latex/main.pdf) and the broad system design in the [Data Flow Diagram](#data-flow-diagram).
 
