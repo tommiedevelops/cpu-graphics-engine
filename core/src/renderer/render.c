@@ -121,7 +121,6 @@ static void renderer_draw_game_object(Renderer* r, FrameBuffer* fb, GameObj* go)
 }
 
 static void prepare_per_scene_uniforms(Renderer* r, Scene* scene) {
-
 	const Camera* cam = scene_get_camera(scene);
 	const Transform* tr  = camera_get_transform(cam);
 	float near = camera_get_near(cam); 
