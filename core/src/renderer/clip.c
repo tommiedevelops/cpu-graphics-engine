@@ -38,6 +38,26 @@ static void prepare_clip_inputs(VSout** in, int* in_n, const Triangle* tri){
 	for(int i = 0; i <= 2; i++) in[i] = tri->v[i];
 }
 
+static void ensure_ccw(Triangle tri) {
+	Vec4f v0 = tri.v[0]->pos;
+	Vec4f v1 = tri.v[1]->pos;
+	Vec4f v2 = tri.v[2]->pos;
+
+	Vec2f a = (Vec2f) {v0.x/v0.w, v0.y/v0.w};
+	Vec2f b = (Vec2f) {v1.x/v1.w, v1.y/v1.w};
+	Vec2f c = (Vec2f) {v2.x/v2.w, v2.y/v2.w};
+
+	// define vec2f_cross?
+	float area2 = (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
+
+	if(area2 < 0.0f) {
+		// swap two elements
+		VSout* tmp = tri.v[0];
+		tri.v[0] = tri.v[1];
+		tri.v[1] = tmp;
+	}
+}
+
 static int prep_clip_output(Triangle* tris_out, VSout** clip_out, int out_n)  {
 	// clamp to 0 if less than 2
 	int num_tris = (out_n > 2) ? out_n - 2 : 0;
@@ -47,8 +67,19 @@ static int prep_clip_output(Triangle* tris_out, VSout** clip_out, int out_n)  {
 		tris_out[k].v[0] = clip_out[0];
 		tris_out[k].v[1] = clip_out[k+1];
 		tris_out[k].v[2] = clip_out[k+2];	
+		ensure_ccw(tris_out[k]);
 	}
 
+	// DEBUG
+	for(int i = 0; i < num_tris; i++){
+		printf("triangle %d\n",i);
+		Triangle tri = tris_out[i];
+		for(int j = 0; j < 3; j++) {
+			VSout* vs = tri.v[j];
+			Vec4f v = vs->pos;
+			print_vec2f((Vec2f){v.x/v.w, v.y/v.w});
+		}
+	}
 	return num_tris;
 }
 
