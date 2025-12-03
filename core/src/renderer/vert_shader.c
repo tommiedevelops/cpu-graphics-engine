@@ -15,3 +15,19 @@ void vs_default(const VSin* in, VSout* out, const VSUniforms* u) {
 	out->uv_over_w = vec2f_scale(in->uv, w_inv);
 	out->w_inv = w_inv;
 }
+
+void print_vsout(VSout* vs) {
+	if(vs == NULL) return;
+	printf("pos: ");
+	print_vec4f(vs->pos);
+	printf("sceen pos: ");
+	print_vec2f((Vec2f){vs->pos.x/vs->pos.w, vs->pos.y/vs->pos.w});
+	print_vec4f(vs->pos);
+	printf("world_pos: ");
+	print_vec3f(vs->world_pos);
+	printf("normal: ");
+	print_vec3f(vs->normal);
+	printf("uv_over_w: ");
+	print_vec2f(vs->uv_over_w);
+	printf("w_inv: %f\n", vs->w_inv);
+}

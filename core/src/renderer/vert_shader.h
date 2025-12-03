@@ -29,4 +29,6 @@ typedef void (*VertShaderF)(const VSin* in, VSout* out, const VSUniforms* u);
 
 void vs_default(const VSin* in, VSout* out, const VSUniforms* uniforms);
 
+void print_vsout(VSout* vs);
+
 #endif

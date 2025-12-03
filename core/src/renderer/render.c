@@ -50,14 +50,28 @@ void pipeline_destroy(Pipeline* p) {
 	free(p);
 }
 
+static void process_clip() {
+}
 static void process_clip_and_rasterize(Renderer* r, FrameBuffer* fb, Triangle clip_result[6], size_t num_tris, FragShaderF fs){
+
 	Mat4 viewport = r->vs_u->viewport;
 
 	for(int k = 0; k < num_tris; k++){
-		Triangle* tri = &clip_result[k];
-		tri_apply_perspective_divide(tri); // divide (x,y,z,w) by w
-		tri_apply_transformation(viewport, tri);
-		rasterize_triangle(r, fb, tri, fs);
+		for(int j = 0; j < 3; j++) {
+			float w = clip_result[k].v[j]->pos.w;
+			
+			clip_result[k].v[j]->pos.x /= w;
+			clip_result[k].v[j]->pos.y /= w;
+			clip_result[k].v[j]->pos.z /= w;
+			clip_result[k].v[j]->pos.w = 1.0f;
+			
+			Vec4f v = clip_result[k].v[j]->pos;
+			clip_result[k].v[j]->pos = 
+				mat4_mul_vec4(viewport,v);
+
+		}
+
+		rasterize_triangle(r, fb, &clip_result[k], fs);
 	}
 }
 
@@ -106,6 +120,7 @@ static void renderer_draw_triangle(Renderer* r, FrameBuffer* fb, Mesh* mesh, Mat
 	assemble_triangle(&tri, out, tri_idx);
 
 	Triangle clip_result[6];
+
 	int num_tris = clip_tri(&tri, clip_result);
 
 	process_clip_and_rasterize(r,fb,clip_result, num_tris, p->fs);

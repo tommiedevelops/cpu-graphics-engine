@@ -70,26 +70,18 @@ static int prep_clip_output(Triangle* tris_out, VSout** clip_out, int out_n)  {
 		ensure_ccw(tris_out[k]);
 	}
 
-	// DEBUG
-	for(int i = 0; i < num_tris; i++){
-		printf("triangle %d\n",i);
-		Triangle tri = tris_out[i];
-		for(int j = 0; j < 3; j++) {
-			VSout* vs = tri.v[j];
-			Vec4f v = vs->pos;
-			print_vec2f((Vec2f){v.x/v.w, v.y/v.w});
-		}
-	}
 	return num_tris;
 }
 
 static VSout* compute_intersection(VSout* s, VSout* e, float t) {
 	VSout* i = malloc(sizeof(VSout));	
+
 	i->pos = lerp_vec4f(s->pos, e->pos, t);
 	i->world_pos = lerp_vec3f(s->world_pos, e->world_pos, t);
 	i->normal = lerp_vec3f(s->normal, e->normal, t);
 	i->uv_over_w = lerp_vec2f(s->uv_over_w, e->uv_over_w, t);
 	i->w_inv = lerp_float(s->w_inv, e->w_inv, t);
+
 	return i;
 }
 
@@ -101,8 +93,10 @@ static void clip_edge(VSout* s, VSout* e, Plane4 P, VSout** out, int* out_n) {
 	if(sIn && eIn) out[(*out_n)++] = e;	
 
 	if(sIn && !eIn) {
+
 		float t = plane4_compute_intersect_t(P,s->pos,e->pos);
 		VSout* i = compute_intersection(s,e,t);
+
 		out[(*out_n)++] = i;
 	}
 
