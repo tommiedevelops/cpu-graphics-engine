@@ -11,6 +11,10 @@
    
 If you want to learn how it works, I've captured my conceptual understanding in [HOW_IT_WORKS.pdf](./docs/latex/main.pdf) and the broad system design in the [Data Flow Diagram](#data-flow-diagram).
 
+## Demos
+<img src="thumbnail.gif" align="center" width="60%">
+<p><em>Stanford Bunny rendered with Phong shading and Utah Teapot rendered with Garaud shading & a brick texture applied</em></p>
+
 ## Features
 - **Mesh Loading:** Import `.obj` files for 3D geometry stored as meshes.
 - **Texture Support:** Load `.png` files to create custom textures for materials.
@@ -18,10 +22,6 @@ If you want to learn how it works, I've captured my conceptual understanding in 
 - **Programmable Shaders:** Define custom **Vertex** and **Fragment** shaders as C function pointers. 
 - **Interactive Rendering:** Control scenes at runtime via **SDL2 event handling** (keyboard, mouse, etc.)
 - **Transparent Graphics Pipeline:** A fully documented, step-by-step pipeline that mirrors modern GPU design — ideal for learning and debugging.
-
-## Demos
-<img src="thumbnail.gif" align="center" width="60%">
-<p><em>Stanford Bunny rendered with Phong shading and Utah Teapot rendered with Garaud shading & a brick texture applied</em></p>
 
 ## System Design
 I use an **App/Core** architecture to separate application-specific user scripting from the static core library. 
