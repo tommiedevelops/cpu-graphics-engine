@@ -1,14 +1,13 @@
-<h1 align="left">TD Graphics Engine</h1>
-<p align="left"><em>A modular, real-time CPU Graphics Engine written in C.</em></p>
+<h1 align="left">CPU Graphics Engine</h1>
 
-3D Graphics done on the CPU, not GPU. <em>"Why?"</em>, you may be asking. There are 3 main reasons:
+3D Graphics done on the CPU, not GPU. <em>"Why?"</em>, you might be asking. There are 3 main reasons:
 
 1. Learn Graphics, then (GPU) Programming
 - Graphics Programming involves learning Graphics and GPU Programming, both pretty complicated. Building or tinkering with a CPU Graphics Engine allows you to focus on the Graphics part first. It is particularly useful for learning how Vertex and Fragment Shaders work.
-2. Shader Experiments
-- Shaders are notoriously hard to debug on the GPU (but much easier on the CPU). You can also do experiments with other parts of the pipeline which are not usually accessible on real GPUs.
+2. Graphics Experiments
+- Shaders are notoriously hard to debug on the GPU, and much easier on the CPU because you can't use 'print' statements or debuggers. You can also do experiments with other parts of the pipeline which are not usually accessible on real GPUs. E.g. What if the view frustum near plane was actually a curved surface (like our eyes)?
 3. Train your CS Muscles
-- Building a Graphics Engine requires some heavy-duty Data Structures & Algorithms, Math concepts, Optimisation Techniques, Multithreading, understanding of memory and more. Graphics and Game Dev is very performance sensitive work!  
+- Building a Graphics Engine requires some heavy-duty Comp Sci knowledge inlcuding DS&A, Linear Algebra, Optimisation Techniques, Multithreading, understanding of memory and more. Graphics and Game Dev is very performance sensitive work!  
    
 If you want to learn how it works, I've captured my conceptual understanding in [HOW_IT_WORKS.pdf](./docs/latex/main.pdf) and the broad system design in the [Data Flow Diagram](#data-flow-diagram).
 
