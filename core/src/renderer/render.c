@@ -4,7 +4,6 @@
 #include "game_math/vector.h"
 #include "game_math/transformation.h"
 #include "game_math/barycentric.h"
-#include "game_math/bounds.h"
 
 #include "asset_manager/material.h"
 #include "asset_manager/mesh.h"
@@ -117,6 +116,27 @@ static void renderer_draw_triangle(Renderer* r, FrameBuffer* fb, Mesh* mesh, Mat
 	assemble_triangle_inputs(mesh, tri_idx, in);
 	apply_vertex_shader(in, out, r->vs_u, p->vs);
 
+	/*
+	 
+	int num_clip_tris, num_clip_verts;
+	int* clip_tris[3*num_expected_tris] = {0};
+	VSout clip_verts[9] = {0};
+
+	// no clip => copy out into clip_tris, set n_tris = 1 and n_verts = 3 
+	clip(out, &num_clip_tris, clip_tris, &num_clip_verts, clip_verts); 
+
+	VSout* a, b, c;
+	for(size_t i = 0; i < num_clip_tris; i++) {
+
+		a = clip_verts[ clip_tris[ 3*i ]  ];	
+		b = clip_verts[ clip_tris[ 3*i + 1] ];	
+		c = clip_verts[ clip_tris[ 3*i + 2] ];	
+
+		// fragment shader applied inside rasterize()
+		rasterize(r, fb, VSout* a, VSout* b, VSout* c, p->fs);
+	}
+	
+	*/
 	assemble_triangle(&tri, out, tri_idx);
 
 	Triangle clip_result[6];

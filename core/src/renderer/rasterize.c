@@ -48,13 +48,12 @@ static inline int edge_func(Vec2i P, Vec2i A, Vec2i B) {
 static inline bool inside_triangle(int e01, int e12, int e20) {
 	return (e01 >= 0) && (e12 >= 0) && (e20 >= 0);
 }
-void rasterize_triangle(Renderer* r, FrameBuffer* fb, const Triangle* tri, FragShaderF frag_shader) {
+void rasterize_triangle(Renderer* r, FrameBuffer* fb, Triangle* tri, FragShaderF frag_shader) {
 	
 	FSin  fs_in;
 	FSout fs_out;
 	
 	Bounds b = tri_get_bounds(tri);
-	print_bounds(b);
 
 	int xmin = max_i(0, (int)ceilf(b.xmin));
 	int ymin = max_i(0, (int)ceilf(b.ymin));

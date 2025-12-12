@@ -16,7 +16,7 @@ void on_init(App* app, void* game_data) {
 	/* for preparing Assets */
 	Assets* assets  = assets_create();
 
-	Mesh* mesh = mesh_parse_from_obj("assets/models/plane.obj");
+	Mesh* mesh = mesh_parse_from_obj("assets/models/triangle.obj");
 	assets_add_mesh(assets, mesh, "bunny");
 
 	Mesh* teapot = mesh_parse_from_obj("assets/models/teapot.obj");
