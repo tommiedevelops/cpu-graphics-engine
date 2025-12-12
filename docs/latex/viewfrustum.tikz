@@ -1,20 +1,20 @@
 \begin{tikzpicture}[]
 	
 	%axes
-	\def\Zmax{8};
-	\def\Zmin{-1};
-	\def\Ymax{3};
-	\def\Ymin{-1};
-	\def\Xmax{3};
-	\def\Xmin{-3};
+	\def\Zmax{8}
+	\def\Zmin{-1}
+	\def\Ymax{3}
+	\def\Ymin{-1}
+	\def\Xmax{3}
+	\def\Xmin{-3}
 
 	%(Z,Y,X)
-	\def\nearZ{1.6};
-	\def\nearXmax{1.1};
-	\def\nearYmax{0.5};
+	\def\nearZ{1.6}
+	\def\nearXmax{1.1}
+	\def\nearYmax{0.5}
 
 	\def\farZ{5}
-	\def\farXmax{\nearXmax*3};
+	\def\farXmax{\nearXmax*3}
 	\def\farYmax{\nearYmax*3}
 
 	\coordinate (nearBotLeft)  at (\nearZ, -\nearYmax, -\nearXmax);

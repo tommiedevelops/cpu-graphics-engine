@@ -49,7 +49,7 @@
 \draw[fill=black] (\ux,\uy) circle (1pt) node[above right] {$v_2$};
 
 %label the origin as C, the Camera
-\draw circle (0,0) node[below left] {$C$};
+\draw (0,0) circle (1) node[below left] {$C$};
 
 % line from origin to vertex
 \draw[dashed, name path=vline] (0,0) -- (\vx,\vy);
@@ -58,8 +58,8 @@
 %label intersection between near plane and vline
 \path[name intersections={of=vline and near, by=I}];
 \path[name intersections={of=uline and near, by=IU}];
-\fill (I) circle (1pt) node[above right];
-\fill (IU) circle (1pt) node[below right];
+\fill (I) circle (1pt) node[above right] {};
+\fill (IU) circle (1pt) node[below right] {};
 
 %charmander graphic
 \node at (3.3,0.45) {\includegraphics[height=1.2cm]{charmander_left_alpha.png}};

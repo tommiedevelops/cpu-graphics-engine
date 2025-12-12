@@ -1,6 +1,6 @@
 \begin{tikzpicture}
-	\def\Xmax{3};
-	\def\Ymax{3};
+	\def\Xmax{3}
+	\def\Ymax{3}
 
 	% Viewport Box
 	\def\botLeftX{-2.5}

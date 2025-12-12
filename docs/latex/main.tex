@@ -51,11 +51,11 @@
 
 \subsection{What is a \textit{Graphics Engine}?}
 \begin{itemize}
-\item The 'rasterization' step in the graphics render pipline is a specific part which involves converting Primitives into Fragments
+\item The rasterization step in the graphics render pipline is a specific part which involves converting Primitives into Fragments
 \item A primitive, in my case, is a Triangle and a Fragment is an (x,y) value on the screen with an additional z value to track its depth
 \item In the real world, rasterization is done purely through specialized hardware on the GPU (which is why it is so fast)
 \item To conceptually understand how it works, instead of building a GPU from scratch (hard), I'll use my good old CPU to do the rasterizing (still hard but easier)
-	\item Just to clarify between similar terms. A "Software Rasterizer" refers to writing a CPU implementation of the Rasterization step in a "Software Renderer". A "Software Renderer" is a CPU implementaion of the Graphics Pipeline. A "Graphics Engine" is a CPU implementation of the graphics pipeline as well as Scene Management, Asset Management, Input handling, Updating the Scene etc. It falls short of being a fully fledged game engine but the scope is larger than a Software Renderer
+\item Just to clarify between similar terms. A ``Software Rasterizer'' refers to writing a CPU implementation of the Rasterization step in a ``Software Renderer''. A ``Software Renderer'' is a CPU implementaion of the Graphics Pipeline. A ``Graphics Engine'' is a CPU implementation of the graphics pipeline as well as Scene Management, Asset Management, Input handling, Updating the Scene etc. It falls short of being a fully fledged game engine but the scope is larger than a Software Renderer
 \end{itemize}
 
 \subsection{Why \textit{C}?}
@@ -66,7 +66,7 @@
 
 \subsection{What does the project depend on?}
 \begin{itemize}
-\item Right now, it depends on the C standard library, std\_image.h (reference) for dealing with .png files and SDL2 (reference) for handling all the OS level stuff like inputs and writing to the screen. Though you could easily replace SDL with any other library which creates Windows for you like RayLib.
+\item Right now, it depends on the C standard library, std\_image.h (reference) for dealing with.png files and SDL2 (reference) for handling all the OS level stuff like inputs and writing to the screen. Though you could easily replace SDL with any other library which creates Windows for you like RayLib.
 \end{itemize}
 
 \section{The Graphics Engine}
@@ -117,7 +117,7 @@
 \subsection{The Vertex Shader}
 \subsection{Perspective Projection}
 \begin{itemize}
-\item In a sentence, the goal of the Perspective Projection is to map the View Space 'View Frustum' to 'Canonical View Volume' in such a way that perspective is simulated.
+\item In a sentence, the goal of the Perspective Projection is to map the View Space `View Frustum' to `Canonical View Volume' in such a way that perspective is simulated.
 
 \item The Canonical View Volume is all points (x,y,z) such that $x \in [-1,1]$, $y \in [-1,1]$ and $z \in [0,1]$ which matches the \textit{Vulkan} convention and a format understood by our rasterizer.
 
@@ -149,7 +149,7 @@
 \subsubsection{What is \textit{Perspective}?}
 \begin{itemize}
 	\item In this project, my goal is to create graphics that are visually realistic or at least somewhat consistent with our experiences in the real world. Thus, my definition of Perspective will be made with that in mind.
-	\item We start by assuming the viewer is 'point like'. We, as humans, perceive the world through our eyes which are 'point-like', in contrast to something like a Photosensor which perceives the world through a rectangular array of sensors.
+	\item We start by assuming the viewer is `point like'. We, as humans, perceive the world through our eyes which are `point-like', in contrast to something like a Photosensor which perceives the world through a rectangular array of sensors.
 	\item Put simply, Perspective is the phenomenon of objects appearing smaller to a point-like viewer as it moves further away from the viewer.
 	\item In other words, the apparent size of an object to a viewer is inversely proportional from the object's distance to the viewer. This is a direct consequence of basic trigonometry.
 \end{itemize}
@@ -211,8 +211,8 @@
 
 We know that the $z$-component of the intersection point is going to be $n$.
 \[
-	\textbf{r}(t_i) = (v_xt_i, v_yt_i, v_zt_i) \\
-		         = (v_xt_i, v_yt_i, n)
+	\textbf{r}(t_i) = (v_{xt_i}, v_{yt_i}, v_{zt_i}) \\
+		         = (v_{xt_i}, v_{yt_i}, n)
 \]
 
 Equating the $z$-components: 
@@ -232,15 +232,13 @@ Thus,
 	\begin{subfigure}{0.45\textwidth}
 	\resizebox{\textwidth}{!}{%
 		\input{frustum-side.tikz}
-	}
-	\label{fig:2d-frustum-yz}
+	}\label{fig:2d-frustum-yz}
 	\end{subfigure}%
 \hfill
 	\begin{subfigure}{0.45\textwidth}
 	\resizebox{\textwidth}{!}{%
 		\input{frustum-top.tikz}
-	}
-	\label{fig:2d-frustum-xz}
+	}\label{fig:2d-frustum-xz}
 	\end{subfigure}
 
 \caption{Side by side graps of the x-z slice and y-z slice of the view frustum showing the how the projected image is calculated on the near plane}
@@ -255,9 +253,9 @@ Thus,
 
 	\item To match the dimensions of our window, we define the aspect ratioo $a$ to be $a = r/t$
 
-	\item We can calculate r by considering FIGURE X. $tan(\frac{\theta_u}{2}) = \frac{r}{n}$ so then $r = ntan(\frac{\theta_y}{2})$. 
+	\item We can calculate r by considering FIGURE X. $\tan(\frac{\theta_u}{2}) = \frac{r}{n}$ so then $r = ntan(\frac{\theta_y}{2})$. 
 
-	\item Then since $a = r/t$, $t = r/a$ which means $t = \frac{ntan(\frac{\theta_y}{2}}{a}$
+	\item Then since $a = r/t$, $t = r/a$ which means $t = \frac{ntan(\frac{\theta_y}{2})}{a}$
 
 	\item Now, if we scale the y component of all vertices on the near plane by $1/t$, this means that vertices in the range $[-r,r]$ will map to $[-1,1]$ and if we scale all the x components by $1/r$ all of the Vertices' x components will be in the range $[-1,1]$ which is exa tly what we need.
 \begin{figure}[h!]
@@ -266,8 +264,7 @@ Thus,
 	\resizebox{0.5\textwidth}{!}{%
 		\input{frustum-front.tikz}
 	}
-	\caption{The view frustum from the perspective of the Camera}
-	\label{fig:frustum-front}
+	\caption{The view frustum from the perspective of the Camera}\label{fig:frustum-front}
 \end{figure}
 
 	
@@ -380,7 +377,7 @@ Hello
 \subsection{Materials}
 \begin{itemize}
 	\item A Material
-	\item It contains ...
+	\item It contains\ldots
 \end{itemize}
 
 \subsection{Textures}
@@ -415,14 +412,14 @@ Hello
 	\item To understand Graphics Engines, you must become somewhat familiar with the operation of matrices. In particular: Matrix Multiplication, Inverse Matrices, Matrices as Linear Transformations and probably more. I provide a very scarce review below.
 	\item Matrix multiplication is done like so:
 	\item Matrix Inverse is calculated like so:
-	\item For an affine, orthonormal matrix, the inverse can be calculated like this ( + reference)
+	\item For an affine, orthonormal matrix, the inverse can be calculated like this (+ reference)
 \end{itemize}
 \subsubsection{Quaternions}
 \begin{itemize}
-	\item To represents rotations in 3D space, I use Quaternions. While you can use a composition of 3x3 Euler Matrices, they are slower, hard to interpolate and are at risk of Gimbal Lock (+ Reference).
+	\item To represents rotations in 3D space, I use Quaternions. While you can use a composition of 3$\times$3 Euler Matrices, they are slower, hard to interpolate and are at risk of Gimbal Lock (+ Reference).
 	\item A Quaternion is a kind of 4D complex number $q = q_0 + q$ where $q_0$ is a scalar and
 $q$ is an R3 vector where each component has unit vectors $i, j, k$.
-	\item The unit vectors $i,j,k$ adhere to the following multiplication rules. \textbf{**TODO**}
+	\item The unit vectors $i,j,k$ adhere to the following multiplication rules. 
 	\item Whenever you are interested in rotating an object in 3D space, you need to specify 2 things: An axis and an angle. These are encoded in the Unit Quaternion in the following way: \textbf{**TODO**}
 	\item In the space of Unit Quaternions, if you operate a Unit Quaternion on a Vector, it results in a rotation of some degrees about some axis.
 \end{itemize}
@@ -453,7 +450,7 @@ We break the problem  up into 2 parts:
 	\item Calculating the transformation for $z$
 \end{enumerate}
 
-For the first part, consider the setup in Figure ?. In this 2D slice, the viewing volume is given by the near and far planes and the top and bottom planes. What we wish to do is to take some point $v$, and project it onto the near plane. 
+For the first part, consider the setup in Figure?. In this 2D slice, the viewing volume is given by the near and far planes and the top and bottom planes. What we wish to do is to take some point $v$, and project it onto the near plane. 
 
 To do this, we draw a line from the point to the origin. Consider the point at which this origin ray intersects the near plane. Let's call this point $x$. 
 
@@ -462,7 +459,7 @@ To do this, we draw a line from the point to the origin. Consider the point at w
 \subsubsection{Rasterization}
 \subsubsection{Improved Rasterization}
 \begin{itemize}
-	\item (First Approach) Takes a Primitive (Triangle made of Vertices) after is has been transformed by MVP and VP. It computes Bounding Box and using BaryCentric Coordinates with respect to the Triangle vertex positions decides which pixels to remove based on whether they are inside or outside of the triangle \textbf{**FIGURE**}
+	\item (First Approach) Takes a Primitive (Triangle made of Vertices) after is has been transformed by MVP and VP.\@It computes Bounding Box and using BaryCentric Coordinates with respect to the Triangle vertex positions decides which pixels to remove based on whether they are inside or outside of the triangle \textbf{**FIGURE**}
 	\item (Optimized Approach) Iterative Edge Functions \textbf{**TODO**}
 \end{itemize}
 
