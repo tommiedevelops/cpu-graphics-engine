@@ -6,6 +6,7 @@
 
 #include "game_math/bounds.h"
 #include "scene_manager/scene.h"
+#include "error_log.h"
 
 FILE* obj_open(char* filename){
 	FILE* fp = fopen(filename, "r");
@@ -28,18 +29,22 @@ void obj_close(FILE* fp){
 
 
 int obj_parse_num_vertices(FILE* fp){
-	char buf[256] = {0};
-	const char * target = "# vertex count =";
-	int vertex_count = 0;
-
-	while(NULL != fgets(buf, sizeof(buf), fp) ) {
-		if(!strncmp(buf, target, strlen(target))){
-			sscanf(buf, "# vertex count = %d", &vertex_count);
-			break;
-		}
+	// NULL CHECK
+	if(fp==NULL){
+		LOG_ERROR("file pointer was null");
+		exit(EXIT_FAILURE);
 	}
+
+	char buf[30];
+	int num_vertices = 0;
+
+	// assuming that every line starting with v represents a VALID vertex
+	while( fgets(buf, sizeof(buf), fp) != NULL ) {
+		if (buf[0] == 'v' ) num_vertices++;
+	}
+
 	rewind(fp);
-	return vertex_count;
+	return num_vertices;
 }
 
 int obj_parse_num_uvs(FILE* fp){
@@ -122,17 +127,15 @@ Vec2f* obj_parse_uvs(FILE* fp, int num_uvs){
 int obj_parse_num_triangles(FILE* fp) {
 
 	char buf[256] = {0};
-	const char * target = "# face count =";
-	int face_count = 0;
 
+	int tri_count = 0;
 	while(NULL != fgets(buf, sizeof(buf), fp) ) {
-		if(!strncmp(buf, target, strlen(target))){
-			sscanf(buf, "# face count = %d", &face_count);
-			break;
+		if(buf[0] == 'f') {
+			tri_count++;
 		}
 	}
 	rewind(fp);
-	return face_count;
+	return tri_count;
 }
 
 int* obj_parse_triangle_uvs(FILE* fp, int num_triangles, int num_uvs, Vec2f* uvs){

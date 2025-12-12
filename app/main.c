@@ -14,28 +14,19 @@ typedef struct GameData {
 
 void on_init(App* app, void* game_data) {
 	/* for preparing Assets */
-	Assets* assets  = assets_create();
+	Assets* assets  = assets_create(); // i feel like should do this in app_create
+	app->assets = assets;
 
 	Mesh* mesh = mesh_parse_from_obj("assets/models/triangle.obj");
 	assets_add_mesh(assets, mesh, "bunny");
 
-	Mesh* teapot = mesh_parse_from_obj("assets/models/teapot.obj");
-	assets_add_mesh(assets,teapot,"teapot");
-
 	Texture* tex = texture_load("assets/textures/brickwall.png");
-
-	mesh_recalculate_normals(teapot);
 	mesh_recalculate_normals(mesh);
 	
 	Vec4f col = (Vec4f){26.0f/255, 208.0f/255.0f, 200.0f/255.0f, 1.0};
 	Pipeline* p = pipeline_create(vs_default, fs_toon);
 	Material*  mat = material_create(col, NULL, p);
 	assets_add_material(assets, mat, "bunny");
-
-	Pipeline* tp = pipeline_create(vs_default, fs_lit);
-	Material* teapot_mat = material_create(col, tex, tp);
-	assets_add_material(assets,teapot_mat,"teapot");
-	app->assets = assets;
 }
 
 void on_start(App* app, void* game_data) {
@@ -63,14 +54,7 @@ void on_start(App* app, void* game_data) {
 	Material*  bunny_mat  = assets_get_material(app->assets, bunny_handle);
 
 	GameObj* bunny = game_obj_create(bunny_tr, bunny_mesh, bunny_mat);
-	const char * teapot_handle = "teapot";
 
-	Transform* teapot_tr = transform_create((Vec3f){3.0f, 0.0f, 0.0f}, QUAT_IDENTITY, VEC3F_1);
-	Mesh* teapot_mesh = assets_get_mesh(app->assets, teapot_handle);
-	Material* teapot_mat = assets_get_material(app->assets,teapot_handle);
-	GameObj* teapot = game_obj_create(teapot_tr,teapot_mesh,teapot_mat);
-
-	//scene_add_game_obj(scene, teapot, teapot_handle);
 	scene_add_game_obj(scene, bunny, bunny_handle);
 
 	app->scene = scene;
@@ -161,13 +145,10 @@ void on_update(App* app, void* game_data, float dt) {
 	handle_movement(cam->transform, gd, dt);
 
 	GameObj* bunny_go = scene_get_game_obj(scene, "bunny");
-	GameObj* teapot_go = scene_get_game_obj(scene, "teapot");
 
 	//move_bunny(bunny_go, gd->time);
 	//rotate_bunny(bunny_go,dt);
 
-/* 	move_bunny(teapot_go, gd->time); */
-/* 	rotate_bunny(teapot_go, dt); */
 }
 
 void on_shutdown(App* app, void* game_data) {
