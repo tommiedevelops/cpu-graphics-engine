@@ -59,8 +59,8 @@
 %label intersection between near plane and vline
 \path[name intersections={of=vline and near, by=I}];
 \path[name intersections={of=uline and near, by=IU}];
-\fill (I) circle (1pt) node[above right];
-\fill (IU) circle (1pt) node[below right];
+\fill (I) circle (1pt) node[above right] {};
+\fill (IU) circle (1pt) node[below right] {};
 
 %charmander graphic
 \node at (3.2,0.4) {\includegraphics[height=1.5cm]{charmander_top_alpha.png}};

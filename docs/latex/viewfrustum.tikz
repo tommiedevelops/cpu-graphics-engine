@@ -1,4 +1,4 @@
-\begin{tikzpicture}[tdplot_main_coords]
+\begin{tikzpicture}[]
 	
 	%axes
 	\def\Zmax{8};
