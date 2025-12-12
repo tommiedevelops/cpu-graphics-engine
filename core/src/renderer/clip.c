@@ -4,6 +4,7 @@
 #include "game_math/plane.h"
 #include "renderer/vert_shader.h"
 #include "renderer/triangle.h"
+#include "error_log.h"
 
 static inline void get_clipping_planes(struct Plane4* planes){
 	/* all normals facing 'plane4_inside'*/
@@ -148,6 +149,17 @@ int clip_tri(const Triangle* tri, Triangle* tris_out){
 	int num_tris = prep_clip_output(tris_out, out, out_n);
 
 	return num_tris;
+}
+
+void clip(VSout** in, VSout** out, int* out_n) {
+
+	if(!in || !out || !out_n) {
+		LOG_ERROR("inputs were null");
+		return;
+	}
+
+	int in_n = 3; // input is a single triangle 
+
 }
 
 

@@ -117,13 +117,17 @@ static void renderer_draw_triangle(Renderer* r, FrameBuffer* fb, Mesh* mesh, Mat
 	apply_vertex_shader(in, out, r->vs_u, p->vs);
 
 	/*
-	 
-	int num_clip_tris, num_clip_verts;
-	int* clip_tris[3*num_expected_tris] = {0};
-	VSout clip_verts[9] = {0};
 
 	// no clip => copy out into clip_tris, set n_tris = 1 and n_verts = 3 
-	clip(out, &num_clip_tris, clip_tris, &num_clip_verts, clip_verts); 
+	
+	VSout clip_out_verts[9] = {0};
+	int out_n = clip(out, clip_verts); 
+	int num_tris = (out_n > 2) ? out_n - 2 : 0;
+
+	int* clip_tris[3*num_tris] = {0};
+
+	// fanning out triangles (clip_verts is inin cw order)
+	assemble_triangles(clip_tris, num_tris);
 
 	VSout* a, b, c;
 	for(size_t i = 0; i < num_clip_tris; i++) {
@@ -137,6 +141,7 @@ static void renderer_draw_triangle(Renderer* r, FrameBuffer* fb, Mesh* mesh, Mat
 	}
 	
 	*/
+
 	assemble_triangle(&tri, out, tri_idx);
 
 	Triangle clip_result[6];
