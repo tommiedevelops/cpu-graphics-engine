@@ -121,7 +121,6 @@ static int assemble_triangles(int* tris_out, const VSout** clip_out, int out_n) 
 
 static void renderer_draw_triangle(Renderer* r, FrameBuffer* fb, Mesh* mesh, Material* mat, size_t tri_idx) {
 
-	Triangle tri;
 	VSin     in[3];
 	VSout    out[3];
 
@@ -131,31 +130,22 @@ static void renderer_draw_triangle(Renderer* r, FrameBuffer* fb, Mesh* mesh, Mat
 	assemble_triangle_inputs(mesh, tri_idx, in);
 	apply_vertex_shader(in, out, r->vs_u, p->vs);
 
-	/*
-
 	VSout clip_out_verts[9] = {0};
 
-	int out_n = clip(out, clip_verts); 
+	int out_n = clip(out, clip_out_verts); 
 
 	int num_tris = (out_n > 2) ? out_n - 2 : 0;
 
-	// construct triangles with fanning technique
-	VSout* a = clip_out_verts[0];
-	VSout* b, c;
+	Triangle tri;
+	tri.v[0] = &clip_out_verts[0];
+
 	for(size_t k = 0; k < num_tris; k++) {
-		b = clip_out_verts[k];
-		c = clip_out_verts[k+1];	
-		rasterize(r, fb, VSout* a, VSout* b, VSout* c, p->fs);
+
+		tri.v[1] = &clip_out_verts[k];
+		tri.v[2] = &clip_out_verts[k+1];	
+
+		rasterize_triangle(r,fb,&tri,p->fs);
 	}
-	*/
-
-	assemble_triangle(&tri, out, tri_idx);
-
-	Triangle clip_result[6];
-
-	int num_tris = clip_tri(&tri, clip_result);
-
-	process_clip_and_rasterize(r,fb,clip_result, num_tris, p->fs);
 }
 
 static void renderer_draw_game_object(Renderer* r, FrameBuffer* fb, GameObj* go) {
