@@ -151,14 +151,20 @@ int clip_tri(const Triangle* tri, Triangle* tris_out){
 	return num_tris;
 }
 
-void clip(VSout** in, VSout** out, int* out_n) {
+int clip(VSout** in, VSout** out, int* out_n) {
 
 	if(!in || !out || !out_n) {
 		LOG_ERROR("inputs were null");
-		return;
+		return -1;
 	}
 
 	int in_n = 3; // input is a single triangle 
+	
+	const int num_planes = 6;
+	Plane4 planes[num_planes];
+	get_clipping_planes(planes);
+
+	return clip_poly(in, in_n, planes, num_planes, out);
 
 }
 

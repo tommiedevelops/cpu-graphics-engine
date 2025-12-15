@@ -104,6 +104,21 @@ static void assemble_triangle(Triangle* tri, VSout* out, int tri_idx) {
 	tri->id = tri_idx;	
 }
 
+static int assemble_triangles(int* tris_out, const VSout** clip_out, int out_n)  {
+	// clamp to 0 if less than 2
+	int num_tris = (out_n > 2) ? out_n - 2 : 0;
+
+	// fanning out triangle from 0th index
+	for(int k = 0; k < num_tris; k++){
+		int i = 3*num_tris;
+		tris_out[i]     = 0;
+		tris_out[i + 1] = k;
+		tris_out[i + 2] = k + 1;
+	}
+
+	return num_tris;
+}
+
 static void renderer_draw_triangle(Renderer* r, FrameBuffer* fb, Mesh* mesh, Material* mat, size_t tri_idx) {
 
 	Triangle tri;
@@ -119,25 +134,19 @@ static void renderer_draw_triangle(Renderer* r, FrameBuffer* fb, Mesh* mesh, Mat
 	/*
 
 	VSout clip_out_verts[9] = {0};
+
 	int out_n = clip(out, clip_verts); 
+
 	int num_tris = (out_n > 2) ? out_n - 2 : 0;
 
-	int* clip_tris[3*num_tris] = {0};
-
-	// fanning out triangles (clip_verts is inin cw order)
-	assemble_triangles(clip_tris, num_tris);
-
-	VSout* a, b, c;
-	for(size_t i = 0; i < num_clip_tris; i++) {
-
-		a = clip_verts[ clip_tris[ 3*i ]  ];	
-		b = clip_verts[ clip_tris[ 3*i + 1] ];	
-		c = clip_verts[ clip_tris[ 3*i + 2] ];	
-
-		// fragment shader applied inside rasterize()
+	// construct triangles with fanning technique
+	VSout* a = clip_out_verts[0];
+	VSout* b, c;
+	for(size_t k = 0; k < num_tris; k++) {
+		b = clip_out_verts[k];
+		c = clip_out_verts[k+1];	
 		rasterize(r, fb, VSout* a, VSout* b, VSout* c, p->fs);
 	}
-	
 	*/
 
 	assemble_triangle(&tri, out, tri_idx);
