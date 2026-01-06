@@ -133,7 +133,6 @@ static void renderer_draw_triangle(Renderer* r, FrameBuffer* fb, Mesh* mesh, Mat
 	VSout clip_out_verts[9] = {0};
 
 	int out_n = clip(out, clip_out_verts); 
-
 	int num_tris = (out_n > 2) ? out_n - 2 : 0;
 
 	Triangle tri;

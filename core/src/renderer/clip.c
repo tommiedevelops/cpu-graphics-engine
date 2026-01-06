@@ -124,6 +124,41 @@ static void clip_against_plane(VSout* in, int in_n, Plane4 P, VSout* out, int* o
 	}
 }
 
+static int clip_against_frustum(const Plane4 planes[NUM_PLANES],
+				const VSout* input, int input_n,
+				VSout* bufA, int capA,
+				VSout* bufB, int capB,
+				VSout** out_ptr){
+	const VSout* src = input;
+	int src_n = input_n;
+
+	VSout* dst  = bufA;
+	int dst_cap = capA;
+	
+	// just to make the code compile for now
+	int dst_n = 0;
+	
+	for (int i = 0; i < NUM_PLANES; i++) {
+	//	int dst_n = clip_against_plane(src, src_n, planes[i], dst, dst_cap);
+
+		if (dst_n <= 0) {
+			*out_ptr = NULL;
+			return 0; // fully clipped
+		}
+
+		// next iteration needs to read from what we just wrote
+		src = dst;
+		src_n = dst_n;
+
+		// ping-pong destinatio buffer
+		dst = (dst == bufA) ? bufB : bufA;
+		dst_cap = (dst == bufA) ? capA : capB;
+	}
+
+	*out_ptr = (VSout*)src; //final vertices live in whichever buffer was last writtenn
+	return src_n;
+}
+
 static int clip_poly(VSout* in, int in_n, const Plane4* p, int p_n, VSout* out){
 	// assuming in represents a convex polygon that is in clockwise order
 	
@@ -171,6 +206,7 @@ int clip(VSout* in, VSout* out) {
 	}
 	
 	Plane4 planes[NUM_PLANES];
+
 	calculate_clipping_planes(planes);
 
 	return clip_poly(in, NUM_CLIP_IN, planes, NUM_PLANES, out);
