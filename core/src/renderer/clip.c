@@ -6,7 +6,9 @@
 #include "renderer/triangle.h"
 #include "error_log.h"
 
-static inline void get_clipping_planes(struct Plane4* planes){
+#define NUM_PLANES (6)
+
+static inline void calculate_clipping_planes(struct Plane4* planes){
 	/* all normals facing 'plane4_inside'*/
 	/* plane4_inside => -w<=x<=w, -w<=y<=w, 0<=z<=w*/
 
@@ -96,9 +98,7 @@ static void clip_edge(VSout s, VSout e, Plane4 P, VSout* out, int* out_n) {
 	if(sIn && eIn) out[(*out_n)++] = e;	
 
 	if(sIn && !eIn) {
-
 		float t = plane4_compute_intersect_t(P,s.pos,e.pos);
-
 		VSout* i = &out[(*out_n)++];
 		compute_intersection(s,e,i,t);
 	}
@@ -121,7 +121,6 @@ static void clip_against_plane(VSout* in, int in_n, Plane4 P, VSout* out, int* o
 		VSout e = in[(v+1)%in_n];
 		clip_edge(s,e,P,out,out_n);
 	}
-	
 }
 
 static int clip_poly(VSout* in, int in_n, const Plane4* p, int p_n, VSout* out){
@@ -129,15 +128,40 @@ static int clip_poly(VSout* in, int in_n, const Plane4* p, int p_n, VSout* out){
 	
 	// There is a bug here. Since changing the pointers to VSout* from VSout** I lost the 'ping pong buffer' effect. Need to revive it somehow to keep the ptrs as is because I want to avoid mallocing
 	
-	int out_n = 0;
+	VSout local_input[9] = {0};
+	int local_input_len = 3;
+
+	local_input[0] = in[0];
+	local_input[1] = in[1];
+	local_input[2] = in[2];
+
+	int local_output_len = 0;
+	VSout local_output[9] = {0};
+
+	VSout (*A)[9] = &local_input;
+	VSout (*B)[9] = &local_output;
+
+	int* A_n = &local_input_len;
+	int* B_n = &local_output_len;
+
 	for(size_t i = 0; i < p_n && in_n > 0; i++){
-		out_n = 0;
-		clip_against_plane(in,in_n, p[i], out, &out_n);
-		memcpy(in,out,out_n*sizeof(VSout*));	
-		in_n = out_n;
+		clip_against_plane(*A, *A_n, p[i], *B, B_n);
+		
+		// swap A and B
+		VSout(*temp)[9];
+		temp = A; A = B; B = temp;
+
+		// swap A_n and B_n
+		int* temp_n;
+		temp_n = A_n; A_n = B_n; B_n = temp_n;
+
+		*B_n = 0; //reset output pointer
 	}
-	return out_n;
+
+	// populate out with local_output
+	return local_output_len;
 }
+
 
 int clip_tri(const Triangle* tri, Triangle* tris_out){
 
@@ -149,7 +173,7 @@ int clip_tri(const Triangle* tri, Triangle* tris_out){
 
 	/* const int num_planes = 6; */
 	/* Plane4 planes[num_planes]; */
-	/* get_clipping_planes(planes); */
+	/* calculate_clipping_planes(planes); */
 
 	/* int out_n = clip_poly(in, in_n, planes, num_planes, out); */
 	/* int num_tris = prep_clip_output(tris_out, out, out_n); */
@@ -166,11 +190,10 @@ int clip(VSout* in, VSout* out) {
 
 	int in_n = 3; // input is a single triangle 
 	
-	const int num_planes = 6;
-	Plane4 planes[num_planes];
-	get_clipping_planes(planes);
+	Plane4 planes[NUM_PLANES];
+	calculate_clipping_planes(planes);
 
-	return clip_poly(in, in_n, planes, num_planes, out);
+	return clip_poly(in, in_n, planes, NUM_PLANES, out);
 
 }
 

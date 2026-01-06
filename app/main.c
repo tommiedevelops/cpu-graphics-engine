@@ -116,6 +116,15 @@ static void handle_movement(Transform* cam_tr, GameData* gd, float dt) {
 	gd->mouse_input = VEC2F_0;
 }
 
+static void rotate_camera(Camera* cam, float dt) {
+	float ang_vel = 2.0f;
+	Transform* tr = cam->transform;
+	float angle = dt * ang_vel;
+	Vec3f axis = (Vec3f){0.0f, 1.0f, 0.0f};
+	Quat rot = quat_angle_axis(angle, axis);
+	transform_apply_rotation(tr,rot);
+}
+
 static void rotate_bunny(GameObj* go, float dt) {
 	float ang_vel = 2.0f;
 	Transform* tr = go->tr;
@@ -146,8 +155,10 @@ void on_update(App* app, void* game_data, float dt) {
 
 	GameObj* bunny_go = scene_get_game_obj(scene, "bunny");
 
+	rotate_camera(cam, dt);
 	//move_bunny(bunny_go, gd->time);
 	//rotate_bunny(bunny_go,dt);
+	
 
 }
 
