@@ -7,6 +7,7 @@
 #include "error_log.h"
 
 #define NUM_PLANES (6)
+#define NUM_CLIP_IN (3)
 
 static inline void calculate_clipping_planes(struct Plane4* planes){
 	/* all normals facing 'plane4_inside'*/
@@ -162,38 +163,17 @@ static int clip_poly(VSout* in, int in_n, const Plane4* p, int p_n, VSout* out){
 	return local_output_len;
 }
 
-
-int clip_tri(const Triangle* tri, Triangle* tris_out){
-
-	/* VSout* in[9]  = {0}; */
-	/* VSout* out[9] = {0}; */
-	/* int in_n  = 3; */
-
-	/* prepare_clip_inputs(in, &in_n, tri); */
-
-	/* const int num_planes = 6; */
-	/* Plane4 planes[num_planes]; */
-	/* calculate_clipping_planes(planes); */
-
-	/* int out_n = clip_poly(in, in_n, planes, num_planes, out); */
-	/* int num_tris = prep_clip_output(tris_out, out, out_n); */
-
-	/* return num_tris; */
-}
-
 int clip(VSout* in, VSout* out) {
 
 	if(!in || !out) {
 		LOG_ERROR("inputs were null");
 		return -1;
 	}
-
-	int in_n = 3; // input is a single triangle 
 	
 	Plane4 planes[NUM_PLANES];
 	calculate_clipping_planes(planes);
 
-	return clip_poly(in, in_n, planes, NUM_PLANES, out);
+	return clip_poly(in, NUM_CLIP_IN, planes, NUM_PLANES, out);
 
 }
 
