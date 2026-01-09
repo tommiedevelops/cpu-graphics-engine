@@ -21,6 +21,8 @@
 #include "scene_manager/scene.h"
 #include "scene_manager/transform.h"
 
+#define CLIP_OUT_SIZE (16)
+
 Renderer* renderer_create(Pipeline* default_pl) {
 	Renderer* r = malloc(sizeof(Renderer));
 	VSUniforms* vs_u = malloc(sizeof(VSUniforms));
@@ -49,8 +51,6 @@ void pipeline_destroy(Pipeline* p) {
 	free(p);
 }
 
-static void process_clip() {
-}
 static void process_clip_and_rasterize(Renderer* r, FrameBuffer* fb, Triangle clip_result[6], size_t num_tris, FragShaderF fs){
 
 	Mat4 viewport = r->vs_u->viewport;
@@ -132,7 +132,7 @@ static void renderer_draw_triangle(Renderer* r, FrameBuffer* fb, Mesh* mesh, Mat
 	apply_vertex_shader(in, out, r->vs_u, p->vs);
 
 	// clipping
-	VSout clip_out_verts[9] = {0};
+	VSout clip_out_verts[CLIP_OUT_SIZE]; // verts provided in clockwise order
 	int out_n = clip(out, clip_out_verts); 
 
 	// triangle reconstruction, rasterize & frag shader

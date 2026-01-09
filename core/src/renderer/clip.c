@@ -7,7 +7,8 @@
 #include "error_log.h"
 
 #define NUM_PLANES (6)
-#define NUM_CLIP_IN (3)
+#define CLIP_IN_SIZE (3)
+#define CLIP_OUT_SIZE (16)
 
 static inline void calculate_clipping_planes(struct Plane4* planes){
 	/* all normals facing 'plane4_inside'*/
@@ -116,7 +117,7 @@ static void clip_edge(VSout s, VSout e, Plane4 P, VSout* out, int* out_n) {
 
 }
 
-static void clip_against_plane(VSout* in, int in_n, Plane4 P, VSout* out, int* out_n){
+static void clip_against_plane(const VSout* in, int in_n, Plane4 P, VSout* out, int* out_n){
 	for(int v = 0; v < in_n; v++){
 		VSout s = in[v];
 		VSout e = in[(v+1)%in_n];
@@ -134,12 +135,10 @@ static int clip_against_frustum(const Plane4 planes[NUM_PLANES],
 
 	VSout* dst  = bufA;
 	int dst_cap = capA;
-	
-	// just to make the code compile for now
 	int dst_n = 0;
 	
 	for (int i = 0; i < NUM_PLANES; i++) {
-	//	int dst_n = clip_against_plane(src, src_n, planes[i], dst, dst_cap);
+		clip_against_plane(src, src_n, planes[i], dst, &dst_n);
 
 		if (dst_n <= 0) {
 			*out_ptr = NULL;
@@ -209,8 +208,19 @@ int clip(VSout* in, VSout* out) {
 
 	calculate_clipping_planes(planes);
 
-	return clip_poly(in, NUM_CLIP_IN, planes, NUM_PLANES, out);
+	VSout bufA[CLIP_OUT_SIZE], bufB[CLIP_OUT_SIZE];
 
+	VSout** out_ptr;
+	int out_n = clip_against_frustum(planes, in, CLIP_IN_SIZE,
+					 bufA, CLIP_OUT_SIZE,
+					 bufB, CLIP_OUT_SIZE,
+					 out_ptr);
+	
+	for(int i = 0; i < out_n; i++){
+		out[i] = *out_ptr[i];
+	}
+
+	return out_n;
 }
 
 
