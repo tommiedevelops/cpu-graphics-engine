@@ -121,18 +121,21 @@ static int assemble_triangles(int* tris_out, const VSout** clip_out, int out_n) 
 
 static void renderer_draw_triangle(Renderer* r, FrameBuffer* fb, Mesh* mesh, Material* mat, size_t tri_idx) {
 
-	VSin     in[3];
-	VSout    out[3];
-
+	// prepare render pipeline
 	const Pipeline* mat_p = material_get_pipeline(mat);
 	const Pipeline* p     = mat_p ? mat_p : r->p; 
 
+	// vertex shader
+	VSin     in[3];
+	VSout    out[3];
 	assemble_triangle_inputs(mesh, tri_idx, in);
 	apply_vertex_shader(in, out, r->vs_u, p->vs);
 
+	// clipping
 	VSout clip_out_verts[9] = {0};
-
 	int out_n = clip(out, clip_out_verts); 
+
+	// triangle reconstruction, rasterize & frag shader
 	int num_tris = (out_n > 2) ? out_n - 2 : 0;
 
 	Triangle tri;
