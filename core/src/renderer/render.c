@@ -49,31 +49,6 @@ void pipeline_destroy(Pipeline* p) {
 	free(p);
 }
 
-static void process_clip() {
-}
-static void process_clip_and_rasterize(Renderer* r, FrameBuffer* fb, Triangle clip_result[6], size_t num_tris, FragShaderF fs){
-
-	Mat4 viewport = r->vs_u->viewport;
-
-	for(int k = 0; k < num_tris; k++){
-		for(int j = 0; j < 3; j++) {
-			float w = clip_result[k].v[j]->pos.w;
-			
-			clip_result[k].v[j]->pos.x /= w;
-			clip_result[k].v[j]->pos.y /= w;
-			clip_result[k].v[j]->pos.z /= w;
-			clip_result[k].v[j]->pos.w = 1.0f;
-			
-			Vec4f v = clip_result[k].v[j]->pos;
-			clip_result[k].v[j]->pos = 
-				mat4_mul_vec4(viewport,v);
-
-		}
-
-		rasterize_triangle(r, fb, &clip_result[k], fs);
-	}
-}
-
 static inline void apply_vertex_shader(const VSin in[3], VSout out[3], const VSUniforms* vs_u, VertShaderF vertex_shader){
 	for(size_t i = 0; i < 3; i++) vertex_shader(&in[i], &out[i], vs_u);
 }
