@@ -6,11 +6,7 @@
 #include "renderer/triangle.h"
 #include "error_log.h"
 
-#define NUM_PLANES (6)
-#define CLIP_IN_SIZE (3)
-#define CLIP_OUT_SIZE (16)
-
-static inline void calculate_clipping_planes(struct Plane4* planes){
+static inline void get_clipping_planes(struct Plane4* planes){
 	/* all normals facing 'plane4_inside'*/
 	/* plane4_inside => -w<=x<=w, -w<=y<=w, 0<=z<=w*/
 
@@ -78,149 +74,92 @@ static int prep_clip_output(Triangle* tris_out, VSout** clip_out, int out_n)  {
 	return num_tris;
 }
 
-void compute_intersection(VSout s, VSout e, VSout* i, float t) {
+static VSout* compute_intersection(VSout* s, VSout* e, float t) {
+	VSout* i = malloc(sizeof(VSout));	
 
-	if(!i){
-		LOG_ERROR("param was null");
-		return;
-	}
+	i->pos = lerp_vec4f(s->pos, e->pos, t);
+	i->world_pos = lerp_vec3f(s->world_pos, e->world_pos, t);
+	i->normal = lerp_vec3f(s->normal, e->normal, t);
+	i->uv_over_w = lerp_vec2f(s->uv_over_w, e->uv_over_w, t);
+	i->w_inv = lerp_float(s->w_inv, e->w_inv, t);
 
-	i->pos = lerp_vec4f(s.pos, e.pos, t);
-	i->world_pos = lerp_vec3f(s.world_pos, e.world_pos, t);
-	i->normal = lerp_vec3f(s.normal, e.normal, t);
-	i->uv_over_w = lerp_vec2f(s.uv_over_w, e.uv_over_w, t);
-	i->w_inv = lerp_float(s.w_inv, e.w_inv, t);
+	return i;
 }
 
-static void clip_edge(VSout s, VSout e, Plane4 P, VSout* out, int* out_n) {
+static void clip_edge(VSout* s, VSout* e, Plane4 P, VSout** out, int* out_n) {
 
-	bool sIn = plane4_inside(P,s.pos);
-	bool eIn = plane4_inside(P,e.pos);
+	bool sIn = plane4_inside(P,s->pos);
+	bool eIn = plane4_inside(P,e->pos);
 
 	if(sIn && eIn) out[(*out_n)++] = e;	
 
 	if(sIn && !eIn) {
-		float t = plane4_compute_intersect_t(P,s.pos,e.pos);
-		VSout* i = &out[(*out_n)++];
-		compute_intersection(s,e,i,t);
+
+		float t = plane4_compute_intersect_t(P,s->pos,e->pos);
+		VSout* i = compute_intersection(s,e,t);
+
+		out[(*out_n)++] = i;
 	}
 
 	if(!sIn && eIn){
 
-		float t = plane4_compute_intersect_t(P,s.pos,e.pos);
-
-		VSout* i = &out[(*out_n)++];
-		compute_intersection(s,e,i,t);
-
+		float t = plane4_compute_intersect_t(P,s->pos,e->pos);
+		VSout* i = compute_intersection(s,e,t);
+		out[(*out_n)++] = i;
 		out[(*out_n)++] = e;
 	}
 
 }
 
-static void clip_against_plane(const VSout* in, int in_n, Plane4 P, VSout* out, int* out_n){
+static void clip_against_plane(VSout** in, int in_n, Plane4 P, VSout** out, int* out_n){
+
 	for(int v = 0; v < in_n; v++){
-		VSout s = in[v];
-		VSout e = in[(v+1)%in_n];
+		VSout* s = in[v];
+		VSout* e = in[(v+1)%in_n];
 		clip_edge(s,e,P,out,out_n);
 	}
-}
-
-static int clip_against_frustum(const Plane4 planes[NUM_PLANES],
-				const VSout* input, int input_n,
-				VSout* bufA, int capA,
-				VSout* bufB, int capB,
-				VSout** out_ptr){
-	const VSout* src = input;
-	int src_n = input_n;
-
-	VSout* dst  = bufA;
-	int dst_cap = capA;
-	int dst_n = 0;
 	
-	for (int i = 0; i < NUM_PLANES; i++) {
-		clip_against_plane(src, src_n, planes[i], dst, &dst_n);
-
-		if (dst_n <= 0) {
-			*out_ptr = NULL;
-			return 0; // fully clipped
-		}
-
-		// next iteration needs to read from what we just wrote
-		src = dst;
-		src_n = dst_n;
-
-		// ping-pong destinatio buffer
-		dst = (dst == bufA) ? bufB : bufA;
-		dst_cap = (dst == bufA) ? capA : capB;
-	}
-
-	*out_ptr = (VSout*)src; //final vertices live in whichever buffer was last writtenn
-	return src_n;
 }
 
-static int clip_poly(VSout* in, int in_n, const Plane4* p, int p_n, VSout* out){
+static int clip_poly(VSout** in, int in_n, const Plane4* p, int p_n, VSout** out){
 	// assuming in represents a convex polygon that is in clockwise order
-	
-	// There is a bug here. Since changing the pointers to VSout* from VSout** I lost the 'ping pong buffer' effect. Need to revive it somehow to keep the ptrs as is because I want to avoid mallocing
-	
-	VSout local_input[9] = {0};
-	int local_input_len = 3;
-
-	local_input[0] = in[0];
-	local_input[1] = in[1];
-	local_input[2] = in[2];
-
-	int local_output_len = 0;
-	VSout local_output[9] = {0};
-
-	VSout (*A)[9] = &local_input;
-	VSout (*B)[9] = &local_output;
-
-	int* A_n = &local_input_len;
-	int* B_n = &local_output_len;
-
+	int out_n = 0;
 	for(size_t i = 0; i < p_n && in_n > 0; i++){
-		clip_against_plane(*A, *A_n, p[i], *B, B_n);
-		
-		// swap A and B
-		VSout(*temp)[9];
-		temp = A; A = B; B = temp;
-
-		// swap A_n and B_n
-		int* temp_n;
-		temp_n = A_n; A_n = B_n; B_n = temp_n;
-
-		*B_n = 0; //reset output pointer
+		out_n = 0;
+		clip_against_plane(in,in_n, p[i], out, &out_n);
+		memcpy(in,out,out_n*sizeof(VSout*));	
+		in_n = out_n;
 	}
-
-	// populate out with local_output
-	return local_output_len;
+	return out_n;
 }
 
-int clip(VSout* in, VSout* out) {
+int clip_tri(const Triangle* tri, Triangle* tris_out){
 
-	if(!in || !out) {
+	VSout* in[9]  = {0};
+	VSout* out[9] = {0};
+	int in_n  = 3;
+
+	prepare_clip_inputs(in, &in_n, tri);
+
+	const int num_planes = 6;
+	Plane4 planes[num_planes];
+	get_clipping_planes(planes);
+
+	int out_n = clip_poly(in, in_n, planes, num_planes, out);
+	int num_tris = prep_clip_output(tris_out, out, out_n);
+
+	return num_tris;
+}
+
+void clip(VSout** in, VSout** out, int* out_n) {
+
+	if(!in || !out || !out_n) {
 		LOG_ERROR("inputs were null");
-		return -1;
-	}
-	
-	Plane4 planes[NUM_PLANES];
-
-	calculate_clipping_planes(planes);
-
-	VSout bufA[CLIP_OUT_SIZE], bufB[CLIP_OUT_SIZE];
-
-	VSout** out_ptr;
-	int out_n = clip_against_frustum(planes, in, CLIP_IN_SIZE,
-					 bufA, CLIP_OUT_SIZE,
-					 bufB, CLIP_OUT_SIZE,
-					 out_ptr);
-	
-	for(int i = 0; i < out_n; i++){
-		out[i] = *out_ptr[i];
+		return;
 	}
 
-	return out_n;
+	int in_n = 3; // input is a single triangle 
+
 }
 
 

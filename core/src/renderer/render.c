@@ -21,8 +21,6 @@
 #include "scene_manager/scene.h"
 #include "scene_manager/transform.h"
 
-#define CLIP_OUT_SIZE (16)
-
 Renderer* renderer_create(Pipeline* default_pl) {
 	Renderer* r = malloc(sizeof(Renderer));
 	VSUniforms* vs_u = malloc(sizeof(VSUniforms));
@@ -51,6 +49,8 @@ void pipeline_destroy(Pipeline* p) {
 	free(p);
 }
 
+static void process_clip() {
+}
 static void process_clip_and_rasterize(Renderer* r, FrameBuffer* fb, Triangle clip_result[6], size_t num_tris, FragShaderF fs){
 
 	Mat4 viewport = r->vs_u->viewport;
@@ -104,50 +104,49 @@ static void assemble_triangle(Triangle* tri, VSout* out, int tri_idx) {
 	tri->id = tri_idx;	
 }
 
-static int assemble_triangles(int* tris_out, const VSout** clip_out, int out_n)  {
-	// clamp to 0 if less than 2
-	int num_tris = (out_n > 2) ? out_n - 2 : 0;
-
-	// fanning out triangle from 0th index
-	for(int k = 0; k < num_tris; k++){
-		int i = 3*num_tris;
-		tris_out[i]     = 0;
-		tris_out[i + 1] = k;
-		tris_out[i + 2] = k + 1;
-	}
-
-	return num_tris;
-}
-
 static void renderer_draw_triangle(Renderer* r, FrameBuffer* fb, Mesh* mesh, Material* mat, size_t tri_idx) {
 
-	// prepare render pipeline
+	Triangle tri;
+	VSin     in[3];
+	VSout    out[3];
+
 	const Pipeline* mat_p = material_get_pipeline(mat);
 	const Pipeline* p     = mat_p ? mat_p : r->p; 
 
-	// vertex shader
-	VSin     in[3];
-	VSout    out[3];
 	assemble_triangle_inputs(mesh, tri_idx, in);
 	apply_vertex_shader(in, out, r->vs_u, p->vs);
 
-	// clipping
-	VSout clip_out_verts[CLIP_OUT_SIZE]; // verts provided in clockwise order
-	int out_n = clip(out, clip_out_verts); 
+	/*
 
-	// triangle reconstruction, rasterize & frag shader
+	VSout clip_out_verts[9] = {0};
+	int out_n = clip(out, clip_verts); 
 	int num_tris = (out_n > 2) ? out_n - 2 : 0;
 
-	Triangle tri;
-	tri.v[0] = &clip_out_verts[0];
+	int* clip_tris[3*num_tris] = {0};
 
-	for(size_t k = 0; k < num_tris; k++) {
+	// fanning out triangles (clip_verts is inin cw order)
+	assemble_triangles(clip_tris, num_tris);
 
-		tri.v[1] = &clip_out_verts[k];
-		tri.v[2] = &clip_out_verts[k+1];	
+	VSout* a, b, c;
+	for(size_t i = 0; i < num_clip_tris; i++) {
 
-		rasterize_triangle(r,fb,&tri,p->fs);
+		a = clip_verts[ clip_tris[ 3*i ]  ];	
+		b = clip_verts[ clip_tris[ 3*i + 1] ];	
+		c = clip_verts[ clip_tris[ 3*i + 2] ];	
+
+		// fragment shader applied inside rasterize()
+		rasterize(r, fb, VSout* a, VSout* b, VSout* c, p->fs);
 	}
+	
+	*/
+
+	assemble_triangle(&tri, out, tri_idx);
+
+	Triangle clip_result[6];
+
+	int num_tris = clip_tri(&tri, clip_result);
+
+	process_clip_and_rasterize(r,fb,clip_result, num_tris, p->fs);
 }
 
 static void renderer_draw_game_object(Renderer* r, FrameBuffer* fb, GameObj* go) {
