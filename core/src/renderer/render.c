@@ -122,8 +122,28 @@ static void renderer_draw_triangle(Renderer* r, FrameBuffer* fb, Mesh* mesh, Mat
 	clip_result[0] = tri;
 
 //	int num_tris = clip(&tri, clip_result);
+	int num_tris = 1;
 
-	process_clip_and_rasterize(r,fb,clip_result, 1, p->fs);
+	Mat4 viewport = r->vs_u->viewport;
+
+	for(int k = 0; k < num_tris; k++){
+		for(int j = 0; j < 3; j++) {
+			float w = clip_result[k].v[j]->pos.w;
+			
+			clip_result[k].v[j]->pos.x /= w;
+			clip_result[k].v[j]->pos.y /= w;
+			clip_result[k].v[j]->pos.z /= w;
+			clip_result[k].v[j]->pos.w = 1.0f;
+			
+			Vec4f v = clip_result[k].v[j]->pos;
+			clip_result[k].v[j]->pos = 
+				mat4_mul_vec4(viewport,v);
+
+		}
+
+		rasterize_triangle(r, fb, &clip_result[k], p->fs);
+	}
+
 }
 
 static void renderer_draw_game_object(Renderer* r, FrameBuffer* fb, GameObj* go) {
