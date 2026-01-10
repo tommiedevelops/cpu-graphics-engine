@@ -106,7 +106,6 @@ static void assemble_triangle(Triangle* tri, VSout* out, int tri_idx) {
 
 static void renderer_draw_triangle(Renderer* r, FrameBuffer* fb, Mesh* mesh, Material* mat, size_t tri_idx) {
 
-	Triangle tri;
 	VSin     in[3];
 	VSout    out[3];
 
@@ -116,34 +115,33 @@ static void renderer_draw_triangle(Renderer* r, FrameBuffer* fb, Mesh* mesh, Mat
 	assemble_triangle_inputs(mesh, tri_idx, in);
 	apply_vertex_shader(in, out, r->vs_u, p->vs);
 
-	assemble_triangle(&tri, out, tri_idx);
+	VSout clip_out[9] = {0};
 
-	Triangle clip_result[6];
-	clip_result[0] = tri;
+	int out_n = clip(out, clip_out); 
 
-//	int num_tris = clip(&tri, clip_result);
-	int num_tris = 1;
+	// apply perspective divide and viewport
+	Mat4 vp = r->vs_u->viewport;
+	for(int i = 0; i < out_n; i++) {
+		float w = clip_out[i].pos.w;
 
-	Mat4 viewport = r->vs_u->viewport;
+		clip_out[i].pos.x /= w;
+		clip_out[i].pos.y /= w;
+		clip_out[i].pos.z /= w;
 
-	for(int k = 0; k < num_tris; k++){
-		for(int j = 0; j < 3; j++) {
-			float w = clip_result[k].v[j]->pos.w;
-			
-			clip_result[k].v[j]->pos.x /= w;
-			clip_result[k].v[j]->pos.y /= w;
-			clip_result[k].v[j]->pos.z /= w;
-			clip_result[k].v[j]->pos.w = 1.0f;
-			
-			Vec4f v = clip_result[k].v[j]->pos;
-			clip_result[k].v[j]->pos = 
-				mat4_mul_vec4(viewport,v);
+		clip_out[i].pos.w = 1.0f;
+		clip_out[i].pos = mat4_mul_vec4(vp, clip_out[i].pos);
+	}	
 
-		}
+	int num_tris = out_n < 2 ? 0: out_n - 2;
 
-		rasterize_triangle(r, fb, &clip_result[k], p->fs);
+	Triangle tri;
+
+	tri.v[0] = &clip_out[0];
+	for(int k = 0; k < num_tris; k++) {	
+		tri.v[1] = &clip_out[k+1];
+		tri.v[2] = &clip_out[k+2];
+		rasterize_triangle(r,fb,&tri,p->fs);
 	}
-
 }
 
 static void renderer_draw_game_object(Renderer* r, FrameBuffer* fb, GameObj* go) {

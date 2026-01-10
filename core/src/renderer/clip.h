@@ -1,7 +1,7 @@
 #ifndef CLIP_H
 #define CLIP_H
 
-typedef struct Triangle Triangle;
+#include "vert_shader.h"
+int clip(const VSout in[3], VSout* out);
 
-int clip_tri(const Triangle* tri, Triangle* clip_result);
 #endif
