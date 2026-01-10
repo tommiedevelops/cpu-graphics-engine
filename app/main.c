@@ -155,7 +155,7 @@ void on_update(App* app, void* game_data, float dt) {
 
 	GameObj* bunny_go = scene_get_game_obj(scene, "bunny");
 
-	rotate_camera(cam, dt);
+	//rotate_camera(cam, dt);
 	//move_bunny(bunny_go, gd->time);
 	//rotate_bunny(bunny_go,dt);
 	

@@ -116,37 +116,14 @@ static void renderer_draw_triangle(Renderer* r, FrameBuffer* fb, Mesh* mesh, Mat
 	assemble_triangle_inputs(mesh, tri_idx, in);
 	apply_vertex_shader(in, out, r->vs_u, p->vs);
 
-	/*
-
-	VSout clip_out_verts[9] = {0};
-	int out_n = clip(out, clip_verts); 
-	int num_tris = (out_n > 2) ? out_n - 2 : 0;
-
-	int* clip_tris[3*num_tris] = {0};
-
-	// fanning out triangles (clip_verts is inin cw order)
-	assemble_triangles(clip_tris, num_tris);
-
-	VSout* a, b, c;
-	for(size_t i = 0; i < num_clip_tris; i++) {
-
-		a = clip_verts[ clip_tris[ 3*i ]  ];	
-		b = clip_verts[ clip_tris[ 3*i + 1] ];	
-		c = clip_verts[ clip_tris[ 3*i + 2] ];	
-
-		// fragment shader applied inside rasterize()
-		rasterize(r, fb, VSout* a, VSout* b, VSout* c, p->fs);
-	}
-	
-	*/
-
 	assemble_triangle(&tri, out, tri_idx);
 
 	Triangle clip_result[6];
+	clip_result[0] = tri;
 
-	int num_tris = clip_tri(&tri, clip_result);
+//	int num_tris = clip(&tri, clip_result);
 
-	process_clip_and_rasterize(r,fb,clip_result, num_tris, p->fs);
+	process_clip_and_rasterize(r,fb,clip_result, 1, p->fs);
 }
 
 static void renderer_draw_game_object(Renderer* r, FrameBuffer* fb, GameObj* go) {
