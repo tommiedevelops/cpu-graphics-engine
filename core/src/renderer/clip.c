@@ -35,7 +35,7 @@ static void calculate_clipping_planes(struct Plane4* planes){
 	planes[4].p = VEC4F_0;
 
 	// far (z = w)
-	planes[5].n = vec4f_create(0.0f, 0.0f, -1.0f, 1.0f);
+	planes[5].n = vec4f_create(0.0f, 0.0f, 1.0f, -1.0f);
 	planes[5].p = vec4f_create(0.0f, 0.0f, 1.0f, 1.0f);
 }
 
@@ -66,7 +66,7 @@ static void clip_edge(VSout s, VSout e, Plane4 P, VSout* out, int* out_n) {
 		compute_intersection(s,e,i,t);
 	}
 
-	if(!sIn && eIn){
+	if(!sIn && eIn) {
 
 		float t = plane4_compute_intersect_t(P,s.pos,e.pos);
 
@@ -93,10 +93,10 @@ static int clip_against_plane(const Plane4 P,
 	return out_n;
 }
 
-void swap_ptrs(void* a, void* b) {
-	void* temp = a;
-	a = b;
-	b = a;
+void swap_ptrs(void** a, void** b) {
+	void* temp = *a;
+	*a = *b;
+	*b = temp;
 }
 
 int clip(const VSout in[3], VSout* out) {
@@ -119,6 +119,9 @@ int clip(const VSout in[3], VSout* out) {
 	int* in_size_ptr = &sizeA;
 	int* out_size_ptr = &sizeB;
 
+	VSout* final_out = bufB;
+	int* final_size = &sizeB;
+
 	// write initial input into one of the buffers
 	for(int i = 0; i < 3; i++) bufA[i] = in[i];
 
@@ -127,14 +130,21 @@ int clip(const VSout in[3], VSout* out) {
 					planes[i], 
 					in_ptr, *in_size_ptr,
 			       		out_ptr);
-		swap_ptrs((void*)in_ptr,(void*)out_ptr);
-		swap_ptrs((void*)in_size_ptr, (void*)out_size_ptr);
-		*out_size_ptr = 0;
+		swap_ptrs((void*)&in_ptr,(void*)&out_ptr);
+		swap_ptrs((void*)&in_size_ptr, (void*)&out_size_ptr);
+		final_out = (final_out == bufB) ? bufA : bufB;
+		final_size = (final_size == &sizeB) 
+			      ?  &sizeA : &sizeB;
 	}
+
+	printf("bufA\n");
+	for(int i = 0; i < 9; i++) print_vec4f(bufA[i].pos);
+	printf("bufB\n");
+	for(int i = 0; i < 9; i++) print_vec4f(bufB[i].pos);
 	
 	// write the results into output.
-	for(int i = 0; i < *in_size_ptr; i++){
-		out[i] = in_ptr[i];
+	for(int i = 0; i < *final_size; i++){
+		out[i] = final_out[i];
 	}
 
 	return *in_size_ptr;

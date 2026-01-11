@@ -17,7 +17,7 @@ void on_init(App* app, void* game_data) {
 	Assets* assets  = assets_create(); // i feel like should do this in app_create
 	app->assets = assets;
 
-	Mesh* mesh = mesh_parse_from_obj("assets/models/bunny.obj");
+	Mesh* mesh = mesh_parse_from_obj("assets/models/triangle.obj");
 	assets_add_mesh(assets, mesh, "bunny");
 
 	Texture* tex = texture_load("assets/textures/brickwall.png");
@@ -39,7 +39,7 @@ void on_start(App* app, void* game_data) {
 	gd->mouse_input = VEC2F_0;
 
 	Transform* cam_tr = transform_default();
-	cam_tr->position = (Vec3f){0.0f, 0.0f, -5.0f};
+	cam_tr->position = (Vec3f){-4.0f, 0.0f, -5.0f};
 
 	Camera* cam  = camera_create(cam_tr, W_WIDTH, W_HEIGHT);
 	Vec3f light_dir = (Vec3f){-0.5f, -1.0f, 0.0f};
