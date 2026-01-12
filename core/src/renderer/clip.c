@@ -35,7 +35,7 @@ static void calculate_clipping_planes(struct Plane4* planes){
 	planes[4].p = VEC4F_0;
 
 	// far (z = w)
-	planes[5].n = vec4f_create(0.0f, 0.0f, 1.0f, -1.0f);
+	planes[5].n = vec4f_create(0.0f, 0.0f, -1.0f, 1.0f);
 	planes[5].p = vec4f_create(0.0f, 0.0f, 1.0f, 1.0f);
 }
 
@@ -126,6 +126,7 @@ int clip(const VSout in[3], VSout* out) {
 	for(int i = 0; i < 3; i++) bufA[i] = in[i];
 
 	for(int i = 0; i < NUM_PLANES; i++){
+		*out_size_ptr = 0;
 		*out_size_ptr = clip_against_plane(
 					planes[i], 
 					in_ptr, *in_size_ptr,

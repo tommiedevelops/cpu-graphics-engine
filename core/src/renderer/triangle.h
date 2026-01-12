@@ -12,6 +12,7 @@ typedef struct Triangle {
 	int id;
 } Triangle;
 
+void tri_print(Triangle* tri);
 Bounds tri_get_bounds(const Triangle* tri);
 void tri_apply_perspective_divide(Triangle* tri);
 void tri_apply_transformation(Mat4 tr, Triangle* tri);

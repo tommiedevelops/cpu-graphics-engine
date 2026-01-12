@@ -1,6 +1,13 @@
 #include "game_math/bounds.h"
 #include "renderer/triangle.h"
 #include "renderer/vert_shader.h"
+#include "game_math/vector.h"
+
+void tri_print(Triangle* tri) {
+	for(int i = 0; i < 3; i++){
+		print_vec4f(tri->v[i]->pos);
+	}
+}
 
 Bounds3 tri_get_bounds(const Triangle* tri){
 	Bounds3 bounds = BOUNDS_DEFAULT;
