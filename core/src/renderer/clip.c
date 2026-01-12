@@ -138,10 +138,10 @@ int clip(const VSout in[3], VSout* out) {
 			      ?  &sizeA : &sizeB;
 	}
 
-	printf("bufA\n");
-	for(int i = 0; i < 9; i++) print_vec4f(bufA[i].pos);
-	printf("bufB\n");
-	for(int i = 0; i < 9; i++) print_vec4f(bufB[i].pos);
+/* 	printf("bufA\n"); */
+/* 	for(int i = 0; i < 9; i++) print_vec4f(bufA[i].pos); */
+/* 	printf("bufB\n"); */
+/* 	for(int i = 0; i < 9; i++) print_vec4f(bufB[i].pos); */
 	
 	// write the results into output.
 	for(int i = 0; i < *final_size; i++){

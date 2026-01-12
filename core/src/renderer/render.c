@@ -116,10 +116,6 @@ static void renderer_draw_triangle(Renderer* r, FrameBuffer* fb, Mesh* mesh, Mat
 	for(int k = 0; k < num_tris; k++) {	
 		tri.v[1] = &clip_out[k+1];
 		tri.v[2] = &clip_out[k+2];
-		
-		//DEBUG
-		tri_print(&tri);
-
 		rasterize_triangle(r,fb,&tri,p->fs);
 	}
 }
