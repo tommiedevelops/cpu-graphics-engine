@@ -14,73 +14,64 @@ typedef struct GameData {
 
 void on_init(App* app, void* game_data) {
 	/* for preparing Assets */
-	// bunny mesh
-	Mesh* mesh = mesh_parse_from_obj("assets/models/triangle.obj");
-	assets_add_mesh(app->assets, mesh, "bunny");
-	mesh_recalculate_normals(mesh);
 
 	// plane mesh
 	Mesh* plane_mesh = mesh_parse_from_obj("assets/models/plane.obj");
 	assets_add_mesh(app->assets, plane_mesh, "plane");
 	mesh_recalculate_normals(plane_mesh);
 
-	// plane material
-	Pipeline* p_plane = pipeline_create(vs_default, fs_unlit);
-	Material* m_plane = material_create(VEC4F_0, NULL, p_plane);
-	assets_add_material(app->assets, m_plane, "plane");
-
-	// bunny material
-	Vec4f col = (Vec4f){26.0f/255, 208.0f/255.0f, 200.0f/255.0f, 1.0};
-	Pipeline* p = pipeline_create(vs_default, fs_toon);
-	Material*  mat = material_create(col, NULL, p);
-	assets_add_material(app->assets, mat, "bunny");
+	// wall material
+	Texture* tex = texture_load("assets/textures/brickwall.png");		
+	Pipeline* p_wall = pipeline_create(vs_default, fs_unlit);
+	Material* m_wall = material_create(VEC4F_0, tex, p_wall);
+	assets_add_material(app->assets, m_wall, "floor");
 }
 
-void on_start(App* app, void* game_data) {
-	/* for preparing Scene */
-
-	// GameData setup
-	GameData* gd = (GameData*)game_data;
-	
-	app->print_fps = true;
-	gd->time = 0.0f;
-	gd->move_input = VEC2F_0;
-	gd->mouse_input = VEC2F_0;
-
+static Camera* setup_camera(){
 	// Camera Setup
 	Transform* cam_tr = transform_default();
 	cam_tr->position = (Vec3f){-4.0f, 0.0f, -5.0f};
 	Camera* cam  = camera_create(cam_tr, W_WIDTH, W_HEIGHT);
-	camera_set_far(cam, 20.0f);
+	return cam;
+}
 
-	// Light Setup
+static Light* setup_light(){
 	Vec3f light_dir = (Vec3f){-0.5f, -1.0f, 0.0f};
 	Vec4f light_col = (Vec4f){235.0f/255.0f, 80.0f/255.0f, 211/255.0f, 1.0f};
 	Light* light = light_create(light_dir, VEC4F_1);
+	return light;
+}
 
+static void setup_game_data(void* game_data) {
+	GameData* gd = (GameData*)game_data;
+	gd->time = 0.0f;
+	gd->move_input = VEC2F_0;
+	gd->mouse_input = VEC2F_0;
+}
 
-	// Bunny GameObject
-	const char * bunny_handle = "bunny";
-	Transform* bunny_tr   = transform_default();
-	bunny_tr->position = (Vec3f){2.0f, 0.0f, 0.0f};
-	Mesh*      bunny_mesh = assets_get_mesh(app->assets, bunny_handle);
-	Material*  bunny_mat  = assets_get_material(app->assets, bunny_handle);
+static void init_scene(App* app, void* game_data) {
+	setup_game_data(game_data);
 
-	GameObj* bunny = game_obj_create(bunny_tr, bunny_mesh, bunny_mat);
-
-	// Plane GameObject
-	Transform* plane_tr   = transform_default();
-	plane_tr->position = (Vec3f){-3.0f, 0.0f, -2.0f};	
-	Mesh*      plane_mesh = assets_get_mesh(app->assets, "bunny");
-	Material*  plane_mat  = assets_get_material(app->assets, "plane");
-
-	GameObj* plane = game_obj_create(plane_tr, plane_mesh, plane_mat);
-
+	Camera* cam = setup_camera();
+	Light* light = setup_light();
 	Scene* scene = scene_create(cam, light);
-	scene_add_game_obj(scene, bunny, bunny_handle);
-	scene_add_game_obj(scene, plane, "plane");
 
 	app->scene = scene;
+}
+
+void on_start(App* app, void* game_data) {
+	/* for preparing Scene */
+	init_scene(app, game_data);
+
+	Mesh *mesh = assets_get_mesh(app->assets, "plane");
+	Material *mat = assets_get_material(app->assets, "floor");
+
+	Vec3f floor_scale = (Vec3f){10.0f, 1.0f, 10.0f};
+	GameObj* floor = game_obj_create(transform_create(VEC3F_0, QUAT_IDENTITY, floor_scale),
+					mesh,
+					mat);
+
+	scene_add_game_obj(app->scene, floor, "wall");
 }
 
 void on_event(App* app, void* game_data, SDL_Event* e) {
@@ -163,7 +154,6 @@ static void move_bunny(GameObj* go, float dt) {
 	Transform* tr = go->tr;
 
 	tr->position.y = -1.0f + A*sin(f*dt);
-
 }
 
 void on_update(App* app, void* game_data, float dt) {

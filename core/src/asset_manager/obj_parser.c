@@ -50,14 +50,12 @@ int obj_parse_num_vertices(FILE* fp){
 int obj_parse_num_uvs(FILE* fp){
 
 	char buf[256] = {0};
-	const char * target = "# uv count =";
+	const char * target = "vt";
 	int uv_count = 0;
 
 	while(NULL != fgets(buf, sizeof(buf), fp) ) {
-		if(!strncmp(buf, target, strlen(target))){
-			sscanf(buf, "# uv count = %d", &uv_count);
-			break;
-		}
+		if(!strncmp(buf, target, strlen(target)))
+			uv_count++;
 	}
 	rewind(fp);
 	return uv_count;
