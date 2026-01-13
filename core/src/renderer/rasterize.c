@@ -48,6 +48,7 @@ static inline int edge_func(Vec2i P, Vec2i A, Vec2i B) {
 static inline bool inside_triangle(int e01, int e12, int e20) {
 	return (e01 >= 0) && (e12 >= 0) && (e20 >= 0);
 }
+
 void rasterize_triangle(Renderer* r, FrameBuffer* fb, Triangle* tri, FragShaderF frag_shader) {
 	
 	FSin  fs_in;

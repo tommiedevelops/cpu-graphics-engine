@@ -44,7 +44,7 @@ void app_init(App* app, AppVTable* v_table, AppCfg* cfg) {
 	app->window = window_create(cfg->w_width, cfg->w_height, cfg->w_name);
 
 	app->scene  = NULL;
-	app->assets = NULL;
+	app->assets = assets_create();
 	app->print_fps = false;
 	app->is_running = false;
 }
