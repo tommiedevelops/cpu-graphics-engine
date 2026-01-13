@@ -5,7 +5,7 @@
 
 void tri_print(Triangle* tri) {
 	for(int i = 0; i < 3; i++){
-		print_vec4f(tri->v[i]->pos);
+		print_vsout(tri->v[i]);
 	}
 }
 

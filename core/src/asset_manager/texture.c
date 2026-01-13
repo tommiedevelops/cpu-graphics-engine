@@ -59,16 +59,20 @@ Vec4f get_pixel(Vec4f* data, int width, int height, int x, int y){
 	return data[index];
 }
 
-static inline float clamp01(float x) {return x < 0 ? 0 : (x > 1 ? 1 : x); }
+static inline float clamp01(float x) {
+	return x < 0 ? (1 + x) : (x > 1 ? 1 : x); 
+}
 
 Vec4f texture_sample(Texture* tex, float u, float v){
 	if(!tex || !tex->map) return VEC4F_0;
 
-	u = clamp01(u);
-	v = clamp01(v);
+	double intPart;
+	// extract decimal parts
+	u = fabs(modf(u, &intPart));
+	v = fabs(modf(v, &intPart));
 	
-	int x = (int)floorf(u *(tex->width - 1));
-	int y = (int)floorf(v *(tex->height - 1));
+	int x = (int)floorf(u * (tex->width - 1));
+	int y = (int)floorf(v * (tex->height - 1));
 
 	return get_pixel(tex->map, tex->width, tex->height, x, y);
 }
