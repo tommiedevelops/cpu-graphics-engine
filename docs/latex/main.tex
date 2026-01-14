@@ -148,15 +148,15 @@
 \end{itemize}
 \subsubsection{What is \textit{Perspective}?}
 \begin{itemize}
-	\item In this project, my goal is to create graphics that are visually realistic or at least somewhat consistent with our experiences in the real world. Thus, my definition of Perspective will be made with that in mind.
+	\item In this project, my goal is to create graphics that are visually realistic or at least somewhat consistent with our experiences in the real world. Thus, my definition of perspective will be made with that in mind.
 	\item We start by assuming the viewer is `point like'. We, as humans, perceive the world through our eyes which are `point-like', in contrast to something like a Photosensor which perceives the world through a rectangular array of sensors.
 	\item Put simply, Perspective is the phenomenon of objects appearing smaller to a point-like viewer as it moves further away from the viewer.
-	\item In other words, the apparent size of an object to a viewer is inversely proportional from the object's distance to the viewer. This is a direct consequence of basic trigonometry.
+	\item In other words, the apparent size of an object to a viewer is inversely proportional to the object's distance to the viewer. This is a direct consequence of basic trigonometry.
 \end{itemize}
 
 \subsubsection{The View Frustum}
 \begin{itemize}
-	\item In this section, we motivate the definition of a \textit{View Frustum} and define what it is.
+	\item In this section, we motivate the definition of the \textit{View Frustum} and define what it is.
 
 	\item To begin, I want you to close one eye and hold your index finger in front of it, close enough for it to appear blurry. Then, gradually move your index finger further away until it comes into focus. We define the distance between your eyeball and finger to be $n$, the \textit{near plane} distance.
 	
@@ -165,26 +165,25 @@
 	\item Pause for a moment. Take your right hand and point straight ahead with your index finger. Slowly move your arm as high as you can until the tip of your index finger is just invisible. Now do the same with your left arm. The angle between your arms is your Vertical Field of View (FOV) or $\theta_y$. You can easily repeat the exercise going left and right.
 
 	\item This angle essential defines the edges of your vision. So it will be an important quantity for us in trying to recreate a realistic viewer.
-	\item Since we are trying to create realistic graphics on a computer screen, we need to take that screen into account. So the last quantity that will be important to us is the \textit{aspect ratio} which is the ratio between the width and height of the widow you're using to render this world.
+	\item Since we are trying to create realistic graphics on a computer screen, we need to take that screen into account. Thus the last quantity that will be important to us is the \textit{aspect ratio}, $a$, which is the ratio between the width and height of the window you're using to render the virtual world.
 
 	\item We also don't want to render infinitely into the distance because of the limited memory on our computers, so we also define $f$ the distance of the \textit{far plane} from the Camera along the z axis.
 
-	\item So what objects are we going to render?
-	\item We start with the near plane. We use the FOV $\theta_y$ to carve out a rectangular area that extends infintiely in the x direction. Then we use $a$ to figure out the distance in the x dimension the near plane should be limtied to.
-	\item Then, we follow the line until we reach $z = f$ and connect all the points to construc the view frustum.
+	\item In summary, the set of objects we care about rendering are those found within the volume in Figure \ref{fig:view-frustum}.
 \end{itemize}
 
 \begin{figure}[h!]
 \centering
 	\textbf{View Space}\\[0.5em]%
 	\resizebox{0.6\textwidth}{!}{%
-		\input{viewfrustum.tikz}
+		\input{viewfrustum.tikz} % TODO: label n and f on the diagram
 	}
+	\caption{The View Frustum in View Space}\label{fig:view-frustum}
 \end{figure}
 
 \subsubsection{Deriving the Projection Matrix}
 \begin{itemize}
-	\item In this section we derive the Projection Matrix which maps the View Frustum to homogeneous Clip Space.
+	\item In this section we derive the Projection Matrix which maps the View Frustum to Homogeneous Clip Space. %TODO: reference the place where I exlpain homogeneous clip space
 	\item We break it up into four steps
 	\begin{enumerate}
 		\item Scale $x$ and $y$ components such that perspective is captured.
@@ -228,7 +227,7 @@ Thus,
 
 \begin{figure}[h!]
 	\centering%
-	\textbf{View Space}\\[0.5em]%
+	\textbf{View Space}\\[0.5em]% fix left diagram, circle?
 	\begin{subfigure}{0.45\textwidth}
 	\resizebox{\textwidth}{!}{%
 		\input{frustum-side.tikz}
