@@ -66,7 +66,7 @@ void on_start(App* app, void* game_data) {
 	Mesh *mesh = assets_get_mesh(app->assets, "plane");
 	Material *mat = assets_get_material(app->assets, "floor");
 
-	Vec3f floor_scale = (Vec3f){10.0f, 1.0f, 10.0f};
+	Vec3f floor_scale = (Vec3f){5.0f, 1.0f, 5.0f};
 	Quat rot = quat_angle_axis(3.1415/2, VEC3F_Z);
 	GameObj* floor = game_obj_create(transform_create(VEC3F_0, rot, floor_scale),
 					mesh,

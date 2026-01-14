@@ -14,8 +14,7 @@ typedef struct VSout {
 	Vec4f pos;
 	Vec3f world_pos;
 	Vec3f normal;
-	Vec2f uv_over_w;	
-	float w_inv;
+	Vec2f uv;
 } VSout;
 
 typedef struct {

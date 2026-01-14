@@ -21,9 +21,7 @@ void rasterize_pixel(Vec2i P, int w0, int w1, int w2, int area, FSin* out, VSout
 	const float depth = bary_mix1(b, v[0]->pos.z, v[1]->pos.z, v[2]->pos.z);	
 
 	// Perspective Correct Attributes
-	const float w_inv = bary_mix1(b, v[0]->w_inv, v[1]->w_inv, v[2]->w_inv);
-	const Vec2f uv_over_w = bary_mix2(b, v[0]->uv_over_w, v[1]->uv_over_w, v[2]->uv_over_w);
-	const Vec2f uv = vec2f_scale(uv_over_w, 1.0f/w_inv);
+	const Vec2f uv = bary_mix2(b, v[0]->uv, v[1]->uv, v[2]->uv);
 
 	// Other linearly interpolated values
 	Vec3f normal = vec3f_normalize(bary_mix3(b,v[0]->normal, v[1]->normal, v[2]->normal));
