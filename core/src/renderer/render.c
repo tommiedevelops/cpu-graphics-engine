@@ -94,16 +94,21 @@ static void renderer_draw_triangle(Renderer* r, FrameBuffer* fb, Mesh* mesh, Mat
 
 	int out_n = clip(out, clip_out); 
 
-	// apply perspective divide and viewport
 	Mat4 vp = r->vs_u->viewport;
 	for(int i = 0; i < out_n; i++) {
+
 		float w = clip_out[i].pos.w;
+		float w_inv = 1.0f/w;
 
-		clip_out[i].pos.x /= w;
-		clip_out[i].pos.y /= w;
-		clip_out[i].pos.z /= w;
+		clip_out[i].w_inv = w_inv;
+		clip_out[i].uv_over_w = 
+			vec2f_scale(clip_out[i].uv, w_inv);
 
+		clip_out[i].pos.x *= w_inv;
+		clip_out[i].pos.y *= w_inv;
+		clip_out[i].pos.z *= w_inv;
 		clip_out[i].pos.w = 1.0f;
+
 		clip_out[i].pos = mat4_mul_vec4(vp, clip_out[i].pos);
 	}	
 
