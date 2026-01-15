@@ -38,6 +38,8 @@ Texture* texture_load(char* filename){
 		}
 	}
 
+	stbi_image_free(img);
+
 	return tex;
 }
 
@@ -47,33 +49,22 @@ void texture_destroy(Texture* tex){
 	free(tex);
 }
 
-Vec4f get_pixel(Vec4f* data, int width, int height, int x, int y){
-
-	int j = y%(height-1);
-	int i = x%(width-1);
-
-	int index = j * width + i;
-	/* printf("index = %d", index); */
-	/* printf("size = %d\n", width*height); */
-
-	return data[index];
-}
-
-static inline float clamp01(float x) {
-	return x < 0 ? (1 + x) : (x > 1 ? 1 : x); 
-}
-
 Vec4f texture_sample(Texture* tex, float u, float v){
 	if(!tex || !tex->map) return VEC4F_0;
 
-	double intPart;
-	// extract decimal parts
-	u = fabs(modf(u, &intPart));
-	v = fabs(modf(v, &intPart));
-	
-	int x = (int)floorf(u * (tex->width - 1));
-	int y = (int)floorf(v * (tex->height - 1));
+	// Tiling mode is Repeat / Wrap
+	float my_u = u - floorf(u);		
+	float my_v = v - floorf(v);
 
-	return get_pixel(tex->map, tex->width, tex->height, x, y);
+	// Nearest neighbour sampling (point sampling)
+	float xf = my_u * (tex->width - 1);
+	float yf = my_v * (tex->height - 1);
+
+	int x = (int)(xf + 0.5f);
+	int y = (int)(yf + 0.5f);
+
+	Vec4f value = tex->map[y*tex->width + x];
+
+	return value;
 }
 
