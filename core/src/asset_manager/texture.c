@@ -63,6 +63,11 @@ Vec4f texture_sample(Texture* tex, float u, float v){
 	int x = (int)(xf + 0.5f);
 	int y = (int)(yf + 0.5f);
 
+	if (x < 0) x = 0;
+	if (x >= tex->width)  x = tex->width - 1;
+	if (y < 0) y = 0;
+	if (y >= tex->height) y = tex->height - 1;
+
 	Vec4f value = tex->map[y*tex->width + x];
 
 	return value;

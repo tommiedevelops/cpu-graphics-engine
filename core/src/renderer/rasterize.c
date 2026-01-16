@@ -19,7 +19,6 @@ void rasterize_pixel(Vec2i P, int w0, int w1, int w2, int area, FSin* out, VSout
 
 	// Depth (Screen Space Z)
 	const float depth = bary_mix1(b, v[0]->pos.z, v[1]->pos.z, v[2]->pos.z);	
-
 	// Perspective Correct Attributes
 	const float w_inv = bary_mix1(b, v[0]->w_inv, v[1]->w_inv, v[2]->w_inv);
 	const Vec2f uv_over_w 
@@ -67,9 +66,9 @@ void rasterize_triangle(Renderer* r, FrameBuffer* fb, Triangle* tri, FragShaderF
 
 	// Assuming CCW winding from 0 to 2
 	VSout** v = tri->v;
-	Vec2i V0 = (Vec2i){(int)floorf(v[0]->pos.x), (int)floorf(v[0]->pos.y)};
-	Vec2i V1 = (Vec2i){(int)floorf(v[1]->pos.x), (int)floorf(v[1]->pos.y)};
-	Vec2i V2 = (Vec2i){(int)floorf(v[2]->pos.x), (int)floorf(v[2]->pos.y)};
+	Vec2i V0 = (Vec2i){(int)floorf(v[0]->pos.x + 0.5f), (int)floorf(v[0]->pos.y + 0.5f)};
+	Vec2i V1 = (Vec2i){(int)floorf(v[1]->pos.x + 0.5f), (int)floorf(v[1]->pos.y + 0.5f)};
+	Vec2i V2 = (Vec2i){(int)floorf(v[2]->pos.x + 0.5f), (int)floorf(v[2]->pos.y + 0.5f)};
 
 	// delta vectors
 	Vec2i A01 = vec2i_sub(V1,V0);
@@ -95,7 +94,7 @@ void rasterize_triangle(Renderer* r, FrameBuffer* fb, Triangle* tri, FragShaderF
 		for(P.x = xmin; P.x <= xmax; P.x++){
 			
 			if(inside_triangle(e01,e12,e20)) {
-				rasterize_pixel(P,e01,e12,e20,area,&fs_in,tri->v);
+				rasterize_pixel(P,e12,e20,e01,area,&fs_in,tri->v);
 				frag_shader(&fs_in, &fs_out, r->fs_u);
 				frame_buffer_draw_pixel(fb,P.x,P.y,vec4f_to_rgba32(fs_out.color),fs_out.depth);
 			}

@@ -90,32 +90,30 @@ static void renderer_draw_triangle(Renderer* r, FrameBuffer* fb, Mesh* mesh, Mat
 	assemble_triangle_inputs(mesh, tri_idx, in);
 	apply_vertex_shader(in, out, r->vs_u, p->vs);
 
+	for(int i = 0; i < 3; i++) {
+		float w = out[i].pos.w;
+		float w_inv = 1.0f/w;
+		out[i].w_inv = w_inv;
+		out[i].uv_over_w = vec2f_scale(out[i].uv, w_inv);
+	}
+
 	VSout clip_out[9] = {0};
 
 	int out_n = clip(out, clip_out); 
 
 	Mat4 vp = r->vs_u->viewport;
 	for(int i = 0; i < out_n; i++) {
-
-		float w = clip_out[i].pos.w;
-		float w_inv = 1.0f/w;
-
-		clip_out[i].w_inv = w_inv;
-		clip_out[i].uv_over_w = 
-			vec2f_scale(clip_out[i].uv, w_inv);
-
+		float w_inv = clip_out[i].w_inv;
 		clip_out[i].pos.x *= w_inv;
 		clip_out[i].pos.y *= w_inv;
 		clip_out[i].pos.z *= w_inv;
 		clip_out[i].pos.w = 1.0f;
-
 		clip_out[i].pos = mat4_mul_vec4(vp, clip_out[i].pos);
 	}	
 
 	int num_tris = out_n < 2 ? 0: out_n - 2;
 
 	Triangle tri;
-
 	tri.v[0] = &clip_out[0];
 
 	for(int k = 0; k < num_tris; k++) {	
