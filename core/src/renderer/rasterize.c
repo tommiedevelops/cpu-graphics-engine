@@ -50,11 +50,16 @@ static inline bool inside_triangle(int e01, int e12, int e20) {
 	return (e01 >= 0) && (e12 >= 0) && (e20 >= 0);
 }
 
+static inline Vec2i to_pixel_center(Vec4f p) {
+	return (Vec2i){ (int)floorf(p.x + 0.5f), (int)floorf(p.y + 0.5f) };
+}
 void rasterize_triangle(Renderer* r, FrameBuffer* fb, Triangle* tri, FragShaderF frag_shader) {
 	
+	// Fragment shader inputs and outputs
 	FSin  fs_in;
 	FSout fs_out;
 	
+	// Floating point bounds of the triangle
 	Bounds b = tri_get_bounds(tri);
 
 	int xmin = max_i(0, (int)ceilf(b.xmin));
@@ -66,9 +71,9 @@ void rasterize_triangle(Renderer* r, FrameBuffer* fb, Triangle* tri, FragShaderF
 
 	// Assuming CCW winding from 0 to 2
 	VSout** v = tri->v;
-	Vec2i V0 = (Vec2i){(int)floorf(v[0]->pos.x + 0.5f), (int)floorf(v[0]->pos.y + 0.5f)};
-	Vec2i V1 = (Vec2i){(int)floorf(v[1]->pos.x + 0.5f), (int)floorf(v[1]->pos.y + 0.5f)};
-	Vec2i V2 = (Vec2i){(int)floorf(v[2]->pos.x + 0.5f), (int)floorf(v[2]->pos.y + 0.5f)};
+	Vec2i V0 = to_pixel_center(v[0]->pos); 
+	Vec2i V1 = to_pixel_center(v[1]->pos); 
+	Vec2i V2 = to_pixel_center(v[2]->pos); 
 
 	// delta vectors
 	Vec2i A01 = vec2i_sub(V1,V0);
