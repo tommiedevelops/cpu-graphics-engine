@@ -53,6 +53,23 @@ static inline bool inside_triangle(int e01, int e12, int e20) {
 static inline Vec2i to_pixel_center(Vec4f p) {
 	return (Vec2i){ (int)floorf(p.x + 0.5f), (int)floorf(p.y + 0.5f) };
 }
+
+typedef struct {
+	int e_row;  // edge value (xmin, current y)
+	int step_x; // how the edge changes when x++
+	int step_y; // how the edge changes when y++
+} EdgeStepper;
+
+static inline EdgeStepper make_edge(Vec2i P, Vec2i A, Vec2i B) {
+	Vec2i d = vec2i_sub(B, A);
+	
+	return (EdgeStepper) {
+		.e_row = edge_func(P, A, B),
+		.step_x = -d.y,
+		.step_y = d.x
+	};
+}
+
 void rasterize_triangle(Renderer* r, FrameBuffer* fb, Triangle* tri, FragShaderF frag_shader) {
 	
 	// Fragment shader inputs and outputs
@@ -83,35 +100,35 @@ void rasterize_triangle(Renderer* r, FrameBuffer* fb, Triangle* tri, FragShaderF
 	Vec2i P = (Vec2i){xmin, ymin};
 
 	// initial edge function for (xmin, ymin)
-	int e01_row = edge_func(P,V0,V1);
-	int e12_row = edge_func(P,V1,V2);
-	int e20_row = edge_func(P,V2,V0);
-
+	EdgeStepper e01 = make_edge(P, V0, V1);
+	EdgeStepper e12 = make_edge(P, V1, V2);
+	EdgeStepper e20 = make_edge(P, V2, V0);
+	
 	// area of triangle
 	int area = edge_func(V0, V1, V2);
 	if(area == 0) return;
 
 	for(P.y = ymin; P.y <= ymax; P.y++){
-		int e01 = e01_row;		
-		int e12 = e12_row;
-		int e20 = e20_row;
+		int e01_xy = e01.e_row;		
+		int e12_xy = e12.e_row;
+		int e20_xy = e20.e_row;
 			
 		for(P.x = xmin; P.x <= xmax; P.x++){
 			
-			if(inside_triangle(e01,e12,e20)) {
-				rasterize_pixel(P,e12,e20,e01,area,&fs_in,tri->v);
+			if(inside_triangle(e01_xy,e12_xy,e20_xy)) {
+				rasterize_pixel(P,e12_xy,e20_xy,e01_xy,area,&fs_in,tri->v);
 				frag_shader(&fs_in, &fs_out, r->fs_u);
 				frame_buffer_draw_pixel(fb,P.x,P.y,vec4f_to_rgba32(fs_out.color),fs_out.depth);
 			}
 
-			e01 -= A01.y;
-			e12 -= A12.y;
-			e20 -= A20.y;
+			e01_xy += e01.step_x;
+			e12_xy += e12.step_x;
+			e20_xy += e20.step_x;
 		}
 
-		e01_row += A01.x;
-		e12_row += A12.x;
-		e20_row += A20.x;
+		e01.e_row += e01.step_y;
+		e12.e_row += e12.step_y;
+		e20.e_row += e20.step_y;
 	}
 
 }
