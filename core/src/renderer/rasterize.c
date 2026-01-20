@@ -70,13 +70,9 @@ static inline EdgeStepper make_edge(Vec2i P, Vec2i A, Vec2i B) {
 	};
 }
 
-void rasterize_triangle(Renderer* r, FrameBuffer* fb, Triangle* tri, FragShaderF frag_shader) {
-	
-	// Fragment shader inputs and outputs
-	FSin  fs_in;
-	FSout fs_out;
-	
-	// Floating point bounds of the triangle
+typedef struct { int xmin, ymin, xmax, ymax; } Recti;
+
+static inline bool tri_clamped_bounds(const Triangle* tri, const FrameBuffer* fb, Recti* out) {
 	Bounds b = tri_get_bounds(tri);
 
 	int xmin = max_i(0, (int)ceilf(b.xmin));
@@ -84,7 +80,19 @@ void rasterize_triangle(Renderer* r, FrameBuffer* fb, Triangle* tri, FragShaderF
 	int xmax = min_i(fb->width - 1, (int)floorf(b.xmax));
 	int ymax = min_i(fb->height - 1, (int)floorf(b.ymax)); 
 
-	if(xmin > xmax || ymin > ymax) return;
+	if(xmin > xmax || ymin > ymax) return false;
+	*out = (Recti){ xmin, ymin, xmax, ymax};
+	return true;
+}
+
+void rasterize_triangle(Renderer* r, FrameBuffer* fb, Triangle* tri, FragShaderF frag_shader) {
+	
+	// Fragment shader inputs and outputs
+	FSin  fs_in;
+	FSout fs_out;
+	
+	Recti box;
+	if(!tri_clamped_bounds(tri, fb, &box)) return;
 
 	// Assuming CCW winding from 0 to 2
 	VSout** v = tri->v;
@@ -97,7 +105,7 @@ void rasterize_triangle(Renderer* r, FrameBuffer* fb, Triangle* tri, FragShaderF
 	Vec2i A12 = vec2i_sub(V2,V1);
 	Vec2i A20 = vec2i_sub(V0,V2);
 
-	Vec2i P = (Vec2i){xmin, ymin};
+	Vec2i P = (Vec2i){box.xmin, box.ymin};
 
 	// initial edge function for (xmin, ymin)
 	EdgeStepper e01 = make_edge(P, V0, V1);
@@ -108,12 +116,12 @@ void rasterize_triangle(Renderer* r, FrameBuffer* fb, Triangle* tri, FragShaderF
 	int area = edge_func(V0, V1, V2);
 	if(area == 0) return;
 
-	for(P.y = ymin; P.y <= ymax; P.y++){
+	for(P.y = box.ymin; P.y <= box.ymax; P.y++){
 		int e01_xy = e01.e_row;		
 		int e12_xy = e12.e_row;
 		int e20_xy = e20.e_row;
 			
-		for(P.x = xmin; P.x <= xmax; P.x++){
+		for(P.x = box.xmin; P.x <= box.xmax; P.x++){
 			
 			if(inside_triangle(e01_xy,e12_xy,e20_xy)) {
 				rasterize_pixel(P,e12_xy,e20_xy,e01_xy,area,&fs_in,tri->v);
