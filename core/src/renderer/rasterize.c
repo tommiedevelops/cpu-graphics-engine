@@ -13,7 +13,7 @@ Vec2i vec2i_sub(Vec2i a, Vec2i b){
 	return (Vec2i){a.x - b.x, a.y - b.y};
 }
 
-void rasterize_pixel(Vec2i P,BaryCoords b, FSin* out, VSout** v) {
+void rasterize_pixel(Vec2i P,BaryCoords b, FSin* out, const VSout* const v[3]) {
 
 	// Depth (Screen Space Z)
 	const float depth = bary_mix1(b, v[0]->pos.z, v[1]->pos.z, v[2]->pos.z);	
