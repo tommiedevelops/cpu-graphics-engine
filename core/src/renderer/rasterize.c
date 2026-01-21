@@ -13,9 +13,7 @@ Vec2i vec2i_sub(Vec2i a, Vec2i b){
 	return (Vec2i){a.x - b.x, a.y - b.y};
 }
 
-void rasterize_pixel(Vec2i P, int w0, int w1, int w2, int area, FSin* out, VSout** v) {
-
-	BaryCoords b = (BaryCoords){(float)w0/area, (float)w1/area, (float)w2/area};
+void rasterize_pixel(Vec2i P,BaryCoords b, FSin* out, VSout** v) {
 
 	// Depth (Screen Space Z)
 	const float depth = bary_mix1(b, v[0]->pos.z, v[1]->pos.z, v[2]->pos.z);	
@@ -85,36 +83,29 @@ static inline bool tri_clamped_bounds(const Triangle* tri, const FrameBuffer* fb
 	return true;
 }
 
+static inline void compute_bary_coords(BaryCoords* out, int e12, int e20, int e01, int area) {
+	*out = (BaryCoords){(float)e12/area, (float)e20/area, (float)e01/area};
+}
+
 void rasterize_triangle(Renderer* r, FrameBuffer* fb, Triangle* tri, FragShaderF frag_shader) {
 	
-	// Fragment shader inputs and outputs
 	FSin  fs_in;
 	FSout fs_out;
 	
 	Recti box;
 	if(!tri_clamped_bounds(tri, fb, &box)) return;
 
-	// Assuming CCW winding from 0 to 2
-	VSout** v = tri->v;
-	Vec2i V0 = to_pixel_center(v[0]->pos); 
-	Vec2i V1 = to_pixel_center(v[1]->pos); 
-	Vec2i V2 = to_pixel_center(v[2]->pos); 
-
-	// delta vectors
-	Vec2i A01 = vec2i_sub(V1,V0);
-	Vec2i A12 = vec2i_sub(V2,V1);
-	Vec2i A20 = vec2i_sub(V0,V2);
-
+	Vec2i V0 = to_pixel_center(tri->v[0]->pos); 
+	Vec2i V1 = to_pixel_center(tri->v[1]->pos); 
+	Vec2i V2 = to_pixel_center(tri->v[2]->pos); 
 	Vec2i P = (Vec2i){box.xmin, box.ymin};
 
-	// initial edge function for (xmin, ymin)
 	EdgeStepper e01 = make_edge(P, V0, V1);
 	EdgeStepper e12 = make_edge(P, V1, V2);
 	EdgeStepper e20 = make_edge(P, V2, V0);
-	
-	// area of triangle
+
 	int area = edge_func(V0, V1, V2);
-	if(area == 0) return;
+	BaryCoords b;
 
 	for(P.y = box.ymin; P.y <= box.ymax; P.y++){
 		int e01_xy = e01.e_row;		
@@ -122,11 +113,12 @@ void rasterize_triangle(Renderer* r, FrameBuffer* fb, Triangle* tri, FragShaderF
 		int e20_xy = e20.e_row;
 			
 		for(P.x = box.xmin; P.x <= box.xmax; P.x++){
-			
 			if(inside_triangle(e01_xy,e12_xy,e20_xy)) {
-				rasterize_pixel(P,e12_xy,e20_xy,e01_xy,area,&fs_in,tri->v);
+				compute_bary_coords(&b, e12_xy, e20_xy, e01_xy, area);
+				rasterize_pixel(P,b,&fs_in,tri->v);
 				frag_shader(&fs_in, &fs_out, r->fs_u);
-				frame_buffer_draw_pixel(fb,P.x,P.y,vec4f_to_rgba32(fs_out.color),fs_out.depth);
+				frame_buffer_draw_pixel(fb,P.x,P.y,
+					vec4f_to_rgba32(fs_out.color),fs_out.depth);
 			}
 
 			e01_xy += e01.step_x;
