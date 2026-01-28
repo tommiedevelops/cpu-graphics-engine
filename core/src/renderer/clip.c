@@ -1,6 +1,9 @@
 /// -------------------------------------------------------------
 /// Implements Sutherland-Hodgman clipping algorithm to clip
 /// vertices against the canonical view volume (Vulkan)
+/// 
+/// See: https://en.wikipedia.org/wiki/Sutherland%E2%80%93Hodgman_algorithm
+/// for pseudocode
 ///
 /// Assumes vertices are in homogeneous clip space (see render.c)
 /// -------------------------------------------------------------
@@ -10,28 +13,12 @@
 #include "game_math/lerp.h"
 #include "game_math/plane.h"
 #include "renderer/vert_shader.h"
-#include "renderer/triangle.h"
 #include "error_log.h"
 
-#define CLIP_IN_SIZE (3)
-#define CLIP_OUT_SIZE (16)
-
-/// Initializes the six clipping planes of the canonical view volume
-/// using the Vulkan clip-space convention.
-///
-/// The planes are defined in homogeneous clip space such that a point
-/// is considered inside the frustum if:
-///
-///     -w ≤ x ≤ w
-///     -w ≤ y ≤ w
-///      0 ≤ z ≤ w
-///
-/// All plane normals are oriented so that plane4_inside(plane, v) returns
-/// true for vertices inside the view volume.
-///
-/// @param planes Output array of 6 Plane4 structures receiving the
-///               clip-space frustum planes. Must be preallocated.
-
+/// Initializes the six clipping planes of the canonical view volume given by
+/// y ∈ [-w,w] && x ∈ [-w,w] && z ∈ [0,1]
+/// 
+/// Normals are pointing "inside"
 static void calculate_clipping_planes(Plane4* planes){
 	//top (y = w)
 	planes[0].n = vec4f_create(0.0f, -1.0f, 0.0f, 1.0f);
@@ -58,24 +45,8 @@ static void calculate_clipping_planes(Plane4* planes){
 	planes[5].p = vec4f_create(0.0f, 0.0f, 1.0f, 1.0f);
 }
 
-/// Computes the interpolated vertex attributes at a line-plane intersection
-///
-/// Given start and end vertices of an edge in clip space, this function
-/// linearly interpolates all per-vertex attributes using parameter t,
-/// where t ∈ [0, 1] represents the intersection point along the segment:
-///
-///  P(t) = S + t (E - S)
-///
-/// This is used during homogeneous clipping to generate new vertices that 
-/// lie exactly on the clipping plane
-///
-/// @param s Start vertex of the edge
-/// @param e End vertex of the edge
-/// @param i Output vertex receiving interpolated attributes (must not be NULL)
-/// @param t Interpolation parameter along the edge, computed from plane-line
-/// 	     intersection in homogeneous coordinates
 static void compute_intersection(VSout s, VSout e, VSout* i, float t) {
-
+	// assumes memory at &i already allocated
 	if(!i){
 		LOG_ERROR("param was null");
 		return;
@@ -88,46 +59,56 @@ static void compute_intersection(VSout s, VSout e, VSout* i, float t) {
 	i->w_inv = lerp_float(s.w_inv, e.w_inv, t);
 }
 
+static inline void write_vert_to_out(VSout* v, VSout* out, int* out_n_ptr)
+{
+	out[(*out_n_ptr)++] = *v;
+}
 
+static inline void write_itx_to_out(Plane4* P, VSout* s, VSout* e, VSout* out,
+					int* out_n_ptr)
+{
+	float t = plane4_compute_intersect_t(*P,s->pos,e->pos);
+	VSout* i = &out[(*out_n_ptr)++];
+	compute_intersection(*s,*e,i,t);
+}
+
+/// Implements the conditional checks in Sutherland Hodgman for a single
+/// pair of vertices.
+/// See: https://en.wikipedia.org/wiki/Sutherland%E2%80%93Hodgman_algorithm
 static void clip_edge(VSout s, VSout e, Plane4 P, VSout* out, int* out_n) {
 
-	bool sIn = plane4_inside(P,s.pos);
-	bool eIn = plane4_inside(P,e.pos);
+	bool s_inside = plane4_inside(P,s.pos);
+	bool e_inside = plane4_inside(P,e.pos); 
 
-	if(sIn && eIn) out[(*out_n)++] = e;	
-
-	if(sIn && !eIn) {
-		float t = plane4_compute_intersect_t(P,s.pos,e.pos);
-		VSout* i = &out[(*out_n)++];
-		compute_intersection(s,e,i,t);
+	if(s_inside && e_inside) 
+	{
+		write_vert_to_out(&e, out, out_n);
 	}
 
-	if(!sIn && eIn) {
+	if(s_inside && !e_inside) 
+	{
+		write_itx_to_out(&P,&s,&e,out,out_n);
+	}
 
-		float t = plane4_compute_intersect_t(P,s.pos,e.pos);
-
-		VSout* i = &out[(*out_n)++];
-		compute_intersection(s,e,i,t);
-
-		out[(*out_n)++] = e;
+	if(!s_inside && e_inside) 
+	{
+		write_itx_to_out(&P,&s,&e,out,out_n);	
+		write_vert_to_out(&e, out,out_n);
 	}
 
 }
 
-/// Performs Sutherland-Hodgman clipping of a polygon against a single plane P
 static void clip_against_plane(const Plane4 P, 
 		               const VSout* in, const int in_n, 
 			       VSout* out, int* out_n_ptr) 
 {
-	int out_n = 0;
+	*out_n_ptr = 0;
 
 	for(int v = 0; v < in_n; v++){
 		VSout s = in[v];
 		VSout e = in[(v+1)%in_n];
-		clip_edge(s,e,P,out,&out_n);
+		clip_edge(s,e,P,out,out_n_ptr);
 	}
-
-	*out_n_ptr = out_n;
 }
 
 static inline void swap_ptrs(void** a, void** b) {
@@ -156,9 +137,13 @@ int clip(const VSout in[3], VSout* out) {
 	Plane4 planes[NUM_PLANES];
 	calculate_clipping_planes(planes);
 
-	// Ping-Pong buffers
-	VSout bufA[CLIP_OUT_SIZE] = {0};
-	VSout bufB[CLIP_OUT_SIZE] = {0};
+	// Ping-pong buffers: clip a triangle against NUM_PLANES without heap allocations.
+	// After each clip, we swap buffers so the next plane uses the newly clipped polygon.
+	
+	const int MAX_CLIP_VERTS = 16;
+	VSout bufA[MAX_CLIP_VERTS];
+	VSout bufB[MAX_CLIP_VERTS];
+
 	int sizeA = 3, sizeB = 0;
 
 	// Pointers to current input and output buffers & respective sizes
